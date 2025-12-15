@@ -11,15 +11,20 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
 
     // Liturgical Color Helper
     const getDayColor = (date) => {
-        const season = getSeason(date);
-        switch (season) {
-            case 'adviento': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
-            case 'navidad': return 'bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100 border-yellow-200';
-            case 'cuaresma': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
-            case 'semana_santa': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
-            case 'pascua': return 'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100 border-yellow-100';
-            case 'pentecostes': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
-            default: return 'bg-green-50 text-green-900 dark:bg-green-900/20 dark:text-green-100 border-green-100'; // Ordinario
+        try {
+            const season = getSeason(date);
+            switch (season) {
+                case 'adviento': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
+                case 'navidad': return 'bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100 border-yellow-200';
+                case 'cuaresma': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
+                case 'semana_santa': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
+                case 'pascua': return 'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100 border-yellow-100';
+                case 'pentecostes': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
+                default: return 'bg-green-50 text-green-900 dark:bg-green-900/20 dark:text-green-100 border-green-100';
+            }
+        } catch (error) {
+            console.error("Error calculating season color:", error);
+            return 'bg-gray-50 text-gray-500'; // Fallback color
         }
     };
 

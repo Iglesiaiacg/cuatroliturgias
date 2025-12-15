@@ -133,6 +133,7 @@ function App() {
         <>
           <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
           <Dashboard
+            key="dashboard-v2-force-refresh"
             date={selectedDate}
             feastName={calculatedFeast}
             onNavigate={setActiveTab}
