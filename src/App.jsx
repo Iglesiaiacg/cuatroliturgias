@@ -13,6 +13,11 @@ import HistoryModal from './components/Common/HistoryModal'
 import SettingsModal from './components/Common/SettingsModal'
 import Toast from './components/Common/Toast'
 
+// New Shell Components
+import Dashboard from './components/Views/Dashboard'
+import BottomNav from './components/Layout/BottomNav'
+import TopBar from './components/Layout/TopBar'
+
 function App() {
   const {
     tradition, setTradition,
@@ -25,6 +30,7 @@ function App() {
   } = useLiturgy()
 
   // UI State
+  const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
@@ -38,9 +44,9 @@ function App() {
     try {
       await generate()
       handleToast("Liturgia generada correctamente")
+      // Ensure we stay on generator view to see result
     } catch (e) {
       handleToast(e.message || "Error al generar", "error")
-      // If auth error, open settings automatically
       if (e.message.includes('API Key')) {
         setTimeout(() => setIsSettingsOpen(true), 1500)
       }
@@ -51,6 +57,7 @@ function App() {
     setDocContent(item.content)
     handleToast("Liturgia restaurada del historial")
     setIsHistoryOpen(false)
+    setActiveTab('generator') // Switch to generator to view restored content
   }
 
   // Document Actions
@@ -64,7 +71,6 @@ function App() {
       contentToSave = previewRef.current.innerHTML
     }
 
-    // Filter for bulletin
     if (type === 'bulletin') {
       const tempDiv = document.createElement('div')
       tempDiv.innerHTML = contentToSave
@@ -104,62 +110,80 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-gray-800 font-sans selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen bg-background-light dark:bg-background-dark text-gray-800 font-sans selection:bg-primary selection:text-white pb-20 transition-colors duration-300">
 
       {/* Toast */}
       {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
 
-      {/* History Modal */}
+      {/* Modals */}
       <HistoryModal
         isOpen={isHistoryOpen}
         onClose={() => setIsHistoryOpen(false)}
         onRestore={handleRestoreHistory}
       />
-
-      {/* Settings Modal */}
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* Top Navigation */}
-      <Header
-        tradition={tradition} setTradition={setTradition}
-        selectedDate={selectedDate} setSelectedDate={setSelectedDate}
-        calculatedFeast={calculatedFeast}
-        onGenerate={handleGenerate}
-        onHistory={() => setIsHistoryOpen(true)}
-        onSettings={() => setIsSettingsOpen(true)}
-      />
+      {/* --- DASHBOARD VIEW --- */}
+      {activeTab === 'dashboard' && (
+        <>
+          <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
+          <Dashboard
+            date={selectedDate}
+            feastName={calculatedFeast}
+            onNavigate={setActiveTab}
+          />
+        </>
+      )}
 
-      {/* Main Workspace */}
-      <main className="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-screen">
+      {/* --- GENERATOR VIEW (Classic Workspace) --- */}
+      <div className={activeTab === 'generator' ? 'block' : 'hidden'}>
+        <Header
+          tradition={tradition} setTradition={setTradition}
+          selectedDate={selectedDate} setSelectedDate={setSelectedDate}
+          calculatedFeast={calculatedFeast}
+          onGenerate={handleGenerate}
+          onHistory={() => setIsHistoryOpen(true)}
+          onSettings={() => setIsSettingsOpen(true)}
+        />
 
-        {/* Context Info (Optional floating info if needed, or integrated in header) */}
+        <main className="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-screen">
+          {loading ? (
+            <Loading tip={loadingTip} />
+          ) : error ? (
+            <div className="mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md animate-slide-in">
+              <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
+              <p className="text-red-600 mb-4">{error}</p>
+              <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
+            </div>
+          ) : docContent ? (
+            <div className="w-full flex flex-col items-center">
+              <Toolbar
+                onPrint={handlePrint}
+                onDownloadFull={() => handleDownload('full')}
+                onDownloadBulletin={() => handleDownload('bulletin')}
+              />
+              <Preview ref={previewRef} content={docContent} season={season} />
+            </div>
+          ) : (
+            <EmptyState />
+          )}
+        </main>
+      </div>
 
-        {/* Content Switcher */}
-        {loading ? (
-          <Loading tip={loadingTip} />
-        ) : error ? (
-          <div className="mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md animate-slide-in">
-            <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
+      {/* --- CALENDAR/FAVORITES (Placeholders) --- */}
+      {(activeTab === 'calendar' || activeTab === 'favorites') && (
+        <div className="flex items-center justify-center min-h-screen text-gray-400">
+          <div className="text-center">
+            <span className="material-symbols-outlined text-6xl mb-4">construction</span>
+            <p>Próximamente</p>
           </div>
-        ) : docContent ? (
-          <div className="w-full flex flex-col items-center">
-            <Toolbar
-              onPrint={handlePrint}
-              onDownloadFull={() => handleDownload('full')}
-              onDownloadBulletin={() => handleDownload('bulletin')}
-            />
-            <Preview ref={previewRef} content={docContent} season={season} />
-          </div>
-        ) : (
-          <EmptyState />
-        )}
+        </div>
+      )}
 
-      </main>
+      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>
   )
 }
