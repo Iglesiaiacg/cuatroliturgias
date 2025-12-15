@@ -1,36 +1,61 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState, useEffect } from 'react';
 
-export default function Clock() {
+const Clock = () => {
     const [time, setTime] = useState(new Date());
 
     useEffect(() => {
-        const timer = setInterval(() => setTime(new Date()), 1000);
+        const timer = setInterval(() => {
+            setTime(new Date());
+        }, 1000);
         return () => clearInterval(timer);
     }, []);
 
-    const h = time.getHours();
-    const m = time.getMinutes();
-    const s = time.getSeconds();
+    const seconds = time.getSeconds();
+    const minutes = time.getMinutes();
+    const hours = time.getHours();
 
-    const hDeg = (h % 12) * 30 + (m / 60) * 30;
-    const mDeg = m * 6 + (s / 60) * 6;
-    const sDeg = s * 6;
+    const secDeg = seconds * 6;
+    const minDeg = minutes * 6 + seconds * 0.1;
+    const hourDeg = hours * 30 + minutes * 0.5;
 
     return (
-        <div id="live-clock" className="flex items-center gap-2">
-            <div className="analog-clock relative" style={{ width: '32px', height: '32px' }}>
-                <div className="absolute inset-0 border-2 border-gray-300 rounded-full opacity-30"></div>
-                <div className="hand hour absolute bg-gray-800 rounded-full origin-bottom"
-                    style={{ width: '2px', height: '30%', left: 'calc(50% - 1px)', bottom: '50%', transform: `rotate(${hDeg}deg)` }}></div>
-                <div className="hand minute absolute bg-gray-600 rounded-full origin-bottom"
-                    style={{ width: '2px', height: '45%', left: 'calc(50% - 1px)', bottom: '50%', transform: `rotate(${mDeg}deg)` }}></div>
-                <div className="hand second absolute bg-red-500 rounded-full origin-bottom"
-                    style={{ width: '1px', height: '40%', left: 'calc(50% - 0.5px)', bottom: '50%', transform: `rotate(${sDeg}deg)` }}></div>
-                <div className="center-dot absolute bg-teal-500 rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" style={{ width: '4px', height: '4px' }}></div>
+        // Wrapper to protect header layout from strict specific pixel widths in CSS
+        <div className="relative w-[100px] h-[100px] flex items-center justify-center overflow-hidden">
+            <div className="clock-container">
+                <div className="clock-face">
+                    {/* Markers */}
+                    {[...Array(12)].map((_, i) => (
+                        <div key={i} className={`marker marker-${i + 1}`}>
+                            <div className="marker-dot"></div>
+                        </div>
+                    ))}
+
+                    {/* Numbers */}
+                    {[...Array(12)].map((_, i) => (
+                        <div key={i} className={`number number-${i + 1}`}>
+                            <span className={`number-${i + 1}-text`}>{i + 1}</span>
+                        </div>
+                    ))}
+
+                    {/* Hands - Dynamic rotation applied inline to override static CSS animations */}
+                    <div
+                        className="hand hour-hand"
+                        style={{ transform: `translateX(-50%) rotate(${hourDeg}deg)` }}
+                    ></div>
+                    <div
+                        className="hand minute-hand"
+                        style={{ transform: `translateX(-50%) rotate(${minDeg}deg)` }}
+                    ></div>
+                    <div
+                        className="hand second-hand"
+                        style={{ transform: `translateX(-50%) rotate(${secDeg}deg)` }}
+                    ></div>
+
+                    <div className="center-pin"></div>
+                </div>
             </div>
-            <span className="text-xs font-mono text-gray-400 font-bold ml-2">
-                {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
         </div>
     );
-}
+};
+
+export default Clock;
