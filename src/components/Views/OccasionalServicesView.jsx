@@ -34,6 +34,22 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
                 <strong>escucha mi voz cuando te invoco.</strong></p>
                 <p>Suba mi oración delante de ti como el incienso, *<br>
                 <strong>el don de mis manos como la ofrenda de la tarde.</strong></p>
+                <p>Pon guarda a mi boca, oh Señor; *<br>
+                <strong>guarda la puerta de mis labios.</strong></p>
+                <p>No dejes que se incline mi corazón a cosa mala, *<br>
+                <strong>a hacer obras impías con los que obran iniquidad; y no coma yo de sus deleites.</strong></p>
+                <p>Que el justo me castigue, será un favor, y que me reprenda será un excelente bálsamo *<br>
+                <strong>que no me herirá la cabeza; pero mi oración será continuamente contra las maldades de aquéllos.</strong></p>
+                <p>Serán despeñados sus jueces en lugares peñascosos, *<br>
+                <strong>y oirán mis palabras, que son verdaderas.</strong></p>
+                <p>Como quien hiende y rompe la tierra, *<br>
+                <strong>son esparcidos nuestros huesos a la boca del Seol.</strong></p>
+                <p>Por tanto, a ti, oh Jehová, Señor, miran mis ojos; *<br>
+                <strong>en ti he confiado; no desampares mi alma.</strong></p>
+                <p>Guárdame de los lazos que me han tendido, *<br>
+                <strong>y de las trampas de los que hacen iniquidad.</strong></p>
+                <p>Caigan los impíos a una en sus redes, *<br>
+                <strong>mientras yo paso adelante.</strong></p>
                 
                 <p class="rubric">Se concluye con la Oración.</p>
                 
