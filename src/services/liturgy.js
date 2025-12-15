@@ -205,7 +205,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
     if (season === 'cuaresma' || season === 'semana_santa') {
         omissionRules = "⚠️ RÚBRICA IMPORTANTE: ESTAMOS EN CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA' (Reemplazar Aleluya por la Aclamación antes del Evangelio propia del tiempo).";
     } else if (season === 'adviento') {
-        omissionRules = "⚠️ RÚBRICA IMPORTANTE: ESTAMOS EN ADVIENTO. OMITIR EL 'GLORIA'. (Mantener Aleluya).";
+        omissionRules = "⚠️ RÚBRICA IMPORTANTE: ESTAMOS EN ADVIENTO. OMITIR EL 'GLORIA'. (Mantener Aleluya). [MANDATORIO: INCLUIR RITO DE ENCENDIDO DE LA VELA DE ADVIENTO DESPUÉS DEL SALUDO INICIAL].";
     } else {
         omissionRules = "RÚBRICA: Incluir Gloria y Aleluya según corresponda a la solemnidad/fiesta.";
     }
@@ -288,7 +288,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         REGLAS DE OMISIÓN ACTIVAS: ${omissionRules}
         INSTRUCCIONES ESPECÍFICAS: ${specificInstructions}
         ESTRUCTURA (COMPLETA Y DETALLADA - INCLUIR TEXTOS DE LAS PARTES FIJAS PARA EL PUEBLO):
-        1. Ritos Iniciales (Antífona de Entrada, Saludo, Acto Penitencial, Kyrie, Gloria [VERIFICAR REGLAS DE OMISIÓN], Oración Colecta).
+        1. Ritos Iniciales (PROCESIÓN DE ENTRADA [Canto/Antífona], Saludo, [SI ES ADVIENTO: RITO DE LUZ/CORONA], Acto Penitencial, Kyrie, Gloria [VERIFICAR REGLAS DE OMISIÓN], Oración Colecta).
         2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [textos completos], 2ª Lectura, Aleluya/Aclamación [VERIFICAR OMISIÓN], Evangelio).
         3. Homilía (Bosquejo breve), Credo, Oración Universal (Peticiones temáticas).
         4. Liturgia Eucarística ${eucharistDetail}.
