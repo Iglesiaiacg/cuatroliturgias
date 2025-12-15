@@ -17,8 +17,9 @@ export default function Clock() {
     const sDeg = s * 6;
 
     return (
-        <div id="live-clock" className="mt-2 flex items-center gap-2">
-            <div className="analog-clock relative bg-white border-2 border-gray-200 rounded-full shadow-inner" style={{ width: '40px', height: '40px' }}>
+        <div id="live-clock" className="flex items-center gap-2">
+            <div className="analog-clock relative" style={{ width: '32px', height: '32px' }}>
+                <div className="absolute inset-0 border-2 border-gray-300 rounded-full opacity-30"></div>
                 <div className="hand hour absolute bg-gray-800 rounded-full origin-bottom"
                     style={{ width: '2px', height: '30%', left: 'calc(50% - 1px)', bottom: '50%', transform: `rotate(${hDeg}deg)` }}></div>
                 <div className="hand minute absolute bg-gray-600 rounded-full origin-bottom"

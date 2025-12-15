@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
 
 // Components
-import Sidebar from './components/Layout/Sidebar'
+import Header from './components/Layout/Header'
 import Toolbar from './components/Layout/Toolbar'
 import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
@@ -23,7 +23,6 @@ function App() {
   } = useLiturgy()
 
   // UI State
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
@@ -36,9 +35,6 @@ function App() {
     try {
       await generate()
       handleToast("Liturgia generada correctamente")
-      // Mobile: close sidebar logic managed by user manually usually, or auto close?
-      // Legacy auto-closed sidebar on mobile.
-      if (window.innerWidth < 768) setIsSidebarOpen(false)
     } catch (e) {
       handleToast(e.message || "Error al generar", "error")
     }
@@ -48,7 +44,6 @@ function App() {
     setDocContent(item.content)
     handleToast("Liturgia restaurada del historial")
     setIsHistoryOpen(false)
-    if (window.innerWidth < 768) setIsSidebarOpen(false)
   }
 
   // Document Actions
@@ -59,9 +54,6 @@ function App() {
 
     let contentToSave = docContent
     if (previewRef.current) {
-      // Get current HTML from editable div to verify any user edits
-      // But Preview component handles contentEditable... 
-      // We should ideally sync back changes or just read innerHTML from ref
       contentToSave = previewRef.current.innerHTML
     }
 
@@ -105,7 +97,7 @@ function App() {
   }
 
   return (
-    <div className="flex w-full h-screen bg-[#f0f2f5] overflow-hidden text-gray-800 font-sans">
+    <div className="min-h-screen bg-[#f8fafc] text-gray-800 font-sans selection:bg-teal-100 selection:text-teal-900">
 
       {/* Toast */}
       {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
@@ -117,62 +109,41 @@ function App() {
         onRestore={handleRestoreHistory}
       />
 
-      {/* Mobile Toggle */}
-      <div className="fixed top-4 left-4 z-50 md:hidden">
-        <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          className="w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center text-teal-700"
-        >
-          {isSidebarOpen ? '✕' : '☰'}
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <Sidebar
+      {/* Top Navigation */}
+      <Header
         tradition={tradition} setTradition={setTradition}
         celebrationKey={celebrationKey} setCelebrationKey={setCelebrationKey}
-        cycleInfo={cycleInfo} selectedDate={selectedDate}
         onGenerate={handleGenerate}
-        className={isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        onHistory={() => setIsHistoryOpen(true)}
       />
 
-      {/* Main View */}
-      <main className="flex-1 h-full overflow-y-auto relative w-full">
-        <div className="w-full min-h-full flex flex-col items-center p-4 md:p-10 pb-32">
+      {/* Main Workspace */}
+      <main className="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-screen">
 
-          {/* Top Bar for History (Mobile/Desktop) */}
-          <div className="w-full max-w-4xl flex justify-end mb-4">
-            <button
-              onClick={() => setIsHistoryOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm text-xs font-bold text-gray-500 hover:text-teal-700 hover:shadow-md transition-all uppercase tracking-wider"
-            >
-              <span>↺</span> Historial
-            </button>
+        {/* Context Info (Optional floating info if needed, or integrated in header) */}
+
+        {/* Content Switcher */}
+        {loading ? (
+          <Loading tip={loadingTip} />
+        ) : error ? (
+          <div className="mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md animate-slide-in">
+            <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
+            <p className="text-red-600 mb-4">{error}</p>
+            <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
           </div>
+        ) : docContent ? (
+          <div className="w-full flex flex-col items-center">
+            <Toolbar
+              onPrint={handlePrint}
+              onDownloadFull={() => handleDownload('full')}
+              onDownloadBulletin={() => handleDownload('bulletin')}
+            />
+            <Preview ref={previewRef} content={docContent} season={season} />
+          </div>
+        ) : (
+          <EmptyState />
+        )}
 
-          {/* Content Switcher */}
-          {loading ? (
-            <Loading tip={loadingTip} />
-          ) : error ? (
-            <div className="neubrutalist-error mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md">
-              <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
-              <p className="text-red-600 mb-4">{error}</p>
-              <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
-            </div>
-          ) : docContent ? (
-            <>
-              <Toolbar
-                onPrint={handlePrint}
-                onDownloadFull={() => handleDownload('full')}
-                onDownloadBulletin={() => handleDownload('bulletin')}
-              />
-              <Preview ref={previewRef} content={docContent} season={season} />
-            </>
-          ) : (
-            <EmptyState />
-          )}
-
-        </div>
       </main>
     </div>
   )

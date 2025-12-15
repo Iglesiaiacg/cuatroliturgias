@@ -1,15 +1,15 @@
 export default function Toolbar({ onPrint, onDownloadFull, onDownloadBulletin }) {
     return (
-        <div id="toolbar" className="sticky top-6 z-30 bg-white border border-gray-200 rounded-xl px-8 py-4 flex flex-wrap items-center gap-6 transition-all justify-center transform hover:scale-[1.01] shadow-lg mb-8">
-            <button onClick={onPrint} className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-teal-700 font-bold transition-colors">
-                <span>🖨️</span> Imprimir
+        <div id="toolbar" className="sticky top-24 z-30 bg-white/80 backdrop-blur-md border border-gray-200/50 rounded-full px-6 py-2 flex flex-wrap items-center gap-4 transition-all justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 mb-8">
+            <button onClick={onPrint} className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:text-teal-700 transition-colors uppercase tracking-wider">
+                <span>🖨️</span> Print
             </button>
-            <div className="w-px h-8 bg-gray-300 hidden md:block"></div>
-            <button onClick={onDownloadFull} className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-teal-700 font-bold transition-colors">
-                <span>📜</span> Guion Completo
+            <div className="w-px h-6 bg-gray-200 hidden md:block"></div>
+            <button onClick={onDownloadFull} className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:text-teal-700 transition-colors uppercase tracking-wider">
+                <span>📜</span> Guion
             </button>
-            <button onClick={onDownloadBulletin} className="flex items-center gap-2 px-4 py-2 text-gray-700 hover:text-teal-700 font-bold transition-colors">
-                <span>👥</span> Boletín Pueblo
+            <button onClick={onDownloadBulletin} className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:text-teal-700 transition-colors uppercase tracking-wider">
+                <span>👥</span> Boletín
             </button>
         </div>
     );
