@@ -1,6 +1,25 @@
 import { CONFIG } from './config';
 import { getApiKey } from './storage';
 
+const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
+    try {
+        const response = await fetch(url, options);
+        if (response.status === 429 || response.status >= 500) {
+            if (retries > 0) {
+                await new Promise(r => setTimeout(r, backoff));
+                return fetchWithRetry(url, options, retries - 1, backoff * 2);
+            }
+        }
+        return response;
+    } catch (err) {
+        if (retries > 0) {
+            await new Promise(r => setTimeout(r, backoff));
+            return fetchWithRetry(url, options, retries - 1, backoff * 2);
+        }
+        throw err;
+    }
+};
+
 export const generateLiturgy = async (prompt) => {
     try {
         const userKey = getApiKey();
@@ -8,7 +27,7 @@ export const generateLiturgy = async (prompt) => {
             throw new Error("Falta la API Key. Configúrala en el menú ⚙️");
         }
 
-        const response = await fetch(`${CONFIG.ENDPOINTS.GENERATE}?key=${userKey}`, {
+        const response = await fetchWithRetry(`${CONFIG.ENDPOINTS.GENERATE}?key=${userKey}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
