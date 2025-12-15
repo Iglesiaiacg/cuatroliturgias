@@ -73,16 +73,13 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                 {calendarDays.map((date, idx) => {
                     const isSelected = isSameDay(date, selectedDate);
                     const isCurrentMonth = isSameMonth(date, monthStart);
+                    const liturgicalColorClass = isCurrentMonth ? getDayColor(date) : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
 
                     return (
                         <div
                             key={date.toString()}
                             onClick={() => {
                                 onDateChange(date);
-                                // Optional: Auto navigate? Keeping user on calendar for now as requested context implies browsing
-                                // Color Logic
-                                const liturgicalColorClass = isCurrentMonth ? getDayColor(date) : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
-
                             }}
                             className={`
                                 relative p-1 sm:p-2 flex flex-col items-start cursor-pointer hover:brightness-95 transition-all border border-transparent
