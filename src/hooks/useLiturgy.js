@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getLiturgicalCycle, getSeason, getTips, buildPrompt, identifyFeast } from '../services/liturgy';
 import { generateLiturgy } from '../services/gemini';
 import { getPreferences, savePreferences, addToHistory } from '../services/storage';
+import { marked } from 'marked';
 
 export const useLiturgy = () => {
     // Init state: Tradition from local storage, Date is always today by default
@@ -58,8 +59,11 @@ export const useLiturgy = () => {
 
             const markdown = await generateLiturgy(prompt);
 
-            // Clean specific markers
-            let cleanText = markdown
+            // 1. Convert Markdown to HTML
+            const htmlContent = marked.parse(markdown);
+
+            // 2. Clean specific markers (Post-processing on HTML)
+            let cleanText = htmlContent
                 .replace(/\$\\dagger\$/g, '†')
                 .replace(/\[\[(.*?)\]\]/g, '<span class="rubric">$1</span>');
 
