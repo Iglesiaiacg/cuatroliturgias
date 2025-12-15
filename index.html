@@ -929,26 +929,33 @@
                     return `
                         ${basePrompt}
                         ROL: Maestro de Ceremonias (Missale Romanum 1962).
-                        REGLA DE ORO: La celebración se refiere al 'Propio del Día' en el calendario Tridentino según la celebración elegida ('${titleStr}'). 
+                        REGLA DE ORO: La celebración se refiere al 'Propio del Día' en el calendario Tridentino.
                         NO USES CICLOS A/B/C.
                         [MANDATORIO: ENFOCAR EL SALMO COMO RESPONSORIAL/GRADUAL CON VERSOS]
-                        ESTRUCTURA (Bilingüe Latín/Español):
-                        1. Ritos al Pie del Altar (Salmo 42, Confiteor).
+                        ESTRUCTURA (Bilingüe Latín/Español - TEXTO COMPLETO PARA EL PUEBLO):
+                        1. Ritos al Pie del Altar (Salmo 42, Confiteor, Absolución).
                         2. Introito, Kyrie, Gloria (si aplica), Colecta.
                         3. Epístola, Gradual (Salmo Responsorial), Evangelio. [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
                         4. Credo (si aplica).
-                        5. Ofertorio, Canon (Latín), Comunión.
-                        6. Ritos Finales, Último Evangelio (Juan 1:1-14 COMPLETO).
+                        5. Ofertorio (Suscipe Sancte Pater, Offerimus tibi), Lavabo, Orate Fratres, Secreta.
+                        6. Canon Romano (Prefacio, Sanctus, Canon [Resumido para el pueblo, destacar Consagración], Pater Noster).
+                        7. Agnus Dei, Comunión, Post-Comunión.
+                        8. Ritos Finales, Último Evangelio (Juan 1:1-14 COMPLETO).
                     `;
                 }
 
                 let specificInstructions = "";
+                let eucharistDetail = "(Ofertorio, Plegaria Eucarística, Rito de Comunión)"; // Default
+
                 if (tradition === 'anglicana') {
-                    specificInstructions = "Usa el Libro de Oración Común 2019 (ACNA). [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS]. Salmos poéticos.";
+                    specificInstructions = "Usa el Libro de Oración Común 2019 (ACNA). [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS]. Incluir 'Prayer of Humble Access' (Oración de Acceso a la Gracia) antes de la comunión.";
+                    eucharistDetail = "(Ofertorio, Sursum Corda, Sanctus, Plegaria de Consagración, Padre Nuestro, Oración de Acceso a la Gracia [Humble Access], Agnus Dei, Comunión, Oración de Post-Comunión)";
                 } else if (tradition === 'ordinariato') {
-                    specificInstructions = "Usa 'Divine Worship: The Missal'. Lenguaje sacro ('Vosotros'). Incluye Decálogo en penitencial si es Adviento/Cuaresma. [MANDATORIO: EN ADVIENTO, INCLUIR ORACIÓN Y RÚBRICA PARA EL ENCENDIDO DE LA VELA]. [MANDATORIO: ORACIÓN UNIVERSAL (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS].";
+                    specificInstructions = "Usa 'Divine Worship: The Missal'. Lenguaje sacro ('Vosotros'). Incluye Decálogo en penitencial si es Adviento/Cuaresma. [MANDATORIO: EN ADVIENTO, INCLUIR ORACIÓN Y RÚBRICA PARA EL ENCENDIDO DE LA VELA]. Incluir 'Prayer of Humble Access'.";
+                    eucharistDetail = "(Ofertorio, Orate Fratres, Prayer over the Offerings, Sursum Corda, Sanctus, Canon Romano [o Plegaria Eucarística], Padre Nuestro, Prayer of Humble Access, Agnus Dei, Comunión, Post-Communión)";
                 } else {
-                    specificInstructions = "Usa el Misal Romano (Conferencia Episcopal Mexicana). [MANDATORIO: ORACIÓN UNIVERSAL (Oración de los Fieles) CON 4-5 PETICIONES DIRECTAMENTE LIGADAS AL TEMA DE LAS LECTURAS].";
+                    specificInstructions = "Usa el Misal Romano (Conferencia Episcopal Mexicana). [MANDATORIO: ORACIÓN UNIVERSAL CON PETICIONES LIGADAS AL TEMA DE LAS LECTURAS].";
+                    eucharistDetail = "(Ofertorio, Oración sobre las Ofrendas, Prefacio, Sanctus, Plegaria Eucarística [Consagración], Padre Nuestro, La Paz, Cordero de Dios, Comunión, Oración después de la Comunión)";
                 }
 
                 return `
@@ -956,12 +963,12 @@
                     TÍTULO LITÚRGICO: ${titleStr}.
                     CICLO: ${cycle.text}.
                     INSTRUCCIONES ESPECÍFICAS: ${specificInstructions}
-                    ESTRUCTURA (COMPLETA Y DETALLADA):
-                    1. Ritos Iniciales (Antífona, Saludo, Acto Penitencial, Kyrie, Gloria, Oración Colecta).
-                    2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [MANDATORIO: FORMATO RESPONSIAL con RESPUESTA CLARA], 2ª Lectura, Aclamación, Evangelio). [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
-                    3. Homilía (Bosquejo), Credo, Oración Universal (MANDATORIO: PETICIONES CREADAS EN BASE AL TEMA CENTRAL DE LAS LECTURAS).
-                    4. Liturgia Eucarística (Ofertorio, Plegaria, Rito de Comunión).
-                    5. Rito de Conclusión (Bendición, Despedida).
+                    ESTRUCTURA (COMPLETA Y DETALLADA - INCLUIR TEXTOS DE LAS PARTES FIJAS PARA EL PUEBLO):
+                    1. Ritos Iniciales (Antífona de Entrada, Saludo, Acto Penitencial, Kyrie, Gloria [si aplica], Oración Colecta).
+                    2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [textos completos], 2ª Lectura, Aleluya/Aclamación, Evangelio).
+                    3. Homilía (Bosquejo breve), Credo, Oración Universal (Peticiones temáticas).
+                    4. Liturgia Eucarística ${eucharistDetail}.
+                    5. Rito de Conclusión (Bendición Solemne, Despedida).
                 `;
             },
 
