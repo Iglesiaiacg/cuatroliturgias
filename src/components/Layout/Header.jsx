@@ -43,20 +43,22 @@ export default function Header({
             {/* 2. COMMAND CENTER (Calendar) */}
             <div className="flex-1 max-w-3xl px-4 md:px-12 flex items-center gap-4 justify-center">
 
-                {/* Tradition Selector */}
-                <div className="relative group shrink-0">
-                    <select
-                        value={tradition}
-                        onChange={(e) => setTradition(e.target.value)}
-                        className="appearance-none bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg pl-3 pr-8 py-2.5 text-xs font-bold text-gray-700 focus:ring-2 focus:ring-teal-500/20 cursor-pointer transition-all outline-none"
-                    >
-                        {traditions.map(t => (
-                            <option key={t.value} value={t.value}>{t.label}</option>
-                        ))}
-                    </select>
-                    <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none">
-                        <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </div>
+                {/* Tradition Selector (Buttons) */}
+                <div className="flex bg-gray-100 p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0 max-w-[200px] md:max-w-none">
+                    {traditions.map(t => (
+                        <button
+                            key={t.value}
+                            onClick={() => setTradition(t.value)}
+                            className={`
+                                px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all whitespace-nowrap
+                                ${tradition === t.value
+                                    ? 'bg-white text-teal-700 shadow-sm ring-1 ring-gray-200'
+                                    : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}
+                            `}
+                        >
+                            {t.label}
+                        </button>
+                    ))}
                 </div>
 
                 {/* Date Picker Wrapper */}
