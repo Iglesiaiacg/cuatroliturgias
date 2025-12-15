@@ -11,7 +11,8 @@ export default function Header({
     selectedDate, setSelectedDate,
     calculatedFeast,
     onGenerate,
-    onHistory
+    onHistory,
+    onSettings
 }) {
 
     const traditions = [
@@ -79,6 +80,13 @@ export default function Header({
 
             {/* 3. ACTIONS */}
             <div className="flex items-center gap-3 shrink-0">
+                <button
+                    onClick={onSettings}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-50 text-gray-400 hover:text-gray-900 transition-colors border border-transparent hover:border-gray-200"
+                    title="Configuración API"
+                >
+                    <span className="text-xl">⚙️</span>
+                </button>
                 <button
                     onClick={onHistory}
                     className="w-10 h-10 rounded-lg flex items-center justify-center hover:bg-gray-50 text-gray-400 hover:text-gray-900 transition-colors border border-transparent hover:border-gray-200"

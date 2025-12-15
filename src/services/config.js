@@ -1,5 +1,5 @@
 export const CONFIG = {
-    API_KEY: "AIzaSyAE2r3DuTMp3m9lZd8Pe5taWGnv2Bsf0hQ", // TODO: Move to backend/env later
+    // API_KEY removed for security. Use Settings Modal.
     ENDPOINTS: {
         GENERATE: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent"
     },

@@ -10,6 +10,7 @@ import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
 import EmptyState from './components/Liturgy/EmptyState'
 import HistoryModal from './components/Common/HistoryModal'
+import SettingsModal from './components/Common/SettingsModal'
 import Toast from './components/Common/Toast'
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
 
   // UI State
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
   const previewRef = useRef(null)
@@ -38,6 +40,10 @@ function App() {
       handleToast("Liturgia generada correctamente")
     } catch (e) {
       handleToast(e.message || "Error al generar", "error")
+      // If auth error, open settings automatically
+      if (e.message.includes('API Key')) {
+        setTimeout(() => setIsSettingsOpen(true), 1500)
+      }
     }
   }
 
@@ -110,6 +116,12 @@ function App() {
         onRestore={handleRestoreHistory}
       />
 
+      {/* Settings Modal */}
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
+
       {/* Top Navigation */}
       <Header
         tradition={tradition} setTradition={setTradition}
@@ -117,6 +129,7 @@ function App() {
         calculatedFeast={calculatedFeast}
         onGenerate={handleGenerate}
         onHistory={() => setIsHistoryOpen(true)}
+        onSettings={() => setIsSettingsOpen(true)}
       />
 
       {/* Main Workspace */}

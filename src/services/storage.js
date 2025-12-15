@@ -1,8 +1,21 @@
 const KEYS = {
     TRADITION: 'liturgy_tradition',
     CELEBRATION: 'liturgy_celebration',
-    HISTORY: 'liturgy_history'
+    HISTORY: 'liturgy_history',
+    API_KEY: 'liturgy_api_key' // New secure key
 };
+
+export const getApiKey = () => {
+    return localStorage.getItem(KEYS.API_KEY) || "";
+}
+
+export const saveApiKey = (key) => {
+    if (key) {
+        localStorage.setItem(KEYS.API_KEY, key);
+    } else {
+        localStorage.removeItem(KEYS.API_KEY);
+    }
+}
 
 export const getPreferences = () => {
     return {
