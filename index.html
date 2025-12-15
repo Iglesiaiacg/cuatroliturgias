@@ -925,16 +925,34 @@
                     ${CONFIG.RULES}
                 `;
 
+                // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO
+                const season = this.getSeason(selectedDate);
+                let omissionRules = "";
+
+                if (season === 'cuaresma' || season === 'semana_santa') {
+                    omissionRules = "⚠️ RÚBRICA IMPORTANTE: ESTAMOS EN CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA' (Reemplazar Aleluya por la Aclamación antes del Evangelio propia del tiempo).";
+                } else if (season === 'adviento') {
+                    omissionRules = "⚠️ RÚBRICA IMPORTANTE: ESTAMOS EN ADVIENTO. OMITIR EL 'GLORIA'. (Mantener Aleluya).";
+                } else {
+                    omissionRules = "RÚBRICA: Incluir Gloria y Aleluya según corresponda a la solemnidad/fiesta.";
+                }
+
                 if (tradition === 'tridentina') {
+                    // Reglas tridentinas específicas (Septuagésima, etc.)
+                    if (titleStr.includes("Septuagesima") || titleStr.includes("Sexagesima") || titleStr.includes("Quinquagesima")) {
+                        omissionRules += " OMITIR ALELUYA (Tiempo de Septuagésima). Usar Tracto.";
+                    }
+
                     return `
                         ${basePrompt}
                         ROL: Maestro de Ceremonias (Missale Romanum 1962).
                         REGLA DE ORO: La celebración se refiere al 'Propio del Día' en el calendario Tridentino.
                         NO USES CICLOS A/B/C.
+                        REGLAS DE OMISIÓN ACTIVAS: ${omissionRules}
                         [MANDATORIO: ENFOCAR EL SALMO COMO RESPONSORIAL/GRADUAL CON VERSOS]
                         ESTRUCTURA (Bilingüe Latín/Español - TEXTO COMPLETO PARA EL PUEBLO):
                         1. Ritos al Pie del Altar (Salmo 42, Confiteor, Absolución).
-                        2. Introito, Kyrie, Gloria (si aplica), Colecta.
+                        2. Introito, Kyrie, Gloria (VERIFICAR OMISIÓN), Colecta.
                         3. Epístola, Gradual (Salmo Responsorial), Evangelio. [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
                         4. Credo (si aplica).
                         5. Ofertorio (Suscipe Sancte Pater, Offerimus tibi), Lavabo, Orate Fratres, Secreta.
@@ -962,10 +980,11 @@
                     ${basePrompt}
                     TÍTULO LITÚRGICO: ${titleStr}.
                     CICLO: ${cycle.text}.
+                    REGLAS DE OMISIÓN ACTIVAS: ${omissionRules}
                     INSTRUCCIONES ESPECÍFICAS: ${specificInstructions}
                     ESTRUCTURA (COMPLETA Y DETALLADA - INCLUIR TEXTOS DE LAS PARTES FIJAS PARA EL PUEBLO):
-                    1. Ritos Iniciales (Antífona de Entrada, Saludo, Acto Penitencial, Kyrie, Gloria [si aplica], Oración Colecta).
-                    2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [textos completos], 2ª Lectura, Aleluya/Aclamación, Evangelio).
+                    1. Ritos Iniciales (Antífona de Entrada, Saludo, Acto Penitencial, Kyrie, Gloria [VERIFICAR REGLAS DE OMISIÓN], Oración Colecta).
+                    2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [textos completos], 2ª Lectura, Aleluya/Aclamación [VERIFICAR OMISIÓN], Evangelio).
                     3. Homilía (Bosquejo breve), Credo, Oración Universal (Peticiones temáticas).
                     4. Liturgia Eucarística ${eucharistDetail}.
                     5. Rito de Conclusión (Bendición Solemne, Despedida).
