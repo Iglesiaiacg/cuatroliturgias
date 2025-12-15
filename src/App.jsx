@@ -16,6 +16,7 @@ import Toast from './components/Common/Toast'
 // New Shell Components
 import Dashboard from './components/Views/Dashboard'
 import CalendarView from './components/Views/CalendarView'
+import OccasionalServicesView from './components/Views/OccasionalServicesView'
 import BottomNav from './components/Layout/BottomNav'
 import TopBar from './components/Layout/TopBar'
 
@@ -181,9 +182,13 @@ function App() {
           <CalendarView
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
-            onNavigate={setActiveTab}
           />
         </>
+      )}
+
+      {/* --- OCCASIONAL SERVICES VIEW --- */}
+      {activeTab === 'occasional' && (
+        <OccasionalServicesView onNavigate={setActiveTab} />
       )}
 
       {/* --- FAVORITES (Placeholder) --- */}

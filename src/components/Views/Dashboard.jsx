@@ -42,14 +42,14 @@ export default function Dashboard({ onNavigate, date, feastName }) {
                         </div>
                     </button>
 
-                    {/* Card 4: Oraciones */}
-                    <button className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
+                    {/* Card 4: Servicios Ocasionales */}
+                    <button onClick={() => onNavigate('occasional')} className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                            <span className="material-symbols-outlined">volunteer_activism</span>
+                            <span className="material-symbols-outlined">church</span>
                         </div>
                         <div>
-                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Oraciones</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Comunes y Propias</span>
+                            <span className="block text-base font-bold leading-tight text-gray-900 dark:text-white font-display mb-0.5">Servicios Ocasionales</span>
+                            <span className="text-xs text-gray-500 dark:text-white/50">Ritos Especiales</span>
                         </div>
                     </button>
                 </div>
