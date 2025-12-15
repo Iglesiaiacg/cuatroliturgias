@@ -4,9 +4,24 @@ import {
     eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths
 } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { getSeason } from '../../services/liturgy';
 
 export default function CalendarView({ selectedDate, onDateChange, onNavigate }) {
     const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
+
+    // Liturgical Color Helper
+    const getDayColor = (date) => {
+        const season = getSeason(date);
+        switch (season) {
+            case 'adviento': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
+            case 'navidad': return 'bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100 border-yellow-200';
+            case 'cuaresma': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
+            case 'semana_santa': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
+            case 'pascua': return 'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100 border-yellow-100';
+            case 'pentecostes': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
+            default: return 'bg-green-50 text-green-900 dark:bg-green-900/20 dark:text-green-100 border-green-100'; // Ordinario
+        }
+    };
 
     // Calendar Logic
     const monthStart = startOfMonth(currentMonth);
@@ -60,11 +75,14 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                             onClick={() => {
                                 onDateChange(date);
                                 // Optional: Auto navigate? Keeping user on calendar for now as requested context implies browsing
+                                // Color Logic
+                                const liturgicalColorClass = isCurrentMonth ? getDayColor(date) : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
+
                             }}
                             className={`
-                                relative bg-white dark:bg-surface-dark p-2 flex flex-col items-start cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors
-                                ${!isCurrentMonth ? 'text-gray-300 dark:text-gray-700 bg-gray-50/50' : 'text-gray-900 dark:text-white'}
-                                ${isSelected ? '!bg-teal-50 dark:!bg-teal-900/20' : ''}
+                                relative p-1 sm:p-2 flex flex-col items-start cursor-pointer hover:brightness-95 transition-all border border-transparent
+                                ${liturgicalColorClass}
+                                ${isSelected ? '!ring-2 ring-primary z-10' : ''}
                             `}
                         >
                             <span className={`
