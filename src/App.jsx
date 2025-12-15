@@ -14,7 +14,7 @@ import SettingsModal from './components/Common/SettingsModal'
 import Toast from './components/Common/Toast'
 
 // New Shell Components
-import Dashboard from './components/Views/Dashboard'
+import HomeView from './components/Views/HomeView'
 import CalendarView from './components/Views/CalendarView'
 import OccasionalServicesView from './components/Views/OccasionalServicesView'
 import BottomNav from './components/Layout/BottomNav'
@@ -132,8 +132,8 @@ function App() {
       {activeTab === 'dashboard' && (
         <>
           <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
-          <Dashboard
-            key="dashboard-v2-force-refresh"
+          <HomeView
+            key="home-refresh-v3"
             date={selectedDate}
             feastName={calculatedFeast}
             onNavigate={setActiveTab}
