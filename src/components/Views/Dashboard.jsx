@@ -1,31 +1,7 @@
 export default function Dashboard({ onNavigate, date, feastName }) {
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 pb-24 space-y-8 overflow-y-auto w-full max-w-md mx-auto animate-fade-in">
-            {/* Liturgical Hero Card */}
-            <section onClick={() => onNavigate('generator')}>
-                <div className="relative w-full aspect-[4/5] sm:aspect-[16/10] rounded-2xl overflow-hidden shadow-lg group cursor-pointer border border-gray-100 dark:border-white/5">
-                    {/* Image Background */}
-                    <div
-                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                        style={{ backgroundImage: 'url("https://images.unsplash.com/photo-1548625361-ec8f1cc04c8d?q=80&w=2566&auto=format&fit=crop")' }}
-                    >
-                    </div>
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/50 to-transparent opacity-90"></div>
 
-                    {/* Content */}
-                    <div className="absolute inset-0 p-6 flex flex-col justify-end items-start text-white">
-                        <h2 className="text-3xl font-bold leading-tight mb-2 font-display">{feastName || "Feria del Tiempo Ordinario"}</h2>
-                        <p className="text-white/80 text-lg font-normal italic leading-snug max-w-[90%] font-display">
-                            "Estad preparados, porque no sabéis a qué hora vendrá el Hijo del hombre."
-                        </p>
-                        <div className="mt-5 flex items-center gap-2 text-sm font-medium text-white/90 group-hover:text-primary transition-colors">
-                            <span>Ver detalles del día</span>
-                            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             {/* Quick Access Grid */}
             <section>
