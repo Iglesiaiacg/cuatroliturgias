@@ -5,64 +5,64 @@ export default function OccasionalServicesView({ onNavigate }) {
         {
             category: "El Año Litúrgico",
             items: [
-                "Antífonas para el Lucernario (Al encender las velas)",
-                "Antífonas para la Fracción del Pan (Confractoria)",
-                "Bendiciones Estacionales",
-                "Sobre la Corona de Adviento",
-                "Festival de Lecciones y Música de Adviento",
-                "Vigilia de Nochebuena",
-                "Estación ante el Pesebre de Navidad",
-                "Festival de Lecciones y Música de Navidad",
-                "Servicio para la Víspera de Año Nuevo",
-                "Bendición de los Hogares en la Epifanía",
-                "Vigilia para la Víspera del Bautismo de Nuestro Señor",
-                "Procesión de la Candelaria",
-                "El Vía Crucis",
-                "Oficio de Tinieblas (Tenebrae)",
-                "Jueves Santo: El Lavatorio de Pies",
-                "Jueves Santo: Reserva del Sacramento",
-                "Jueves Santo: Despojo del Altar",
-                "Ágape para el Jueves Santo",
-                "Bendición de los Alimentos en Pascua",
-                "Bendición de los Hogares en Pascua",
-                "Procesión de las Rogativas",
-                "Vigilia para la Víspera de Todos los Santos",
-                "Servicio para la Víspera de Todos los Santos (Halloween)"
+                { title: "Antífonas para el Lucernario", description: "Oraciones al encender las velas." },
+                { title: "Antífonas para la Fracción", description: "Cantos para la fracción del pan (Confractoria)." },
+                { title: "Bendiciones Estacionales", description: "Bendiciones especiales para cada tiempo litúrgico." },
+                { title: "Sobre la Corona de Adviento", description: "Rito para bendecir y encender la corona." },
+                { title: "Festival de Lecciones y Música de Adviento", description: "Servicio de lecturas y cánticos de espera." },
+                { title: "Vigilia de Nochebuena", description: "Celebración en la víspera de la Natividad." },
+                { title: "Estación ante el Pesebre", description: "Devoción especial ante el nacimiento." },
+                { title: "Festival de Lecciones y Música de Navidad", description: "Celebración festiva de la Encarnación." },
+                { title: "Víspera de Año Nuevo", description: "Oración para recibir el año civil." },
+                { title: "Bendición de Hogares (Epifanía)", description: "Tradicional bendición de casas con tiza." },
+                { title: "Vigilia Bautismo del Señor", description: "Preparación para la renovación bautismal." },
+                { title: "Procesión de la Candelaria", description: "Bendición de las velas y procesión." },
+                { title: "El Vía Crucis", description: "Meditación sobre la Pasión del Señor." },
+                { title: "Oficio de Tinieblas (Tenebrae)", description: "Liturgia solemne de sombras y luz." },
+                { title: "Jueves Santo: Lavatorio", description: "Rito del mandato del amor fraterno." },
+                { title: "Jueves Santo: Reserva", description: "Traslado y reserva del Santísimo." },
+                { title: "Jueves Santo: Despojo", description: "Despojo del altar tras la misa." },
+                { title: "Ágape de Jueves Santo", description: "Cena fraterna recordando la Última Cena." },
+                { title: "Bendición de Alimentos (Pascua)", description: "Bendición de la mesa de Pascua." },
+                { title: "Bendición de Hogares (Pascua)", description: "Bendición de casas en tiempo pascual." },
+                { title: "Procesión de las Rogativas", description: "Súplicas por los frutos de la tierra." },
+                { title: "Vigilia de Todos los Santos", description: "Preparación para la solemnidad." },
+                { title: "Víspera de Todos los Santos", description: "Servicio de oración (Halloween)." }
             ]
         },
         {
             category: "Servicios Pastorales",
             items: [
-                "Bienvenida a Nuevas Personas en la Congregación",
-                "Cuando Miembros Dejan una Congregación",
-                "Preparación de Adultos para el Santo Bautismo (Catecumenado)",
-                "Rito de Admisión de Catecúmenos",
-                "Inscripción de Candidatos para el Bautismo",
-                "Presentación del Credo / Padre Nuestro",
-                "Vigilia en la Víspera del Bautismo",
-                "Reafirmación de los Votos Bautismales",
-                "Bienvenida a Miembros que Regresan o de Otras Tradiciones",
-                "Inscripción para la Preparación Cuaresmal",
-                "Rito de Preparación del Jueves Santo",
-                "Celebración para un Hogar (Bendición de Casa)",
-                "Bendición de una Mujer Embarazada",
-                "Preparación de Padres y Padrinos",
-                "Aniversario de Matrimonio",
-                "Servicio Público de Sanación",
-                "Sobre el Exorcismo",
-                "Entierro de quien no profesa la fe cristiana",
-                "Comisionamiento para Ministerios Laicos",
-                "Dedicación de Mobiliario y Ornamentos de la Iglesia"
+                { title: "Bienvenida a Nuevos", description: "Acogida de nuevos miembros a la comunidad." },
+                { title: "Despedida de Miembros", description: "Oración al dejar una congregación." },
+                { title: "Catecumenado", description: "Preparación de adultos para el Bautismo." },
+                { title: "Admisión de Catecúmenos", description: "Rito de entrada al catecumenado." },
+                { title: "Inscripción de Candidatos", description: "Elección para el Bautismo." },
+                { title: "Entrga del Credo / Padre Nuestro", description: "Ritos de transmisión de la fe." },
+                { title: "Vigilia Bautismal", description: "Oración previa al Bautismo." },
+                { title: "Reafirmación Votos", description: "Renovación de promesas bautismales." },
+                { title: "Recepción de Miembros", description: "Acogida de otras tradiciones cristianas." },
+                { title: "Inscripción Cuaresmal", description: "Inicio de la preparación final." },
+                { title: "Rito Jueves Santo", description: "Preparación inmediata a los sacramentos." },
+                { title: "Bendición de Casa", description: "Celebración y bendición para un hogar." },
+                { title: "Bendición Embarazada", description: "Oración por la madre y el hijo." },
+                { title: "Padres y Padrinos", description: "Preparación para el rol bautismal." },
+                { title: "Aniversario Matrimonio", description: "Renovación de votos matrimoniales." },
+                { title: "Servicio de Sanación", description: "Oración pública por la salud." },
+                { title: "Sobre el Exorcismo", description: "Notas pastorales sobre liberación." },
+                { title: "Entierro no cristiano", description: "Servicio fúnebre pastoral." },
+                { title: "Comisionamiento Laicos", description: "Envío a ministerios específicos." },
+                { title: "Dedicación Mobiliario", description: "Bendición de ornamentos y objetos." }
             ]
         },
         {
             category: "Misión Episcopal",
             items: [
-                "Liturgia para el Discernimiento de una Nueva Misión",
-                "Comisionamiento de un Plantador de Iglesias",
-                "Apertura de una Nueva Congregación",
-                "Puesta aparte de un espacio secular para uso sagrado",
-                "Letanía por la Misión de la Iglesia"
+                { title: "Discernimiento Misión", description: "Liturgia para buscar la voluntad de Dios." },
+                { title: "Comisionamiento Plantador", description: "Envío para fundar nuevas iglesias." },
+                { title: "Apertura Congregación", description: "Inicio oficial de una nueva misión." },
+                { title: "Puesta aparte espacio", description: "Bendición de lugares de culto temporal." },
+                { title: "Letanía por la Misión", description: "Súplicas por la expansión del Evangelio." }
             ]
         }
     ];
@@ -83,30 +83,43 @@ export default function OccasionalServicesView({ onNavigate }) {
                 </div>
             </div>
 
-            {/* List Content */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-6">
+            {/* Content grid */}
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-8">
                 {services.map((section, idx) => (
                     <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 100}ms` }}>
-                        <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-widest mb-3 px-2">
+                        <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-widest mb-4 px-1 sticky top-0 bg-gray-50 dark:bg-background-dark z-10 py-2">
                             {section.category}
                         </h3>
-                        <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden divide-y divide-gray-50 dark:divide-white/5">
+
+                        {/* Responsive Grid: 1 col mobile, 2 col tablet, 4 col desktop */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                             {section.items.map((item, i) => (
                                 <button
                                     key={i}
-                                    className="w-full text-left px-5 py-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center justify-between group"
+                                    className="relative flex flex-col p-5 bg-white dark:bg-surface-dark rounded-xl border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all text-left group h-full"
                                 >
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-200 group-hover:text-primary transition-colors pr-4">
-                                        {item}
-                                    </span>
-                                    <span className="material-symbols-outlined text-gray-300 group-hover:text-primary/50 text-[20px]">chevron_right</span>
+                                    <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-colors text-teal-600 dark:text-teal-400">
+                                        <span className="material-symbols-outlined text-[24px]">church</span>
+                                    </div>
+
+                                    <h4 className="font-bold text-gray-900 dark:text-white font-display leading-tight mb-2 group-hover:text-primary transition-colors">
+                                        {item.title}
+                                    </h4>
+
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-3">
+                                        {item.description}
+                                    </p>
+
+                                    <div className="mt-auto pt-4 flex items-center text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
+                                        VER DETALLES <span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
+                                    </div>
                                 </button>
                             ))}
                         </div>
                     </div>
                 ))}
 
-                <div className="px-4 py-8 text-center">
+                <div className="px-4 py-8 text-center bg-gray-100 dark:bg-white/5 rounded-xl mx-auto max-w-2xl mt-8">
                     <p className="text-xs text-gray-400 italic">
                         Basado en "The Book of Occasional Services 2003".<br />
                         Los textos completos estarán disponibles próximamente.
