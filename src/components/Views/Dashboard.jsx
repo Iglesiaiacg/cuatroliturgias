@@ -15,8 +15,8 @@ export default function Dashboard({ onNavigate, date, feastName }) {
                             <span className="material-symbols-outlined">menu_book</span>
                         </div>
                         <div>
-                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Lecturas</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Evangelio y Salmos</span>
+                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Liturgia</span>
+                            <span className="text-xs text-gray-500 dark:text-white/50">Guía de la celebración</span>
                         </div>
                     </button>
 
