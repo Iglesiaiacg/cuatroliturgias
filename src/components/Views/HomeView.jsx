@@ -1,6 +1,6 @@
 export default function Dashboard({ onNavigate, date, feastName }) {
     return (
-        <main className="flex-1 flex flex-col px-4 pt-6 pb-24 space-y-8 overflow-y-auto w-full max-w-md mx-auto animate-fade-in">
+        <main className="flex-1 flex flex-col px-4 pt-6 pb-24 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
 
 
             {/* Quick Access Grid */}
@@ -8,7 +8,7 @@ export default function Dashboard({ onNavigate, date, feastName }) {
                 <div className="flex items-center justify-between mb-4 px-1">
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white font-display">Accesos Rápidos</h3>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Card 1: Lecturas - Triggers Generator */}
                     <button onClick={() => onNavigate('generator')} className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
