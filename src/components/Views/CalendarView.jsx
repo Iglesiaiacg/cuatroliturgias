@@ -14,13 +14,15 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
         try {
             const season = getSeason(date);
             switch (season) {
-                case 'adviento': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
-                case 'navidad': return 'bg-yellow-100 text-yellow-900 dark:bg-yellow-900/30 dark:text-yellow-100 border-yellow-200';
-                case 'cuaresma': return 'bg-purple-100 text-purple-900 dark:bg-purple-900/30 dark:text-purple-100 border-purple-200';
-                case 'semana_santa': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
-                case 'pascua': return 'bg-yellow-50 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-100 border-yellow-100';
-                case 'pentecostes': return 'bg-red-100 text-red-900 dark:bg-red-900/30 dark:text-red-100 border-red-200';
-                default: return 'bg-green-50 text-green-900 dark:bg-green-900/20 dark:text-green-100 border-green-100';
+                // Stronger colors (approx 300 scale) replacing previous 100/50 pastel scale
+                // Yellow replaced with Slate/Silver for "White" feasts
+                case 'adviento': return 'bg-purple-300 text-purple-900 border-purple-400 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600';
+                case 'navidad': return 'bg-slate-200 text-slate-900 border-slate-300 dark:bg-slate-700 dark:text-white dark:border-slate-500 font-medium';
+                case 'cuaresma': return 'bg-purple-300 text-purple-900 border-purple-400 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600';
+                case 'semana_santa': return 'bg-red-300 text-red-900 border-red-400 dark:bg-red-800 dark:text-red-100 dark:border-red-600';
+                case 'pascua': return 'bg-slate-200 text-slate-900 border-slate-300 dark:bg-slate-700 dark:text-white dark:border-slate-500 font-medium';
+                case 'pentecostes': return 'bg-red-300 text-red-900 border-red-400 dark:bg-red-800 dark:text-red-100 dark:border-red-600';
+                default: return 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-600';
             }
         } catch (error) {
             console.error("Error calculating season color:", error);
