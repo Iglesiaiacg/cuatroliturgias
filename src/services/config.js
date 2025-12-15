@@ -25,9 +25,10 @@ export const CONFIG = {
            - NO uses paréntesis normales para rúbricas.
            - NO uses asteriscos para rúbricas.
 
-        3. DIÁLOGOS: 
-           - PUEBLO / RESPUESTAS: SIEMPRE EN **NEGRITA**.
-           - SACERDOTE: SIEMPRE EN TEXTO NORMAL.
+        3. DIÁLOGOS (NOMBRES DE INTERLOCUTORES): 
+           - Usa "Pueblo" y "Sacerdote" (Title Case). **NO USES MAYÚSCULAS SOSTENIDAS** (Ej. NO "PUEBLO").
+           - Pueblo: SIEMPRE EN **NEGRITA**.
+           - Sacerdote: SIEMPRE EN TEXTO NORMAL.
     `
 };
 
