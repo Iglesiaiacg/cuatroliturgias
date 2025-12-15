@@ -49,7 +49,7 @@ export default function Dashboard({ onNavigate, date, feastName }) {
                         </div>
                         <div>
                             <span className="block text-base font-bold leading-tight text-gray-900 dark:text-white font-display mb-0.5">Servicios Ocasionales</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Ritos Especiales</span>
+                            <span className="text-xs text-gray-500 dark:text-white/50">Libro de Servicios 2003</span>
                         </div>
                     </button>
                 </div>
