@@ -15,10 +15,6 @@ export default function Dashboard({ onNavigate, date, feastName }) {
 
                     {/* Content */}
                     <div className="absolute inset-0 p-6 flex flex-col justify-end items-start text-white">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-green-900/40 border border-green-500/30 text-green-300 text-xs font-semibold uppercase tracking-wide mb-3 backdrop-blur-sm">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Tiempo Litúrgico
-                        </div>
                         <h2 className="text-3xl font-bold leading-tight mb-2 font-display">{feastName || "Feria del Tiempo Ordinario"}</h2>
                         <p className="text-white/80 text-lg font-normal italic leading-snug max-w-[90%] font-display">
                             "Estad preparados, porque no sabéis a qué hora vendrá el Hijo del hombre."
