@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Generador Litúrgico Pro</title>
+
+    <!-- CONFIGURACIÓN PWA -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#E0E5EC">
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- ICONOS -->
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='25' fill='%230d9488'/%3E%3Ctext x='50' y='55' font-size='50' text-anchor='middle' dy='.3em'%3E🕊️%3C/text%3E%3C/svg%3E"
+        type="image/svg+xml">
+
+    <!-- LIBRERÍAS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500&display=swap');
+
+        :root {
+            --bg-color: #E0E5EC;
+            --text-main: #4A5568;
+            --text-light: #A0AEC0;
+            --accent: #0d9488;
+            --shadow-light: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+            --shadow-inset: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+            --shadow-sm: 5px 5px 10px #b8b9be, -5px -5px 10px #ffffff;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overscroll-behavior-y: none;
+        }
+
+        .font-serif {
+            font-family: 'Merriweather', serif;
+        }
+
+        /* UI COMPONENTS */
+        .neu-flat {
+            background: var(--bg-color);
+            box-shadow: var(--shadow-light);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .neu-btn {
+            background: var(--bg-color);
+            box-shadow: var(--shadow-sm);
+            border-radius: 50px;
+            color: var(--text-main);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 48px;
+            cursor: pointer;
+        }
+
+        .neu-btn:active,
+        .neu-btn.active {
+            box-shadow: var(--shadow-inset);
+            transform: scale(0.98);
+            color: var(--accent);
+        }
+
+        .neu-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        /* ESTILO ESPECÍFICO PARA BOTONES DE TOOLBAR (A PETICIÓN DEL USUARIO) */
+        .neu-btn-toolbar {
+            color: #090909;
+            padding: 0.7em 1.7em;
+            font-size: 18px;
+            border-radius: 0.5em;
+            background: #e8e8e8;
+            cursor: pointer;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s;
+            box-shadow: 6px 6px 12px #c5c5c5, -6px -6px 12px #ffffff;
+            min-height: 44px;
+            /* Ajuste para ToolBar */
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .neu-btn-toolbar:active {
+            color: #666;
+            box-shadow: inset 4px 4px 12px #c5c5c5, inset -4px -4px 12px #ffffff;
+        }
+
+        /* FIN ESTILO TOOLBAR */
+
+
+        /* SELECTORES E INPUTS */
+        .neu-select,
+        .neu-input {
+            appearance: none;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-inset);
+            border-radius: 12px;
+            padding: 12px 16px;
+            width: 100%;
+            border: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 0.95rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .neu-input:focus,
+        .neu-select:focus {
+            box-shadow: inset 2px 2px 5px #b8b9be, inset -3px -3px 7px #ffffff;
+            color: var(--accent);
+        }
+
+        .neu-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            cursor: pointer;
+        }
+
+        .neu-icon-btn:active {
+            box-shadow: var(--shadow-inset);
+            transform: scale(0.95);
+        }
+
+        /* SHORTCUT CHIPS */
+        .shortcut-chip {
+            font-size: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: var(--bg-color);
+            box-shadow: var(--shadow-sm);
+            color: var(--text-main);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .shortcut-chip:hover {
+            transform: translateY(-1px);
+            color: var(--accent);
+        }
+
+        .shortcut-chip:active {
+            box-shadow: var(--shadow-inset);
+            transform: translateY(0);
+        }
+
+        /* DOCUMENT PREVIEW - VISTA FLUIDA */
+        .page-preview {
+            background-color: transparent;
+            box-shadow: none;
+            padding: 1rem 2rem;
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+            min-height: auto;
+            color: #2d3748;
+            border-radius: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .preview-content-wrapper {
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .page-preview {
+                padding: 1rem;
+                width: 100%;
+            }
+        }
+
+        /* LITURGY TYPOGRAPHY - ESPACIADO MEJORADO */
+        .liturgy-content h1 {
+            font-family: 'Merriweather', serif;
+            font-size: 24pt;
+            text-align: center;
+            margin-bottom: 24pt;
+            font-weight: 800;
+            border-bottom: 2px solid #cbd5e0;
+            padding-bottom: 15pt;
+            line-height: 1.2;
+            color: #1a202c;
+        }
+
+        .liturgy-content h2 {
+            font-family: 'Nunito', sans-serif;
+            color: #9f1239;
+            font-size: 16pt;
+            margin-top: 40pt;
+            margin-bottom: 16pt;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-align: center;
+        }
+
+        .liturgy-content h3 {
+            font-family: 'Merriweather', serif;
+            color: #2d3748;
+            font-weight: 700;
+            font-size: 14pt;
+            margin-top: 24pt;
+            margin-bottom: 8pt;
+        }
+
+        .liturgy-content p {
+            margin-bottom: 16pt;
+            line-height: 1.7;
+            text-align: justify;
+            font-size: 12pt;
+            color: #4a5568;
+        }
+
+        .liturgy-content ul {
+            margin-left: 20px;
+            margin-bottom: 24pt;
+            list-style-type: none;
+        }
+
+        .liturgy-content li {
+            margin-bottom: 14px;
+            padding-left: 15px;
+            border-left: 4px solid #cbd5e0;
+            color: #4a5568;
+            font-size: 12pt;
+            line-height: 1.6;
+        }
+
+        .liturgy-content blockquote {
+            font-style: italic;
+            color: #718096;
+            text-align: center;
+            border: none;
+            margin: 30px 0;
+            font-size: 1.1em;
+        }
+
+        /* RÚBRICAS Y NEGRITAS */
+        .rubric {
+            color: #be123c !important;
+            font-family: 'Nunito', sans-serif;
+            font-style: italic !important;
+            font-size: 0.95em;
+            display: block;
+            margin: 12px 0;
+            font-weight: 600;
+        }
+
+        .liturgy-content strong {
+            font-weight: 800;
+            color: #1a202c;
+        }
+
+        /* ICONS & LOADERS */
+        .liturgy-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px auto;
+            display: block;
+            fill: #2d3748;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(13, 148, 136, 0.1);
+            border-left-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ESTADO VACÍO MEJORADO */
+        .empty-icon {
+            animation: bounceIn 1s cubic-bezier(0.17, 0.84, 0.44, 1) forwards;
+            color: #b8b9be;
+            transition: all 0.3s;
+        }
+
+        .neu-flat:hover .empty-icon {
+            transform: scale(1.05) rotate(5deg);
+            color: #94a3b8;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.1);
+                opacity: 0;
+            }
+
+            60% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* RELOJ ANALÓGICO - TAMAÑO AJUSTADO */
+        .analog-clock {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            position: relative;
+            box-shadow: inset 2px 2px 5px #c5c5c5, inset -2px -2px 5px #ffffff;
+            margin: 0 auto;
+        }
+
+        .hand {
+            position: absolute;
+            width: 50%;
+            transform-origin: 100%;
+            height: 2px;
+            background: var(--text-main);
+            top: 50%;
+            left: 0;
+            border-radius: 2px;
+            transform: rotate(90deg);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hour {
+            width: 30%;
+            left: 20%;
+            height: 3px;
+        }
+
+        .minute {
+            height: 2px;
+        }
+
+        .second {
+            width: 45%;
+            left: 5%;
+            background: #ef4444;
+            /* Rojo para segundero */
+            height: 1px;
+        }
+
+        .center-dot {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+        }
+
+        /* END RELOJ ANALÓGICO */
+
+        /* ANIMATIONS */
+        .slide-in {
+            animation: slideIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* TOAST NOTIFICATION */
+        #toast-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+            border-left: 6px solid var(--accent);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+
+        /* IMPRESIÓN - AQUÍ SE MANTIENE EL FORMATO DE HOJA */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #doc-content,
+            #doc-content * {
+                visibility: visible;
+            }
+
+            #doc-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+                max-width: none;
+                background: white;
+                /* Fondo blanco para imprimir */
+                color: black;
+            }
+
+            .liturgy-content h1,
+            .liturgy-content h2,
+            .liturgy-content h3,
+            .liturgy-content p,
+            .liturgy-content li {
+                color: black;
+            }
+
+            @page {
+                size: letter;
+                margin: 2.54cm;
+            }
+        }
+
+        /* MODAL HISTORIAL */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-color);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-overlay.open .modal-card {
+            transform: translateY(0);
+        }
+
+        .history-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .history-item:hover {
+            background: white;
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen overflow-hidden relative">
+
+    <div id="toast-container"></div>
+
+    <div class="flex h-full w-full relative">
+
+        <!-- SIDEBAR -->
+        <aside id="sidebar"
+            class="w-full md:w-96 border-r border-gray-200/50 flex flex-col z-40 bg-[var(--bg-color)] absolute md:relative inset-0 transition-transform duration-300 transform md:translate-x-0 shadow-xl md:shadow-none">
+
+            <!-- HEADER -->
+            <div class="p-6 shrink-0 z-20">
+                <div class="neu-flat p-5 flex items-center justify-between gap-2 mb-6 relative">
+                    <button id="btn-history"
+                        class="neu-icon-btn absolute top-2 right-2 w-8 h-8 text-gray-400 hover:text-teal-700 shadow-none hover:shadow-sm"
+                        title="Historial">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" />
+                        </svg>
+                    </button>
+
+                    <div class="flex items-center gap-4">
+                        <div
+                            class="w-12 h-12 rounded-full bg-teal-50 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                            🕊️</div>
+                        <div class="flex flex-col">
+                            <h1 class="text-lg font-bold text-gray-700 leading-tight">Generador<br>Litúrgico</h1>
+
+                            <!-- RELOJ ANALÓGICO -->
+                            <div id="live-clock" class="mt-2 flex items-center gap-2">
+                                <div class="analog-clock" style="width: 40px; height: 40px;">
+                                    <div class="hand hour" id="hour-hand" style="width: 30%; left: 20%;"></div>
+                                    <div class="hand minute" id="minute-hand" style="width: 45%;"></div>
+                                    <div class="hand second" id="second-hand" style="width: 40%;"></div>
+                                    <div class="center-dot" style="width: 4px; height: 4px;"></div>
+                                </div>
+                                <span id="digital-time" class="text-xs font-mono text-gray-400 font-bold ml-2"></span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CONTROLES PRINCIPALES -->
+            <div class="px-6 flex-grow flex flex-col gap-6 overflow-y-auto">
+
+                <!-- Selector de Tradición -->
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-3">Tradición
+                        Litúrgica</label>
+                    <select id="tradition-select" class="neu-select">
+                        <option value="anglicana">Anglicana (ACNA 2019)</option>
+                        <option value="catolica">Católica (Misal Romano)</option>
+                        <option value="ordinariato">Uso del Ordinariato (Divine Worship)</option>
+                        <option value="tridentina">Misa Tridentina (1962)</option>
+                    </select>
+                </div>
+
+                <!-- Selector de Celebración (Dinámico) -->
+                <div class="space-y-3">
+                    <label
+                        class="text-[10px] font-bold text-gray-400 uppercase tracking-widest ml-3">Celebración</label>
+
+                    <select id="celebration-picker" class="neu-select">
+                        <!-- Esta lista se llenará por JS -->
+                    </select>
+                </div>
+
+                <!-- Info Panel: Propio Seleccionado y Ciclo de Referencia -->
+                <div class="neu-flat p-4 mt-2">
+                    <div class="flex flex-col gap-1">
+                        <div>
+                            <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Propio Seleccionado
+                            </p>
+                            <p id="selected-date-display" class="text-sm font-bold text-teal-700 mt-1">--</p>
+                        </div>
+                        <div id="cycle-display">
+                            <!-- Aquí va la información del ciclo -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ACTION FOOTER -->
+            <div class="p-6 shrink-0 z-20 mt-auto">
+                <button id="btn-generate"
+                    class="neu-btn w-full py-4 text-sm font-bold tracking-wide group text-teal-800 hover:text-teal-900 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+                    <span class="mr-2 group-hover:scale-110 transition-transform text-lg">✨</span> Generar Liturgia
+                </button>
+
+                <div class="mt-5 text-[10px] text-gray-400 text-center font-bold tracking-wider opacity-50">
+                    v6.2 ANALOG CLOCK FIX
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN VIEW -->
+        <main id="main-view"
+            class="w-full h-full overflow-y-auto relative bg-[#f0f2f5] z-10 flex flex-col items-center">
+
+            <!-- Mobile Nav -->
+            <div
+                class="sticky top-0 w-full z-50 bg-[#f0f2f5]/95 backdrop-blur-md p-4 flex justify-between items-center shadow-sm md:hidden border-b border-gray-200/50">
+                <button id="btn-menu-mobile" class="neu-icon-btn text-teal-700">
+                    <svg width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <span class="text-base font-bold text-gray-700">Vista Previa</span>
+                <div class="w-10"></div>
+            </div>
+
+            <!-- Toolbar -->
+            <div id="toolbar"
+                class="sticky top-6 z-30 neu-flat px-8 py-4 hidden flex-wrap items-center gap-6 transition-all justify-center transform hover:scale-[1.01] shadow-lg">
+                <button onclick="window.print()" class="neu-btn-toolbar">
+                    🖨️ Imprimir
+                </button>
+                <div class="w-px h-8 bg-gray-300 hidden md:block"></div>
+                <button id="btn-download" class="neu-btn-toolbar">
+                    📜 Guion Completo
+                </button>
+                <button id="btn-download-bulletin" class="neu-btn-toolbar">
+                    👥 Boletín Pueblo
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="w-full p-4 md:p-10 pb-32 flex justify-center min-h-screen">
+
+                <!-- Empty State - DISEÑO MEJORADO -->
+                <div id="empty-state"
+                    class="flex flex-col items-center justify-center text-gray-400 mt-20 md:mt-32 max-w-sm text-center opacity-70 transition-all duration-500">
+                    <div class="neu-flat p-10 rounded-full mb-8 animate-pulse bg-white/50">
+                        <svg class="empty-icon w-20 h-20 text-gray-400" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 14.5c-.83 0-1.5-.67-1.5-1.5h3c0 .83-.67 1.5-1.5 1.5zm0-10c-2.76 0-5 2.24-5 5h2c0-1.66 1.34-3 3-3s3 1.34 3 3H17c0-2.76-2.24-5-5-5z" />
+                        </svg>
+                    </div>
+                    <h2 class="text-3xl font-bold text-gray-700 mb-3">La Palabra de Dios te espera</h2>
+                    <p class="text-lg text-gray-500">Comience su discernimiento eligiendo el Rito y el Propio Litúrgico
+                        que desea preparar.</p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loading-state" class="hidden flex flex-col items-center justify-center mt-32">
+                    <div class="spinner mb-8 w-16 h-16 border-4"></div>
+                    <p class="text-teal-700 font-bold text-base tracking-widest uppercase animate-pulse">Consultando
+                        Rúbricas...</p>
+                    <p id="loading-tip"
+                        class="text-gray-400 text-xs mt-4 max-w-xs text-center italic transition-opacity duration-500">
+                        "La liturgia es la cumbre a la cual tiende la actividad de la Iglesia."
+                    </p>
+                </div>
+
+                <!-- Document Content -->
+                <div id="doc-content"
+                    class="page-preview font-serif hidden slide-in mt-8 outline-none focus:ring-2 focus:ring-teal-500/50 transition-all rounded-lg"
+                    contenteditable="true" spellcheck="false"></div>
+                <p id="edit-hint" class="hidden text-xs text-center text-gray-400 mt-2 italic animate-pulse">💡 Puedes
+                    editar el texto directamente haciendo clic sobre él</p>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const CONFIG = {
+            API_KEY: "AIzaSyAE2r3DuTMp3m9lZd8Pe5taWGnv2Bsf0hQ",
+            ENDPOINTS: {
+                GENERATE: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent"
+            },
+            ICONS: {
+                adviento: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/><path d="M12 2v20M2 12h20M12 8a4 4 0 0 1 4 4M8 12a4 4 0 0 1 4-4" fill="none" stroke="currentColor"/></svg>`,
+                navidad: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><path d="M12 2l3 7h7l-5 5 2 7-7-4-7 4 2-7-5-5h7z" fill="none" stroke="currentColor"/></svg>`,
+                cuaresma: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><path d="M8 2v20M2 8h12M16 12a4 4 0 0 1 0 8 4 4 0 0 1 0-8z" fill="none" stroke="currentColor"/></svg>`,
+                semana_santa: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><path d="M10 2v20M4 8h12" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+                pascua: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><circle cx="12" cy="12" r="5" fill="none" stroke="currentColor"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" fill="none" stroke="currentColor"/></svg>`,
+                pentecostes: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><path d="M12 2s-6 7-6 12a6 6 0 1 0 12 0c0-5-6-12-6-12z" fill="none" stroke="currentColor"/></svg>`,
+                ordinario: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><path d="M5 3h14v2l-2 6h-10l-2-6v-2zM9 11v3a3 3 0 0 0 6 0v-3M12 14v6M7 21h10" fill="none" stroke="currentColor"/><circle cx="12" cy="2" r="2" fill="none" stroke="currentColor"/></svg>`
+            },
+            RULES: `
+                REGLAS DE FORMATO MANDATORIAS (NO MODIFICAR):
+                1. FORMATO DE DIÁLOGO: 
+                   - PUEBLO / RESPUESTAS: SIEMPRE EN **NEGRITA**.
+                   - SACERDOTE / LECTOR: SIEMPRE EN TEXTO NORMAL.
+                2. LECTURAS:
+                   - Escribe el Título (Ej. "Lectura de...").
+                   - IMPERATIVO: ESCRIBE EL TEXTO BÍBLICO COMPLETO DEBAJO. NO PONGAS SOLO LA CITA (Ej. "Juan 3:16").
+                3. TÉCNICO:
+                   - NO uses tablas Markdown.
+                   - NO uses LaTeX ($).
+                   - Rúbricas siempre entre [[doble corchete]] o en *cursiva*.
+            `
+        };
+
+        const LITURGY_PROPIOS = {
+            "catolica": [
+                { label: "--- DÍAS CLAVE DEL CALENDARIO", disabled: true },
+                { value: "HOY_CALENDARIO", label: "Propio de la Fecha Actual (Ferial/Dominical)" },
+                { value: "PROXIMO_DOMINGO", label: "Propio del Próximo Domingo" },
+                { label: "--- PROPIOS MÓVILES (NOVUS ORDO)", disabled: true },
+                { value: "ADVIENTO_I", label: "I Domingo de Adviento" },
+                { value: "ADVIENTO_II", label: "II Domingo de Adviento" },
+                { value: "ADVIENTO_III", label: "III Domingo de Adviento (Gaudete)" },
+                { value: "CENIZA", label: "Miércoles de Ceniza" },
+                { value: "CUARESMA_I", label: "I Domingo de Cuaresma" },
+                { value: "RESURRECCION", label: "Domingo de Resurrección" },
+                { value: "TRINIDAD", label: "Santísima Trinidad" },
+                { value: "CRISTO_REY", label: "Jesucristo, Rey del Universo" },
+            ],
+            "ordinariato": [
+                { label: "--- DÍAS CLAVE DEL CALENDARIO", disabled: true },
+                { value: "HOY_CALENDARIO", label: "Propio de la Fecha Actual (Ferial/Dominical)" },
+                { value: "PROXIMO_DOMINGO", label: "Propio del Próximo Domingo" },
+                { label: "--- PROPIOS MÓVILES (DIVINE WORSHIP)", disabled: true },
+                { value: "ADVIENTO_I", label: "I Sunday of Advent" },
+                { value: "ADVIENTO_II", label: "II Sunday of Advent" },
+                { value: "ADVIENTO_III", label: "III Sunday of Advent (Gaudete)" },
+                { value: "CENIZA", label: "Ash Wednesday" },
+                { value: "CUARESMA_I", label: "I Sunday in Lent" },
+                { value: "RESURRECCION", label: "Easter Day" },
+                { value: "TRINIDAD", label: "Trinity Sunday" },
+                { value: "CORPUS", label: "Corpus Christi" },
+                { value: "CRISTO_REY", label: "Christ the King" },
+            ],
+            "anglicana": [
+                { label: "--- DÍAS CLAVE DEL CALENDARIO", disabled: true },
+                { value: "HOY_CALENDARIO", label: "Propio de la Fecha Actual (Ferial/Dominical)" },
+                { value: "PROXIMO_DOMINGO", label: "Propio del Próximo Domingo" },
+                { label: "--- PROPIOS MÓVILES (LOC 2019)", disabled: true },
+                { value: "ADVIENTO_I", label: "First Sunday of Advent" },
+                { value: "ADVIENTO_II", label: "Second Sunday of Advent" },
+                { value: "ADVIENTO_III", label: "Third Sunday of Advent" },
+                { value: "CENIZA", label: "Ash Wednesday" },
+                { value: "CUARESMA_I", label: "First Sunday in Lent" },
+                { value: "RESURRECCION", label: "Easter Day" },
+                { value: "PENTECOSTES", label: "The Day of Pentecost" },
+                { value: "TRINIDAD", label: "Trinity Sunday" },
+                { value: "CRISTO_REY", label: "Christ the King (Last Sunday after Pentecost)" },
+            ],
+            "tridentina": [
+                { label: "--- DÍAS CLAVE DEL CALENDARIO", disabled: true },
+                { value: "HOY_CALENDARIO", label: "Propio de la Fecha Actual (Ferial/Dominical)" },
+                { label: "--- PROPIOS MÓVILES (MISSALE 1962)", disabled: true },
+                { value: "ADVIENTO_I", label: "Dominica I Adventus" },
+                { value: "ADVIENTO_II", label: "Dominica II Adventus" },
+                { value: "SEPTUAGESIMA", label: "Septuagesima Sunday" },
+                { value: "SEXAGESIMA", label: "Sexagesima Sunday" },
+                { value: "CENIZA", label: "Feria Quarta Cinerum" },
+                { value: "CUARESMA_I", label: "Dominica I in Quadragesima" },
+                { value: "PASSION_I", label: "Dominica I Passionis" },
+                { value: "PALMS", label: "Dominica II Passionis seu de Palmis" },
+                { value: "RESURRECCION", label: "Dominica Resurrectionis" },
+                { value: "PENTECOSTES", label: "Dominica Pentecostes" },
+                { value: "TRINIDAD", label: "Dominica Sanctissimae Trinitatis" },
+                { value: "PENTECOSTES_IV", label: "Dominica IV Post Pentecostes" },
+            ]
+        };
+
+        const LiturgyService = {
+            state: {
+                selectedDate: new Date(),
+                tradition: localStorage.getItem('liturgy_tradition') || 'anglicana',
+                celebrationKey: localStorage.getItem('liturgy_celebration') || 'HOY_CALENDARIO'
+            },
+
+            savePreferences() {
+                localStorage.setItem('liturgy_tradition', this.state.tradition);
+                localStorage.setItem('liturgy_celebration', this.state.celebrationKey);
+            },
+
+            savePreferences() {
+                localStorage.setItem('liturgy_tradition', this.state.tradition);
+                localStorage.setItem('liturgy_celebration', this.state.celebrationKey);
+            },
+
+            addToHistory(htmlContent, title) {
+                const item = {
+                    id: Date.now(),
+                    date: new Date().toISOString(),
+                    title: title,
+                    tradition: this.state.tradition,
+                    content: htmlContent
+                };
+                let history = this.getHistory();
+                history.unshift(item);
+                if (history.length > 5) history.pop(); // Mantener solo últimos 5
+                localStorage.setItem('liturgy_history', JSON.stringify(history));
+            },
+
+            getHistory() {
+                try {
+                    return JSON.parse(localStorage.getItem('liturgy_history')) || [];
+                } catch (e) { return []; }
+            },
+
+            getEasterDate(year) {
+                const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+                const d = Math.floor(b / 4), e = b % 4;
+                const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+                const h = (19 * a + b - d - g + 15) % 30;
+                const i = Math.floor(c / 4), k = c % 4;
+                const l = (32 + 2 * e + 2 * i - h - k) % 7;
+                const m = Math.floor((a + 11 * h + 22 * l) / 451);
+                return new Date(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1);
+            },
+
+            getLiturgicalCycle(date) {
+                const year = date.getFullYear();
+                const navidad = new Date(year, 11, 25);
+                const diaNavidad = navidad.getDay();
+                const diasRestar = (diaNavidad === 0) ? 28 : (diaNavidad + 21);
+                const inicioAdviento = new Date(year, 11, 25 - diasRestar);
+
+                let targetYear = date >= inicioAdviento ? year + 1 : year;
+
+                const residuo = targetYear % 3;
+                let cicloDom = residuo === 1 ? "A (Mateo)" : (residuo === 2 ? "B (Marcos)" : "C (Lucas)");
+                let cicloFerial = (targetYear % 2 !== 0) ? "I (Impar)" : "II (Par)";
+
+                return { cicloDom, cicloFerial, text: `${cicloDom} | Año ${cicloFerial}` };
+            },
+
+            getSeason(date) {
+                const year = date.getFullYear();
+                const pascua = this.getEasterDate(year);
+                const ceniza = new Date(pascua); ceniza.setDate(pascua.getDate() - 46);
+                const navidad = new Date(year, 11, 25);
+                const adviento = new Date(year, 11, 25 - ((navidad.getDay() === 0 ? 28 : navidad.getDay() + 21)));
+
+                if (date >= adviento && date < navidad) return 'adviento';
+                if ((date >= navidad) || (date.getMonth() === 0 && date.getDate() < 13)) return 'navidad';
+                if (date >= ceniza && date < pascua) {
+                    const diff = (pascua - date) / (1000 * 60 * 60 * 24);
+                    return diff <= 7 ? 'semana_santa' : 'cuaresma';
+                }
+                const pentecostes = new Date(pascua); pentecostes.setDate(pascua.getDate() + 49);
+                if (date >= pascua && date <= pentecostes) {
+                    if (date.getTime() === pentecostes.getTime()) return 'pentecostes';
+                    return 'pascua';
+                }
+                return 'ordinario';
+            },
+
+            getTips() {
+                const tips = [
+                    "El color morado se usa en Adviento y Cuaresma como signo de penitencia.",
+                    "La palabra 'Eucaristía' significa 'Acción de Gracias'.",
+                    "El 'Kyrie Eleison' es la única parte de la misa en griego.",
+                    "El Domingo de Gaudete permite el uso de vestiduras rosas.",
+                    "La Cuaresma dura 40 días, recordando el tiempo de Jesús en el desierto.",
+                    "El Cirio Pascual representa a Cristo Resucitado, luz del mundo.",
+                    "El incienso simboliza las oraciones de los santos subiendo al cielo."
+                ];
+                return tips[Math.floor(Math.random() * tips.length)];
+            },
+
+            buildPrompt() {
+                const { selectedDate, tradition, celebrationKey } = this.state;
+                const cycle = this.getLiturgicalCycle(selectedDate);
+
+                let dateStr;
+                let titleStr;
+
+                // Determinamos el TÍTULO que debe guiar a la IA
+                titleStr = UIManager.els.celebrationPicker.options[UIManager.els.celebrationPicker.selectedIndex].text;
+
+                if (celebrationKey === 'HOY_CALENDARIO' || celebrationKey === 'PROXIMO_DOMINGO') {
+                    // MODO CALENDARIO (Usa la fecha real)
+                    dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                } else {
+                    // MODO PROPIO FIJO (La fecha es el nombre del Propio para forzar la búsqueda)
+                    dateStr = titleStr;
+                }
+
+
+                let basePrompt = `
+                    FECHA: ${dateStr}.
+                    TRADICIÓN: ${tradition.toUpperCase()}.
+                    ${CONFIG.RULES}
+                `;
+
+                if (tradition === 'tridentina') {
+                    return `
+                        ${basePrompt}
+                        ROL: Maestro de Ceremonias (Missale Romanum 1962).
+                        REGLA DE ORO: La celebración se refiere al 'Propio del Día' en el calendario Tridentino según la celebración elegida ('${titleStr}'). 
+                        NO USES CICLOS A/B/C.
+                        [MANDATORIO: ENFOCAR EL SALMO COMO RESPONSORIAL/GRADUAL CON VERSOS]
+                        ESTRUCTURA (Bilingüe Latín/Español):
+                        1. Ritos al Pie del Altar (Salmo 42, Confiteor).
+                        2. Introito, Kyrie, Gloria (si aplica), Colecta.
+                        3. Epístola, Gradual (Salmo Responsorial), Evangelio. [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
+                        4. Credo (si aplica).
+                        5. Ofertorio, Canon (Latín), Comunión.
+                        6. Ritos Finales, Último Evangelio (Juan 1:1-14 COMPLETO).
+                    `;
+                }
+
+                let specificInstructions = "";
+                if (tradition === 'anglicana') {
+                    specificInstructions = "Usa el Libro de Oración Común 2019 (ACNA). [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS]. Salmos poéticos.";
+                } else if (tradition === 'ordinariato') {
+                    specificInstructions = "Usa 'Divine Worship: The Missal'. Lenguaje sacro ('Vosotros'). Incluye Decálogo en penitencial si es Adviento/Cuaresma. [MANDATORIO: EN ADVIENTO, INCLUIR ORACIÓN Y RÚBRICA PARA EL ENCENDIDO DE LA VELA]. [MANDATORIO: ORACIÓN UNIVERSAL (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS].";
+                } else {
+                    specificInstructions = "Usa el Misal Romano (Conferencia Episcopal Mexicana). [MANDATORIO: ORACIÓN UNIVERSAL (Oración de los Fieles) CON 4-5 PETICIONES DIRECTAMENTE LIGADAS AL TEMA DE LAS LECTURAS].";
+                }
+
+                return `
+                    ${basePrompt}
+                    TÍTULO LITÚRGICO: ${titleStr}.
+                    CICLO: ${cycle.text}.
+                    INSTRUCCIONES ESPECÍFICAS: ${specificInstructions}
+                    ESTRUCTURA (COMPLETA Y DETALLADA):
+                    1. Ritos Iniciales (Antífona, Saludo, Acto Penitencial, Kyrie, Gloria, Oración Colecta).
+                    2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [MANDATORIO: FORMATO RESPONSIAL con RESPUESTA CLARA], 2ª Lectura, Aclamación, Evangelio). [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
+                    3. Homilía (Bosquejo), Credo, Oración Universal (MANDATORIO: PETICIONES CREADAS EN BASE AL TEMA CENTRAL DE LAS LECTURAS).
+                    4. Liturgia Eucarística (Ofertorio, Plegaria, Rito de Comunión).
+                    5. Rito de Conclusión (Bendición, Despedida).
+                `;
+            },
+
+            async generate() {
+                const prompt = this.buildPrompt();
+                try {
+                    const response = await fetch(`${CONFIG.ENDPOINTS.GENERATE}?key=${CONFIG.API_KEY}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+                    });
+                    const data = await response.json();
+
+                    if (data.error) throw new Error(data.error.message);
+
+                    const candidate = data.candidates?.[0];
+                    if (!candidate || !candidate.content?.parts?.[0]?.text) {
+                        throw new Error("Respuesta inválida o incompleta de la IA.");
+                    }
+
+                    return candidate.content.parts[0].text;
+                } catch (e) {
+                    throw e;
+                }
+            }
+        };
+
+        const UIManager = {
+            els: {
+                celebrationPicker: document.getElementById('celebration-picker'),
+                traditionSelect: document.getElementById('tradition-select'),
+                cycleDisplay: document.getElementById('cycle-display'),
+                docContent: document.getElementById('doc-content'),
+                emptyState: document.getElementById('empty-state'),
+                loadingState: document.getElementById('loading-state'),
+                toolbar: document.getElementById('toolbar'),
+                sidebar: document.getElementById('sidebar'),
+                toastContainer: document.getElementById('toast-container'),
+                hourHand: document.getElementById('hour-hand'),
+                minuteHand: document.getElementById('minute-hand'),
+                secondHand: document.getElementById('second-hand'),
+                btnHistory: document.getElementById('btn-history') // Bind del nuevo botón
+            },
+
+            safeBind(id, event, handler) {
+                const el = document.getElementById(id);
+                if (el) el[event] = handler;
+                else console.warn(`Element ${id} not found.`);
+            },
+
+            init() {
+                this.updateClock();
+                setInterval(() => this.updateClock(), 1000);
+
+                // Inicializa la UI con el estado guardado
+                if (this.els.traditionSelect) this.els.traditionSelect.value = LiturgyService.state.tradition;
+                this.updateTraditionList();
+
+                // Asegurar que el selector de celebración también se sincronice después de llenar la lista
+                if (this.els.celebrationPicker) {
+                    this.els.celebrationPicker.value = LiturgyService.state.celebrationKey;
+                    // Si el valor guardado ya no existe (ej. cambio de mes), volver al default
+                    if (!this.els.celebrationPicker.value) {
+                        this.els.celebrationPicker.selectedIndex = 0;
+                        LiturgyService.state.celebrationKey = this.els.celebrationPicker.value;
+                    }
+                }
+                this.updateCelebrationDisplay();
+
+                // Event Listeners
+                this.safeBind('celebration-picker', 'change', (e) => {
+                    LiturgyService.state.celebrationKey = e.target.value;
+                    LiturgyService.savePreferences();
+                    this.updateCelebrationDisplay();
+                });
+
+                this.safeBind('tradition-select', 'change', (e) => {
+                    LiturgyService.state.tradition = e.target.value;
+                    LiturgyService.savePreferences();
+                    this.updateTraditionList();
+                });
+
+                // BOTONES DE ACCIÓN
+                this.safeBind('btn-generate', 'onclick', () => this.handleGenerate());
+                this.safeBind('btn-menu-mobile', 'onclick', () => this.toggleSidebar());
+                this.safeBind('btn-download', 'onclick', () => this.downloadDoc('full'));
+                this.safeBind('btn-download-bulletin', 'onclick', () => this.downloadDoc('bulletin'));
+                this.safeBind('fab-download', 'onclick', () => this.downloadDoc('full'));
+
+                // History Bindings
+                this.safeBind('btn-history', 'onclick', () => this.openHistory());
+                this.safeBind('close-history', 'onclick', () => this.closeHistory());
+                // Cerrar modal al hacer click fuera
+                const modal = document.getElementById('history-modal');
+                if (modal) {
+                    modal.addEventListener('click', (e) => {
+                        if (e.target === modal) this.closeHistory();
+                    });
+                }
+            },
+
+            updateClock() {
+                const now = new Date();
+                const h = now.getHours();
+                const m = now.getMinutes();
+                const s = now.getSeconds();
+
+                const hDeg = (h % 12) * 30 + (m / 60) * 30;
+                const mDeg = m * 6 + (s / 60) * 6;
+                const sDeg = s * 6;
+
+                if (this.els.hourHand) this.els.hourHand.style.transform = `rotate(${hDeg}deg)`;
+                if (this.els.minuteHand) this.els.minuteHand.style.transform = `rotate(${mDeg}deg)`;
+                if (this.els.secondHand) this.els.secondHand.style.transform = `rotate(${sDeg}deg)`;
+
+                // Actualizar reloj digital para el historial si existe
+                const digital = document.getElementById('digital-time');
+                if (digital) digital.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            },
+
+            openHistory() {
+                const history = LiturgyService.getHistory();
+                const container = document.getElementById('history-list');
+                const modal = document.getElementById('history-modal');
+
+                container.innerHTML = '';
+                if (history.length === 0) {
+                    container.innerHTML = '<p class="text-center text-gray-400 py-4">No hay historial reciente.</p>';
+                } else {
+                    history.forEach(item => {
+                        const date = new Date(item.date).toLocaleDateString();
+                        const time = new Date(item.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                        const div = document.createElement('div');
+                        div.className = 'history-item';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-xs font-bold text-teal-700 uppercase">${item.tradition}</span>
+                                <span class="text-[10px] text-gray-400">${date} ${time}</span>
+                            </div>
+                            <h4 class="font-bold text-sm text-gray-700">${item.title}</h4>
+                        `;
+                        div.onclick = () => this.restoreHistory(item);
+                        container.appendChild(div);
+                    });
+                }
+
+                modal.classList.add('open');
+            },
+
+            closeHistory() {
+                const modal = document.getElementById('history-modal');
+                if (modal) modal.classList.remove('open');
+            },
+
+            restoreHistory(item) {
+                // Restaurar vista
+                if (this.els.docContent) {
+                    this.els.docContent.innerHTML = item.content;
+                    this.els.docContent.classList.remove('hidden');
+
+                    const hint = document.getElementById('edit-hint');
+                    if (hint) hint.classList.remove('hidden');
+
+                    this.els.emptyState.classList.add('hidden');
+                    this.els.toolbar.classList.remove('hidden');
+                    this.els.toolbar.classList.add('flex');
+
+                    if (window.innerWidth < 768 && this.els.sidebar) this.els.sidebar.classList.add('-translate-x-full');
+                }
+                this.closeHistory();
+                this.showToast('Liturgia restaurada del historial');
+            },
+
+            toggleSidebar() {
+                if (this.els.sidebar) this.els.sidebar.classList.toggle('-translate-x-full');
+            },
+
+            updateTraditionList() {
+                const tradition = this.els.traditionSelect.value;
+                const selector = this.els.celebrationPicker;
+
+                if (!selector) return;
+
+                const newOptions = LITURGY_PROPIOS[tradition] || [];
+                selector.innerHTML = '';
+
+                newOptions.forEach(group => {
+                    if (group.disabled) {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = group.label;
+                        selector.appendChild(optgroup);
+                    } else if (group.options) {
+                        const optgroup = document.createElement('optgroup');
+                        optgroup.label = group.label;
+                        group.options.forEach(option => {
+                            const opt = document.createElement('option');
+                            opt.value = option.value;
+                            opt.textContent = option.label;
+                            optgroup.appendChild(opt);
+                        });
+                        selector.appendChild(optgroup);
+                    } else {
+                        const opt = document.createElement('option');
+                        opt.value = group.value;
+                        opt.textContent = group.label;
+                        if (group.selected) opt.selected = true;
+                        selector.appendChild(opt);
+                    }
+                });
+
+                LiturgyService.state.celebrationKey = selector.value;
+                this.updateCelebrationDisplay();
+            },
+
+            updateCelebrationDisplay() {
+                const { celebrationKey } = LiturgyService.state;
+                let dateToDisplay = '';
+                let newDate = new Date();
+
+                // 1. CÁLCULO DE FECHA Y PROPÓSITO
+                if (celebrationKey === 'HOY_CALENDARIO') {
+                    newDate.setHours(12, 0, 0, 0);
+                    dateToDisplay = newDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+                } else if (celebrationKey === 'PROXIMO_DOMINGO') {
+                    const daysUntilSunday = (7 - newDate.getDay()) % 7;
+                    newDate.setDate(newDate.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
+                    newDate.setHours(12, 0, 0, 0);
+
+                    dateToDisplay = newDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+                } else {
+                    newDate.setHours(12, 0, 0, 0);
+                    dateToDisplay = this.els.celebrationPicker.options[this.els.celebrationPicker.selectedIndex].text;
+                }
+
+                // 2. ACTUALIZAR ESTADO DE LA FECHA Y CICLO
+                LiturgyService.state.selectedDate = newDate;
+                const cycleInfo = LiturgyService.getLiturgicalCycle(newDate).text;
+
+                // 3. ACTUALIZAR DISPLAY (BLINDAJE CONTRA INCONSISTENCIAS)
+
+                let titleHtml;
+                let subtitleHtml;
+
+                if (celebrationKey === 'HOY_CALENDARIO' || celebrationKey === 'PROXIMO_DOMINGO') {
+                    // MODO CALENDARIO: Título es la fecha REAL.
+                    titleHtml = `**${dateToDisplay}**`;
+                    subtitleHtml = `<p class="text-xs font-normal">Propio del día / ${cycleInfo}</p>`;
+                } else {
+                    // MODO PROPIO FIJO: Título es el Propio Litúrgico elegido.
+                    titleHtml = `**${dateToDisplay}**`;
+
+                    // Subtítulo muestra el ciclo de referencia de la fecha actual.
+                    subtitleHtml = `<p class="text-xs font-normal">Propio Fijo / Ciclo de referencia: ${cycleInfo}</p>`;
+                }
+
+                const selectedDateDisplay = document.querySelector('.neu-flat p#selected-date-display');
+                if (selectedDateDisplay) selectedDateDisplay.innerHTML = titleHtml;
+
+                if (this.els.cycleDisplay) {
+                    this.els.cycleDisplay.innerHTML = subtitleHtml;
+                }
+
+            },
+
+            showToast(msg, type = 'success') {
+                if (!this.els.toastContainer) return;
+                const toast = document.createElement('div');
+                toast.className = `toast ${type}`;
+                toast.innerHTML = type === 'error' ? `⚠️ ${msg}` : `✅ ${msg}`;
+                this.els.toastContainer.appendChild(toast);
+                setTimeout(() => toast.remove(), 4000);
+            },
+
+            async handleGenerate() {
+                this.updateCelebrationDisplay();
+
+                if (this.els.emptyState) this.els.emptyState.classList.add('hidden');
+                if (this.els.docContent) this.els.docContent.classList.add('hidden');
+                if (this.els.toolbar) this.els.toolbar.classList.add('hidden');
+                if (this.els.loadingState) this.els.loadingState.classList.remove('hidden');
+
+                if (window.innerWidth < 768 && this.els.sidebar) this.els.sidebar.classList.add('-translate-x-full');
+
+                // Mostrar tips aleatorios
+                const tipEl = document.getElementById('loading-tip');
+                let tipInterval;
+                if (tipEl) {
+                    tipEl.textContent = LiturgyService.getTips();
+                    tipInterval = setInterval(() => {
+                        tipEl.style.opacity = '0';
+                        setTimeout(() => {
+                            tipEl.textContent = LiturgyService.getTips();
+                            tipEl.style.opacity = '1';
+                        }, 500);
+                    }, 4000);
+                }
+
+                try {
+                    const markdownText = await LiturgyService.generate();
+                    if (tipInterval) clearInterval(tipInterval); // Detener tips
+
+                    let cleanText = markdownText
+                        .replace(/\$\\dagger\$/g, '†')
+                        .replace(/\[\[(.*?)\]\]/g, '<span class="rubric">$1</span>');
+
+                    const season = LiturgyService.getSeason(LiturgyService.state.selectedDate);
+                    const headerHtml = `<div class="liturgy-icon-container">${CONFIG.ICONS[season]}</div>`;
+
+                    if (this.els.docContent) {
+                        this.els.docContent.innerHTML = headerHtml + `<div class="preview-content-wrapper liturgy-content">${marked.parse(cleanText)}</div>`;
+                        this.els.docContent.classList.remove('hidden');
+
+                        // Mostrar pista de edición
+                        const hint = document.getElementById('edit-hint');
+                        if (hint) hint.classList.remove('hidden');
+                    }
+
+                    if (this.els.loadingState) this.els.loadingState.classList.add('hidden');
+                    if (this.els.toolbar) {
+                        this.els.toolbar.classList.remove('hidden');
+                        this.els.toolbar.classList.add('flex');
+                    }
+                    this.showToast('Liturgia generada correctamente');
+
+                    // Guardar en historial
+                    const title = this.els.celebrationPicker.options[this.els.celebrationPicker.selectedIndex].text;
+                    LiturgyService.addToHistory(this.els.docContent.innerHTML, title);
+
+                } catch (error) {
+                    console.error(error);
+                    if (tipInterval) clearInterval(tipInterval);
+                    if (this.els.loadingState) this.els.loadingState.classList.add('hidden');
+                    if (this.els.emptyState) this.els.emptyState.classList.remove('hidden');
+                    this.showToast('Error al generar. Intenta de nuevo.', 'error');
+                }
+            },
+
+            downloadDoc(type) {
+                if (!this.els.docContent || this.els.docContent.classList.contains('hidden')) return;
+
+                let content = this.els.docContent.innerHTML;
+
+                if (type === 'bulletin') {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = content;
+                    tempDiv.querySelectorAll('p').forEach(p => {
+                        if (p.textContent.toLowerCase().includes('(en secreto)')) p.remove();
+                    });
+                    content = tempDiv.innerHTML;
+                }
+
+                const css = `
+                    <style>
+                        /* Configuración para el DOCX (Tamaño Carta) */
+                        body { font-family: 'Times New Roman', serif; font-size: 11pt; }
+                        h1 { text-align: center; font-size: 16pt; border-bottom: 1px solid #ccc; font-weight: bold; margin-bottom: 12pt; }
+                        h2 { color: #9f1239; font-size: 13pt; margin-top: 15pt; }
+                        .rubric { color: red; font-style: italic; font-size: 10pt; }
+                        strong { font-weight: bold; }
+                        table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
+                        td, th { border: 1px solid #000; padding: 5pt; }
+                        @page { size: letter; margin: 2.54cm; }
+                    </style>
+                `;
+
+                // Forzar codificación UTF-8 en el archivo DOCX
+                const htmlContent = `
+                    <html>
+                    <head>
+                        <meta charset='utf-8'>
+                        ${css}
+                        <style>@page { size: letter; margin: 2.54cm; }</style>
+                    </head>
+                    <body>${content}</body>
+                    </html>
+                `;
+
+                const blob = htmlDocx.asBlob(htmlContent);
+                saveAs(blob, `Liturgia_${LiturgyService.state.selectedDate.toISOString().split('T')[0]}.docx`);
+                this.showToast('Documento descargado');
+            }
+        };
+
+        UIManager.init();
+    </script>
+
+    <!-- HTML DEL MODAL DE HISTORIAL -->
+    <div id="history-modal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="p-5 border-b border-gray-200/50 flex justify-between items-center">
+                <h3 class="font-bold text-gray-700 text-lg">Historial Reciente</h3>
+                <button id="close-history" class="neu-icon-btn w-8 h-8 text-sm">✕</button>
+            </div>
+            <div id="history-list" class="p-5 overflow-y-auto flex-1">
+                <!-- Items se llenan dinámicamente -->
+            </div>
+            <div class="p-4 bg-gray-50 rounded-b-[20px] text-center">
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Se guardan los últimos 5</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
