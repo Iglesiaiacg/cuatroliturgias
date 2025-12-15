@@ -182,6 +182,7 @@ function App() {
           <CalendarView
             selectedDate={selectedDate}
             onDateChange={setSelectedDate}
+            onNavigate={setActiveTab}
           />
         </>
       )}
