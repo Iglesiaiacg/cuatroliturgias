@@ -1,7 +1,7 @@
 import { CONFIG } from './config';
 import { getApiKey } from './storage';
 
-const fetchWithRetry = async (url, options, retries = 3, backoff = 1000) => {
+const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     try {
         const response = await fetch(url, options);
         if (response.status === 429 || response.status >= 500) {
