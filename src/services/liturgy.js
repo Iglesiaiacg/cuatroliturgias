@@ -239,8 +239,19 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         specificInstructions = "Usa el Libro de Oración Común 2019 (ACNA). [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS]. Incluir 'Prayer of Humble Access' (Oración de Acceso a la Gracia) antes de la comunión.";
         eucharistDetail = "(Ofertorio, Sursum Corda, Sanctus, Plegaria de Consagración, Padre Nuestro, Oración de Acceso a la Gracia [Humble Access], Agnus Dei, Comunión, Oración de Post-Comunión)";
     } else if (tradition === 'ordinariato') {
-        specificInstructions = "Usa 'Divine Worship: The Missal'. Lenguaje sacro ('Vosotros'). Incluye Decálogo en penitencial si es Adviento/Cuaresma. [MANDATORIO: EN ADVIENTO, INCLUIR ORACIÓN Y RÚBRICA PARA EL ENCENDIDO DE LA VELA]. Incluir 'Prayer of Humble Access'.";
-        eucharistDetail = "(Ofertorio, Orate Fratres, Prayer over the Offerings, Sursum Corda, Sanctus, Canon Romano [o Plegaria Eucarística], Padre Nuestro, Prayer of Humble Access, Agnus Dei, Comunión, Post-Communión)";
+        specificInstructions = `
+            FUENTE: 'Divine Worship: The Missal'. 
+            LENGUAJE: Sacro ('Vosotros').
+            MANDATORIO (NO RESUMIR): Escribe la **PLEGARIA EUCARÍSTICA I (CANON ROMANO)** COMPLETA palabra por palabra.
+            CRÍTICO - RUBRICAS SECRETAS: Incluir las oraciones que el sacerdote dice en voz baja (Vox Secreta) como rúbricas rojas. (Ej. 'Aufer a nobis', 'Oramus te Domine', 'Haec commixtio').
+            Incluir 'Prayer of Humble Access' antes de la comunión.
+        `;
+        eucharistDetail = `
+            1. Ofertorio (Con oraciones secretas 'Suscipe Sancte Pater', 'Offerimus tibi').
+            2. Orate Fratres, Prayer over the Offerings.
+            3. CANON ROMANO COMPLETO (Te igitur, Memento, Communicantes, Hanc igitur, Quam oblationem, Consagración, Unde et memores, Supplices te rogamus...). NO RESUMIR.
+            4. Rito de Comunión (Padre Nuestro, Prayer of Humble Access, Agnus Dei).
+        `;
     } else {
         specificInstructions = "Usa el Misal Romano (Conferencia Episcopal Mexicana). [MANDATORIO: ORACIÓN UNIVERSAL CON PETICIONES LIGADAS AL TEMA DE LAS LECTURAS].";
         eucharistDetail = "(Ofertorio, Oración sobre las Ofrendas, Prefacio, Sanctus, Plegaria Eucarística [Consagración], Padre Nuestro, La Paz, Cordero de Dios, Comunión, Oración después de la Comunión)";
