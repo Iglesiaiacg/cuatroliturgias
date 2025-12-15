@@ -7,8 +7,8 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
         "Antífonas para el Lucernario": `
             <div class="liturgy-content">
                 <h1>Antífonas para el Lucernario</h1>
-                <p class="rubric">[[Este rito se utiliza antes de la Oración Vespertina, especialmente en fiestas o domingos.]]</p>
-                <p class="rubric">[[Se encienden las velas.]]</p>
+                <p class="rubric">Este rito se utiliza antes de la Oración Vespertina, especialmente en fiestas o domingos.</p>
+                <p class="rubric">Se encienden las velas.</p>
                 
                 <p>Luz y paz en Jesucristo nuestro Señor.</p>
                 <p><strong>Demos gracias a Dios.</strong></p>
@@ -27,7 +27,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
                 Hijo de Dios, Dador de la vida;<br>
                 por tanto el mundo te glorifica.</p>
 
-                <p class="rubric">[[A continuación puede seguir un himno o salmo de lucernario apropiado, como el Salmo 141.]]</p>
+                <p class="rubric">A continuación puede seguir un himno o salmo de lucernario apropiado, como el Salmo 141.</p>
                 
                 <h3>Salmo 141</h3>
                 <p>Señor, a ti clamo; apresúrate a mí; *<br>
@@ -35,7 +35,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
                 <p>Suba mi oración delante de ti como el incienso, *<br>
                 <strong>el don de mis manos como la ofrenda de la tarde.</strong></p>
                 
-                <p class="rubric">[[Se concluye con la Oración.]]</p>
+                <p class="rubric">Se concluye con la Oración.</p>
                 
                 <p>Oremos.</p>
                 <p>Señor Jesucristo, mientras este día se apaga en el anochecer, te pedimos que la luz de tu verdad disipe las tinieblas de nuestros corazones; tú que eres la Luz del mundo, y vives y reinas con el Dios Padre y el Espíritu Santo, un solo Dios, por los siglos de los siglos. <strong>Amén.</strong></p>
