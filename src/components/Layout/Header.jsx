@@ -98,7 +98,7 @@ export default function Header({
                 </button>
                 <button
                     onClick={onGenerate}
-                    className="px-5 py-2.5 bg-gray-900 hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                     <span className="text-sm">✨</span> <span className="hidden sm:inline">Generar</span>
                 </button>
