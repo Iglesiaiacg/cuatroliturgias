@@ -225,8 +225,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             2. Introito, Kyrie, Gloria (VERIFICAR OMISIÓN), Colecta.
             3. Epístola, Gradual (Salmo Responsorial), Evangelio. [MANDATORIO: TEXTOS BÍBLICOS COMPLETOS]
             4. Credo (si aplica).
-            5. Ofertorio (Suscipe Sancte Pater, Offerimus tibi), Lavabo, Orate Fratres, Secreta.
-            6. Canon Romano (Prefacio, Sanctus, Canon [Resumido para el pueblo, destacar Consagración], Pater Noster).
+            5. Ofertorio (Suscipe Sancte Pater, Offerimus tibi). [MANDATORIO: INCLUIR ORACIONES "VOX SECRETA" EN RUBRICAS ROJAS]. Lavabo, Orate Fratres, Secreta.
+            6. CANON ROMANO 1962 COMPLETO (Te igitur, Memento, Communicantes, Hanc igitur, Quam oblationem, Consagración, Unde et memores, Supplices te rogamus...). NO RESUMIR. INCLUIR ORACIONES DEL SACERDOTE.
             7. Agnus Dei, Comunión, Post-Comunión.
             8. Ritos Finales, Último Evangelio (Juan 1:1-14 COMPLETO).
         `;
@@ -236,8 +236,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
     let eucharistDetail = "(Ofertorio, Plegaria Eucarística, Rito de Comunión)"; // Default
 
     if (tradition === 'anglicana') {
-        specificInstructions = "Usa el Libro de Oración Común 2019 (ACNA). [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS]. Incluir 'Prayer of Humble Access' (Oración de Acceso a la Gracia) antes de la comunión.";
-        eucharistDetail = "(Ofertorio, Sursum Corda, Sanctus, Plegaria de Consagración, Padre Nuestro, Oración de Acceso a la Gracia [Humble Access], Agnus Dei, Comunión, Oración de Post-Comunión)";
+        specificInstructions = `
+            FUENTE: Libro de Oración Común 2019 (ACNA) - Rito Estándar.
+            [MANDATORIO: ORACIÓN COMÚN (Oración de los Fieles) BASADA EN EL TEMA CENTRAL DE LAS LECTURAS].
+            MANDATORIO (NO RESUMIR): Escribe la **PLEGARIA DE CONSAGRACIÓN (Aglican Standard)** COMPLETA.
+            Incluir 'Prayer of Humble Access' (Oración de Acceso a la Gracia) antes de la comunión.
+        `;
+        eucharistDetail = `
+            1. Ofertorio.
+            2. Sursum Corda, Sanctus.
+            3. PLEGARIA DE CONSAGRACIÓN COMPLETA (Standard Anglican Text). NO RESUMIR.
+            4. Padre Nuestro.
+            5. Oración de Acceso a la Gracia [Humble Access] (Rúbrica: Sacerdote y Pueblo juntos).
+            6. Agnus Dei, Comunión, Oración de Post-Comunión.
+        `;
     } else if (tradition === 'ordinariato') {
         specificInstructions = `
             FUENTE: 'Divine Worship: The Missal'. 
@@ -253,8 +265,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             4. Rito de Comunión (Padre Nuestro, Prayer of Humble Access, Agnus Dei).
         `;
     } else {
-        specificInstructions = "Usa el Misal Romano (Conferencia Episcopal Mexicana). [MANDATORIO: ORACIÓN UNIVERSAL CON PETICIONES LIGADAS AL TEMA DE LAS LECTURAS].";
-        eucharistDetail = "(Ofertorio, Oración sobre las Ofrendas, Prefacio, Sanctus, Plegaria Eucarística [Consagración], Padre Nuestro, La Paz, Cordero de Dios, Comunión, Oración después de la Comunión)";
+        specificInstructions = `
+            FUENTE: Misal Romano (Conferencia Episcopal Mexicana).
+            [MANDATORIO: ORACIÓN UNIVERSAL CON PETICIONES LIGADAS AL TEMA DE LAS LECTURAS].
+            MANDATORIO (NO RESUMIR): Escribe la **PLEGARIA EUCARÍSTICA (II o III)** COMPLETA palabra por palabra.
+            MANDATORIO: Incluir oraciones privadas del sacerdote en rúbricas rojas (Ej. Antes del Evangelio 'Munda cor meum', Ofertorio 'Benedictus es Domine', Antes de la comunión 'Domine Iesu Christe').
+        `;
+        eucharistDetail = `
+            1. Ofertorio (Con oraciones secretas 'Bendito seas Señor'...).
+            2. Oración sobre las Ofrendas, Prefacio, Sanctus.
+            3. PLEGARIA EUCARÍSTICA COMPLETA (NO RESUMIR).
+            4. Padre Nuestro, La Paz, Cordero de Dios.
+            5. Comunión (Con oraciones secretas del sacerdote antes de comulgar).
+            6. Oración después de la Comunión.
+        `;
     }
 
     return `
