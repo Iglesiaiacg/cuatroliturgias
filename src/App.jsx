@@ -190,7 +190,7 @@ function App() {
 
       {/* --- OCCASIONAL SERVICES VIEW --- */}
       {activeTab === 'occasional' && (
-        <OccasionalServicesView onNavigate={setActiveTab} />
+        <OccasionalServicesView onNavigate={setActiveTab} setDocContent={setDocContent} />
       )}
 
       {/* --- FAVORITES (Placeholder) --- */}

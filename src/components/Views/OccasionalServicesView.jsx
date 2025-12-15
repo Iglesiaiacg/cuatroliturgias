@@ -1,6 +1,60 @@
 import { useState } from 'react';
 
-export default function OccasionalServicesView({ onNavigate }) {
+export default function OccasionalServicesView({ onNavigate, setDocContent }) {
+
+    // Content Definitions
+    const serviceContent = {
+        "Antífonas para el Lucernario": `
+            <div class="liturgy-content">
+                <h1>Antífonas para el Lucernario</h1>
+                <p class="rubric">[[Este rito se utiliza antes de la Oración Vespertina, especialmente en fiestas o domingos.]]</p>
+                <p class="rubric">[[Se encienden las velas.]]</p>
+                
+                <p>Luz y paz en Jesucristo nuestro Señor.</p>
+                <p><strong>Demos gracias a Dios.</strong></p>
+                
+                <h3>Luz Alegre (Phos Hilaron)</h3>
+                <p>Oh Luz alegre del santo esplendor del Padre,<br>
+                inmortal, celeste, santo, bendito,<br>
+                Jesucristo.</p>
+                
+                <p>Habiendo llegado a la puesta del sol,<br>
+                y viendo la luz de la tarde,<br>
+                cantamos a Dios: Padre, Hijo, y Espíritu Santo.</p>
+                
+                <p>Digno eres en todo momento<br>
+                de ser alabado con voces propicias,<br>
+                Hijo de Dios, Dador de la vida;<br>
+                por tanto el mundo te glorifica.</p>
+
+                <p class="rubric">[[A continuación puede seguir un himno o salmo de lucernario apropiado, como el Salmo 141.]]</p>
+                
+                <h3>Salmo 141</h3>
+                <p>Señor, a ti clamo; apresúrate a mí; *<br>
+                <strong>escucha mi voz cuando te invoco.</strong></p>
+                <p>Suba mi oración delante de ti como el incienso, *<br>
+                <strong>el don de mis manos como la ofrenda de la tarde.</strong></p>
+                
+                <p class="rubric">[[Se concluye con la Oración.]]</p>
+                
+                <p>Oremos.</p>
+                <p>Señor Jesucristo, mientras este día se apaga en el anochecer, te pedimos que la luz de tu verdad disipe las tinieblas de nuestros corazones; tú que eres la Luz del mundo, y vives y reinas con el Dios Padre y el Espíritu Santo, un solo Dios, por los siglos de los siglos. <strong>Amén.</strong></p>
+            </div>
+        `
+    };
+
+    const handleServiceClick = (item) => {
+        if (serviceContent[item.title]) {
+            if (setDocContent) {
+                setDocContent(serviceContent[item.title]);
+                onNavigate('generator');
+            }
+        } else {
+            // Optional: fallback or toast for items not yet implemented
+            console.log("Contenido no disponible para:", item.title);
+        }
+    };
+
     const services = [
         {
             category: "El Año Litúrgico",
@@ -96,6 +150,7 @@ export default function OccasionalServicesView({ onNavigate }) {
                             {section.items.map((item, i) => (
                                 <button
                                     key={i}
+                                    onClick={() => handleServiceClick(item)}
                                     className="relative flex flex-col p-5 bg-white dark:bg-surface-dark rounded-xl border border-gray-100 dark:border-white/5 shadow-sm hover:shadow-md hover:border-primary/30 transition-all text-left group h-full"
                                 >
                                     <div className="w-10 h-10 rounded-full bg-teal-50 dark:bg-teal-900/20 flex items-center justify-center mb-3 group-hover:bg-primary group-hover:text-white transition-colors text-teal-600 dark:text-teal-400">
