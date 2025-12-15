@@ -15,6 +15,7 @@ import Toast from './components/Common/Toast'
 
 // New Shell Components
 import Dashboard from './components/Views/Dashboard'
+import CalendarView from './components/Views/CalendarView'
 import BottomNav from './components/Layout/BottomNav'
 import TopBar from './components/Layout/TopBar'
 
@@ -173,12 +174,24 @@ function App() {
         </main>
       </div>
 
-      {/* --- CALENDAR/FAVORITES (Placeholders) --- */}
-      {(activeTab === 'calendar' || activeTab === 'favorites') && (
+      {/* --- CALENDAR VIEW --- */}
+      {activeTab === 'calendar' && (
+        <>
+          <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
+          <CalendarView
+            selectedDate={selectedDate}
+            onDateChange={setSelectedDate}
+            onNavigate={setActiveTab}
+          />
+        </>
+      )}
+
+      {/* --- FAVORITES (Placeholder) --- */}
+      {activeTab === 'favorites' && (
         <div className="flex items-center justify-center min-h-screen text-gray-400">
           <div className="text-center">
-            <span className="material-symbols-outlined text-6xl mb-4">construction</span>
-            <p>Próximamente</p>
+            <span className="material-symbols-outlined text-6xl mb-4">favorite</span>
+            <p>Favoritos próximamente</p>
           </div>
         </div>
       )}
