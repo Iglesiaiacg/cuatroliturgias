@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
-import { getLiturgicalCycle, getSeason, getTips, buildPrompt } from '../services/liturgy';
+import { getLiturgicalCycle, getSeason, getTips, buildPrompt, identifyFeast } from '../services/liturgy';
 import { generateLiturgy } from '../services/gemini';
 import { getPreferences, savePreferences, addToHistory } from '../services/storage';
-import { LITURGY_PROPIOS, CONFIG } from '../services/config';
 
 export const useLiturgy = () => {
-    // Init state from local storage or defaults
-    const [tradition, setTradition] = useState(() => getPreferences().tradition);
-    const [celebrationKey, setCelebrationKey] = useState(() => getPreferences().celebrationKey);
+    // Init state: Tradition from local storage, Date is always today by default
+    const [tradition, setTradition] = useState(() => getPreferences().tradition || 'anglicana');
     const [selectedDate, setSelectedDate] = useState(new Date());
+
+    // Computed State
+    const [calculatedFeast, setCalculatedFeast] = useState("");
+
+    // UI State
     const [docContent, setDocContent] = useState(null);
     const [loading, setLoading] = useState(false);
     const [loadingTip, setLoadingTip] = useState("");
@@ -16,29 +19,20 @@ export const useLiturgy = () => {
     const [cycleInfo, setCycleInfo] = useState("");
     const [season, setSeason] = useState("ordinario");
 
-    // Effect: Update Date & Cycle when celebration changes
+    // Effect: Update computed info when Date/Tradition changes
     useEffect(() => {
-        let newDate = new Date();
-        newDate.setHours(12, 0, 0, 0);
+        const feastName = identifyFeast(selectedDate, tradition);
+        const cycle = getLiturgicalCycle(selectedDate);
+        const currentSeason = getSeason(selectedDate);
 
-        if (celebrationKey === 'HOY_CALENDARIO') {
-            // Keep today
-        } else if (celebrationKey === 'PROXIMO_DOMINGO') {
-            const daysUntilSunday = (7 - newDate.getDay()) % 7;
-            newDate.setDate(newDate.getDate() + (daysUntilSunday === 0 ? 7 : daysUntilSunday));
-        } else {
-            // For fixed keys, we just use today as reference for cycle calculation
-            // but the prompt uses the label.
-        }
+        setCalculatedFeast(feastName);
+        setCycleInfo(cycle.text);
+        setSeason(currentSeason);
 
-        setSelectedDate(newDate);
-        setCycleInfo(getLiturgicalCycle(newDate).text);
-        setSeason(getSeason(newDate));
+        // Save prefs (only tradition, date is ephemeral usually, but could save if needed)
+        savePreferences(tradition, null);
 
-        // Save prefs
-        savePreferences(tradition, celebrationKey);
-
-    }, [celebrationKey, tradition]);
+    }, [selectedDate, tradition]);
 
     // Handle Generation
     const generate = async () => {
@@ -53,24 +47,12 @@ export const useLiturgy = () => {
         }, 4000);
 
         try {
-            // Get label for prompt
-            const options = LITURGY_PROPIOS[tradition] || [];
-            let label = "";
-
-            // Flatten options to find label
-            for (const group of options) {
-                if (group.value === celebrationKey) label = group.label;
-                if (group.options) {
-                    const found = group.options.find(o => o.value === celebrationKey);
-                    if (found) label = found.label;
-                }
-            }
-            if (!label) label = celebrationKey; // Fallback
+            // Get label for prompt directly from calculation
+            const label = identifyFeast(selectedDate, tradition);
 
             const prompt = buildPrompt({
                 selectedDate,
                 tradition,
-                celebrationKey,
                 celebrationLabel: label
             });
 
@@ -97,9 +79,9 @@ export const useLiturgy = () => {
     return {
         tradition,
         setTradition,
-        celebrationKey,
-        setCelebrationKey,
         selectedDate,
+        setSelectedDate, // Exposed for DatePicker
+        calculatedFeast, // Exposed for UI display
         cycleInfo,
         season,
         loading,

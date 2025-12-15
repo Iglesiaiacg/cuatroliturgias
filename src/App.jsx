@@ -15,8 +15,9 @@ import Toast from './components/Common/Toast'
 function App() {
   const {
     tradition, setTradition,
-    celebrationKey, setCelebrationKey,
-    selectedDate, cycleInfo, season,
+    selectedDate, setSelectedDate,
+    calculatedFeast,
+    cycleInfo, season,
     loading, loadingTip, error,
     docContent, setDocContent,
     generate
@@ -112,7 +113,8 @@ function App() {
       {/* Top Navigation */}
       <Header
         tradition={tradition} setTradition={setTradition}
-        celebrationKey={celebrationKey} setCelebrationKey={setCelebrationKey}
+        selectedDate={selectedDate} setSelectedDate={setSelectedDate}
+        calculatedFeast={calculatedFeast}
         onGenerate={handleGenerate}
         onHistory={() => setIsHistoryOpen(true)}
       />
