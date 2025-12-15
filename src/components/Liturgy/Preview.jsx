@@ -15,7 +15,7 @@ const Preview = forwardRef(({ content, season }, ref) => {
             <div
                 ref={ref}
                 id="doc-content"
-                className="page-preview font-serif bg-white shadow-2xl p-12 md:p-20 rounded-none md:rounded-lg min-h-[min(90vh,29.7cm)] w-full max-w-[21cm] outline-none focus:ring-0 transition-all text-gray-900 leading-relaxed text-[11pt] border-t-4 border-teal-700/20"
+                className="page-preview liturgy-content mx-auto bg-white shadow-2xl min-h-[29.7cm] w-[21cm] p-[2cm] outline-none text-[11pt] leading-relaxed"
                 contentEditable={true}
                 suppressContentEditableWarning={true}
             >

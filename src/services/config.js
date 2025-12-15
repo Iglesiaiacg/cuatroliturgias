@@ -14,16 +14,20 @@ export const CONFIG = {
     },
     RULES: `
         REGLAS DE FORMATO MANDATORIAS (NO MODIFICAR):
-        1. FORMATO DE DIÁLOGO: 
+        1. ESTRUCTURA VISUAL (CRÍTICO):
+           - Usa **DOBLE SALTO DE LÍNEA** entre cada intervención. (Ej. Sacerdote habla.\n\nPueblo responde).
+           - Cada parte debe ser un párrafo distinto.
+           - NO hagas "muros de texto". Separa todo.
+
+        2. RUBRICAS (INSTRUCCIONES):
+           - TODA instrucción en rojo debe ir entre [[DOBLES CORCHETES]]. 
+           - Ej: [[Se ponen de pie]].
+           - NO uses paréntesis normales para rúbricas.
+           - NO uses asteriscos para rúbricas.
+
+        3. DIÁLOGOS: 
            - PUEBLO / RESPUESTAS: SIEMPRE EN **NEGRITA**.
-           - SACERDOTE / LECTOR: SIEMPRE EN TEXTO NORMAL.
-        2. LECTURAS:
-           - Escribe el Título (Ej. "Lectura de...").
-           - IMPERATIVO: ESCRIBE EL TEXTO BÍBLICO COMPLETO DEBAJO. NO PONGAS SOLO LA CITA (Ej. "Juan 3:16").
-        3. TÉCNICO:
-           - NO uses tablas Markdown.
-           - NO uses LaTeX ($).
-           - Rúbricas siempre entre [[doble corchete]] o en *cursiva*.
+           - SACERDOTE: SIEMPRE EN TEXTO NORMAL.
     `
 };
 
