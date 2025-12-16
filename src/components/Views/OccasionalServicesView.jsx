@@ -83,8 +83,63 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
                 <p>Un solo cuerpo somos, aunque muchos, pues todos participamos de un solo pan. *<br>
                 <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
+            </div >
+        `,
+        "Bendiciones Estacionales": `
+            <div class="liturgy-content">
+                <h1>Bendiciones Estacionales</h1>
+                <p class="rubric">Bendiciones especiales para cada tiempo litúrgico.</p>
+                <p class="rubric">Una o más de las siguientes bendiciones pueden ser utilizadas por el Obispo (o el Presbítero).</p>
+
+                <h3>Adviento</h3>
+                <p>Que el Sol de Justicia brille sobre ustedes y disperse las tinieblas de su camino.<br>
+                <strong>Amén.</strong></p>
+                <p>Que él los fortalezca y prepare sus corazones para su venida.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Navidad</h3>
+                <p>Que Dios, que amó tanto al mundo que envió a su Hijo Unigénito, les conceda ser hijos de Dios por adopción y gracia.<br>
+                <strong>Amén.</strong></p>
+                <p>Que Dios, que aceptó nuestra naturaleza terrenal en el Verbo hecho carne, les conceda participar de su vida divina.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Epifanía</h3>
+                <p>Que Cristo, que atrajo a las naciones a su luz, les conceda en esta vida caminar en su luz.<br>
+                <strong>Amén.</strong></p>
+                <p>Que él, que apareció en nuestra carne, transforme sus vidas a su semejanza.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Cuaresma</h3>
+                <p>Que Dios, que nos concedió estos días de penitencia, les conceda el perdón de sus pecados y la paz.<br>
+                <strong>Amén.</strong></p>
+                <p>Que él les conceda la gracia de una verdadera conversión y la fortaleza para vencer el mal.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Pascua</h3>
+                <p>Que el Dios de la paz, que resucitó de los muertos a nuestro Señor Jesucristo, el gran Pastor de las ovejas, los haga aptos en toda obra buena para que hagan su voluntad.<br>
+                <strong>Amén.</strong></p>
+                <p>Que él, que destruyó la muerte por su muerte y restauró la vida por su resurrección, les conceda la inmortalidad.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Pentecostés</h3>
+                <p>Que el Espíritu de la verdad los guíe a toda la verdad y les conceda el don de la sabiduría.<br>
+                <strong>Amén.</strong></p>
+                <p>Que él, que unió las lenguas de las naciones en la confesión de un solo nombre, los mantenga firmes en la fe.<br>
+                <strong>Amén.</strong></p>
+                <p>Que la bendición de Dios Todopoderoso, Padre, Hijo y Espíritu Santo, sea con ustedes y permanezca siempre.<br>
+                <strong>Amén.</strong></p>
             </div>
-        `
+        `,
     };
 
     const handleServiceClick = (item) => {
@@ -185,7 +240,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
             {/* Content grid */}
             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-8">
                 {services.map((section, idx) => (
-                    <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 100}ms` }}>
+                    <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 100} ms` }}>
                         <h3 className="text-sm font-bold text-teal-700 dark:text-teal-400 uppercase tracking-widest mb-4 px-1 sticky top-0 bg-gray-50 dark:bg-background-dark z-10 py-2">
                             {section.category}
                         </h3>
