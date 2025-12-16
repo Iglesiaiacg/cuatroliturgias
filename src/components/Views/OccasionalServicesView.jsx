@@ -56,6 +56,34 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
                 <p>Oremos.</p>
                 <p>Señor Jesucristo, mientras este día se apaga en el anochecer, te pedimos que la luz de tu verdad disipe las tinieblas de nuestros corazones; tú que eres la Luz del mundo, y vives y reinas con el Dios Padre y el Espíritu Santo, un solo Dios, por los siglos de los siglos. <strong>Amén.</strong></p>
             </div>
+        `,
+        "Antífonas para la Fracción": `
+            <div class="liturgy-content">
+                <h1>Antífonas para la Fracción</h1>
+                <p class="rubric">Cantos para la fracción del pan (Confractoria).</p>
+
+                <p class="rubric">Uno de los siguientes himnos u otros apropiados, pueden ser cantados.</p>
+
+                <h3>Cristo Nuestra Pascua (Pascha Nostrum)</h3>
+                <p>Aleluya. Cristo nuestra Pascua ha sido sacrificado por nosotros; *<br>
+                <strong>por tanto celebremos la fiesta. Aleluya.</strong></p>
+
+                <h3>Cordero de Dios (Agnus Dei)</h3>
+                <p>Cordero de Dios, que quitas el pecado del mundo, *<br>
+                <strong>ten piedad de nosotros.</strong></p>
+                <p>Cordero de Dios, que quitas el pecado del mundo, *<br>
+                <strong>ten piedad de nosotros.</strong></p>
+                <p>Cordero de Dios, que quitas el pecado del mundo, *<br>
+                <strong>danos tu paz.</strong></p>
+
+                <h3>Reconócete, Señor Jesús</h3>
+                <p>Reconócete, Señor Jesús, al partir el pan. *<br>
+                <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
+                <p>El pan que partimos es la comunión del cuerpo de Cristo. *<br>
+                <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
+                <p>Un solo cuerpo somos, aunque muchos, pues todos participamos de un solo pan. *<br>
+                <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
+            </div>
         `
     };
 
