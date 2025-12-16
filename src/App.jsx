@@ -37,12 +37,16 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
+  // Navigation State
+  const [serviceTitle, setServiceTitle] = useState(null)
+
   const previewRef = useRef(null)
 
   // Handlers
   const handleToast = (msg, type = 'success') => setToast({ message: msg, type })
 
   const handleGenerate = async () => {
+    setServiceTitle(null) // Clear service title when generating fresh liturgy
     try {
       await generate()
       handleToast("Liturgia generada correctamente")
@@ -163,6 +167,14 @@ function App() {
             </div>
           ) : docContent ? (
             <div className="w-full flex flex-col items-center">
+              {/* Context Title for Manual Services */}
+              {serviceTitle && (
+                <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in">
+                  <span className="text-xs font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">Servicio Ocasional</span>
+                  <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mt-4">{serviceTitle}</h2>
+                </div>
+              )}
+
               <Toolbar
                 onPrint={handlePrint}
                 onDownloadFull={() => handleDownload('full')}
@@ -190,7 +202,11 @@ function App() {
 
       {/* --- OCCASIONAL SERVICES VIEW --- */}
       {activeTab === 'occasional' && (
-        <OccasionalServicesView onNavigate={setActiveTab} setDocContent={setDocContent} />
+        <OccasionalServicesView
+          onNavigate={setActiveTab}
+          setDocContent={setDocContent}
+          setServiceTitle={setServiceTitle}
+        />
       )}
 
       {/* --- FAVORITES (Placeholder) --- */}

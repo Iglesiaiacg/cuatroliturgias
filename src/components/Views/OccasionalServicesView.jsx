@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function OccasionalServicesView({ onNavigate, setDocContent }) {
+export default function OccasionalServicesView({ onNavigate, setDocContent, setServiceTitle }) {
 
     // Content Definitions
     const serviceContent = {
@@ -91,6 +91,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent }) {
         if (serviceContent[item.title]) {
             if (setDocContent) {
                 setDocContent(serviceContent[item.title]);
+                if (setServiceTitle) setServiceTitle(item.title);
                 onNavigate('generator');
             }
         } else {
