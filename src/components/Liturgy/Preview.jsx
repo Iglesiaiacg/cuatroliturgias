@@ -20,7 +20,7 @@ const Preview = forwardRef(({ content, season }, ref) => {
                 suppressContentEditableWarning={true}
             >
                 {/* Liturgy Header Icon */}
-                <div className="flex justify-center mb-8 text-teal-700 opacity-80"
+                <div className="flex justify-center mb-8 text-primary opacity-80"
                     dangerouslySetInnerHTML={{ __html: iconHtml }}
                     style={{ width: '48px', height: '48px', margin: '0 auto 2rem auto' }}
                 />

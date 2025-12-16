@@ -52,7 +52,7 @@ export default function Header({
                             className={`
                                 px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-bold transition-all whitespace-nowrap
                                 ${tradition === t.value
-                                    ? 'bg-white text-teal-700 shadow-sm ring-1 ring-gray-200'
+                                    ? 'bg-white text-primary shadow-sm ring-1 ring-gray-200'
                                     : 'text-gray-500 hover:text-gray-900 hover:bg-gray-200/50'}
                             `}
                         >
@@ -68,14 +68,14 @@ export default function Header({
                         onChange={(date) => setSelectedDate(date)}
                         dateFormat="dd/MM/yyyy"
                         locale="es"
-                        className="w-28 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-2.5 text-xs font-bold text-gray-700 focus:ring-2 focus:ring-teal-500/20 text-center cursor-pointer outline-none transition-all"
+                        className="w-28 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-2.5 text-xs font-bold text-gray-700 focus:ring-2 focus:ring-primary/20 text-center cursor-pointer outline-none transition-all"
                     />
                 </div>
 
                 {/* Calculated Feast Label */}
                 <div className="hidden md:flex flex-col items-start justify-center h-10 border-l border-gray-200 pl-4 animate-fade-in">
                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Liturgia del Día</span>
-                    <span className="text-xs font-bold text-teal-700 truncate max-w-[200px] lg:max-w-xs">{calculatedFeast}</span>
+                    <span className="text-xs font-bold text-primary truncate max-w-[200px] lg:max-w-xs">{calculatedFeast}</span>
                 </div>
 
             </div>
@@ -98,7 +98,7 @@ export default function Header({
                 </button>
                 <button
                     onClick={onGenerate}
-                    className="px-5 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
+                    className="px-5 py-2.5 bg-primary hover:bg-red-800 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all flex items-center gap-2"
                 >
                     <span className="text-sm">✨</span> <span className="hidden sm:inline">Generar</span>
                 </button>

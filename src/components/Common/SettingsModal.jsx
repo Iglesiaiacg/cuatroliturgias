@@ -37,11 +37,11 @@ export default function SettingsModal({ isOpen, onClose }) {
                             value={key}
                             onChange={(e) => setKey(e.target.value)}
                             placeholder="Pega tu llave aquí (AIza...)"
-                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 outline-none transition-all font-mono"
+                            className="w-full bg-gray-50 border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none transition-all font-mono"
                         />
                         <p className="text-[10px] text-gray-400 mt-2">
                             Tu llave se guarda de forma segura en tu navegador.
-                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-teal-600 hover:underline ml-1 font-bold">
+                            <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" className="text-primary hover:underline ml-1 font-bold">
                                 Obtener llave gratis aquí →
                             </a>
                         </p>

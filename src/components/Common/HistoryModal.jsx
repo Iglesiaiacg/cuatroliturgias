@@ -37,17 +37,17 @@ export default function HistoryModal({ isOpen, onClose, onRestore }) {
                             <div
                                 key={item.id}
                                 onClick={() => onRestore(item)}
-                                className="p-4 m-2 rounded-xl hover:bg-teal-50 cursor-pointer border border-transparent hover:border-teal-100 transition-all group"
+                                className="p-4 m-2 rounded-xl hover:bg-red-50 cursor-pointer border border-transparent hover:border-red-100 transition-all group"
                             >
                                 <div className="flex justify-between items-center mb-1">
-                                    <span className="text-[10px] font-bold text-teal-700 uppercase tracking-wider bg-teal-100/50 px-2 py-0.5 rounded-md group-hover:bg-white/80 transition-colors">
+                                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider bg-red-100/50 px-2 py-0.5 rounded-md group-hover:bg-white/80 transition-colors">
                                         {item.tradition}
                                     </span>
                                     <span className="text-[10px] text-gray-400">
                                         {new Date(item.date).toLocaleDateString()} {new Date(item.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
-                                <h4 className="font-bold text-sm text-gray-700 group-hover:text-teal-900 transition-colors">
+                                <h4 className="font-bold text-sm text-gray-700 group-hover:text-red-900 transition-colors">
                                     {item.title}
                                 </h4>
                             </div>
