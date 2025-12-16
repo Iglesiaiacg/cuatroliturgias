@@ -2,7 +2,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import es from 'date-fns/locale/es';
-import Clock from './Clock';
+import logo from '../../assets/logo.png';
 
 registerLocale('es', es);
 
@@ -30,13 +30,13 @@ export default function Header({
                 <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-black rounded-xl shadow-lg flex items-center justify-center text-white font-serif text-lg font-bold">L</div>
                     <div className="hidden lg:block">
-                        <h1 className="text-sm font-bold text-gray-900 leading-none tracking-tight">Liturgico</h1>
+                        <h1 className="text-sm font-bold text-gray-900 leading-none tracking-tight">Liturgical Calendar</h1>
                         <span className="text-[9px] text-gray-500 font-bold uppercase tracking-[0.2em]">CALENDAR EDITION</span>
                     </div>
                 </div>
                 <div className="h-8 w-px bg-gray-200 mx-2 hidden md:block"></div>
                 <div className="hidden md:block">
-                    <Clock />
+                    <img src={logo} alt="Logo" className="h-12 w-auto object-contain" />
                 </div>
             </div>
 
