@@ -1,20 +1,18 @@
 @import "tailwindcss";
 
-@layer theme {
-    :root {
-        /* Classic / Solemn Theme */
-        --color-primary: #981b1e;
-        /* Liturgical Red (Rubric) */
-        --color-background-light: #fdfbf7;
-        /* Warm Cream (Paper) */
-        --color-background-dark: #1c1917;
-        /* Warm Dark Grey */
-        --color-surface-dark: #292524;
-        /* Stone Grey */
-        --color-surface-light: #ffffff;
-        /* White */
-        --font-display: "Newsreader", serif;
-    }
+@theme {
+    /* Classic / Solemn Theme */
+    --color-primary: #981b1e;
+    /* Liturgical Red (Rubric) */
+    --color-background-light: #fdfbf7;
+    /* Warm Cream (Paper) */
+    --color-background-dark: #1c1917;
+    /* Warm Dark Grey */
+    --color-surface-dark: #292524;
+    /* Stone Grey */
+    --color-surface-light: #ffffff;
+    /* White */
+    --font-display: "Newsreader", serif;
 }
 
 @layer utilities {
