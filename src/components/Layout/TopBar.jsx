@@ -8,7 +8,7 @@ export default function TopBar({ date, onSettings }) {
         <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 px-4 pt-12 pb-4 flex items-center justify-between transition-colors duration-300">
             <div className="flex flex-col">
                 <span className="text-xs font-medium uppercase tracking-widest text-primary mb-0.5 capitalize">{dateStr}</span>
-                <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white font-display">Calendario Litúrgico</h1>
+                <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white font-display">LITÚRG-IA /CG</h1>
             </div>
             <button
                 onClick={onSettings}
