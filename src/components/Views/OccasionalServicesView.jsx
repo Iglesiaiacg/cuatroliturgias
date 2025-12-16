@@ -140,6 +140,222 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <strong>Amén.</strong></p>
             </div>
         `,
+        "Sobre la Corona de Adviento": `
+            <div class="liturgy-content">
+                <h1>Sobre la Corona de Adviento</h1>
+                <p class="rubric">Este rito está pensado para ser parte de la Oración Vespertina o de la Eucaristía, al comienzo del servicio.</p>
+
+                <h3>Bendición de la Corona</h3>
+                <p class="rubric">Se usa solo el Primer Domingo de Adviento.</p>
+                <p>Oh Dios, por cuya palabra todas las cosas son santificadas, derrama tu bendición sobre esta corona y concédenos que quienes la usen preparen sus corazones para la venida de Cristo, y reciban de Ti abundante gracia. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Primer Domingo de Adviento</h3>
+                <p class="rubric">Se enciende la primera vela (morada).</p>
+                <p>Encendemos esta vela, Señor, mientras esperamos tu venida; que la luz de tu amor disipe las tinieblas de nuestro mundo y nos guíe hacia Ti.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Segundo Domingo de Adviento</h3>
+                <p class="rubric">Se encienden dos velas (moradas).</p>
+                <p>Rey de Paz, enciende en nuestros corazones el fuego de tu amor; que al prepararnos para recibirte, seamos instrumentos de tu paz en el mundo.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Tercer Domingo de Adviento</h3>
+                <p class="rubric">Se encienden tres velas (dos moradas y una rosa).</p>
+                <p>Dios de Gozo, regocijamos nuestras almas en tu promesa; que la cercanía de nuestra salvación nos llene de alegría y esperanza renovada.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Cuarto Domingo de Adviento</h3>
+                <p class="rubric">Se encienden las cuatro velas.</p>
+                <p>Emanuel, Dios con nosotros, abre nuestros ojos para ver tu presencia; que al completar nuestra espera, estemos listos para recibirte con fe pura y amor sincero.<br>
+                <strong>Amén.</strong></p>
+                
+                <h3>Nochebuena / Navidad</h3>
+                <p class="rubric">Se encienden todas las velas y el cirio central (blanco).</p>
+                <p>Gloria a Dios en las alturas, y en la tierra paz. La Palabra se hizo carne y habitó entre nosotros, y hemos visto su gloria. Cristo, la Luz del mundo, ha nacido. ¡Aleluya!<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Festival de Lecciones y Música de Adviento": `
+            <div class="liturgy-content">
+                <h1>Festival de Lecciones y Música de Adviento</h1>
+                <p class="rubric">Este servicio celebra la esperanza de la venida de Cristo a través de lecturas bíblicas y música.</p>
+                <p class="rubric">Se puede comenzar con una procesión y un himno de entrada (ej. "Ven, ven, Señor, no tardes" o "Ven, oh ven, Emanuel").</p>
+
+                <h3>Oración del Oficiante (Bidding Prayer)</h3>
+                <p>Amados en Cristo, en este tiempo de Adviento, es nuestra responsabilidad y gozo preparar nuestros corazones para escuchar una vez más el mensaje de los ángeles; para ir en espíritu a Belén y ver esta cosa que ha sucedido y que el Señor nos ha dado a conocer: el Verbo hecho carne.</p>
+                <p>Por tanto, oremos por las necesidades de todo el mundo; por la paz y la justicia en la tierra; por la unidad y la misión de la Iglesia...</p>
+                <p>Y para resumir todas estas peticiones, oremos con las palabras que Cristo mismo nos enseñó:</p>
+                <p><strong>Padre nuestro...</strong></p>
+
+                <h3>Primera Lección: La Caída</h3>
+                <p class="rubric">Génesis 3:1-15 (o selección)</p>
+                <p><em>Adán y Eva se rebelan contra Dios y son expulsados del Edén, pero se promete la redención.</em></p>
+                <p>[Inserte lectura completa aquí si se desea, o lea directamente de la Biblia]</p>
+                <p class="rubric">Se canta un himno o villancico.</p>
+
+                <h3>Segunda Lección: La Promesa a Abraham</h3>
+                <p class="rubric">Génesis 22:15-18</p>
+                <p><em>Dios promete que en la descendencia de Abraham serán benditas todas las naciones.</em></p>
+                <p class="rubric">Se canta un himno o villancico.</p>
+
+                <h3>Tercera Lección: La Profecía de un Salvador</h3>
+                <p class="rubric">Isaías 9:2, 6-7</p>
+                <p><em>El pueblo que andaba en tinieblas ha visto gran luz... Porque un niño nos es nacido.</em></p>
+                <p class="rubric">Se canta un himno o villancico.</p>
+
+                <h3>Cuarta Lección: La Vara de Isaí</h3>
+                <p class="rubric">Isaías 11:1-9</p>
+                <p><em>Saldrá una vara del tronco de Isaí... y reposará sobre él el Espíritu de Jehová.</em></p>
+                <p class="rubric">Se canta un himno o villancico.</p>
+
+                <h3>Quinta Lección: El Anuncio a María</h3>
+                <p class="rubric">Lucas 1:26-38</p>
+                <p><em>El ángel Gabriel anuncia a María que concebirá y dará a luz un hijo.</em></p>
+                <p class="rubric">Se canta un himno o villancico (ej. "Ave María" o Magníficat).</p>
+
+                <h3>Sexta Lección: El Nacimiento de Emmanuel</h3>
+                <p class="rubric">Mateo 1:18-23</p>
+                <p><em>El ángel se le aparece a José: llamará su nombre Emmanuel.</em></p>
+                <p class="rubric">Se canta un himno o villancico.</p>
+
+                <h3>Séptima Lección: La Palabra se hizo Carne</h3>
+                <p class="rubric">San Juan 1:1-14</p>
+                <p><em>Y aquel Verbo fue hecho carne, y habitó entre nosotros.</em></p>
+                <p class="rubric">Se canta un himno o villancico de alabanza.</p>
+
+                <h3>Colecta y Bendición</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, que alegras nuestros corazones con la espera de la redención; concédenos que al recibir a tu Unigénito Hijo como nuestro Redentor con gozo, podamos también verle sin temor cuando venga a ser nuestro Juez; quien vive y reina contigo y el Espíritu Santo, un solo Dios, ahora y por siempre.<br>
+                <strong>Amén.</strong></p>
+                <p>La bendición de Dios Todopoderoso...</p>
+            </div>
+        `,
+        "Vigilia de Nochebuena": `
+            <div class="liturgy-content">
+                <h1>Vigilia de Nochebuena</h1>
+                <p class="rubric">Este rito está destinado a preceder la Eucaristía de la Noche de Navidad. Comienza en silencio o con un preludio musical.</p>
+
+                <h3>Salmo Invitatorio</h3>
+                <p>Aleluya. A nosotros un niño nos es nacido; *<br>
+                <strong>Venid, adorémosle. Aleluya.</strong></p>
+
+                <h3>Salmo 89 (Selección)</h3>
+                <p>Las misericordias de Jehová cantaré perpetuamente; *<br>
+                <strong>de generación en generación haré notoria tu fidelidad con mi boca.</strong></p>
+                <p>Porque dije: Para siempre será edificada misericordia; *<br>
+                <strong>en los cielos mismos afirmarás tu verdad.</strong></p>
+                <p>Para siempre confirmaré tu descendencia, *<br>
+                <strong>y edificaré tu trono por todas las generaciones.</strong></p>
+                <p>Celebrarán los cielos tus maravillas, oh Jehová, *<br>
+                <strong>tu verdad también en la congregación de los santos.</strong></p>
+
+                <h3>Lección: La Genealogía de Cristo</h3>
+                <p class="rubric">Mateo 1:1-17</p>
+                <p>Libro de la genealogía de Jesucristo, hijo de David, hijo de Abraham...</p>
+                <p>[Se puede leer el texto completo de la genealogía aquí]</p>
+                <p>...así el nacimiento de Jesucristo fue así.</p>
+
+                <h3>Te Deum Laudamus</h3>
+                <p class="rubric">Se canta o dice el Te Deum.</p>
+                <p>A ti, oh Dios, te alabamos; a ti, Señor, te reconocemos.<br>
+                A ti, eterno Padre, te venera toda la tierra.<br>
+                Santo, Santo, Santo, Señor Dios de los Ejércitos;<br>
+                Llenos están los cielos y la tierra de la majestad de tu gloria.</p>
+
+                <h3>Colecta</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, que has iluminado esta noche santísima con el resplandor de la luz verdadera; concédenos que, así como en la tierra hemos conocido el misterio de esa Luz, podamos también gozar de él plenamente en el cielo; donde con el Padre y el Espíritu Santo vive y reina, un solo Dios, en gloria sempiterna.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Estación ante el Pesebre": `
+            <div class="liturgy-content">
+                <h1>Estación ante el Pesebre</h1>
+                <p class="rubric">Este rito puede usarse antes de la Eucaristía de Navidad o como un servicio devocional independiente.</p>
+                <p class="rubric">Durante el himno de entrada o procesional, los ministros van hacia el pesebre.</p>
+
+                <h3>Versículo y Respuesta</h3>
+                <p>La Palabra se hizo carne y habitó entre nosotros; *<br>
+                <strong>Y vimos su gloria.</strong></p>
+                <p>Aleluya. A nosotros un niño nos es nacido; *<br>
+                <strong>Venid, adorémosle. Aleluya.</strong></p>
+
+                <h3>Lectura</h3>
+                <p class="rubric">Lucas 2:1-20 (El Nacimiento de Jesús)</p>
+                <p>Aconteció en aquellos días, que se promulgó un edicto de parte de Augusto César, que todo el mundo fuese empadronado...</p>
+
+                <h3>Colecta del Pesebre</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, nuestro Padre, tú has amado tanto al mundo que diste a tu único Hijo Jesús, para nacer en un pesebre humilde. Te alabamos y te damos gracias por el don de su presencia entre nosotros. Haz que nuestros corazones sean como el de María, guardando todas estas cosas y meditándolas. Por el mismo Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+                
+                <p class="rubric">Pueden cantarse villancicos como "Noche de Paz" o "A la nanita nana".</p>
+            </div>
+        `,
+        "Festival de Lecciones y Música de Navidad": `
+            <div class="liturgy-content">
+                <h1>Festival de Lecciones y Música de Navidad</h1>
+                <p class="rubric">Este servicio tradicional incluye nueve lecciones bíblicas intercaladas con villancicos.</p>
+
+                <h3>Oración del Oficiante (Bidding Prayer)</h3>
+                <p>Amados en Cristo, sea nuestro cuidado y deleite escuchar nuevamente el mensaje de los ángeles, e ir en corazón y mente a Belén y ver esta cosa que ha sucedido y que el Señor nos ha dado a conocer: el Verbo hecho carne.</p>
+                <p>Oremos por la paz del mundo... por la unidad de la Iglesia... por los pobres y los desamparados...</p>
+                <p>Y sumemos todas nuestras oraciones diciendo:</p>
+                <p><strong>Padre nuestro...</strong></p>
+
+                <h3>Primera Lección</h3>
+                <p class="rubric">Génesis 3:8-15</p>
+                <p><em>Dios anuncia en el jardín del Edén que la simiente de la mujer herirá la cabeza de la serpiente.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Segunda Lección</h3>
+                <p class="rubric">Génesis 22:15-18</p>
+                <p><em>Dios promete al fiel Abraham que en su simiente serán benditas todas las naciones de la tierra.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Tercera Lección</h3>
+                <p class="rubric">Isaías 9:2-7</p>
+                <p><em>El profeta anuncia la venida del Salvador para un pueblo que anda en tinieblas.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Cuarta Lección</h3>
+                <p class="rubric">Miqueas 5:2-4</p>
+                <p><em>El profeta anuncia la gloria de la pequeña Belén.</em></p>
+                <p class="rubric">Se canta un villancico (ej. "Oh, pueblecito de Belén").</p>
+
+                <h3>Quinta Lección</h3>
+                <p class="rubric">Lucas 1:26-38</p>
+                <p><em>El ángel Gabriel saluda a la Santísima Virgen María.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Sexta Lección</h3>
+                <p class="rubric">Lucas 2:1-7</p>
+                <p><em>San Lucas cuenta el nacimiento de Jesús.</em></p>
+                <p class="rubric">Se canta un villancico (ej. "Noche de Paz").</p>
+
+                <h3>Séptima Lección</h3>
+                <p class="rubric">Lucas 2:8-16</p>
+                <p><em>Los pastores van al pesebre.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Octava Lección</h3>
+                <p class="rubric">Mateo 2:1-12</p>
+                <p><em>Los magos son guiados por la estrella a Jesús.</em></p>
+                <p class="rubric">Se canta un villancico.</p>
+
+                <h3>Novena Lección</h3>
+                <p class="rubric">Juan 1:1-14</p>
+                <p><em>San Juan explica el gran misterio de la Encarnación.</em></p>
+                <p class="rubric">Se canta un villancico solemne (ej. "Adeste Fideles").</p>
+
+                <h3>Colecta y Bendición</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, que haces que nos alegremos con la celebración anual del nacimiento de tu único Hijo Jesucristo; concédenos que, al recibirlo con gozo como nuestro Redentor, podamos con segura confianza contemplarlo cuando venga para ser nuestro Juez; quien vive y reina contigo y el Espíritu Santo, un solo Dios, ahora y por siempre.<br>
+                <strong>Amén.</strong></p>
+                <p>La bendición de Dios Todopoderoso...</p>
+            </div>
+        `,
     };
 
     const handleServiceClick = (item) => {
