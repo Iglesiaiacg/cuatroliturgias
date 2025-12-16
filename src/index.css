@@ -2,11 +2,17 @@
 
 @layer theme {
     :root {
-        --color-primary: #8311d4;
-        --color-background-light: #f7f6f8;
-        --color-background-dark: #1a1022;
-        --color-surface-dark: #2d1f36;
+        /* Classic / Solemn Theme */
+        --color-primary: #981b1e;
+        /* Liturgical Red (Rubric) */
+        --color-background-light: #fdfbf7;
+        /* Warm Cream (Paper) */
+        --color-background-dark: #1c1917;
+        /* Warm Dark Grey */
+        --color-surface-dark: #292524;
+        /* Stone Grey */
         --color-surface-light: #ffffff;
+        /* White */
         --font-display: "Newsreader", serif;
     }
 }

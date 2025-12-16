@@ -169,7 +169,14 @@ function App() {
             <div className="w-full flex flex-col items-center">
               {/* Context Title for Manual Services */}
               {serviceTitle && (
-                <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in">
+                <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in relative">
+                  <button
+                    onClick={() => setActiveTab('occasional')}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                    title="Volver a Servicios Ocasionales"
+                  >
+                    <span className="material-symbols-outlined text-2xl">arrow_back</span>
+                  </button>
                   <span className="text-xs font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">Servicio Ocasional</span>
                   <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mt-4">{serviceTitle}</h2>
                 </div>
