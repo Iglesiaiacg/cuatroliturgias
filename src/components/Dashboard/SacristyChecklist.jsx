@@ -4,16 +4,20 @@ import { getLiturgicalColor } from '../../services/liturgy';
 export default function SacristyChecklist({ date }) {
     const color = getLiturgicalColor(date);
 
-    // Default items
+    // Expanded Default items
     const defaultItems = [
-        { id: 'misal', label: 'Misal Romano / Libro de Oración', checked: false },
-        { id: 'leccionario', label: 'Leccionario (Marcado)', checked: false },
-        { id: 'caliz', label: 'Cáliz, Patena y Purificador', checked: false },
-        { id: 'corporal', label: 'Corporal', checked: false },
-        { id: 'vinajeras', label: 'Vinajeras (Agua y Vino)', checked: false },
-        { id: 'lavabo', label: 'Lavabo y Manutergio', checked: false },
-        { id: 'pan', label: 'Hostias (Sificientes)', checked: false },
-        { id: 'velas', label: 'Velas del Altar Encendidas', checked: false },
+        { id: 'misal', label: 'Misal Romano', checked: false },
+        { id: 'leccionario', label: 'Leccionario', checked: false },
+        { id: 'evangeliario', label: 'Evangeliario', checked: false },
+        { id: 'caliz', label: 'Cáliz/Patena', checked: false },
+        { id: 'corporal', label: 'Corporal/Purific.', checked: false },
+        { id: 'vinajeras', label: 'Vinajeras', checked: false },
+        { id: 'lavabo', label: 'Lavabo', checked: false },
+        { id: 'pan', label: 'Hostias Sufic.', checked: false },
+        { id: 'velas', label: 'Velas Altar', checked: false },
+        { id: 'llaves', label: 'Llave Sagrario', checked: false },
+        { id: 'micro', label: 'Micrófono', checked: false },
+        { id: 'incienso', label: 'Incienso', checked: false },
     ];
 
     // Load from local storage or use default
@@ -25,6 +29,7 @@ export default function SacristyChecklist({ date }) {
     };
 
     const [items, setItems] = useState(getStoredItems);
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     // Reset when date changes
     useEffect(() => {
@@ -46,55 +51,62 @@ export default function SacristyChecklist({ date }) {
     const progress = Math.round((completed / total) * 100);
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
-            {/* Header with Liturgical Color */}
-            <div className={`px-6 py-4 flex items-center justify-between border-b ${color.classes.replace('text-', 'border-').split(' ')[2]}`}>
-                <div>
-                    <h3 className="text-lg font-bold font-display text-gray-900 dark:text-white">Sacristía Digital</h3>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Preparación para la Santa Misa</p>
+        <div className="bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
+            {/* Header (Compact) */}
+            <div
+                className={`px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border-b ${color.classes.replace('text-', 'border-').split(' ')[2]}`}
+                onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+                <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full ${color.classes.replace('bg-', 'bg-').split(' ')[0].replace('100', '500').replace('/50', '')} shadow-sm`}></div>
+                    <div>
+                        <h3 className="text-sm font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
+                            Sacristía Digital
+                            <span className="text-[10px] font-normal text-gray-400 bg-gray-100 dark:bg-white/10 px-1.5 rounded-full">{color.name}</span>
+                        </h3>
+                    </div>
                 </div>
-                <div className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${color.classes}`}>
-                    {color.name}
+
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-gray-400">{completed}/{total}</span>
+                        <div className="w-12 bg-gray-200 dark:bg-white/10 rounded-full h-1 overflow-hidden">
+                            <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }}></div>
+                        </div>
+                    </div>
+                    <span className="material-symbols-outlined text-gray-400 text-lg transform transition-transform duration-300" style={{ rotate: isCollapsed ? '180deg' : '0deg' }}>expand_less</span>
                 </div>
             </div>
 
-            {/* Checklist */}
-            <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+            {/* Checklist Grid (Collapsible) */}
+            <div
+                className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-2 gap-y-1 p-2 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-96 opacity-100'}`}
+            >
                 {items.map(item => (
                     <button
                         key={item.id}
                         onClick={() => toggleItem(item.id)}
-                        className={`flex items-center gap-3 p-3 rounded-lg transition-all text-left group
+                        className={`flex items-center gap-2 px-2 py-1.5 rounded-md transition-all text-left group
                             ${item.checked
-                                ? 'bg-green-50 dark:bg-green-900/10 text-green-800 dark:text-green-200'
-                                : 'hover:bg-gray-50 dark:hover:bg-white/5 text-gray-600 dark:text-gray-300'
+                                ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
+                                : 'hover:bg-white dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
                             }
                         `}
                     >
                         <div className={`
-                            w-6 h-6 rounded-md border flex items-center justify-center transition-colors shrink-0
+                            w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center transition-colors shrink-0
                             ${item.checked
                                 ? 'bg-green-500 border-green-500 text-white'
-                                : 'border-gray-300 dark:border-gray-600 group-hover:border-primary'
+                                : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
                             }
                         `}>
-                            {item.checked && <span className="material-symbols-outlined text-sm font-bold">check</span>}
+                            {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
                         </div>
-                        <span className={`text-sm font-medium ${item.checked ? 'line-through opacity-70' : ''}`}>
+                        <span className={`text-[10px] sm:text-xs font-medium truncate w-full ${item.checked ? 'line-through opacity-60' : ''}`}>
                             {item.label}
                         </span>
                     </button>
                 ))}
-            </div>
-
-            {/* Progress Bar */}
-            <div className="bg-gray-50 dark:bg-black/20 p-2">
-                <div className="w-full bg-gray-200 dark:bg-white/10 rounded-full h-1.5 overflow-hidden">
-                    <div
-                        className="h-full bg-primary transition-all duration-500"
-                        style={{ width: `${progress}%` }}
-                    ></div>
-                </div>
             </div>
         </div>
     );
