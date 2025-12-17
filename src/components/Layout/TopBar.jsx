@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-import logoHome from '../../assets/logo-home.png';
+import logoHome from '../../assets/logo.png';
 
 export default function TopBar({ date, onSettings }) {
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
