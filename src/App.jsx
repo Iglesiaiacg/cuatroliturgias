@@ -116,7 +116,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-background-dark text-gray-800 font-sans selection:bg-primary selection:text-white pb-20 transition-colors duration-300">
+    <div className="h-[100dvh] w-full flex flex-col overflow-hidden bg-background-light dark:bg-background-dark text-gray-800 font-sans selection:bg-primary selection:text-white transition-colors duration-300">
 
       {/* Toast */}
       {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
@@ -132,99 +132,106 @@ function App() {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      {/* --- DASHBOARD VIEW --- */}
-      {activeTab === 'dashboard' && (
-        <>
-          <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
-          <HomeView
-            key="home-refresh-v3"
-            date={selectedDate}
-            feastName={calculatedFeast}
-            onNavigate={setActiveTab}
-          />
-        </>
-      )}
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col relative overflow-hidden">
 
-      {/* --- GENERATOR VIEW (Classic Workspace) --- */}
-      <div className={activeTab === 'generator' ? 'block' : 'hidden'}>
-        <Header
-          tradition={tradition} setTradition={setTradition}
-          selectedDate={selectedDate} setSelectedDate={setSelectedDate}
-          calculatedFeast={calculatedFeast}
-          onGenerate={handleGenerate}
-          onHistory={() => setIsHistoryOpen(true)}
-          onSettings={() => setIsSettingsOpen(true)}
-        />
-
-        <main className="pt-24 pb-32 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center min-h-screen">
-          {loading ? (
-            <Loading tip={loadingTip} />
-          ) : error ? (
-            <div className="mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md animate-slide-in">
-              <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
-              <p className="text-red-600 mb-4">{error}</p>
-              <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
-            </div>
-          ) : docContent ? (
-            <div className="w-full flex flex-col items-center">
-              {/* Context Title for Manual Services */}
-              {serviceTitle && (
-                <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in relative">
-                  <button
-                    onClick={() => setActiveTab('occasional')}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
-                    title="Volver a Servicios Ocasionales"
-                  >
-                    <span className="material-symbols-outlined text-2xl">arrow_back</span>
-                  </button>
-                  <span className="text-xs font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">Servicio Ocasional</span>
-                  <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mt-4">{serviceTitle}</h2>
-                </div>
-              )}
-
-              <Toolbar
-                onPrint={handlePrint}
-                onDownloadFull={() => handleDownload('full')}
-                onDownloadBulletin={() => handleDownload('bulletin')}
-              />
-              <Preview ref={previewRef} content={docContent} season={season} />
-            </div>
-          ) : (
-            <EmptyState />
-          )}
-        </main>
-      </div>
-
-      {/* --- CALENDAR VIEW --- */}
-      {activeTab === 'calendar' && (
-        <>
-          <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
-          <CalendarView
-            selectedDate={selectedDate}
-            onDateChange={setSelectedDate}
-            onNavigate={setActiveTab}
-          />
-        </>
-      )}
-
-      {/* --- OCCASIONAL SERVICES VIEW --- */}
-      {activeTab === 'occasional' && (
-        <OccasionalServicesView
-          onNavigate={setActiveTab}
-          setDocContent={setDocContent}
-          setServiceTitle={setServiceTitle}
-        />
-      )}
-
-      {/* --- FAVORITES (Placeholder) --- */}
-      {activeTab === 'favorites' && (
-        <div className="flex items-center justify-center min-h-screen text-gray-400">
-          <div className="text-center">
-            <span className="material-symbols-outlined text-6xl mb-4">favorite</span>
-            <p>Favoritos próximamente</p>
+        {/* --- DASHBOARD VIEW --- */}
+        {activeTab === 'dashboard' && (
+          <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
+            <HomeView
+              key="home-refresh-v3"
+              date={selectedDate}
+              feastName={calculatedFeast}
+              onNavigate={setActiveTab}
+            />
           </div>
-        </div>
-      )}
+        )}
+
+        {/* --- GENERATOR VIEW (Classic Workspace) --- */}
+        {activeTab === 'generator' && (
+          <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <Header
+              tradition={tradition} setTradition={setTradition}
+              selectedDate={selectedDate} setSelectedDate={setSelectedDate}
+              calculatedFeast={calculatedFeast}
+              onGenerate={handleGenerate}
+              onHistory={() => setIsHistoryOpen(true)}
+              onSettings={() => setIsSettingsOpen(true)}
+            />
+
+            <main className="flex-1 py-8 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center w-full">
+              {loading ? (
+                <Loading tip={loadingTip} />
+              ) : error ? (
+                <div className="mt-20 p-8 bg-red-50 border-2 border-red-100 rounded-xl text-center max-w-md animate-slide-in">
+                  <h3 className="text-red-700 font-bold text-lg mb-2">Error de Generación</h3>
+                  <p className="text-red-600 mb-4">{error}</p>
+                  <button onClick={() => window.location.reload()} className="underline text-red-800 font-bold">Recargar página</button>
+                </div>
+              ) : docContent ? (
+                <div className="w-full flex flex-col items-center">
+                  {/* Context Title for Manual Services */}
+                  {serviceTitle && (
+                    <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in relative">
+                      <button
+                        onClick={() => setActiveTab('occasional')}
+                        className="absolute left-0 top-1/2 -translate-y-1/2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors"
+                        title="Volver a Servicios Ocasionales"
+                      >
+                        <span className="material-symbols-outlined text-2xl">arrow_back</span>
+                      </button>
+                      <span className="text-xs font-bold text-primary uppercase tracking-widest bg-primary/10 px-3 py-1 rounded-full">Servicio Ocasional</span>
+                      <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white mt-4">{serviceTitle}</h2>
+                    </div>
+                  )}
+
+                  <Toolbar
+                    onPrint={handlePrint}
+                    onDownloadFull={() => handleDownload('full')}
+                    onDownloadBulletin={() => handleDownload('bulletin')}
+                  />
+                  <Preview ref={previewRef} content={docContent} season={season} />
+                </div>
+              ) : (
+                <EmptyState />
+              )}
+            </main>
+          </div>
+        )}
+
+        {/* --- CALENDAR VIEW --- */}
+        {activeTab === 'calendar' && (
+          <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
+            <CalendarView
+              selectedDate={selectedDate}
+              onDateChange={setSelectedDate}
+              onNavigate={setActiveTab}
+            />
+          </div>
+        )}
+
+        {/* --- OCCASIONAL SERVICES VIEW --- */}
+        {activeTab === 'occasional' && (
+          /* OccasionalServicesView handles its own layout, so we just render it. It will fill the flex-1 container. */
+          <OccasionalServicesView
+            onNavigate={setActiveTab}
+            setDocContent={setDocContent}
+            setServiceTitle={setServiceTitle}
+          />
+        )}
+
+        {/* --- FAVORITES (Placeholder) --- */}
+        {activeTab === 'favorites' && (
+          <div className="flex-1 flex items-center justify-center text-gray-400">
+            <div className="text-center">
+              <span className="material-symbols-outlined text-6xl mb-4">favorite</span>
+              <p>Favoritos próximamente</p>
+            </div>
+          </div>
+        )}
+      </div>
 
       <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
     </div>

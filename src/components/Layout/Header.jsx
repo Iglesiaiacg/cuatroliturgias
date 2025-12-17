@@ -23,7 +23,7 @@ export default function Header({
     ];
 
     return (
-        <header className="fixed top-0 left-0 right-0 h-20 bg-white/90 backdrop-blur-md border-b border-gray-200 z-50 px-6 flex items-center justify-between shadow-sm transition-all">
+        <header className="h-20 bg-white/90 backdrop-blur-md border-b border-gray-200 z-50 px-6 flex items-center justify-between shadow-sm transition-all shrink-0">
 
             {/* 1. BRAND & CLOCK */}
             <div className="flex items-center gap-4 shrink-0">
@@ -41,7 +41,7 @@ export default function Header({
             </div>
 
             {/* 2. COMMAND CENTER (Calendar) */}
-            <div className="flex-1 max-w-3xl px-4 md:px-12 flex items-center gap-4 justify-center">
+            <div className="flex-1 max-w-3xl px-2 md:px-12 flex items-center gap-2 md:gap-4 justify-start md:justify-center overflow-x-auto no-scrollbar mask-linear-fade">
 
                 {/* Tradition Selector (Buttons) */}
                 <div className="flex bg-gray-100 p-1 rounded-xl overflow-x-auto no-scrollbar shrink-0 max-w-[200px] md:max-w-none">

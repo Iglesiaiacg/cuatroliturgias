@@ -1,6 +1,6 @@
 export default function BottomNav({ activeTab, onTabChange }) {
     return (
-        <nav className="fixed bottom-0 left-0 w-full glass-nav pb-safe pt-2 px-6 z-50">
+        <nav className="w-full glass-nav pb-safe pt-2 px-6 z-50 shrink-0">
             <div className="flex justify-between items-center max-w-md mx-auto h-16">
                 <button
                     onClick={() => onTabChange('dashboard')}

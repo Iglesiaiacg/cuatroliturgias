@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import StyledCard from '../Common/StyledCard';
 
 export default function OccasionalServicesView({ onNavigate, setDocContent, setServiceTitle }) {
 
@@ -1038,27 +1039,14 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                             {/* Responsive Grid: 1 col mobile, 2 col tablet, 4 col desktop */}
                             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
                                 {section.items.map((item, i) => (
-                                    <button
+                                    <StyledCard
                                         key={i}
+                                        title={item.title}
+                                        description={item.description}
+                                        icon="church"
                                         onClick={() => handleServiceClick(item)}
-                                        className="relative flex flex-col p-5 bg-white dark:bg-surface-dark rounded-xl border border-[var(--color-primary)]/10 dark:border-white/5 shadow-sm hover:shadow-md hover:border-[var(--color-primary)] transition-all text-left group h-full"
-                                    >
-                                        <div className="w-10 h-10 rounded-full bg-[var(--color-primary)]/5 dark:bg-red-900/20 flex items-center justify-center mb-3 group-hover:bg-[var(--color-primary)] group-hover:text-white transition-colors text-[var(--color-primary)] dark:text-red-400">
-                                            <span className="material-symbols-outlined text-[24px]">church</span>
-                                        </div>
-
-                                        <h4 className="font-bold text-gray-900 dark:text-white font-display leading-tight mb-2 group-hover:text-[var(--color-primary)] transition-colors">
-                                            {item.title}
-                                        </h4>
-
-                                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-3">
-                                            {item.description}
-                                        </p>
-
-                                        <div className="mt-auto pt-4 flex items-center text-xs font-bold text-[var(--color-primary)] opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0 duration-300">
-                                            VER DETALLES <span className="material-symbols-outlined text-[16px] ml-1">arrow_forward</span>
-                                        </div>
-                                    </button>
+                                        actionText="Ver Detalles"
+                                    />
                                 ))}
                             </div>
                         </div>

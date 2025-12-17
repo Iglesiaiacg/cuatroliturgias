@@ -1,3 +1,5 @@
+import StyledCard from '../Common/StyledCard';
+
 export default function Dashboard({ onNavigate, date, feastName }) {
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 pb-24 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
@@ -9,49 +11,41 @@ export default function Dashboard({ onNavigate, date, feastName }) {
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white font-display">Accesos Rápidos</h3>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Card 1: Lecturas - Triggers Generator */}
-                    <button onClick={() => onNavigate('generator')} className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                            <span className="material-symbols-outlined">menu_book</span>
-                        </div>
-                        <div>
-                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Liturgia</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Guía de la celebración</span>
-                        </div>
-                    </button>
+                    {/* Card 1: Liturgia */}
+                    <StyledCard
+                        title="Liturgia"
+                        description="Guía de la celebración"
+                        icon="menu_book"
+                        onClick={() => onNavigate('generator')}
+                        actionText="Abrir"
+                    />
 
                     {/* Card 2: Liturgia Horas */}
-                    <button className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                            <span className="material-symbols-outlined">schedule</span>
-                        </div>
-                        <div>
-                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Liturgia Horas</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Laudes y Vísperas</span>
-                        </div>
-                    </button>
+                    <StyledCard
+                        title="Liturgia Horas"
+                        description="Laudes y Vísperas"
+                        icon="schedule"
+                        onClick={() => { }}
+                        actionText="Próximamente"
+                    />
 
                     {/* Card 3: Santoral */}
-                    <button className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                            <span className="material-symbols-outlined">diversity_3</span>
-                        </div>
-                        <div>
-                            <span className="block text-base font-bold text-gray-900 dark:text-white font-display">Santoral</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Vida de Santos</span>
-                        </div>
-                    </button>
+                    <StyledCard
+                        title="Santoral"
+                        description="Vida de Santos"
+                        icon="diversity_3"
+                        onClick={() => { }}
+                        actionText="Próximamente"
+                    />
 
                     {/* Card 4: Servicios Ocasionales */}
-                    <button onClick={() => onNavigate('occasional')} className="relative flex flex-col p-4 h-32 rounded-xl bg-surface-light dark:bg-surface-dark border border-gray-100 dark:border-white/5 shadow-sm active:scale-95 transition-all hover:border-primary/50 group text-left">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-auto group-hover:bg-primary group-hover:text-white transition-colors text-primary">
-                            <span className="material-symbols-outlined">church</span>
-                        </div>
-                        <div>
-                            <span className="block text-base font-bold leading-tight text-gray-900 dark:text-white font-display mb-0.5">Servicios Ocasionales</span>
-                            <span className="text-xs text-gray-500 dark:text-white/50">Libro de Servicios 2003</span>
-                        </div>
-                    </button>
+                    <StyledCard
+                        title="Servicios Ocasionales"
+                        description="Libro de Servicios 2003"
+                        icon="church"
+                        onClick={() => onNavigate('occasional')}
+                        actionText="Abrir"
+                    />
                 </div>
             </section>
         </main>
