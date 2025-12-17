@@ -86,7 +86,7 @@ export default function PulpitView({ content, onClose, title }) {
             <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 transition-all duration-500 z-50 print:hidden ${showControls ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'}`}>
 
                 {/* Main Control Deck */}
-                <div className="flex items-center gap-3 bg-black/80 backdrop-blur-md p-3 rounded-2xl shadow-2xl border border-white/10">
+                <div className="flex items-center gap-2 md:gap-3 bg-black/80 backdrop-blur-md p-2 md:p-3 rounded-2xl shadow-2xl border border-white/10 max-w-[92vw] overflow-x-auto no-scrollbar">
 
                     {/* Play/Pause */}
                     <button
