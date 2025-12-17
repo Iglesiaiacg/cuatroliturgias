@@ -8,7 +8,7 @@ export default function StyledCard({ title, description, icon, onClick, actionTe
             className="group relative flex flex-col items-center justify-center gap-2 px-6 py-6 m-2 
             bg-white dark:bg-white/5 rounded-lg shadow-lg overflow-hidden cursor-pointer
             transition-all duration-300 hover:shadow-xl
-            after:absolute after:h-full after:w-full after:inset-0 after:-z-20 after:bg-[var(--color-primary)] 
+            after:absolute after:h-full after:w-full after:inset-0 after:z-10 after:bg-[var(--color-primary)] 
             after:rounded-lg after:transition-all after:duration-500 after:-translate-y-full after:hover:translate-y-0
             [&_p]:transition-all [&_p]:delay-200"
         >
