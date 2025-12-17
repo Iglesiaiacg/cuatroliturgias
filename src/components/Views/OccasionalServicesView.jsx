@@ -1012,7 +1012,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
     ];
 
     return (
-        <main className="flex-1 flex flex-col w-full h-full bg-gray-50 dark:bg-background-dark animate-fade-in pb-24 overflow-hidden" >
+        <main className="flex-1 flex flex-col w-full h-full bg-gray-50 dark:bg-background-dark animate-fade-in overflow-hidden" >
             {/* Header */}
             < div className="flex items-center gap-4 px-6 py-4 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-white/5 shrink-0 z-10 shadow-sm" >
                 <button
