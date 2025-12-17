@@ -1,9 +1,15 @@
 import StyledCard from '../Common/StyledCard';
+import SacristyChecklist from '../Dashboard/SacristyChecklist';
 
 export default function Dashboard({ onNavigate, date, feastName }) {
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
 
+
+            {/* Sacristy Digital Checklist */}
+            <section className="mb-2">
+                <SacristyChecklist date={date} />
+            </section>
 
             {/* Quick Access Grid */}
             <section>

@@ -1,34 +1,14 @@
-import { useState } from 'react';
 import {
     format, startOfMonth, endOfMonth, startOfWeek, endOfWeek,
     eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths
 } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getSeason } from '../../services/liturgy';
+import { getLiturgicalColor } from '../../services/liturgy';
 
 export default function CalendarView({ selectedDate, onDateChange, onNavigate }) {
     const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
 
-    // Liturgical Color Helper
-    const getDayColor = (date) => {
-        try {
-            const season = getSeason(date);
-            switch (season) {
-                // Stronger colors (approx 300 scale) replacing previous 100/50 pastel scale
-                // Yellow replaced with Slate/Silver for "White" feasts
-                case 'adviento': return 'bg-purple-300 text-purple-900 border-purple-400 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600';
-                case 'navidad': return 'bg-slate-200 text-slate-900 border-slate-300 dark:bg-slate-700 dark:text-white dark:border-slate-500 font-medium';
-                case 'cuaresma': return 'bg-purple-300 text-purple-900 border-purple-400 dark:bg-purple-700 dark:text-purple-100 dark:border-purple-600';
-                case 'semana_santa': return 'bg-red-300 text-red-900 border-red-400 dark:bg-red-800 dark:text-red-100 dark:border-red-600';
-                case 'pascua': return 'bg-slate-200 text-slate-900 border-slate-300 dark:bg-slate-700 dark:text-white dark:border-slate-500 font-medium';
-                case 'pentecostes': return 'bg-red-300 text-red-900 border-red-400 dark:bg-red-800 dark:text-red-100 dark:border-red-600';
-                default: return 'bg-green-200 text-green-900 border-green-300 dark:bg-green-800 dark:text-green-100 dark:border-green-600';
-            }
-        } catch (error) {
-            console.error("Error calculating season color:", error);
-            return 'bg-gray-50 text-gray-500'; // Fallback color
-        }
-    };
+
 
     // Calendar Logic
     const monthStart = startOfMonth(currentMonth);
@@ -75,7 +55,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                 {calendarDays.map((date, idx) => {
                     const isSelected = isSameDay(date, selectedDate);
                     const isCurrentMonth = isSameMonth(date, monthStart);
-                    const liturgicalColorClass = isCurrentMonth ? getDayColor(date) : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
+                    const liturgicalColorClass = isCurrentMonth ? getLiturgicalColor(date).classes : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
 
                     return (
                         <div

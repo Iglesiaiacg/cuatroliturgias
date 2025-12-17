@@ -173,6 +173,26 @@ export const getLiturgicalCycle = (date) => {
     return { cicloDom, cicloFerial, text: `${cicloDom} | Año ${cicloFerial}` };
 };
 
+export const getLiturgicalColor = (date) => {
+    const season = getSeason(date);
+    switch (season) {
+        case 'adviento':
+            return { name: 'Morado', code: 'purple', classes: 'bg-purple-100 text-purple-900 border-purple-200 dark:bg-purple-900/50 dark:text-purple-100 dark:border-purple-800' };
+        case 'navidad':
+            return { name: 'Blanco', code: 'slate', classes: 'bg-slate-100 text-slate-900 border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700' };
+        case 'cuaresma':
+            return { name: 'Morado', code: 'purple', classes: 'bg-purple-100 text-purple-900 border-purple-200 dark:bg-purple-900/50 dark:text-purple-100 dark:border-purple-800' };
+        case 'semana_santa':
+            return { name: 'Rojo', code: 'red', classes: 'bg-red-100 text-red-900 border-red-200 dark:bg-red-900/50 dark:text-red-100 dark:border-red-800' };
+        case 'pascua':
+            return { name: 'Blanco', code: 'slate', classes: 'bg-slate-100 text-slate-900 border-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:border-slate-700' };
+        case 'pentecostes':
+            return { name: 'Rojo', code: 'red', classes: 'bg-red-100 text-red-900 border-red-200 dark:bg-red-900/50 dark:text-red-100 dark:border-red-800' };
+        default:
+            return { name: 'Verde', code: 'green', classes: 'bg-green-100 text-green-900 border-green-200 dark:bg-green-900/50 dark:text-green-100 dark:border-green-800' };
+    }
+};
+
 export const getTips = () => {
     const tips = [
         "El color morado se usa en Adviento y Cuaresma como signo de penitencia.",
