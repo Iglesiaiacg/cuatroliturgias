@@ -13,7 +13,7 @@ export default function SacristyChecklist({ date }) {
         { id: 'corporal', label: 'Corporal/Purific.', checked: false },
         { id: 'vinajeras', label: 'Vinajeras', checked: false },
         { id: 'lavabo', label: 'Lavabo', checked: false },
-        { id: 'pan', label: 'Hostias Sufic.', checked: false },
+        { id: 'pan', label: 'Hostias (Suficientes)', checked: false },
         { id: 'velas', label: 'Velas Altar', checked: false },
         { id: 'llaves', label: 'Llave Sagrario', checked: false },
         { id: 'micro', label: 'Micrófono', checked: false },
