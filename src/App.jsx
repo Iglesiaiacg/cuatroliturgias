@@ -4,7 +4,7 @@ import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
 
 // Components
-import Header from './components/Layout/Header'
+import GeneratorToolbar from './components/Liturgy/GeneratorToolbar'
 import Toolbar from './components/Layout/Toolbar'
 import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
@@ -17,7 +17,6 @@ import Toast from './components/Common/Toast'
 import HomeView from './components/Views/HomeView'
 import CalendarView from './components/Views/CalendarView'
 import OccasionalServicesView from './components/Views/OccasionalServicesView'
-import BottomNav from './components/Layout/BottomNav'
 import TopBar from './components/Layout/TopBar'
 
 function App() {
@@ -135,10 +134,17 @@ function App() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col relative overflow-hidden">
 
+        {/* Universal TopBar */}
+        <TopBar
+          date={selectedDate}
+          onSettings={() => setIsSettingsOpen(true)}
+          activeTab={activeTab}
+          onNavigate={setActiveTab}
+        />
+
         {/* --- DASHBOARD VIEW --- */}
         {activeTab === 'dashboard' && (
           <div className="flex-1 flex flex-col w-full overflow-y-auto">
-            <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
             <HomeView
               key="home-refresh-v3"
               date={selectedDate}
@@ -151,13 +157,12 @@ function App() {
         {/* --- GENERATOR VIEW (Classic Workspace) --- */}
         {activeTab === 'generator' && (
           <div className="flex-1 flex flex-col w-full overflow-y-auto">
-            <Header
+            <GeneratorToolbar
               tradition={tradition} setTradition={setTradition}
               selectedDate={selectedDate} setSelectedDate={setSelectedDate}
               calculatedFeast={calculatedFeast}
               onGenerate={handleGenerate}
               onHistory={() => setIsHistoryOpen(true)}
-              onSettings={() => setIsSettingsOpen(true)}
             />
 
             <main className="flex-1 py-8 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center w-full">
@@ -203,7 +208,6 @@ function App() {
         {/* --- CALENDAR VIEW --- */}
         {activeTab === 'calendar' && (
           <div className="flex-1 flex flex-col w-full overflow-y-auto">
-            <TopBar date={selectedDate} onSettings={() => setIsSettingsOpen(true)} />
             <CalendarView
               selectedDate={selectedDate}
               onDateChange={setSelectedDate}
@@ -233,7 +237,7 @@ function App() {
         )}
       </div>
 
-      <BottomNav activeTab={activeTab} onTabChange={setActiveTab} />
+      {/* Footer removed as per request (icons moved to header) */}
     </div>
   )
 }
