@@ -13,6 +13,31 @@
     --color-surface-light: #ffffff;
     /* White */
     --font-display: "Newsreader", serif;
+
+    /* --- LITURGICAL ATMOSPHERES (Mesh Gradients) --- */
+    /* Ordinario (Green/Nature) */
+    --bg-ordinary: radial-gradient(at 0% 0%, hsla(153, 40%, 90%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 0%, hsla(120, 30%, 95%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(160, 35%, 92%, 1) 0, transparent 50%);
+
+    /* Adviento (Purple/Expectation) */
+    --bg-advent: radial-gradient(at 0% 0%, hsla(270, 40%, 94%, 1) 0, transparent 55%),
+        radial-gradient(at 50% 100%, hsla(290, 30%, 96%, 1) 0, transparent 55%),
+        radial-gradient(at 100% 0%, hsla(260, 40%, 93%, 1) 0, transparent 55%);
+
+    /* Navidad / Pascua (Gold/White/Joy) */
+    --bg-festive: radial-gradient(at 0% 0%, hsla(45, 60%, 94%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 50%, hsla(50, 80%, 96%, 1) 0, transparent 50%),
+        radial-gradient(at 100% 100%, hsla(40, 50%, 92%, 1) 0, transparent 50%);
+
+    /* Cuaresma (Grey/Purple/Somber) */
+    --bg-lent: radial-gradient(at 20% 20%, hsla(260, 15%, 90%, 1) 0, transparent 50%),
+        radial-gradient(at 80% 80%, hsla(0, 0%, 92%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 50%, hsla(280, 10%, 95%, 1) 0, transparent 50%);
+
+    --bg-martyr: radial-gradient(at 10% 10%, hsla(0, 50%, 96%, 1) 0, transparent 50%),
+        radial-gradient(at 90% 90%, hsla(10, 60%, 97%, 1) 0, transparent 50%),
+        radial-gradient(at 50% 50%, hsla(350, 40%, 95%, 1) 0, transparent 50%);
 }
 
 @layer utilities {
