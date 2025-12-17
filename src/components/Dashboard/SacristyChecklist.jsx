@@ -56,7 +56,7 @@ export default function SacristyChecklist({ date }) {
     };
 
     const [items, setItems] = useState(getStoredItems);
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
 
     // Reset when date changes
     useEffect(() => {
