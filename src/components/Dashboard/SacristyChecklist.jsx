@@ -4,28 +4,55 @@ import { getLiturgicalColor } from '../../services/liturgy';
 export default function SacristyChecklist({ date }) {
     const color = getLiturgicalColor(date);
 
-    // Expanded Default items
+    // Expanded Default items (Comprehensive)
     const defaultItems = [
+        // Libros
         { id: 'misal', label: 'Misal Romano', checked: false },
         { id: 'leccionario', label: 'Leccionario', checked: false },
         { id: 'evangeliario', label: 'Evangeliario', checked: false },
-        { id: 'caliz', label: 'Cáliz/Patena', checked: false },
-        { id: 'corporal', label: 'Corporal/Purific.', checked: false },
-        { id: 'vinajeras', label: 'Vinajeras', checked: false },
-        { id: 'lavabo', label: 'Lavabo', checked: false },
+        { id: 'guion', label: 'Guión / Oración Fieles', checked: false },
+
+        // Altar y Credencia - Vasos
+        { id: 'caliz', label: 'Cáliz y Patena', checked: false },
+        { id: 'copon', label: 'Copón (si es necesario)', checked: false },
+        { id: 'vinajeras', label: 'Vinajeras (Vino/Agua)', checked: false },
+        { id: 'lavabo', label: 'Jarra y Jofaina (Lavabo)', checked: false },
+
+        // Altar y Credencia - Lencería
+        { id: 'corporal', label: 'Corporal y Purificador', checked: false },
+        { id: 'manutergio', label: 'Manutergio', checked: false },
+        { id: 'manteles', label: 'Manteles de Altar', checked: false },
+
+        // Elementos
         { id: 'pan', label: 'Hostias (Suficientes)', checked: false },
-        { id: 'velas', label: 'Velas Altar', checked: false },
-        { id: 'llaves', label: 'Llave Sagrario', checked: false },
-        { id: 'micro', label: 'Micrófono', checked: false },
-        { id: 'incienso', label: 'Incienso', checked: false },
+        { id: 'velas', label: 'Velas del Altar', checked: false },
+        { id: 'llaves', label: 'Llave del Sagrario', checked: false },
+
+        // Procesión y Ritos
+        { id: 'cruz', label: 'Cruz Alta / Ciriales', checked: false },
+        { id: 'incensario', label: 'Incensario y Naveta', checked: false },
+        { id: 'carbones', label: 'Carbones / Incienso', checked: false },
+        { id: 'acetre', label: 'Acetre e Hisopo (Agua)', checked: false },
+        { id: 'campanilla', label: 'Campanilla', checked: false },
+
+        // Vestiduras
+        { id: 'vestiduras', label: 'Vestiduras (Color)', checked: false },
+        { id: 'micro', label: 'Micrófono / Sonido', checked: false },
     ];
 
     // Load from local storage or use default
     const getStoredItems = () => {
-        const key = `sacristy-${date.toDateString()}`;
+        // v2 key to force update with new items list
+        const key = `sacristy-v2-${date.toDateString()}`;
         const stored = localStorage.getItem(key);
         if (stored) return JSON.parse(stored);
         return defaultItems;
+    };
+
+    // Save to local storage
+    const saveItems = (newItems) => {
+        const key = `sacristy-v2-${date.toDateString()}`;
+        localStorage.setItem(key, JSON.stringify(newItems));
     };
 
     const [items, setItems] = useState(getStoredItems);
@@ -42,7 +69,7 @@ export default function SacristyChecklist({ date }) {
             item.id === id ? { ...item, checked: !item.checked } : item
         );
         setItems(newItems);
-        localStorage.setItem(`sacristy-${date.toDateString()}`, JSON.stringify(newItems));
+        saveItems(newItems);
     };
 
     // Calculate progress
