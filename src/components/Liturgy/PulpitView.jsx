@@ -67,6 +67,7 @@ export default function PulpitView({ content, onClose, title }) {
                             margin: 1em 0 0.5em 0;
                             font-size: 0.85em;
                             font-weight: bold;
+                            user-select: none; /* Smart Rubric: Non-selectable */
                         }
                         strong { font-weight: 700; }
                         h1, h2, h3 { margin-top: 1.5em; margin-bottom: 0.5em; line-height: 1.2; font-family: 'Cinzel', serif; }
