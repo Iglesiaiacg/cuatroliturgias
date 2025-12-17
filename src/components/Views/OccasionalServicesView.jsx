@@ -728,6 +728,33 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <p class="rubric">Se hace un gran ruido (strepitus) simbolizando el terremoto a la muerte de Cristo. La vela de Cristo se oculta y luego se muestra de nuevo, simbolizando la resurrección.</p>
             </div>
         `,
+        "Ágape de Jueves Santo": `
+            <div class="liturgy-content">
+                <h1>Ágape de Jueves Santo</h1>
+                <p class="rubric">Esta comida sigue a la Eucaristía del Jueves Santo. No es una celebración eucarística, sino una cena fraterna recordando la Última Cena. Se sugiere una comida sencilla (sopa, queso, aceitunas, frutas, pan y vino).</p>
+
+                <h3>Bendición del Vino</h3>
+                <p class="rubric">El Oficiante toma la copa y dice:</p>
+                <p>Bendito seas, oh Señor nuestro Dios, Rey del universo. Tú creas el fruto de la vid; y en esta noche nos has refrescado con la copa de salvación en la Sangre de tu Hijo Jesucristo. Gloria a ti por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Bendición del Pan</h3>
+                <p class="rubric">El Oficiante toma el pan y dice:</p>
+                <p>Bendito seas, oh Señor nuestro Dios, Rey del universo. Tú haces brotar el pan de la tierra; y nos has alimentado en nuestro camino con el pan de vida en el Cuerpo de tu Hijo Jesucristo.</p>
+                <p>Como el grano esparcido sobre la tierra es reunido en un solo pan, así reúne a tu Iglesia en todo lugar en el reino de tu Hijo. A ti sea la gloria y el poder por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+                
+                <p class="rubric">Los alimentos se comparten en silencio o con conversación tranquila sobre el significado de la noche.</p>
+
+                <h3>Lectura</h3>
+                <p class="rubric">Juan 13:34-35</p>
+                <p>Un mandamiento nuevo os doy: Que os améis unos a otros; como yo os he amado, que también os améis unos a otros. En esto conocerán todos que sois mis discípulos, si tuviereis amor los unos con los otros.</p>
+
+                <h3>Oración Final</h3>
+                <p>Te damos gracias, Padre celestial, porque nos has invitado a compartir este ágape en memoria de tu Hijo. Concédenos que, alimentados por tu gracia, vivamos siempre en el amor fraterno que él nos mandó. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
         "Jueves Santo: Lavatorio": `
             <div class="liturgy-content">
                 <h1>Jueves Santo: Lavatorio</h1>
