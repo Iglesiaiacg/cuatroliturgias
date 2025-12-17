@@ -18,6 +18,7 @@ import HomeView from './components/Views/HomeView'
 import CalendarView from './components/Views/CalendarView'
 import OccasionalServicesView from './components/Views/OccasionalServicesView'
 import TopBar from './components/Layout/TopBar'
+import PulpitView from './components/Liturgy/PulpitView'
 
 function App() {
   const {
@@ -34,6 +35,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
   // Navigation State
@@ -117,6 +119,15 @@ function App() {
   return (
     <div className="h-[100dvh] w-full flex flex-col overflow-hidden bg-background-light dark:bg-background-dark text-gray-800 font-sans selection:bg-primary selection:text-white transition-colors duration-300">
 
+      {/* Pulpit Mode Overlay */}
+      {isPulpitOpen && docContent && (
+        <PulpitView
+          content={docContent}
+          title={calculatedFeast || serviceTitle}
+          onClose={() => setIsPulpitOpen(false)}
+        />
+      )}
+
       {/* Toast */}
       {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
 
@@ -195,6 +206,7 @@ function App() {
                     onPrint={handlePrint}
                     onDownloadFull={() => handleDownload('full')}
                     onDownloadBulletin={() => handleDownload('bulletin')}
+                    onPulpitMode={() => setIsPulpitOpen(true)}
                   />
                   <Preview ref={previewRef} content={docContent} season={season} />
                 </div>
