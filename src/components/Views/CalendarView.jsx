@@ -1,12 +1,15 @@
+import { useState } from 'react';
 import {
     format, startOfMonth, endOfMonth, startOfWeek, endOfWeek,
     eachDayOfInterval, isSameMonth, isSameDay, addMonths, subMonths
 } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { getLiturgicalColor } from '../../services/liturgy';
+import DayDetailsModal from './DayDetailsModal';
 
 export default function CalendarView({ selectedDate, onDateChange, onNavigate }) {
     const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
+    const [viewedDate, setViewedDate] = useState(null); // Date currently shown in modal
 
 
 
@@ -62,6 +65,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                             key={date.toString()}
                             onClick={() => {
                                 onDateChange(date);
+                                setViewedDate(date);
                             }}
                             className={`
                                 relative p-1 sm:p-2 flex flex-col items-start cursor-pointer hover:brightness-95 transition-all border border-transparent
@@ -98,6 +102,17 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                     <span>Ir a la Liturgia del {format(selectedDate, 'd MMM', { locale: es })}</span>
                 </button>
             </div>
+            {/* Day Details Modal */}
+            {viewedDate && (
+                <DayDetailsModal
+                    date={viewedDate}
+                    onClose={() => setViewedDate(null)}
+                    onGenerate={(d) => {
+                        onDateChange(d);
+                        onNavigate('generator');
+                    }}
+                />
+            )}
         </main>
     );
 }
