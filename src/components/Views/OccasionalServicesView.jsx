@@ -816,6 +816,51 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <p class="rubric">Después de un tiempo de adoración en silencio, se despoja el altar principal (Denudación del Altar) mientras se lee el Salmo 22 sin gloria patri.</p>
             </div>
         `,
+        "Jueves Santo: Despojo": `
+            <div class="liturgy-content">
+                <h1>Jueves Santo: Despojo</h1>
+                <p class="rubric">Este rito se realiza tras la Eucaristía del Jueves Santo y la Reserva del Santísimo.</p>
+                <p class="rubric">El altar es despojado totalmente. Se retiran los manteles, las velas y cualquier ornamento, dejando el altar desnudo como símbolo del despojo de Cristo antes de su crucifixión.</p>
+                
+                <h3>Salmo 22</h3>
+                <p class="rubric">Se recita o canta el Salmo 22, sin Gloria Patri.</p>
+                
+                <p>Dios mío, Dios mío, ¿por qué me has desamparado? *<br>
+                <strong>¿Por qué estás tan lejos de mi salvación, y de las palabras de mi clamor?</strong></p>
+                
+                <p>Dios mío, clamo de día, y no respondes; *<br>
+                <strong>Y de noche, y no hay para mí reposo.</strong></p>
+                
+                <p>Pero tú eres santo, *<br>
+                <strong>Tú que habitas entre las alabanzas de Israel.</strong></p>
+                
+                <p>En ti esperaron nuestros padres; *<br>
+                <strong>Esperaron, y tú los libraste.</strong></p>
+                
+                <p>Clamaron a ti, y fueron librados; *<br>
+                <strong>Confiaron en ti, y no fueron avergonzados.</strong></p>
+                
+                <p>Mas yo soy gusano, y no hombre; *<br>
+                <strong>Oprobio de los hombres, y despreciado del pueblo.</strong></p>
+                
+                <p>Todos los que me ven me escarnecen; *<br>
+                <strong>Estiran la boca, menean la cabeza, diciendo:</strong></p>
+                
+                <p>Se encomendó al Señor; líbrele él; *<br>
+                <strong>Sálvele, puesto que en él se complacía.</strong></p>
+                
+                <p>Pero tú eres el que me sacó del vientre; *<br>
+                <strong>El que me hizo estar confiado desde que estaba a los pechos de mi madre.</strong></p>
+                
+                <p>Sobre ti fui echado desde antes de nacer; *<br>
+                <strong>Desde el vientre de mi madre, tú eres mi Dios.</strong></p>
+                
+                <p>No te alejes de mí, porque la angustia está cerca; *<br>
+                <strong>Porque no hay quien ayude.</strong></p>
+                
+                <p class="rubric">Se concluye en silencio, sin bendición ni despedida, y se sale de la iglesia en silencio.</p>
+            </div>
+        `,
         "Bienvenida a Nuevos": `
             <div class="liturgy-content">
                 <h1>Bienvenida a Nuevos Miembros</h1>
