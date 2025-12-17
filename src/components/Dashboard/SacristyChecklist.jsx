@@ -7,7 +7,7 @@ export default function SacristyChecklist({ date }) {
     // Expanded Default items (Comprehensive)
     const defaultItems = [
         // Libros
-        { id: 'misal', label: 'Misal Romano', checked: false },
+        { id: 'misal', label: 'Misal', checked: false },
         { id: 'leccionario', label: 'Leccionario', checked: false },
         { id: 'evangeliario', label: 'Evangeliario', checked: false },
         { id: 'guion', label: 'Guión / Oración Fieles', checked: false },
