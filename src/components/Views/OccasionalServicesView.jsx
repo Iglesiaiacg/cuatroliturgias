@@ -949,64 +949,64 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
         {
             category: "El Año Litúrgico",
             items: [
-                { title: "Antífonas para el Lucernario", description: "Oraciones al encender las velas." },
-                { title: "Antífonas para la Fracción", description: "Cantos para la fracción del pan (Confractoria)." },
-                { title: "Bendiciones Estacionales", description: "Bendiciones especiales para cada tiempo litúrgico." },
-                { title: "Sobre la Corona de Adviento", description: "Rito para bendecir y encender la corona." },
-                { title: "Festival de Lecciones y Música de Adviento", description: "Servicio de lecturas y cánticos de espera." },
-                { title: "Vigilia de Nochebuena", description: "Celebración en la víspera de la Natividad." },
-                { title: "Estación ante el Pesebre", description: "Devoción especial ante el nacimiento." },
-                { title: "Festival de Lecciones y Música de Navidad", description: "Celebración festiva de la Encarnación." },
-                { title: "Víspera de Año Nuevo", description: "Oración para recibir el año civil." },
-                { title: "Bendición de Hogares (Epifanía)", description: "Tradicional bendición de casas con tiza." },
-                { title: "Vigilia Bautismo del Señor", description: "Preparación para la renovación bautismal." },
-                { title: "Procesión de la Candelaria", description: "Bendición de las velas y procesión." },
-                { title: "El Vía Crucis", description: "Meditación sobre la Pasión del Señor." },
-                { title: "Oficio de Tinieblas (Tenebrae)", description: "Liturgia solemne de sombras y luz." },
-                { title: "Jueves Santo: Lavatorio", description: "Rito del mandato del amor fraterno." },
-                { title: "Jueves Santo: Reserva", description: "Traslado y reserva del Santísimo." },
-                { title: "Jueves Santo: Despojo", description: "Despojo del altar tras la misa." },
-                { title: "Ágape de Jueves Santo", description: "Cena fraterna recordando la Última Cena." },
-                { title: "Bendición de Alimentos (Pascua)", description: "Bendición de la mesa de Pascua." },
-                { title: "Bendición de Hogares (Pascua)", description: "Bendición de casas en tiempo pascual." },
-                { title: "Procesión de las Rogativas", description: "Súplicas por los frutos de la tierra." },
-                { title: "Vigilia de Todos los Santos", description: "Preparación para la solemnidad." },
-                { title: "Víspera de Todos los Santos", description: "Servicio de oración (Halloween)." }
+                { title: "Antífonas para el Lucernario", description: "Oraciones al encender las velas.", icon: "light_mode" },
+                { title: "Antífonas para la Fracción", description: "Cantos para la fracción del pan (Confractoria).", icon: "bakery_dining" },
+                { title: "Bendiciones Estacionales", description: "Bendiciones especiales para cada tiempo litúrgico.", icon: "calendar_month" },
+                { title: "Sobre la Corona de Adviento", description: "Rito para bendecir y encender la corona.", icon: "candle" },
+                { title: "Festival de Lecciones y Música de Adviento", description: "Servicio de lecturas y cánticos de espera.", icon: "library_music" },
+                { title: "Vigilia de Nochebuena", description: "Celebración en la víspera de la Natividad.", icon: "bedtime" },
+                { title: "Estación ante el Pesebre", description: "Devoción especial ante el nacimiento.", icon: "child_care" },
+                { title: "Festival de Lecciones y Música de Navidad", description: "Celebración festiva de la Encarnación.", icon: "music_note" },
+                { title: "Víspera de Año Nuevo", description: "Oración para recibir el año civil.", icon: "hourglass_empty" },
+                { title: "Bendición de Hogares (Epifanía)", description: "Tradicional bendición de casas con tiza.", icon: "home_work" },
+                { title: "Vigilia Bautismo del Señor", description: "Preparación para la renovación bautismal.", icon: "water_drop" },
+                { title: "Procesión de la Candelaria", description: "Bendición de las velas y procesión.", icon: "candle" },
+                { title: "El Vía Crucis", description: "Meditación sobre la Pasión del Señor.", icon: "conversion_path" },
+                { title: "Oficio de Tinieblas (Tenebrae)", description: "Liturgia solemne de sombras y luz.", icon: "dark_mode" },
+                { title: "Jueves Santo: Lavatorio", description: "Rito del mandato del amor fraterno.", icon: "wash" },
+                { title: "Jueves Santo: Reserva", description: "Traslado y reserva del Santísimo.", icon: "inventory_2" },
+                { title: "Jueves Santo: Despojo", description: "Despojo del altar tras la misa.", icon: "layers_clear" },
+                { title: "Ágape de Jueves Santo", description: "Cena fraterna recordando la Última Cena.", icon: "restaurant" },
+                { title: "Bendición de Alimentos (Pascua)", description: "Bendición de la mesa de Pascua.", icon: "restaurant_menu" },
+                { title: "Bendición de Hogares (Pascua)", description: "Bendición de casas en tiempo pascual.", icon: "holiday_village" },
+                { title: "Procesión de las Rogativas", description: "Súplicas por los frutos de la tierra.", icon: "agriculture" },
+                { title: "Vigilia de Todos los Santos", description: "Preparación para la solemnidad.", icon: "groups" },
+                { title: "Víspera de Todos los Santos", description: "Servicio de oración (Halloween).", icon: "face" }
             ]
         },
         {
             category: "Servicios Pastorales",
             items: [
-                { title: "Bienvenida a Nuevos", description: "Acogida de nuevos miembros a la comunidad." },
-                { title: "Despedida de Miembros", description: "Oración al dejar una congregación." },
-                { title: "Catecumenado", description: "Preparación de adultos para el Bautismo." },
-                { title: "Admisión de Catecúmenos", description: "Rito de entrada al catecumenado." },
-                { title: "Inscripción de Candidatos", description: "Elección para el Bautismo." },
-                { title: "Entrga del Credo / Padre Nuestro", description: "Ritos de transmisión de la fe." },
-                { title: "Vigilia Bautismal", description: "Oración previa al Bautismo." },
-                { title: "Reafirmación Votos", description: "Renovación de promesas bautismales." },
-                { title: "Recepción de Miembros", description: "Acogida de otras tradiciones cristianas." },
-                { title: "Inscripción Cuaresmal", description: "Inicio de la preparación final." },
-                { title: "Rito Jueves Santo", description: "Preparación inmediata a los sacramentos." },
-                { title: "Bendición de Casa", description: "Celebración y bendición para un hogar." },
-                { title: "Bendición Embarazada", description: "Oración por la madre y el hijo." },
-                { title: "Padres y Padrinos", description: "Preparación para el rol bautismal." },
-                { title: "Aniversario Matrimonio", description: "Renovación de votos matrimoniales." },
-                { title: "Servicio de Sanación", description: "Oración pública por la salud." },
-                { title: "Sobre el Exorcismo", description: "Notas pastorales sobre liberación." },
-                { title: "Entierro no cristiano", description: "Servicio fúnebre pastoral." },
-                { title: "Comisionamiento Laicos", description: "Envío a ministerios específicos." },
-                { title: "Dedicación Mobiliario", description: "Bendición de ornamentos y objetos." }
+                { title: "Bienvenida a Nuevos", description: "Acogida de nuevos miembros a la comunidad.", icon: "handshake" },
+                { title: "Despedida de Miembros", description: "Oración al dejar una congregación.", icon: "waving_hand" },
+                { title: "Catecumenado", description: "Preparación de adultos para el Bautismo.", icon: "school" },
+                { title: "Admisión de Catecúmenos", description: "Rito de entrada al catecumenado.", icon: "how_to_reg" },
+                { title: "Inscripción de Candidatos", description: "Elección para el Bautismo.", icon: "edit_document" },
+                { title: "Entrga del Credo / Padre Nuestro", description: "Ritos de transmisión de la fe.", icon: "book" },
+                { title: "Vigilia Bautismal", description: "Oración previa al Bautismo.", icon: "water" },
+                { title: "Reafirmación Votos", description: "Renovación de promesas bautismales.", icon: "published_with_changes" },
+                { title: "Recepción de Miembros", description: "Acogida de otras tradiciones cristianas.", icon: "door_front" },
+                { title: "Inscripción Cuaresmal", description: "Inicio de la preparación final.", icon: "edit_calendar" },
+                { title: "Rito Jueves Santo", description: "Preparación inmediata a los sacramentos.", icon: "event" },
+                { title: "Bendición de Casa", description: "Celebración y bendición para un hogar.", icon: "doorbell" },
+                { title: "Bendición Embarazada", description: "Oración por la madre y el hijo.", icon: "pregnant_woman" },
+                { title: "Padres y Padrinos", description: "Preparación para el rol bautismal.", icon: "family_restroom" },
+                { title: "Aniversario Matrimonio", description: "Renovación de votos matrimoniales.", icon: "favorite" },
+                { title: "Servicio de Sanación", description: "Oración pública por la salud.", icon: "healing" },
+                { title: "Sobre el Exorcismo", description: "Notas pastorales sobre liberación.", icon: "shield" },
+                { title: "Entierro no cristiano", description: "Servicio fúnebre pastoral.", icon: "church" },
+                { title: "Comisionamiento Laicos", description: "Envío a ministerios específicos.", icon: "badge" },
+                { title: "Dedicación Mobiliario", description: "Bendición de ornamentos y objetos.", icon: "chair" }
             ]
         },
         {
             category: "Misión Episcopal",
             items: [
-                { title: "Discernimiento Misión", description: "Liturgia para buscar la voluntad de Dios." },
-                { title: "Comisionamiento Plantador", description: "Envío para fundar nuevas iglesias." },
-                { title: "Apertura Congregación", description: "Inicio oficial de una nueva misión." },
-                { title: "Puesta aparte espacio", description: "Bendición de lugares de culto temporal." },
-                { title: "Letanía por la Misión", description: "Súplicas por la expansión del Evangelio." }
+                { title: "Discernimiento Misión", description: "Liturgia para buscar la voluntad de Dios.", icon: "explore" },
+                { title: "Comisionamiento Plantador", description: "Envío para fundar nuevas iglesias.", icon: "nature" },
+                { title: "Apertura Congregación", description: "Inicio oficial de una nueva misión.", icon: "storefront" },
+                { title: "Puesta aparte espacio", description: "Bendición de lugares de culto temporal.", icon: "architecture" },
+                { title: "Letanía por la Misión", description: "Súplicas por la expansión del Evangelio.", icon: "campaign" }
             ]
         }
     ];
@@ -1043,7 +1043,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                                         key={i}
                                         title={item.title}
                                         description={item.description}
-                                        icon="church"
+                                        icon={item.icon || "church"}
                                         onClick={() => handleServiceClick(item)}
                                         actionText="Ver Detalles"
                                     />
