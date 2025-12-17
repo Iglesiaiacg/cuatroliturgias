@@ -3,47 +3,42 @@ import React from 'react';
 
 export default function StyledCard({ title, description, icon, onClick, actionText = "Abrir" }) {
     return (
-        <div
+        <button
             onClick={onClick}
-            className="group relative flex flex-col items-center justify-center gap-2 px-6 py-6 m-2 
-            bg-white dark:bg-white/5 rounded-lg shadow-lg overflow-hidden cursor-pointer
-            transition-all duration-300 hover:shadow-xl
-            after:absolute after:h-full after:w-full after:inset-0 after:z-10 after:bg-[var(--color-primary)] 
-            after:rounded-lg after:transition-all after:duration-500 after:-translate-y-full after:hover:translate-y-0
-            [&_p]:transition-all [&_p]:delay-200"
+            className="group relative flex flex-col items-center justify-center p-4 m-0 
+            bg-white dark:bg-surface-dark/50 rounded-lg shadow-sm
+            border border-gray-100 dark:border-white/5
+            transition-all duration-300 ease-out
+            hover:shadow-lg hover:-translate-y-1 hover:border-[var(--color-primary)]/30
+            cursor-pointer w-full text-center h-full"
         >
-            {/* Icon Container - Scaled up/styled to match the visual weight of the user's SVG */}
-            <div className="relative z-20 w-24 h-24 mb-2 flex items-center justify-center rounded-full 
-                bg-gray-100 dark:bg-white/5 group-hover:bg-white/20 
-                border border-[var(--color-primary)]/20 group-hover:border-white/20
-                text-[var(--color-primary)] group-hover:text-white
-                transition-all duration-300 group-hover:-translate-y-2 group-hover:scale-110">
-                <span className="material-symbols-outlined text-5xl">
+            {/* Icon Container - Compact & Light */}
+            <div className="mb-3 p-3 rounded-full 
+                bg-[var(--color-primary)]/5 dark:bg-[var(--color-primary)]/10
+                text-[var(--color-primary)]
+                transition-transform duration-300 group-hover:scale-110 group-hover:bg-[var(--color-primary)]/10">
+                <span className="material-symbols-outlined text-3xl">
                     {icon}
                 </span>
             </div>
 
             {/* Title */}
-            <p className="z-20 font-display font-bold text-xl text-center text-gray-900 dark:text-gray-100 group-hover:text-white tracking-wider">
+            <h3 className="font-display font-bold text-base text-gray-900 dark:text-gray-100 
+                group-hover:text-[var(--color-primary)] transition-colors duration-300 mb-1">
                 {title}
-            </p>
+            </h3>
 
             {/* Description */}
-            <p className="z-20 text-xs font-semibold text-center text-gray-500 dark:text-gray-400 group-hover:text-white/90 line-clamp-2 min-h-[2.5em]">
+            <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 leading-relaxed px-2">
                 {description}
             </p>
 
-            {/* Action Row */}
-            <div className="z-20 w-full mt-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-500 transform translate-y-4 group-hover:translate-y-0">
-                <p className="px-6 py-2 bg-white/20 backdrop-blur-sm text-white text-sm font-bold rounded-full shadow-sm hover:bg-white/30 transition-colors">
-                    {actionText}
-                </p>
+            {/* Subtle Action Indicator */}
+            <div className="mt-auto pt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+                <span className="text-[10px] uppercase tracking-wider font-bold text-[var(--color-primary)] flex items-center gap-1">
+                    {actionText} <span className="material-symbols-outlined text-[12px]">arrow_forward</span>
+                </span>
             </div>
-
-            {/* Decorative background circle (optional, mimicking the user's SVG complexity if desired, but keeping it simple for now) */}
-            <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-0 group-hover:opacity-10 transition-opacity duration-500">
-                {/* This could be a texture or pattern */}
-            </div>
-        </div>
+        </button>
     );
 }
