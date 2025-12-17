@@ -1,7 +1,7 @@
 import StyledCard from '../Common/StyledCard';
 import SacristyChecklist from '../Dashboard/SacristyChecklist';
 
-export default function Dashboard({ onNavigate, date, feastName }) {
+export default function Dashboard({ onNavigate, date }) {
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
 

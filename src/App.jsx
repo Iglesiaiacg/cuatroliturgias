@@ -159,7 +159,6 @@ function App() {
             <HomeView
               key="home-refresh-v3"
               date={selectedDate}
-              feastName={calculatedFeast}
               onNavigate={setActiveTab}
             />
           </div>

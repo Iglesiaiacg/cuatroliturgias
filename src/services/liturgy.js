@@ -30,7 +30,7 @@ const getAdventStart = (year) => {
 
 // --- CORE IDENTIFICATION LOGIC ---
 
-export const identifyFeast = (date, tradition) => {
+export const identifyFeast = (date) => {
     const d = normalizeDate(date);
     const year = d.getFullYear();
 

@@ -32,7 +32,7 @@ export const savePreferences = (tradition, celebrationKey) => {
 export const getHistory = () => {
     try {
         return JSON.parse(localStorage.getItem(KEYS.HISTORY)) || [];
-    } catch (e) {
+    } catch {
         return [];
     }
 };

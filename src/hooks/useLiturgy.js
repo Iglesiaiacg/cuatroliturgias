@@ -22,7 +22,7 @@ export const useLiturgy = () => {
 
     // Effect: Update computed info when Date/Tradition changes
     useEffect(() => {
-        const feastName = identifyFeast(selectedDate, tradition);
+        const feastName = identifyFeast(selectedDate);
         const cycle = getLiturgicalCycle(selectedDate);
         const currentSeason = getSeason(selectedDate);
 
@@ -49,7 +49,7 @@ export const useLiturgy = () => {
 
         try {
             // Get label for prompt directly from calculation
-            const label = identifyFeast(selectedDate, tradition);
+            const label = identifyFeast(selectedDate);
 
             const prompt = buildPrompt({
                 selectedDate,
