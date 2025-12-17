@@ -14,7 +14,7 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
     ];
 
     return (
-        <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 px-4 pt-12 pb-2 transition-colors duration-300">
+        <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 px-4 pt-4 pb-2 transition-colors duration-300">
             <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
                 {/* 1. Logo & Date */}
                 <div className="flex flex-col shrink-0">
