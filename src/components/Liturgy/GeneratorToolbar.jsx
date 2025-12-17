@@ -50,6 +50,7 @@ export default function GeneratorToolbar({
                         onChange={(date) => setSelectedDate(date)}
                         dateFormat="dd/MM/yyyy"
                         locale="es"
+                        portalId="root"
                         className="w-28 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs font-bold text-gray-700 dark:text-gray-200 focus:ring-2 focus:ring-primary/20 text-center cursor-pointer outline-none transition-all"
                     />
                 </div>
