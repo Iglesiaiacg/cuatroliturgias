@@ -491,7 +491,7 @@ export default function DirectoryView() {
 
                             {/* Section 3: Medical (Vital) */}
                             <div className="p-6 border-b border-gray-100 dark:border-white/5">
-                                <h3 className="text-sm font-bold text-red-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">medical_services</span> Salud (Vital)
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
