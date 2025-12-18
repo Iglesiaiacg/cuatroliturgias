@@ -99,7 +99,7 @@ export default function DirectoryView() {
         let y = 35; // Start Y position
 
         // Load Logo
-        const logoUrl = "https://raw.githubusercontent.com/Iglesiaiacg/cuatroliturgias/main/Logo-refresh-phase-1-700px.png";
+        const logoUrl = "https://raw.githubusercontent.com/Iglesiaiacg/cuatroliturgias/main/Emblema%20de%20la%20Iglesia%20Anglicana.png";
         try {
             const img = new Image();
             img.src = logoUrl;
