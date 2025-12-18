@@ -89,96 +89,197 @@ export default function DirectoryView() {
         }
     };
 
-    const handleDownloadForm = () => {
+    const handleDownloadForm = async () => {
         const doc = new jsPDF();
 
-        // Header
-        doc.setFontSize(18);
+        // --- CONFIGURATION ---
+        const marginLeft = 20;
+        const marginRight = 190;
+        const toggleY = 10; // Vertical spacing increment
+        let y = 30; // Start Y position
+
+        // Load Logo
+        const logoUrl = "https://raw.githubusercontent.com/Iglesiaiacg/cuatroliturgias/main/Logo-refresh-phase-1-700px.png";
+        try {
+            const img = new Image();
+            img.src = logoUrl;
+            img.crossOrigin = "Anonymous";
+            await new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve; // Continue even if logo fails
+            });
+            doc.addImage(img, 'PNG', marginLeft, 15, 25, 25);
+        } catch (e) {
+            console.error("Could not load logo", e);
+        }
+
+        // --- HEADER ---
         doc.setFont("times", "bold");
-        doc.text("IGLESIA ANGLICANA COMUNIDAD DE GRACIA", 105, 20, { align: "center" });
-        doc.setFontSize(14);
-        doc.text("Formulario de Membresía y Cuidado Pastoral", 105, 30, { align: "center" });
+        doc.setFontSize(22);
+        doc.text("IGLESIA ANGLICANA", 105, 25, { align: "center" });
+        doc.text("COMUNIDAD DE GRACIA", 105, 33, { align: "center" });
 
-        // Content Boxes
         doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
+        doc.setFont("times", "italic");
+        doc.text("Membresía y Cuidado Pastoral", 105, 40, { align: "center" });
 
-        const box = (y, label, h = 10) => {
-            doc.rect(15, y, 180, h);
-            doc.text(label, 17, y + 4);
+        doc.setLineWidth(0.5);
+        doc.line(marginLeft, 45, marginRight, 45); // Separator line
+
+        y = 55;
+
+        // Helper for Lines
+        const drawField = (label, x, width, valY) => {
+            doc.setFont("times", "bold");
+            doc.setFontSize(10);
+            doc.text(label, x, valY);
+
+            // Draw underline for writing
+            const labelWidth = doc.getTextWidth(label);
+            const lineStart = x + labelWidth + 2;
+            const lineEnd = x + width;
+
+            doc.setLineWidth(0.1);
+            doc.setDrawColor(150); // Grey line
+            doc.line(lineStart, valY + 1, lineEnd, valY + 1);
+            doc.setDrawColor(0); // Reset black
         };
 
-        let y = 45;
-        doc.setFont("helvetica", "bold");
-        doc.text("I. DATOS PERSONALES", 15, y);
-        y += 5;
+        const drawSection = (title) => {
+            doc.setFont("times", "bold");
+            doc.setFontSize(12);
+            doc.setTextColor(153, 27, 27); // Red-800
+            doc.text(title, marginLeft, y);
+            doc.setTextColor(0);
+            y += 8;
+        };
 
-        box(y, "Nombre Completo:");
-        doc.rect(140, y, 55, 35); // Photo box
-        doc.text("FOTO", 160, y + 17);
-        y += 12;
-
-        box(y, "Fecha de Nacimiento:                                          Lugar de Nacimiento:");
-        y += 12;
-
-        box(y, "Estado Civil:                                                     Profesión/Oficio:");
-        y += 12;
-
-        box(y, "Domicilio Completo (Calle, Num, Col, CP):", 15);
-        y += 17;
-
-        doc.text("II. CONTACTO", 15, y);
-        y += 5;
-        box(y, "Teléfono Casa:                                                 Celular:");
-        y += 12;
-        box(y, "Correo Electrónico:");
-        y += 12;
-
-        doc.text("III. SALUD (VITAL)", 15, y);
-        y += 5;
-        box(y, "Tipo de Sangre:                                               Alergias:");
-        y += 12;
-        box(y, "Padecimientos Crónicos:");
-        y += 12;
-        box(y, "Medicamentos Actuales:");
-        y += 12;
-        box(y, "EN CASO DE EMERGENCIA AVISAR A (Nombre y Tel):", 15);
-        y += 17;
-
-        doc.text("IV. VIDA SACRAMENTAL", 15, y);
-        y += 5;
-        box(y, "Fecha Bautismo:                                              Lugar:");
-        y += 12;
-        box(y, "Fecha Confirmación:                                        Lugar:");
-        y += 12;
-        box(y, "Fecha Matrimonio:                                           Cónyuge:");
-        y += 17;
-
-        doc.text("V. VIDA MINISTERIAL", 15, y);
-        y += 5;
-        // Checkboxes simulation
-        doc.rect(15, y, 4, 4); doc.text("Laico", 21, y + 3);
-        doc.rect(45, y, 4, 4); doc.text("Presbítero", 51, y + 3);
-        doc.rect(85, y, 4, 4); doc.text("Diácono", 91, y + 3);
-        doc.rect(120, y, 4, 4); doc.text("Ministro Laico", 126, y + 3);
-        y += 10;
-
-        box(y, "Actualmente sirvo en el ministerio de:");
-        y += 12;
-        box(y, "Dios me ha dado el don de:");
-        y += 15;
-
-        // Privacy Notice (Simplified view)
+        // --- FOTO PLACEHOLDER (Right side) ---
+        doc.setDrawColor(200);
+        doc.rect(160, 55, 30, 40);
         doc.setFontSize(8);
-        doc.text("AVISO DE PRIVACIDAD", 105, 260, { align: "center" });
-        const splitText = doc.splitTextToSize(PRIVACY_NOTICE, 170);
-        // Only show first paragraph or so, then refer to back
-        // Or create a new page for full privacy notice if requested "well founded"
-        doc.addPage();
+        doc.setTextColor(150);
+        doc.text("FOTO", 175, 75, { align: "center" });
+        doc.setTextColor(0);
+
+        // --- I. DATOS PERSONALES ---
+        drawSection("I. DATOS PERSONALES");
+
+        drawField("Nombre Completo:", marginLeft, 135, y);
+        y += toggleY;
+
+        drawField("Fecha de Nacimiento:", marginLeft, 60, y);
+        drawField("Lugar:", 90, 65, y); // x=90, w=65 (ends at 155)
+        y += toggleY;
+
+        drawField("Estado Civil:", marginLeft, 60, y);
+        drawField("Profesión/Oficio:", 90, 65, y);
+        y += toggleY;
+
+        drawField("Domicilio Completo:", marginLeft, 135, y);
+        y += toggleY;
+
+        // Small note under domicile
+        doc.setFontSize(8);
+        doc.setFont("times", "italic");
+        doc.setTextColor(100);
+        doc.text("(Calle, Número, Colonia, C.P.)", marginLeft, y - 4);
+        doc.setTextColor(0);
+        y += 5; // Extra spacing after section
+
+        // --- II. CONTACTO ---
+        drawSection("II. INFORMACIÓN DE CONTACTO");
+
+        drawField("Teléfono Casa:", marginLeft, 80, y);
+        drawField("Celular / WhatsApp:", 110, 80, y);
+        y += toggleY;
+
+        drawField("Correo Electrónico:", marginLeft, 170, y);
+        y += toggleY + 5;
+
+        // --- III. SALUD ---
+        drawSection("III. SALUD Y SEGURIDAD (VITAL)");
+
+        drawField("Tipo de Sangre:", marginLeft, 80, y);
+        drawField("Alergias:", 110, 80, y);
+        y += toggleY;
+
+        drawField("Padecimientos Crónicos:", marginLeft, 170, y);
+        y += toggleY;
+
+        drawField("Medicamentos Actuales:", marginLeft, 170, y);
+        y += toggleY;
+
+        doc.setFillColor(254, 242, 242); // Light red bg
+        doc.rect(marginLeft, y - 5, 170, 12, 'F');
+        drawField("EN CASO DE EMERGENCIA AVISAR A:", marginLeft + 2, 166, y);
+        y += (toggleY / 2);
+        doc.setFontSize(8);
+        doc.text("(Nombre y Teléfono)", marginLeft + 2, y);
+        y += toggleY + 5;
+
+        // --- IV. VIDA SACRAMENTAL ---
+        drawSection("IV. VIDA SACRAMENTAL");
+
+        drawField("Bautismo (Fecha/Lugar):", marginLeft, 170, y);
+        y += toggleY;
+        drawField("Confirmación (Fecha/Lugar):", marginLeft, 170, y);
+        y += toggleY;
+        drawField("Matrimonio (Fecha/Cónyuge):", marginLeft, 170, y);
+        y += toggleY + 5;
+
+        // --- V. VIDA MINISTERIAL ---
+        drawSection("V. VIDA MINISTERIAL");
+
+        doc.setFont("times", "bold");
         doc.setFontSize(10);
+        doc.text("Orden Eclesiástico:", marginLeft, y);
+
+        // Checkboxes
+        const roles = ["Laico", "Presbítero", "Diácono", "Ministro Laico"];
+        let xPos = marginLeft + 35;
+        roles.forEach(role => {
+            doc.rect(xPos, y - 3, 4, 4);
+            doc.text(role, xPos + 6, y);
+            xPos += 35;
+        });
+        y += toggleY;
+
+        drawField("Ministerio Actual:", marginLeft, 170, y);
+        y += toggleY;
+        drawField("Dones Espirituales:", marginLeft, 170, y);
+        y += toggleY + 10;
+
+        // --- FOOTER / PRIVACY PREVIEW ---
+        doc.setLineWidth(0.5);
+        doc.line(marginLeft, 270, marginRight, 270);
+        doc.setFontSize(8);
+        doc.setFont("times", "italic");
+        doc.text("Este documento es confidencial y para uso exclusivo de la administración pastoral.", 105, 275, { align: "center" });
+        doc.text("Consulte el Aviso de Privacidad Integral al reverso.", 105, 279, { align: "center" });
+
+        // --- PAGE 2: PRIVACY NOTICE ---
+        doc.addPage();
+
+        // Header Page 2
+        doc.setFontSize(16);
+        doc.setFont("times", "bold");
         doc.text("AVISO DE PRIVACIDAD INTEGRAL", 105, 20, { align: "center" });
-        doc.setFontSize(9);
-        doc.text(splitText, 15, 30);
+
+        doc.setFontSize(10);
+        doc.setFont("times", "normal");
+
+        // Split text for layout
+        const splitText = doc.splitTextToSize(PRIVACY_NOTICE, 170);
+        doc.text(splitText, marginLeft, 35);
+
+        // Signatures
+        let ySig = 220;
+        doc.line(40, ySig, 90, ySig);
+        doc.text("Firma del Fiel", 65, ySig + 5, { align: "center" });
+
+        doc.line(120, ySig, 170, ySig);
+        doc.text("Firma del Párroco/Responsable", 145, ySig + 5, { align: "center" });
 
         doc.save("Formulario_Membresia_IACG.pdf");
     };
