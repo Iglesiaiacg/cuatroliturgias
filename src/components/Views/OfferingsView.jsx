@@ -271,76 +271,77 @@ export default function OfferingsView() {
                 </div>
             )}
 
-            {/* Ledger List */}
-            <div className="flex-1 overflow-y-auto p-4 max-w-5xl mx-auto w-full">
-                {transactions.length === 0 ? (
-                    <div className="text-center py-20 opacity-50">
-                        <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">account_balance_wallet</span>
-                        <p className="text-lg font-medium text-gray-500">No hay movimientos registrados</p>
-                        <p className="text-sm text-gray-400">Comienza registrando la colecta del domingo.</p>
-                    </div>
-                ) : (
-                    <div className="space-y-3">
-                        <div className="hidden md:grid grid-cols-12 gap-4 px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                            <div className="col-span-2">Fecha</div>
-                            <div className="col-span-4">Descripción</div>
-                            <div className="col-span-3">Categoría</div>
-                            <div className="col-span-2 text-right">Monto</div>
-                            <div className="col-span-1 text-center">Acción</div>
+            {/* Ledger List (Table View) */}
+            <div className="flex-1 overflow-y-auto px-4 pb-4 max-w-6xl mx-auto w-full">
+                <div className="bg-white dark:bg-surface-dark shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
+                    {transactions.length === 0 ? (
+                        <div className="text-center py-20 opacity-50">
+                            <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">account_balance_wallet</span>
+                            <p className="text-lg font-medium text-gray-500">No hay movimientos registrados</p>
+                            <p className="text-sm text-gray-400">Comienza registrando la colecta del domingo.</p>
                         </div>
-
-                        {transactions.map(t => (
-                            <div key={t.id} className="group bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm border border-gray-100 dark:border-white/5 flex flex-col md:grid md:grid-cols-12 gap-2 md:gap-4 items-center transition-all hover:shadow-md">
-                                {/* Date */}
-                                <div className="w-full md:col-span-2 flex items-center gap-2 text-gray-500 text-xs md:text-sm">
-                                    <span className="material-symbols-outlined text-sm opacity-50">event</span>
-                                    {format(new Date(t.date), 'd MMM yyyy', { locale: es })}
-                                </div>
-
-                                {/* Description */}
-                                <div className="w-full md:col-span-4 font-medium text-gray-900 dark:text-white">
-                                    {t.description}
-                                </div>
-
-                                {/* Category */}
-                                <div className="w-full md:col-span-3">
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border
-                                        ${t.type === 'income'
-                                            ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300'
-                                            : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300'}
-                                    `}>
-                                        {categories[t.type].find(c => c.id === t.category)?.label || t.category}
-                                    </span>
-                                </div>
-
-                                {/* Amount */}
-                                <div className={`w-full md:col-span-2 text-lg md:text-base font-mono font-bold text-right
-                                    ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}
-                                `}>
-                                    {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                                </div>
-
-                                {/* Actions */}
-                                <div className="w-full md:col-span-1 flex justify-end md:justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button
-                                        onClick={() => handleDelete(t.id)}
-                                        className="text-gray-400 hover:text-red-500 p-1 hover:bg-red-50 rounded-full transition-colors"
-                                        title="Eliminar"
-                                    >
-                                        <span className="material-symbols-outlined">delete</span>
-                                    </button>
-                                    <button
-                                        onClick={() => handleDownloadReceipt(t)}
-                                        className="text-gray-400 hover:text-blue-500 p-1 hover:bg-blue-50 rounded-full transition-colors"
-                                        title="Descargar Recibo"
-                                    >
-                                        <span className="material-symbols-outlined">receipt</span>
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
+                    ) : (
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-black/20 dark:text-gray-400 sticky top-0 z-10">
+                                    <tr>
+                                        <th className="px-6 py-3 font-bold tracking-wider">Fecha</th>
+                                        <th className="px-6 py-3 font-bold tracking-wider">Descripción</th>
+                                        <th className="px-6 py-3 font-bold tracking-wider">Beneficiario/Origen</th>
+                                        <th className="px-6 py-3 font-bold tracking-wider">Categoría</th>
+                                        <th className="px-6 py-3 font-bold tracking-wider text-right">Monto</th>
+                                        <th className="px-6 py-3 font-bold tracking-wider text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                    {transactions.map((t) => (
+                                        <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                            <td className="px-6 py-4 whitespace-nowrap text-gray-500">
+                                                {format(new Date(t.date), 'dd/MM/yyyy', { locale: es })}
+                                            </td>
+                                            <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                                                {t.description}
+                                            </td>
+                                            <td className="px-6 py-4 text-gray-500">
+                                                {t.beneficiary || '-'}
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border
+                                                    ${t.type === 'income'
+                                                        ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300'
+                                                        : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300'}
+                                                `}>
+                                                    {categories[t.type].find(c => c.id === t.category)?.label || t.category}
+                                                </span>
+                                            </td>
+                                            <td className={`px-6 py-4 text-right font-mono font-bold ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                                                {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                                            </td>
+                                            <td className="px-6 py-4 text-center">
+                                                <div className="flex items-center justify-center gap-2">
+                                                    <button
+                                                        onClick={() => handleDownloadReceipt(t)}
+                                                        className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                                        title="Descargar Recibo"
+                                                    >
+                                                        <span className="material-symbols-outlined text-lg">receipt_long</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(t.id)}
+                                                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                                        title="Eliminar"
+                                                    >
+                                                        <span className="material-symbols-outlined text-lg">delete</span>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                </div>
             </div>
 
             {/* Hidden Receipt Container */}
