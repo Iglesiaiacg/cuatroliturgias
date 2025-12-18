@@ -3,8 +3,12 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { numberToWords } from '../../utils/numberToWords';
 
+import { FINANCE_CATEGORIES } from '../../utils/financeCategories';
+
 const Receipt = forwardRef(({ data }, ref) => {
     if (!data) return null;
+
+    const currentCategories = FINANCE_CATEGORIES[data.type] || [];
 
     return (
         <div ref={ref} className="bg-white p-8 w-[800px] h-[500px] flex items-center justify-center">
@@ -15,14 +19,10 @@ const Receipt = forwardRef(({ data }, ref) => {
                 <h1 className="text-3xl font-bold text-center mb-6 uppercase tracking-wider">Recibo</h1>
 
                 {/* Top Row: Recibido de & Fecha */}
-                <div className="flex justify-between items-end mb-8 relative">
+                <div className="flex justify-between items-end mb-6 relative">
                     <div className="flex-1 flex gap-2 items-end">
                         <span className="font-bold text-lg whitespace-nowrap">Recibido de:</span>
                         <div className="flex-1 border-b-2 border-black px-2 font-handwriting text-xl">
-                            {/* If it's an expense, we pay TO someone, but standard receipt says "Recibido de" implies incoming. 
-                                For expense, maybe "Pagado a"? 
-                                User asked for "Recibo" so we stick to the format provided.
-                                We will put the 'beneficiary' here. */}
                             {data.beneficiary || "_________________"}
                         </div>
                     </div>
@@ -34,8 +34,23 @@ const Receipt = forwardRef(({ data }, ref) => {
                     </div>
                 </div>
 
+                {/* Conceptos Grid */}
+                <div className="mb-4">
+                    <span className="font-bold text-sm uppercase mb-2 block">Concepto:</span>
+                    <div className="grid grid-cols-3 gap-2 text-sm">
+                        {currentCategories.map(cat => (
+                            <div key={cat.id} className="flex items-center gap-2">
+                                <div className={`w-4 h-4 border-2 border-black flex items-center justify-center ${data.category === cat.id ? 'bg-black' : ''}`}>
+                                    {data.category === cat.id && <span className="text-white font-bold text-xs">✓</span>}
+                                </div>
+                                <span className={data.category === cat.id ? 'font-bold' : ''}>{cat.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Concept & Amount Section */}
-                <div className="flex-1 mb-4 flex flex-col justify-start pt-4 gap-4">
+                <div className="flex-1 mb-4 flex flex-col justify-start gap-4">
                     {/* Row 1 (Data) */}
                     <div className="flex gap-4 items-end">
                         <div className="flex-1 border-b-2 border-black pb-1 px-4 font-handwriting text-2xl relative">
@@ -47,12 +62,6 @@ const Receipt = forwardRef(({ data }, ref) => {
                     </div>
 
                     {/* Row 2 (Empty/Placeholder) */}
-                    <div className="flex gap-4 items-end">
-                        <div className="flex-1 border-b-2 border-black h-8"></div>
-                        <div className="w-1/4 border-b-2 border-black h-8"></div>
-                    </div>
-
-                    {/* Row 3 (Empty/Placeholder) */}
                     <div className="flex gap-4 items-end">
                         <div className="flex-1 border-b-2 border-black h-8"></div>
                         <div className="w-1/4 border-b-2 border-black h-8"></div>

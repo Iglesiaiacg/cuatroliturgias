@@ -6,26 +6,11 @@ import { jsPDF } from 'jspdf';
 import StyledCard from '../Common/StyledCard';
 import Receipt from '../Finance/Receipt';
 import AccountSheet from '../Finance/AccountSheet';
+import { FINANCE_CATEGORIES as categories } from '../../utils/financeCategories';
 
 export default function OfferingsView() {
-    // Categories Configuration (Liturgical & Administrative)
-    const categories = {
-        income: [
-            { id: 'colecta', label: 'Colecta Dominical' },
-            { id: 'diezmo', label: 'Diezmos' },
-            { id: 'donacion', label: 'Donaciones Específicas' },
-            { id: 'eventos', label: 'Eventos / Ventas' },
-            { id: 'misiones', label: 'Misiones' }
-        ],
-        expense: [
-            { id: 'altar', label: 'Suministros Altar (Pan/Vino/Velas)' },
-            { id: 'caridad', label: 'Caridad / Ayuda Social' },
-            { id: 'mantenimiento', label: 'Mantenimiento Templo' },
-            { id: 'papeleria', label: 'Papelería / Liturgia' },
-            { id: 'servicios', label: 'Servicios Básicos' },
-            { id: 'clero', label: 'Estipendios / Viáticos' }
-        ]
-    };
+    // Categories imported from utils
+
 
     // State for transactions - Init lazy to prevent overwrite
     const [transactions, setTransactions] = useState(() => {
