@@ -35,24 +35,27 @@ const Receipt = forwardRef(({ data }, ref) => {
                 </div>
 
                 {/* Concept & Amount Section */}
-                <div className="flex gap-4 flex-1 mb-4">
-                    {/* Left: Concept */}
-                    <div className="flex-1 flex flex-col gap-2">
-                        <div className="font-handwriting text-2xl leading-relaxed pl-8 pt-4">
-                            {data.description}
+                <div className="flex-1 mb-4 flex flex-col justify-start pt-4 gap-4">
+                    {/* Row 1 (Data) */}
+                    <div className="flex gap-4 items-end">
+                        <div className="flex-1 border-b-2 border-black pb-1 px-4 font-handwriting text-2xl relative">
+                            <span className="text-gray-900">{data.description}</span>
                         </div>
-                        <div className="font-handwriting text-lg text-gray-600 pl-12">
-                            - P. Roger Griffin
+                        <div className="w-1/4 border-b-2 border-black pb-1 text-right pr-2 font-mono text-xl font-bold">
+                            ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                         </div>
                     </div>
 
-                    {/* Right: Amount Column */}
-                    <div className="w-1/4 flex flex-col justify-start pt-4 gap-4">
-                        <div className="border-b-2 border-black text-right pr-2 font-mono text-xl font-bold">
-                            ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                        </div>
-                        <div className="border-b-2 border-black h-8"></div>
-                        <div className="border-b-2 border-black h-8"></div>
+                    {/* Row 2 (Empty/Placeholder) */}
+                    <div className="flex gap-4 items-end">
+                        <div className="flex-1 border-b-2 border-black h-8"></div>
+                        <div className="w-1/4 border-b-2 border-black h-8"></div>
+                    </div>
+
+                    {/* Row 3 (Empty/Placeholder) */}
+                    <div className="flex gap-4 items-end">
+                        <div className="flex-1 border-b-2 border-black h-8"></div>
+                        <div className="w-1/4 border-b-2 border-black h-8"></div>
                     </div>
                 </div>
 
