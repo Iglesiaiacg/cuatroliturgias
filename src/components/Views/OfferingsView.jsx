@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { toPng } from 'html-to-image';
-import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
 import StyledCard from '../Common/StyledCard';
 import Receipt from '../Finance/Receipt';
 
@@ -80,8 +80,27 @@ export default function OfferingsView() {
         setTimeout(async () => {
             if (receiptRef.current) {
                 try {
-                    const dataUrl = await toPng(receiptRef.current, { quality: 0.95, pixelRatio: 2 });
-                    saveAs(dataUrl, `Recibo_${transaction.id}.png`);
+                    const dataUrl = await toPng(receiptRef.current, { quality: 1.0, pixelRatio: 2 });
+
+                    // A5 Landscape: 210mm x 148mm
+                    const pdf = new jsPDF({
+                        orientation: 'landscape',
+                        unit: 'mm',
+                        format: 'a5'
+                    });
+
+                    const imgProps = pdf.getImageProperties(dataUrl);
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+                    // Helper to center vertically if image is shorter than page (A5)
+                    // If image is taller, it fits width, so we might need new page or scale down. 
+                    // Assuming layout fits.
+                    const y = (pdf.internal.pageSize.getHeight() - pdfHeight) / 2;
+
+                    pdf.addImage(dataUrl, 'PNG', 0, y > 0 ? y : 0, pdfWidth, pdfHeight);
+                    pdf.save(`Recibo_${transaction.id}.pdf`);
+
                 } catch (err) {
                     console.error('Error generating receipt', err);
                     alert('Error al generar el recibo');
