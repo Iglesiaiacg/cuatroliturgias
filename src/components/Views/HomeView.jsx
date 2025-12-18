@@ -5,6 +5,9 @@ import FinanceCard from '../Dashboard/FinanceCard';
 import RolesCard from '../Dashboard/RolesCard';
 import IntentionsCard from '../Dashboard/IntentionsCard';
 import InventoryCard from '../Dashboard/InventoryCard';
+import StatsCard from '../Dashboard/StatsCard';
+import NoticesCard from '../Dashboard/NoticesCard';
+import QuickCertCard from '../Dashboard/QuickCertCard';
 
 export default function Dashboard({ onNavigate, date }) {
     return (
@@ -84,9 +87,7 @@ export default function Dashboard({ onNavigate, date }) {
                     <section>
                         <InventoryCard />
                     </section>
-                    <section>
-                        <SacristyChecklist date={date} />
-                    </section>
+
                 </div>
 
             </div>

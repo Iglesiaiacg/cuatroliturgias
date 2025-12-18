@@ -107,13 +107,13 @@ export default function SacristyChecklist({ date }) {
 
             {/* Checklist Grid (Collapsible) */}
             <div
-                className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-2 gap-y-1 p-2 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-96 opacity-100'}`}
+                className={`grid grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
             >
                 {items.map(item => (
                     <button
                         key={item.id}
                         onClick={() => toggleItem(item.id)}
-                        className={`flex items-center gap-2 px-2 py-1.5 rounded-md transition-all text-left group
+                        className={`flex items-start gap-2 px-2 py-2 rounded-md transition-all text-left group
                             ${item.checked
                                 ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
                                 : 'hover:bg-white dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
@@ -121,7 +121,7 @@ export default function SacristyChecklist({ date }) {
                         `}
                     >
                         <div className={`
-                            w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center transition-colors shrink-0
+                            mt-0.5 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0
                             ${item.checked
                                 ? 'bg-green-500 border-green-500 text-white'
                                 : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
@@ -129,7 +129,7 @@ export default function SacristyChecklist({ date }) {
                         `}>
                             {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
                         </div>
-                        <span className={`text-[10px] sm:text-xs font-medium truncate w-full ${item.checked ? 'line-through opacity-60' : ''}`}>
+                        <span className={`text-xs font-medium leading-tight ${item.checked ? 'line-through opacity-60' : ''}`}>
                             {item.label}
                         </span>
                     </button>
