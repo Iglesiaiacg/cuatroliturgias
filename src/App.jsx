@@ -149,12 +149,14 @@ function App() {
         <div className="flex-1 flex flex-col relative overflow-hidden">
 
           {/* Universal TopBar */}
-          <TopBar
-            date={selectedDate}
-            onSettings={() => setIsSettingsOpen(true)}
-            activeTab={activeTab}
-            onNavigate={setActiveTab}
-          />
+          <div className="print:hidden">
+            <TopBar
+              date={selectedDate}
+              onSettings={() => setIsSettingsOpen(true)}
+              activeTab={activeTab}
+              onNavigate={setActiveTab}
+            />
+          </div>
 
           {/* --- DASHBOARD VIEW --- */}
           {activeTab === 'dashboard' && (
