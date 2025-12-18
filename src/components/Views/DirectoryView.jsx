@@ -96,7 +96,7 @@ export default function DirectoryView() {
         const marginLeft = 20;
         const marginRight = 190;
         const toggleY = 10; // Vertical spacing increment
-        let y = 30; // Start Y position
+        let y = 35; // Start Y position
 
         // Load Logo
         const logoUrl = "https://raw.githubusercontent.com/Iglesiaiacg/cuatroliturgias/main/Logo-refresh-phase-1-700px.png";
@@ -108,7 +108,15 @@ export default function DirectoryView() {
                 img.onload = resolve;
                 img.onerror = resolve; // Continue even if logo fails
             });
-            doc.addImage(img, 'PNG', marginLeft, 15, 25, 25);
+
+            // Calculate Aspect Ratio
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            const targetWidth = 25;
+            const scaleFactor = targetWidth / imgWidth;
+            const targetHeight = imgHeight * scaleFactor;
+
+            doc.addImage(img, 'PNG', marginLeft, 20, targetWidth, targetHeight);
         } catch (e) {
             console.error("Could not load logo", e);
         }
