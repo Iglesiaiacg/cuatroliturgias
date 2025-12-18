@@ -132,7 +132,7 @@ export default function DirectoryView() {
         doc.text("Membresía y Cuidado Pastoral", 105, 40, { align: "center" });
 
         doc.setLineWidth(0.5);
-        doc.line(marginLeft, 45, marginRight, 45); // Separator line
+        // doc.line(marginLeft, 45, marginRight, 45); // Separator line removed
 
         y = 55;
 
@@ -260,7 +260,7 @@ export default function DirectoryView() {
 
         // --- FOOTER / PRIVACY PREVIEW ---
         doc.setLineWidth(0.5);
-        doc.line(marginLeft, 270, marginRight, 270);
+        // doc.line(marginLeft, 270, marginRight, 270); // Separator line removed
         doc.setFontSize(8);
         doc.setFont("times", "italic");
         doc.text("Este documento es confidencial y para uso exclusivo de la administración pastoral.", 105, 275, { align: "center" });
@@ -282,7 +282,7 @@ export default function DirectoryView() {
         doc.text(splitText, marginLeft, 35);
 
         // Signatures
-        let ySig = 220;
+        let ySig = 265;
         doc.line(40, ySig, 90, ySig);
         doc.text("Firma del Fiel", 65, ySig + 5, { align: "center" });
 
