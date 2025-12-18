@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { jsPDF } from 'jspdf';
+import { PRIVACY_NOTICE } from '../../utils/privacyNotice';
 
 export default function DirectoryView() {
     const [members, setMembers] = useState([]);
@@ -21,9 +23,33 @@ export default function DirectoryView() {
         localStorage.setItem('liturgia_directory', JSON.stringify(newList));
     };
 
+    const generateMemberId = (fullName, currentList) => {
+        if (!fullName) return '';
+
+        // Initials: First letter of each word (up to 3)
+        const words = fullName.trim().toUpperCase().split(/\s+/);
+        const initials = words.slice(0, 3).map(w => w[0]).join('');
+        const prefix = `IACG_${initials}`;
+
+        // Find consecutive number
+        const matchingIds = currentList
+            .filter(m => m.memberId && m.memberId.startsWith(prefix))
+            .map(m => {
+                const parts = m.memberId.split('_');
+                return parseInt(parts[parts.length - 1]) || 0;
+            });
+
+        const nextNum = (matchingIds.length > 0 ? Math.max(...matchingIds) : 0) + 1;
+        const paddedNum = nextNum.toString().padStart(3, '0');
+
+        return `${prefix}_${paddedNum}`;
+    };
+
     const handleCreate = () => {
         const newMember = {
             id: crypto.randomUUID(),
+            memberId: '', // Will generate on save
+            photo: '', // Base64
             fullName: '',
             address: '',
             birthDate: '',
@@ -39,6 +65,12 @@ export default function DirectoryView() {
             medications: '',
             emergencyName: '',
             emergencyPhone: '',
+            baptismDate: '',
+            confirmationDate: '',
+            marriageDate: '',
+            ministryOrder: 'Laico', // Default
+            currentMinistry: '',
+            spiritualGifts: '',
             notes: '',
             isNew: true
         };
@@ -46,23 +78,133 @@ export default function DirectoryView() {
         setIsEditing(true);
     };
 
+    const handlePhotoChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setSelectedMember(prev => ({ ...prev, photo: reader.result }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleDownloadForm = () => {
+        const doc = new jsPDF();
+
+        // Header
+        doc.setFontSize(18);
+        doc.setFont("times", "bold");
+        doc.text("IGLESIA ANGLICANA COMUNIDAD DE GRACIA", 105, 20, { align: "center" });
+        doc.setFontSize(14);
+        doc.text("Formulario de Membresía y Cuidado Pastoral", 105, 30, { align: "center" });
+
+        // Content Boxes
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+
+        const box = (y, label, h = 10) => {
+            doc.rect(15, y, 180, h);
+            doc.text(label, 17, y + 4);
+        };
+
+        let y = 45;
+        doc.setFont("helvetica", "bold");
+        doc.text("I. DATOS PERSONALES", 15, y);
+        y += 5;
+
+        box(y, "Nombre Completo:");
+        doc.rect(140, y, 55, 35); // Photo box
+        doc.text("FOTO", 160, y + 17);
+        y += 12;
+
+        box(y, "Fecha de Nacimiento:                                          Lugar de Nacimiento:");
+        y += 12;
+
+        box(y, "Estado Civil:                                                     Profesión/Oficio:");
+        y += 12;
+
+        box(y, "Domicilio Completo (Calle, Num, Col, CP):", 15);
+        y += 17;
+
+        doc.text("II. CONTACTO", 15, y);
+        y += 5;
+        box(y, "Teléfono Casa:                                                 Celular:");
+        y += 12;
+        box(y, "Correo Electrónico:");
+        y += 12;
+
+        doc.text("III. SALUD (VITAL)", 15, y);
+        y += 5;
+        box(y, "Tipo de Sangre:                                               Alergias:");
+        y += 12;
+        box(y, "Padecimientos Crónicos:");
+        y += 12;
+        box(y, "Medicamentos Actuales:");
+        y += 12;
+        box(y, "EN CASO DE EMERGENCIA AVISAR A (Nombre y Tel):", 15);
+        y += 17;
+
+        doc.text("IV. VIDA SACRAMENTAL", 15, y);
+        y += 5;
+        box(y, "Fecha Bautismo:                                              Lugar:");
+        y += 12;
+        box(y, "Fecha Confirmación:                                        Lugar:");
+        y += 12;
+        box(y, "Fecha Matrimonio:                                           Cónyuge:");
+        y += 17;
+
+        doc.text("V. VIDA MINISTERIAL", 15, y);
+        y += 5;
+        // Checkboxes simulation
+        doc.rect(15, y, 4, 4); doc.text("Laico", 21, y + 3);
+        doc.rect(45, y, 4, 4); doc.text("Presbítero", 51, y + 3);
+        doc.rect(85, y, 4, 4); doc.text("Diácono", 91, y + 3);
+        doc.rect(120, y, 4, 4); doc.text("Ministro Laico", 126, y + 3);
+        y += 10;
+
+        box(y, "Actualmente sirvo en el ministerio de:");
+        y += 12;
+        box(y, "Dios me ha dado el don de:");
+        y += 15;
+
+        // Privacy Notice (Simplified view)
+        doc.setFontSize(8);
+        doc.text("AVISO DE PRIVACIDAD", 105, 260, { align: "center" });
+        const splitText = doc.splitTextToSize(PRIVACY_NOTICE, 170);
+        // Only show first paragraph or so, then refer to back
+        // Or create a new page for full privacy notice if requested "well founded"
+        doc.addPage();
+        doc.setFontSize(10);
+        doc.text("AVISO DE PRIVACIDAD INTEGRAL", 105, 20, { align: "center" });
+        doc.setFontSize(9);
+        doc.text(splitText, 15, 30);
+
+        doc.save("Formulario_Membresia_IACG.pdf");
+    };
+
     const handleSave = (e) => {
         e.preventDefault();
         if (!selectedMember.fullName) return;
 
+        let memberToSave = { ...selectedMember };
+
+        // Auto-generate ID if missing
+        if (!memberToSave.memberId) {
+            memberToSave.memberId = generateMemberId(memberToSave.fullName, members);
+        }
+
         let newList;
         if (selectedMember.isNew) {
-            const { isNew, ...memberData } = selectedMember;
+            const { isNew, ...memberData } = memberToSave;
             newList = [...members, memberData];
         } else {
-            newList = members.map(m => m.id === selectedMember.id ? selectedMember : m);
+            newList = members.map(m => m.id === selectedMember.id ? memberToSave : m);
         }
 
         saveMembers(newList);
 
-        // Refresh selected member from list to ensure sync without isNew flag
-        const savedId = selectedMember.id;
-        const savedMember = newList.find(m => m.id === savedId);
+        const savedMember = newList.find(m => m.id === memberToSave.id);
         setSelectedMember(savedMember);
         setIsEditing(false);
     };
@@ -149,19 +291,39 @@ export default function DirectoryView() {
                     <div className="max-w-3xl mx-auto">
                         <div className="flex justify-between items-start mb-6">
                             <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl font-display font-bold shadow-sm">
-                                    {selectedMember.fullName ? selectedMember.fullName.charAt(0).toUpperCase() : '?'}
+                                <div className="relative group">
+                                    <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl font-display font-bold shadow-sm overflow-hidden border-2 border-transparent group-hover:border-primary/50 transition-all">
+                                        {selectedMember.photo ? (
+                                            <img src={selectedMember.photo} alt="Profile" className="w-full h-full object-cover" />
+                                        ) : (
+                                            selectedMember.fullName ? selectedMember.fullName.charAt(0).toUpperCase() : '?'
+                                        )}
+                                    </div>
+                                    {isEditing && (
+                                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer rounded-full transition-opacity">
+                                            <span className="material-symbols-outlined text-sm">upload</span>
+                                            <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                                        </label>
+                                    )}
                                 </div>
                                 <div>
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                         {selectedMember.fullName || 'Nuevo Registro'}
                                     </h2>
                                     <p className="text-sm text-gray-500">
-                                        {selectedMember.id ? 'ID: ' + selectedMember.id.slice(0, 8) : 'Borrador'}
+                                        {selectedMember.memberId ? <span className="font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{selectedMember.memberId}</span> : 'ID Pendiente'}
                                     </p>
                                 </div>
                             </div>
                             <div className="flex gap-2">
+                                <button
+                                    onClick={handleDownloadForm}
+                                    className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"
+                                    title="Descargar Formulario en Blanco"
+                                >
+                                    <span className="material-symbols-outlined text-sm">description</span>
+                                    <span className="hidden md:inline">FORMULARIO</span>
+                                </button>
                                 {!isEditing ? (
                                     <>
                                         <button
@@ -258,6 +420,47 @@ export default function DirectoryView() {
                                             <div className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap min-h-[1.5rem]">{selectedMember.children || '—'}</div>
                                         )}
                                     </div>
+                                </div>
+                            </div>
+                            {/* Section 5: Sacraments */}
+                            <div className="p-6 border-t border-gray-100 dark:border-white/5">
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <span className="material-symbols-outlined">church</span> Vida Sacramental
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                    <Field label="Fecha Bautismo" type="date" value={selectedMember.baptismDate} onChange={v => setSelectedMember({ ...selectedMember, baptismDate: v })} editing={isEditing} />
+                                    <Field label="Fecha Confirmación" type="date" value={selectedMember.confirmationDate} onChange={v => setSelectedMember({ ...selectedMember, confirmationDate: v })} editing={isEditing} />
+                                    <Field label="Fecha Matrimonio" type="date" value={selectedMember.marriageDate} onChange={v => setSelectedMember({ ...selectedMember, marriageDate: v })} editing={isEditing} />
+                                </div>
+                            </div>
+
+                            {/* Section 6: Ministry */}
+                            <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">
+                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <span className="material-symbols-outlined">volunteer_activism</span> Vida Ministerial
+                                </h3>
+                                <div className="grid grid-cols-1 gap-6">
+                                    <div>
+                                        <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-wider">Orden Eclesiástico</label>
+                                        <div className="flex flex-wrap gap-4">
+                                            {['Laico', 'Presbítero', 'Diácono', 'Ministro Laico'].map(role => (
+                                                <label key={role} className="flex items-center gap-2 cursor-pointer">
+                                                    <input
+                                                        type="radio"
+                                                        name="ministryOrder"
+                                                        value={role}
+                                                        checked={selectedMember.ministryOrder === role}
+                                                        onChange={e => isEditing && setSelectedMember({ ...selectedMember, ministryOrder: e.target.value })}
+                                                        disabled={!isEditing}
+                                                        className="accent-primary"
+                                                    />
+                                                    <span className="text-sm text-gray-700 dark:text-gray-300">{role}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <Field label="Actualmente sirvo en el ministerio de" value={selectedMember.currentMinistry} onChange={v => setSelectedMember({ ...selectedMember, currentMinistry: v })} editing={isEditing} placeholder="Música, Ujieres, Escuela Dominical..." />
+                                    <Field label="Dios me ha dado el don de" value={selectedMember.spiritualGifts} onChange={v => setSelectedMember({ ...selectedMember, spiritualGifts: v })} editing={isEditing} placeholder="Enseñanza, Hospitalidad, Exhortación..." />
                                 </div>
                             </div>
                         </div>
