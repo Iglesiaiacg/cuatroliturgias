@@ -17,6 +17,7 @@ import Toast from './components/Common/Toast'
 import HomeView from './components/Views/HomeView'
 import CalendarView from './components/Views/CalendarView'
 import OccasionalServicesView from './components/Views/OccasionalServicesView'
+import OfferingsView from './components/Views/OfferingsView'
 import TopBar from './components/Layout/TopBar'
 import PulpitView from './components/Liturgy/PulpitView'
 import BackgroundWrapper from './components/Layout/BackgroundWrapper'
@@ -239,13 +240,10 @@ function App() {
             />
           )}
 
-          {/* --- FAVORITES (Placeholder) --- */}
-          {activeTab === 'favorites' && (
-            <div className="flex-1 flex items-center justify-center text-gray-400">
-              <div className="text-center">
-                <span className="material-symbols-outlined text-6xl mb-4">favorite</span>
-                <p>Favoritos próximamente</p>
-              </div>
+          {/* --- OFFERINGS VIEW --- */}
+          {activeTab === 'offerings' && (
+            <div className="flex-1 flex flex-col w-full overflow-y-auto">
+              <OfferingsView />
             </div>
           )}
         </div>
