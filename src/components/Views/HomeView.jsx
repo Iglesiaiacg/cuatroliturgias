@@ -45,6 +45,10 @@ export default function Dashboard({ onNavigate, date }) {
                     </section>
 
                     <section>
+                        <NoticesCard />
+                    </section>
+
+                    <section>
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <StyledCard
@@ -70,8 +74,11 @@ export default function Dashboard({ onNavigate, date }) {
                 {/* Column 2: Management */}
                 <div className="space-y-6">
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión</h3>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
                         <RolesCard />
+                    </section>
+                    <section>
+                        <StatsCard />
                     </section>
                     <section>
                         <IntentionsCard />
@@ -81,13 +88,15 @@ export default function Dashboard({ onNavigate, date }) {
                 {/* Column 3: Finance & Checklist */}
                 <div className="space-y-6">
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Finanzas</h3>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Administración</h3>
                         <FinanceCard />
                     </section>
                     <section>
                         <InventoryCard />
                     </section>
-
+                    <section>
+                        <QuickCertCard />
+                    </section>
                 </div>
 
             </div>
