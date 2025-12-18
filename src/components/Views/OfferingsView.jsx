@@ -80,7 +80,11 @@ export default function OfferingsView() {
         setTimeout(async () => {
             if (receiptRef.current) {
                 try {
-                    const dataUrl = await toPng(receiptRef.current, { quality: 1.0, pixelRatio: 2 });
+                    const dataUrl = await toPng(receiptRef.current, {
+                        quality: 1.0,
+                        pixelRatio: 2,
+                        skipFonts: true // Bypass CORS issues with external fonts
+                    });
 
                     // A5 Landscape: 210mm x 148mm
                     const pdf = new jsPDF({
