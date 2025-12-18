@@ -41,7 +41,7 @@ const Receipt = forwardRef(({ data }, ref) => {
                         <div className="flex-1 border-b-2 border-black pb-1 px-4 font-handwriting text-2xl relative">
                             <span className="text-gray-900">{data.description}</span>
                         </div>
-                        <div className="w-1/4 border-b-2 border-black pb-1 text-right pr-2 font-mono text-xl font-bold text-red-800">
+                        <div className="w-1/4 border-b-2 border-black pb-1 text-right pr-2 font-mono text-xl font-bold" style={{ color: '#991b1b' }}>
                             ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                         </div>
                     </div>
@@ -62,7 +62,7 @@ const Receipt = forwardRef(({ data }, ref) => {
                 {/* Total & Words */}
                 <div className="flex justify-end gap-2 items-end mb-2">
                     <span className="font-bold text-lg">TOTAL</span>
-                    <div className="w-1/4 border-b-2 border-black text-right pr-2 font-mono text-xl font-bold text-red-800">
+                    <div className="w-1/4 border-b-2 border-black text-right pr-2 font-mono text-xl font-bold" style={{ color: '#991b1b' }}>
                         ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                     </div>
                 </div>
