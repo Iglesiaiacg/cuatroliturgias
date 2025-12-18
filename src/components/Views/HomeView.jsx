@@ -24,9 +24,16 @@ export default function Dashboard({ onNavigate, date }) {
                         return "Buenas noches";
                     })()},
                 </h1>
-                <p className="text-gray-500 dark:text-gray-400">
-                    {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
-                </p>
+                <div className="flex items-center gap-2">
+                    <p className="text-gray-500 dark:text-gray-400">
+                        {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
+                    </p>
+                    {date && new Date().toDateString() !== date.toDateString() && (
+                        <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold ml-2">
+                            Fecha Seleccionada
+                        </span>
+                    )}
+                </div>
             </div>
 
             {/* Sacristy Digital Checklist */}

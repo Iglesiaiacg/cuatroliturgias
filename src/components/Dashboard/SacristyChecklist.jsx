@@ -105,6 +105,14 @@ export default function SacristyChecklist({ date }) {
                 </div>
             </div>
 
+            {/* Warning for Sunday/Feasts */}
+            {(!isCollapsed && (date.getDay() === 0 || !color.name.toLowerCase().includes('verde'))) && (
+                <div className="mx-3 mt-2 mb-1 px-3 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-900/30 rounded-lg flex items-center gap-2 animate-fade-in">
+                    <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-sm">warning</span>
+                    <span className="text-xs font-bold text-yellow-700 dark:text-yellow-300">Revisa que no falte nada para la celebración.</span>
+                </div>
+            )}
+
             {/* Checklist Grid (Collapsible) */}
             <div
                 className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
