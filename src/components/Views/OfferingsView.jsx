@@ -297,7 +297,8 @@ export default function OfferingsView() {
                             </div>
                         ) : (
                             <div className="overflow-x-auto">
-                                <table className="w-full text-sm text-left">
+                                {/* Desktop Table */}
+                                <table className="w-full text-sm text-left hidden md:table">
                                     <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-black/20 dark:text-gray-400 sticky top-0 z-10">
                                         <tr>
                                             <th className="px-6 py-3 font-bold tracking-wider">Fecha</th>
@@ -354,6 +355,57 @@ export default function OfferingsView() {
                                         ))}
                                     </tbody>
                                 </table>
+
+                                {/* Mobile Card List */}
+                                <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-white/5">
+                                    {transactions.map((t) => (
+                                        <div key={t.id} className="p-4 space-y-3 bg-white dark:bg-surface-dark">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <div className="text-xs text-gray-400 mb-1">
+                                                        {format(new Date(t.date), 'dd MMMM yyyy', { locale: es })}
+                                                    </div>
+                                                    <div className="font-bold text-gray-900 dark:text-white text-sm">
+                                                        {t.description}
+                                                    </div>
+                                                    {t.beneficiary && (
+                                                        <div className="text-xs text-gray-500 mt-1">
+                                                            Ref: {t.beneficiary}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                                <div className={`font-mono font-bold text-lg ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                                                    {t.type === 'income' ? '+' : '-'}${t.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                                                </div>
+                                            </div>
+
+                                            <div className="flex items-center justify-between mt-2">
+                                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-[10px] font-bold uppercase border
+                                                    ${t.type === 'income'
+                                                        ? 'bg-green-50 text-green-700 border-green-100 dark:bg-green-900/20 dark:text-green-300'
+                                                        : 'bg-red-50 text-red-700 border-red-100 dark:bg-red-900/20 dark:text-red-300'}
+                                                `}>
+                                                    {categories[t.type].find(c => c.id === t.category)?.label || t.category}
+                                                </span>
+
+                                                <div className="flex items-center gap-3">
+                                                    <button
+                                                        onClick={() => handleDownloadReceipt(t)}
+                                                        className="flex items-center gap-1 text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-lg"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">receipt_long</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => handleDelete(t.id)}
+                                                        className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-lg"
+                                                    >
+                                                        <span className="material-symbols-outlined text-sm">delete</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
                             </div>
                         )}
                     </div>

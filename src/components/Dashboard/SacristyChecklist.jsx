@@ -107,7 +107,7 @@ export default function SacristyChecklist({ date }) {
 
             {/* Checklist Grid (Collapsible) */}
             <div
-                className={`grid grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
             >
                 {items.map(item => (
                     <button

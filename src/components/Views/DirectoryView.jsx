@@ -332,9 +332,9 @@ export default function DirectoryView() {
     );
 
     return (
-        <div className="flex bg-gray-50 dark:bg-black/20 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-white/5 h-[calc(100vh-140px)] animate-fade-in">
-            {/* Sidebar List */}
-            <div className="w-1/3 min-w-[300px] border-r border-gray-200 dark:border-white/10 flex flex-col bg-white dark:bg-surface-dark">
+        <div className="flex flex-col md:flex-row bg-gray-50 dark:bg-black/20 rounded-2xl overflow-hidden shadow-sm border border-gray-200 dark:border-white/5 h-[calc(100vh-140px)] animate-fade-in">
+            {/* Sidebar List (Hidden on mobile if member selected) */}
+            <div className={`${selectedMember ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 min-w-[300px] border-r border-gray-200 dark:border-white/10 flex-col bg-white dark:bg-surface-dark h-full`}>
                 <div className="p-4 border-b border-gray-100 dark:border-white/5 space-y-3">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -395,7 +395,17 @@ export default function DirectoryView() {
             </div>
 
             {/* Main Content / Form */}
-            <div className="flex-1 overflow-y-auto bg-gray-50/50 dark:bg-black/5 p-4 md:p-8">
+            <div className={`${!selectedMember ? 'hidden md:flex' : 'flex'} flex-1 overflow-y-auto bg-gray-50/50 dark:bg-black/5 p-4 md:p-8 flex-col`}>
+                {/* Mobile Back Button */}
+                {selectedMember && (
+                    <button
+                        onClick={() => setSelectedMember(null)}
+                        className="md:hidden mb-4 flex items-center text-gray-500 hover:text-primary transition-colors font-bold text-sm"
+                    >
+                        <span className="material-symbols-outlined mr-1">arrow_back</span>
+                        Volver a la lista
+                    </button>
+                )}
                 {selectedMember ? (
                     <div className="max-w-3xl mx-auto">
                         <div className="flex justify-between items-start mb-6">
