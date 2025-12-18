@@ -36,6 +36,9 @@ export default function DirectoryView() {
             bloodType: '',
             allergies: '',
             illnesses: '',
+            medications: '',
+            emergencyName: '',
+            emergencyPhone: '',
             notes: '',
             isNew: true
         };

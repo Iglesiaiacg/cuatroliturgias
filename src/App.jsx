@@ -243,6 +243,14 @@ function App() {
             />
           )}
 
+          {/* --- DIRECTORY VIEW --- */}
+          {activeTab === 'directory' && (
+            <div className="flex-1 flex flex-col w-full overflow-y-auto px-4 py-6 max-w-7xl mx-auto">
+              <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-6">Directorio de Fieles</h1>
+              <DirectoryView />
+            </div>
+          )}
+
           {/* --- OFFERINGS VIEW --- */}
           {activeTab === 'offerings' && (
             <div className="flex-1 flex flex-col w-full overflow-y-auto">
