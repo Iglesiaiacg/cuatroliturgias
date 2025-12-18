@@ -41,23 +41,7 @@ export default function Dashboard({ onNavigate, date }) {
                         actionText="Abrir"
                     />
 
-                    {/* Card 2: Liturgia Horas */}
-                    <StyledCard
-                        title="Liturgia Horas"
-                        description="Laudes y Vísperas"
-                        icon="schedule"
-                        onClick={() => { }}
-                        actionText="Próximamente"
-                    />
 
-                    {/* Card 3: Santoral */}
-                    <StyledCard
-                        title="Santoral"
-                        description="Vida de Santos"
-                        icon="diversity_3"
-                        onClick={() => { }}
-                        actionText="Próximamente"
-                    />
 
                     {/* Card 4: Servicios Ocasionales */}
                     <StyledCard

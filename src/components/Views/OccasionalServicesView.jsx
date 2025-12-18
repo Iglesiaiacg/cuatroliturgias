@@ -946,6 +946,13 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
 
     const services = [
         {
+            category: "Liturgia Diaria",
+            items: [
+                { title: "Liturgia Horas", description: "Laudes y Vísperas", icon: "schedule" },
+                { title: "Santoral", description: "Vida de Santos", icon: "diversity_3" }
+            ]
+        },
+        {
             category: "El Año Litúrgico",
             items: [
                 { title: "Antífonas para el Lucernario", description: "Oraciones al encender las velas.", icon: "light_mode" },
