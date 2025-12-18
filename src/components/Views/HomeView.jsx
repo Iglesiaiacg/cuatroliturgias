@@ -1,5 +1,10 @@
 import StyledCard from '../Common/StyledCard';
 import SacristyChecklist from '../Dashboard/SacristyChecklist';
+import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
+import FinanceCard from '../Dashboard/FinanceCard';
+import RolesCard from '../Dashboard/RolesCard';
+import IntentionsCard from '../Dashboard/IntentionsCard';
+import InventoryCard from '../Dashboard/InventoryCard';
 
 export default function Dashboard({ onNavigate, date }) {
     return (
@@ -26,33 +31,65 @@ export default function Dashboard({ onNavigate, date }) {
                 <SacristyChecklist date={date} />
             </section>
 
-            {/* Quick Access Grid */}
-            <section>
-                <div className="flex items-center justify-between mb-4 px-1">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white font-display">Accesos Rápidos</h3>
+            {/* Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+
+                {/* Column 1: Priority (Next Liturgy & Actions) */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
+                        <NextLiturgyCard onClick={() => onNavigate('generator')} />
+                    </section>
+
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <StyledCard
+                                title="Liturgia"
+                                description="Generador"
+                                icon="menu_book"
+                                onClick={() => onNavigate('generator')}
+                                actionText="Ir"
+                                compact={true}
+                            />
+                            <StyledCard
+                                title="Servicios"
+                                description="Ocasionales"
+                                icon="church"
+                                onClick={() => onNavigate('occasional')}
+                                actionText="Ir"
+                                compact={true}
+                            />
+                        </div>
+                    </section>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Card 1: Liturgia */}
-                    <StyledCard
-                        title="Liturgia"
-                        description="Guía de la celebración"
-                        icon="menu_book"
-                        onClick={() => onNavigate('generator')}
-                        actionText="Abrir"
-                    />
 
-
-
-                    {/* Card 4: Servicios Ocasionales */}
-                    <StyledCard
-                        title="Servicios Ocasionales"
-                        description="Libro de Servicios 2003"
-                        icon="church"
-                        onClick={() => onNavigate('occasional')}
-                        actionText="Abrir"
-                    />
+                {/* Column 2: Management */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión</h3>
+                        <RolesCard />
+                    </section>
+                    <section>
+                        <IntentionsCard />
+                    </section>
                 </div>
-            </section>
+
+                {/* Column 3: Finance & Checklist */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Finanzas</h3>
+                        <FinanceCard />
+                    </section>
+                    <section>
+                        <InventoryCard />
+                    </section>
+                    <section>
+                        <SacristyChecklist date={date} />
+                    </section>
+                </div>
+
+            </div>
         </main>
     );
 }
