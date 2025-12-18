@@ -26,7 +26,7 @@ function App() {
     tradition, setTradition,
     selectedDate, setSelectedDate,
     calculatedFeast,
-    cycleInfo, season,
+    season,
     loading, loadingTip, error,
     docContent, setDocContent,
     generate

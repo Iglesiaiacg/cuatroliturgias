@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import StyledCard from '../Common/StyledCard';
 
 export default function OccasionalServicesView({ onNavigate, setDocContent, setServiceTitle }) {

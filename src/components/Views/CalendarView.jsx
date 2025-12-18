@@ -55,7 +55,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 flex-1 auto-rows-fr bg-gray-200 gap-px">
-                {calendarDays.map((date, idx) => {
+                {calendarDays.map((date) => {
                     const isSelected = isSameDay(date, selectedDate);
                     const isCurrentMonth = isSameMonth(date, monthStart);
                     const liturgicalColorClass = isCurrentMonth ? getLiturgicalColor(date).classes : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
