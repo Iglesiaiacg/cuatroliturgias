@@ -9,6 +9,7 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
     const navItems = [
         { id: 'dashboard', icon: 'home', label: 'Inicio' },
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario' },
+        { id: 'directory', icon: 'diversity_3', label: 'Fieles' },
         { id: 'offerings', icon: 'savings', label: 'Ofrendas' },
         { id: 'generator', icon: 'menu_book', label: 'Liturgia' },
     ];
