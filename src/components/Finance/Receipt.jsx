@@ -11,93 +11,105 @@ const Receipt = forwardRef(({ data }, ref) => {
     const currentCategories = FINANCE_CATEGORIES[data.type] || [];
 
     return (
-        <div ref={ref} className="bg-white p-8 w-[800px] h-[500px] flex items-center justify-center">
-            {/* Outline Box */}
-            <div className="border-4 border-black w-full h-full p-8 relative flex flex-col justify-between">
+        <div ref={ref} className="bg-white p-8 w-[800px] h-[500px] flex items-center justify-center relative overflow-hidden">
+            {/* Background Texture/Watermark */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.03] flex items-center justify-center">
+                <span className="material-symbols-outlined text-[400px]">church</span>
+            </div>
+
+            {/* Main Border Box */}
+            <div className="w-full h-full border-4 border-double border-gray-800 p-8 relative flex flex-col justify-between z-10">
 
                 {/* Header */}
-                <h1 className="text-3xl font-bold text-center mb-6 uppercase tracking-wider">Recibo</h1>
-
-                {/* Top Row: Recibido de & Fecha */}
-                <div className="flex justify-between items-end mb-6 relative">
-                    <div className="flex-1 flex gap-2 items-end">
-                        <span className="font-bold text-lg whitespace-nowrap">Recibido de:</span>
-                        <div className="flex-1 border-b-2 border-black px-2 font-handwriting text-xl">
-                            {data.beneficiary || "_________________"}
-                        </div>
-                    </div>
-                    <div className="w-1/3 flex gap-2 items-end ml-4">
-                        <span className="font-bold text-lg whitespace-nowrap">Fecha:</span>
-                        <div className="flex-1 border-b-2 border-black px-2 text-center font-handwriting text-xl">
-                            {format(new Date(data.date), "dd/MMM/yyyy", { locale: es })}
-                        </div>
-                    </div>
+                <div className="text-center mb-8 border-b border-gray-900 pb-4">
+                    <h1 className="text-4xl font-display font-bold text-gray-900 uppercase tracking-widest mb-1">Recibo de Tesorería</h1>
+                    <p className="text-sm font-serif italic text-gray-600">Iglesia Anglicana Comunidad de Gracia</p>
                 </div>
 
-                {/* Conceptos Grid */}
-                <div className="mb-4">
-                    <span className="font-bold text-sm uppercase mb-2 block">Concepto:</span>
-                    <div className="grid grid-cols-3 gap-2 text-sm">
-                        {currentCategories.map(cat => (
-                            <div key={cat.id} className="flex items-center gap-2">
-                                <div className={`w-4 h-4 border-2 border-black flex items-center justify-center ${data.category === cat.id ? 'bg-black' : ''}`}>
-                                    {data.category === cat.id && <span className="text-white font-bold text-xs">✓</span>}
-                                </div>
-                                <span className={data.category === cat.id ? 'font-bold' : ''}>{cat.label}</span>
+                {/* Top Row: Date & No */}
+                <div className="flex justify-between items-end mb-8 font-display">
+                    <div className="flex flex-col">
+                        <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Fecha de Emisión</span>
+                        <div className="text-xl border-b border-gray-400 min-w-[200px] pb-1">
+                            {format(new Date(data.date), "dd 'de' MMMM, yyyy", { locale: es })}
+                        </div>
+                    </div>
+                    {data.eventId && (
+                        <div className="flex flex-col text-right">
+                            <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Evento Vinculado</span>
+                            <div className="text-lg italic text-gray-800">
+                                {data.eventTitle || 'Evento Litúrgico'}
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Concept & Amount Section */}
-                <div className="flex-1 mb-4 flex flex-col justify-start gap-4">
-                    {/* Row 1 (Data) */}
-                    <div className="flex gap-4 items-end">
-                        <div className="flex-1 border-b-2 border-black pb-1 px-4 font-handwriting text-2xl relative">
-                            <span className="text-gray-900">{data.description}</span>
                         </div>
-                        <div className="w-1/4 border-b-2 border-black pb-1 text-right pr-2 font-mono text-xl font-bold" style={{ color: '#991b1b' }}>
-                            ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                    )}
+                </div>
+
+                {/* Main Content Info */}
+                <div className="grid grid-cols-12 gap-8 mb-4 font-display">
+                    {/* Received From / Paid To */}
+                    <div className="col-span-8 space-y-6">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                                {data.type === 'income' ? 'Recibimos de' : 'Pagado a'}
+                            </span>
+                            <div className="text-2xl font-bold italic border-b border-gray-400 pb-1">
+                                {data.beneficiary || "Anónimo / General"}
+                            </div>
                         </div>
-                    </div>
 
-                    {/* Row 2 (Empty/Placeholder) */}
-                    <div className="flex gap-4 items-end">
-                        <div className="flex-1 border-b-2 border-black h-8"></div>
-                        <div className="w-1/4 border-b-2 border-black h-8"></div>
-                    </div>
-                </div>
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold uppercase tracking-wider text-gray-500">La cantidad de</span>
+                            <div className="text-lg italic border-b border-gray-400 pb-1 capitalize">
+                                {numberToWords(data.amount)}
+                            </div>
+                        </div>
 
-                {/* Total & Words */}
-                <div className="flex justify-end gap-2 items-end mb-2">
-                    <span className="font-bold text-lg">TOTAL</span>
-                    <div className="w-1/4 border-b-2 border-black text-right pr-2 font-mono text-xl font-bold" style={{ color: '#991b1b' }}>
-                        ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
-                    </div>
-                </div>
-                <div className="text-right text-sm font-medium pr-2 mb-8 uppercase">
-                    {numberToWords(data.amount)}
-                </div>
-
-                {/* Footer / Signature */}
-                <div className="flex flex-col items-center justify-center mt-auto relative">
-                    {/* Signature Line */}
-                    <div className="w-1/2 border-b-2 border-black mb-2 relative">
-                        {/* Fake Signature Image or Text */}
-                        <div className="absolute bottom-1 left-10 font-handwriting text-4xl text-blue-900 -rotate-3 opacity-80">
-                            Firma Autorizada
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold uppercase tracking-wider text-gray-500">Por concepto de</span>
+                            <div className="text-xl border-b border-gray-400 pb-1">
+                                {data.description}
+                            </div>
                         </div>
                     </div>
-                    <span className="font-bold text-sm">(Firma y Nombre)</span>
 
-                    <p className="text-[10px] text-center mt-4 max-w-2xl leading-tight">
-                        Este recibo debe llenarse por duplicado. El tesorero recibirá el original y el dinero, y quien verifique el recibo entregará la copia a la secretaria. Iglesia Anglicana Comunidad de Gracia
-                    </p>
+                    {/* Amount Box */}
+                    <div className="col-span-4 flex flex-col justify-center items-center">
+                        <div className="border-2 border-gray-800 p-4 rounded-lg w-full text-center bg-gray-50">
+                            <span className="text-xs font-bold uppercase block mb-2 text-gray-500">Importe Total</span>
+                            <span className="text-4xl font-mono font-bold text-gray-900">
+                                ${data.amount.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
+                            </span>
+                        </div>
+
+                        {/* Category Badge */}
+                        <div className="mt-4 w-full flex justify-center">
+                            {currentCategories.map(cat => (
+                                data.category === cat.id && (
+                                    <span key={cat.id} className="px-3 py-1 bg-gray-200 rounded-full text-xs font-bold uppercase tracking-wide border border-gray-300">
+                                        {cat.label}
+                                    </span>
+                                )
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                {/* Address Footer */}
-                <div className="absolute bottom-1 left-8 right-8 text-[9px] text-gray-600 text-center">
-                    Iglesia Anglicana Comunidad de Gracia. Calle Benito Quijano, Xalapa, Mexico, 91064, Ver. Tel. 2281215962. Correo electrónico: iacgmx@gmail.com
+                {/* Footer / Signature using grid */}
+                <div className="grid grid-cols-2 gap-12 mt-auto items-end">
+                    <div className="text-[10px] text-gray-500 text-justify leading-tight">
+                        Este documento es un comprobante interno de la Iglesia Anglicana Comunidad de Gracia.
+                        Cualquier duda o aclaración favor de contactar a la tesorería.
+                        <br />Xalapa, Veracruz.
+                    </div>
+                    <div className="flex flex-col items-center">
+                        <div className="w-full border-b border-gray-900 mb-2 relative h-12">
+                            {/* Fake Signature */}
+                            <div className="absolute bottom-1 left-10 font-handwriting text-3xl text-blue-900 -rotate-2 opacity-60">
+                                Tesorería IACG
+                            </div>
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-wider">Firma Autorizada</span>
+                    </div>
                 </div>
 
             </div>

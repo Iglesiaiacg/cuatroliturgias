@@ -7,6 +7,7 @@ import StyledCard from '../Common/StyledCard';
 import Receipt from '../Finance/Receipt';
 import AccountSheet from '../Finance/AccountSheet';
 import { FINANCE_CATEGORIES as categories } from '../../utils/financeCategories';
+import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 
 export default function OfferingsView() {
     // Categories imported from utils
@@ -31,8 +32,39 @@ export default function OfferingsView() {
         amount: '',
         type: 'income',
         category: 'colecta',
-        beneficiary: ''
+        beneficiary: '',
+        eventId: '',
+        eventTitle: ''
     });
+
+    // Calendar Integration
+    const { getEventsForDate } = useCalendarEvents();
+    const [recentEvents, setRecentEvents] = useState([]);
+
+    // Load recent/upcoming events for dropdown (last 7 days + next 7 days)
+    useEffect(() => {
+        if (showForm) {
+            const today = new Date();
+            const candidates = [];
+            // Check range from -7 days to +7 days
+            for (let i = -7; i <= 7; i++) {
+                const d = new Date(today);
+                d.setDate(today.getDate() + i);
+                const dayEvents = getEventsForDate(d);
+                dayEvents.forEach(e => {
+                    // Filter out auto-generated finance tasks to avoid recursion, keep liturgies
+                    if (e.type !== 'finance' && !e.isAuto) {
+                        candidates.push({
+                            ...e,
+                            uniqueId: e.id + d.toISOString(), // Ensure unique key for dropdown
+                            displayDate: d
+                        });
+                    }
+                });
+            }
+            setRecentEvents(candidates);
+        }
+    }, [showForm, getEventsForDate]);
 
     const receiptRef = useRef(null);
     const [receiptData, setReceiptData] = useState(null);
@@ -245,6 +277,36 @@ export default function OfferingsView() {
                                 >
                                     {categories[formData.type].map(cat => (
                                         <option key={cat.id} value={cat.id}>{cat.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Link Event */}
+                            <div className="md:col-span-4">
+                                <label className="block text-xs font-bold text-gray-500 mb-1">Vincular Evento (Opcional)</label>
+                                <select
+                                    value={formData.uniqueId || ''}
+                                    onChange={(e) => {
+                                        const selected = recentEvents.find(ev => ev.uniqueId === e.target.value);
+                                        if (selected) {
+                                            setFormData({
+                                                ...formData,
+                                                eventId: selected.id,
+                                                eventTitle: selected.title,
+                                                uniqueId: selected.uniqueId,
+                                                description: formData.description || selected.title // Auto-fill desc if empty
+                                            });
+                                        } else {
+                                            setFormData({ ...formData, eventId: '', eventTitle: '', uniqueId: '' });
+                                        }
+                                    }}
+                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                >
+                                    <option value="">-- Ninguno --</option>
+                                    {recentEvents.map(ev => (
+                                        <option key={ev.uniqueId} value={ev.uniqueId}>
+                                            {format(new Date(ev.displayDate), 'dd/MM')} - {ev.title}
+                                        </option>
                                     ))}
                                 </select>
                             </div>
