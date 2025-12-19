@@ -41,6 +41,13 @@ function App() {
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
+  // Settings State
+  const [rubricLevel, setRubricLevel] = useState(() => localStorage.getItem('rubricLevel') || 'simple'); // 'simple' | 'solemn'
+
+  useEffect(() => {
+    localStorage.setItem('rubricLevel', rubricLevel);
+  }, [rubricLevel]);
+
   // Navigation State
   const [serviceTitle, setServiceTitle] = useState(null)
 
@@ -144,6 +151,8 @@ function App() {
         <SettingsModal
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
+          rubricLevel={rubricLevel}
+          onRubricChange={setRubricLevel}
         />
 
         {/* Main Content Area */}
@@ -213,7 +222,7 @@ function App() {
                       onDownloadBulletin={() => handleDownload('bulletin')}
                       onPulpitMode={() => setIsPulpitOpen(true)}
                     />
-                    <Preview ref={previewRef} content={docContent} season={season} />
+                    <Preview ref={previewRef} content={docContent} season={season} rubricLevel={rubricLevel} />
                   </div>
                 ) : (
                   <EmptyState />

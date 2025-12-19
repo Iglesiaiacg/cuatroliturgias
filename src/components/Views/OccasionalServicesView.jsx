@@ -1,6 +1,19 @@
+import { useState } from 'react';
 import StyledCard from '../Common/StyledCard';
+import RiteGenerator from './RiteGenerator';
+import { baptismRite } from '../../utils/rites/baptism';
+import { marriageRite } from '../../utils/rites/marriage';
 
 export default function OccasionalServicesView({ onNavigate, setDocContent, setServiceTitle }) {
+    const [activeGenerator, setActiveGenerator] = useState(null);
+
+    const handleGeneratorSubmit = (content, title) => {
+        setDocContent(content);
+        setServiceTitle(title);
+        onNavigate('generator'); // Or wherever we view the result
+        // Note: The parent App.jsx logic for 'generator' tab might need to know to show the doc immediately.
+        // In App.jsx, if docContent is set, it shows preview.
+    };
 
     // Content Definitions
     const serviceContent = {
@@ -932,6 +945,11 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
 
 
     const handleServiceClick = (item) => {
+        if (item.type === 'generator') {
+            setActiveGenerator(item.riteId);
+            return;
+        }
+
         if (serviceContent[item.title]) {
             if (setDocContent) {
                 setDocContent(serviceContent[item.title]);
@@ -939,12 +957,18 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 onNavigate('generator');
             }
         } else {
-            // Optional: fallback or toast for items not yet implemented
             console.log("Contenido no disponible para:", item.title);
         }
     };
 
     const services = [
+        {
+            category: "Sacramentos Mayores (Generadores)",
+            items: [
+                { title: "Santo Bautismo", description: "Generador de rito bautismal personalizado.", icon: "water_drop", type: 'generator', riteId: 'baptism' },
+                { title: "Santo Matrimonio", description: "Generador de rito matrimonial personalizado.", icon: "favorite", type: 'generator', riteId: 'marriage' }
+            ]
+        },
         {
             category: "Liturgia Diaria",
             items: [
@@ -1033,39 +1057,51 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 </div>
             </div>
 
-            {/* Content grid */}
+
+
+            {/* Content grid or Active Generator */}
             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-8">
-                {
-                    services.map((section, idx) => (
-                        <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 100}ms` }}>
-                            <h3 className="text-sm font-bold text-[var(--color-primary)] dark:text-red-400 uppercase tracking-widest mb-4 px-1 sticky top-0 bg-[var(--color-background-light)] dark:bg-background-dark z-10 py-2 border-b border-primary/10">
-                                {section.category}
-                            </h3>
+                {activeGenerator ? (
+                    <RiteGenerator
+                        rite={activeGenerator === 'baptism' ? baptismRite : marriageRite}
+                        onGenerate={handleGeneratorSubmit}
+                        onCancel={() => setActiveGenerator(null)}
+                    />
+                ) : (
+                    <>
+                        {
+                            services.map((section, idx) => (
+                                <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 100}ms` }}>
+                                    <h3 className="text-sm font-bold text-[var(--color-primary)] dark:text-red-400 uppercase tracking-widest mb-4 px-1 sticky top-0 bg-[var(--color-background-light)] dark:bg-background-dark z-10 py-2 border-b border-primary/10">
+                                        {section.category}
+                                    </h3>
 
-                            {/* Responsive Grid: 1 col mobile, 2 col tablet, 4 col desktop */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                                {section.items.map((item, i) => (
-                                    <StyledCard
-                                        key={i}
-                                        title={item.title}
-                                        description={item.description}
-                                        icon={item.icon || "church"}
-                                        onClick={() => handleServiceClick(item)}
-                                        actionText="Ver Detalles"
-                                    />
-                                ))}
-                            </div>
+                                    {/* Responsive Grid: 1 col mobile, 2 col tablet, 4 col desktop */}
+                                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                                        {section.items.map((item, i) => (
+                                            <StyledCard
+                                                key={i}
+                                                title={item.title}
+                                                description={item.description}
+                                                icon={item.icon || "church"}
+                                                onClick={() => handleServiceClick(item)}
+                                                actionText={item.type === 'generator' ? "Crear Rito" : "Ver Detalles"}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ))
+                        }
+
+                        <div className="px-4 py-8 text-center bg-[var(--color-primary)]/5 dark:bg-white/5 rounded-xl mx-auto max-w-2xl mt-8 border border-[var(--color-primary)]/10">
+                            <p className="text-xs text-gray-500 italic">
+                                Basado en "The Book of Occasional Services 2003".<br />
+                                Los textos completos estarán disponibles próximamente.
+                            </p>
                         </div>
-                    ))
-                }
-
-                <div className="px-4 py-8 text-center bg-[var(--color-primary)]/5 dark:bg-white/5 rounded-xl mx-auto max-w-2xl mt-8 border border-[var(--color-primary)]/10">
-                    <p className="text-xs text-gray-500 italic">
-                        Basado en "The Book of Occasional Services 2003".<br />
-                        Los textos completos estarán disponibles próximamente.
-                    </p>
-                </div>
+                    </>
+                )}
             </div>
-        </main>
+        </main >
     );
 }

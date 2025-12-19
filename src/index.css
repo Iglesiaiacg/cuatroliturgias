@@ -512,3 +512,39 @@
     mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
     -webkit-mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
 }
+
+/* Rubrics Customization */
+.rubric {
+    @apply text-red-600 italic text-sm my-2 block;
+}
+
+/* Solemn Rubrics - Hidden by default unless enabled */
+.rubric-solemn {
+    @apply text-red-700 font-bold bg-red-50 p-2 rounded border-l-4 border-red-500 text-xs mt-2 mb-4;
+    display: none; /* Default state: hidden (Simple mode) */
+}
+
+/* When parent has class 'mode-solemn', show solemn rubrics */
+.mode-solemn .rubric-solemn {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mystagogical Annotations */
+.mystagogy {
+    @apply border-b-2 border-dotted border-primary cursor-help relative inline-block text-primary/80;
+}
+
+.mystagogy:hover {
+    @apply bg-yellow-50 text-primary;
+}
+
+.mystagogy::after {
+    content: "❓";
+    @apply text-[10px] align-top ml-0.5 opacity-50;
+}
