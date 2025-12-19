@@ -1,4 +1,5 @@
 import StyledCard from '../Common/StyledCard';
+import SacristyChecklist from '../Dashboard/SacristyChecklist';
 import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
 import FinanceCard from '../Dashboard/FinanceCard';
 import RolesCard from '../Dashboard/RolesCard';
@@ -34,6 +35,11 @@ export default function Dashboard({ onNavigate, date }) {
                     )}
                 </div>
             </div>
+
+            {/* Sacristy Digital Checklist */}
+            <section className="mb-2">
+                <SacristyChecklist date={date} />
+            </section>
 
             {/* Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
