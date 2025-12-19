@@ -1,4 +1,4 @@
-import { CONFIG } from './config';
+import { CONFIG } from './config.js';
 
 // --- DATE MATH HELPERS ---
 const OneDay = 1000 * 60 * 60 * 24;
@@ -119,21 +119,60 @@ export const identifyFeast = (date) => {
     if (d.getTime() === christKing.getTime()) return "Jesucristo, Rey del Universo";
 
     // 6. ORDINARY TIME
-    // Needs calculation of "Week X".
-    // 1st part: Baptism (Sunday after Jan 6) to Ash Wed.
-    // 2nd part: Pentecost to Advent.
+    // Part 1: After Baptism until Ash Wednesday
+    // Part 2: After Pentecost until Advent
+
+    // Helper: Calculate Ordinary Time Week
+    const getOTWeek = (d) => {
+        // Target: Christ the King is Week 34
+        // We calculate backwards from Christ the King for the second part of the year (Green Season)
+        // This ensures we land on Week 34 correctly regardless of when Easter fell.
+
+        const adventStart = getAdventStart(year);
+        const christKing = new Date(adventStart);
+        christKing.setDate(adventStart.getDate() - 7);
+        christKing.setHours(12, 0, 0, 0);
+
+        if (d > pentecost) {
+            // Second part of the year
+            const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+            const diffTime = christKing.getTime() - d.getTime();
+            const weeksBeforeKing = Math.round(diffTime / msPerWeek);
+            const weekNum = 34 - weeksBeforeKing;
+
+            // Calculate "Proper" for Lectionary (Common Worship / BCP / RCL uses Propers linked to dates)
+            // But strict Ordinary Time number is Week X.
+            // Valid weeks are usually 6-34 in this period.
+            return { week: weekNum, proper: `Propio ${weekNum - 5}` }; // Aprox rule: Week 34 = Proper 29
+        } else {
+            // First part of the year (Epiphany to Lent)
+            // Starts after Baptism of the Lord.
+            // Baptism is the Sunday after Jan 6 (Epiphany).
+            let baptism = new Date(year, 0, 6);
+            while (baptism.getDay() !== 0) {
+                baptism.setDate(baptism.getDate() + 1);
+            }
+            // If Epiphany (Jan 6) IS Sunday, Baptism is usually transferred to Monday, 
+            // but for simplicity let's stick to the Sunday following Jan 6 as the anchor for "Week 1" logic begins week after.
+            // Actually, the Sunday AFTER Baptism is the Second Sunday.
+
+            const msPerWeek = 1000 * 60 * 60 * 24 * 7;
+            const diffTime = d.getTime() - baptism.getTime();
+            const weeksAfterBaptism = Math.floor(diffTime / msPerWeek);
+
+            // 1 week after baptism = 2nd Sunday
+            return { week: weeksAfterBaptism + 1, proper: null };
+        }
+    };
 
     if (d.getDay() === 0) {
-        // Simple approximation for Sundays of Ordinary Time
-        // Correct calculation is complex because of the gap.
-        // Quick Fix: Let UI generic label "Domingo del Tiempo Ordinario" + Prompt will fix details?
-        // No, user wants specific.
-
-        // Let's rely on simple counters roughly or just return "Tiempo Ordinario (Domingo)"
-        return "Domingo del Tiempo Ordinario (Verificar Semana en Ordo)";
+        const { week, proper } = getOTWeek(d);
+        const properText = proper ? ` (${proper})` : '';
+        return `${week}º Domingo del Tiempo Ordinario${properText}`;
     }
 
-    return "Feria del Tiempo Ordinario";
+    const { week } = getOTWeek(d);
+    return `Feria del Tiempo Ordinario (${week}ª Semana)`;
 };
 
 // --- REST OF SERVICE ---
