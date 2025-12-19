@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { format, subDays } from 'date-fns';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import StatsHistoryModal from './StatsHistoryModal';
 
 export default function StatsCard() {
     const [stats, setStats] = useState({
