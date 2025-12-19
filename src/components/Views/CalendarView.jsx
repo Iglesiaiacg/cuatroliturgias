@@ -6,11 +6,12 @@ import {
 import { es } from 'date-fns/locale';
 import { getLiturgicalColor } from '../../services/liturgy';
 import DayDetailsModal from './DayDetailsModal';
+import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 
 export default function CalendarView({ selectedDate, onDateChange, onNavigate }) {
     const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
     const [viewedDate, setViewedDate] = useState(null); // Date currently shown in modal
-
+    const { getEventsForDate } = useCalendarEvents();
 
 
     // Calendar Logic
@@ -55,10 +56,11 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
 
             {/* Calendar Grid */}
             <div className="grid grid-cols-7 flex-1 auto-rows-fr bg-gray-200 gap-px">
-                {calendarDays.map((date, idx) => {
+                {calendarDays.map((date) => {
                     const isSelected = isSameDay(date, selectedDate);
                     const isCurrentMonth = isSameMonth(date, monthStart);
                     const liturgicalColorClass = isCurrentMonth ? getLiturgicalColor(date).classes : 'bg-gray-50/50 text-gray-300 dark:text-gray-700';
+                    const events = getEventsForDate(date);
 
                     return (
                         <div
@@ -81,9 +83,23 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                                 {format(date, 'd')}
                             </span>
 
-                            {/* Optional: Dot indicators for feasts could go here */}
+                            {/* Event Indicators */}
+                            <div className="mt-auto flex flex-wrap gap-1 content-end w-full">
+                                {events.slice(0, 5).map((evt, idx) => (
+                                    <span key={idx} className="text-[10px] leading-none">
+                                        {evt.type === 'birthday' && '🎂'}
+                                        {evt.type === 'pastoral' && '🔵'}
+                                        {evt.type === 'finance' && '🟢'}
+                                        {evt.type === 'meeting' && '🟣'}
+                                        {evt.type === 'other' && '🟠'}
+                                        {evt.type === 'roster' && '📋'}
+                                    </span>
+                                ))}
+                                {events.length > 5 && <span className="text-[8px] text-gray-500 font-bold">+</span>}
+                            </div>
+
                             {isSelected && (
-                                <span className="mt-auto self-center text-[10px] text-primary font-bold uppercase tracking-tighter opacity-70">
+                                <span className="absolute bottom-1 right-1 text-[10px] text-primary font-bold uppercase tracking-tighter opacity-70 hidden sm:block">
                                     Seleccionado
                                 </span>
                             )}

@@ -1,67 +1,67 @@
 import { useState, useEffect } from 'react';
 import { getLiturgicalColor } from '../../services/liturgy';
 
+// Expanded Default items (Comprehensive) - Defined outside to be stable
+const defaultItems = [
+    // Libros
+    { id: 'misal', label: 'Misal', checked: false },
+    { id: 'leccionario', label: 'Leccionario', checked: false },
+    { id: 'evangeliario', label: 'Evangeliario', checked: false },
+    { id: 'guion', label: 'Guión / Oración Fieles', checked: false },
+
+    // Altar y Credencia - Vasos
+    { id: 'caliz', label: 'Cáliz y Patena', checked: false },
+    { id: 'copon', label: 'Copón (si es necesario)', checked: false },
+    { id: 'vinajeras', label: 'Vinajeras (Vino/Agua)', checked: false },
+    { id: 'lavabo', label: 'Jarra y Jofaina (Lavabo)', checked: false },
+
+    // Altar y Credencia - Lencería
+    { id: 'corporal', label: 'Corporal y Purificador', checked: false },
+    { id: 'manutergio', label: 'Manutergio', checked: false },
+    { id: 'manteles', label: 'Manteles de Altar', checked: false },
+
+    // Elementos
+    { id: 'pan', label: 'Hostias (Suficientes)', checked: false },
+    { id: 'velas', label: 'Velas del Altar', checked: false },
+    { id: 'llaves', label: 'Llave del Sagrario', checked: false },
+
+    // Procesión y Ritos
+    { id: 'cruz', label: 'Cruz Alta / Ciriales', checked: false },
+    { id: 'incensario', label: 'Incensario y Naveta', checked: false },
+    { id: 'carbones', label: 'Carbones / Incienso', checked: false },
+    { id: 'acetre', label: 'Acetre e Hisopo (Agua)', checked: false },
+    { id: 'campanilla', label: 'Campanilla', checked: false },
+
+    // Vestiduras
+    { id: 'vestiduras', label: 'Vestiduras (Color)', checked: false },
+    { id: 'micro', label: 'Micrófono / Sonido', checked: false },
+];
+
 export default function SacristyChecklist({ date }) {
     const color = getLiturgicalColor(date);
+    const storageKey = `sacristy-v2-${date.toDateString()}`;
 
-    // Expanded Default items (Comprehensive)
-    const defaultItems = [
-        // Libros
-        { id: 'misal', label: 'Misal', checked: false },
-        { id: 'leccionario', label: 'Leccionario', checked: false },
-        { id: 'evangeliario', label: 'Evangeliario', checked: false },
-        { id: 'guion', label: 'Guión / Oración Fieles', checked: false },
+    // Initialize state from local storage or default
+    const [items, setItems] = useState(() => {
+        const stored = localStorage.getItem(storageKey);
+        return stored ? JSON.parse(stored) : defaultItems;
+    });
 
-        // Altar y Credencia - Vasos
-        { id: 'caliz', label: 'Cáliz y Patena', checked: false },
-        { id: 'copon', label: 'Copón (si es necesario)', checked: false },
-        { id: 'vinajeras', label: 'Vinajeras (Vino/Agua)', checked: false },
-        { id: 'lavabo', label: 'Jarra y Jofaina (Lavabo)', checked: false },
-
-        // Altar y Credencia - Lencería
-        { id: 'corporal', label: 'Corporal y Purificador', checked: false },
-        { id: 'manutergio', label: 'Manutergio', checked: false },
-        { id: 'manteles', label: 'Manteles de Altar', checked: false },
-
-        // Elementos
-        { id: 'pan', label: 'Hostias (Suficientes)', checked: false },
-        { id: 'velas', label: 'Velas del Altar', checked: false },
-        { id: 'llaves', label: 'Llave del Sagrario', checked: false },
-
-        // Procesión y Ritos
-        { id: 'cruz', label: 'Cruz Alta / Ciriales', checked: false },
-        { id: 'incensario', label: 'Incensario y Naveta', checked: false },
-        { id: 'carbones', label: 'Carbones / Incienso', checked: false },
-        { id: 'acetre', label: 'Acetre e Hisopo (Agua)', checked: false },
-        { id: 'campanilla', label: 'Campanilla', checked: false },
-
-        // Vestiduras
-        { id: 'vestiduras', label: 'Vestiduras (Color)', checked: false },
-        { id: 'micro', label: 'Micrófono / Sonido', checked: false },
-    ];
-
-    // Load from local storage or use default
-    const getStoredItems = () => {
-        // v2 key to force update with new items list
-        const key = `sacristy-v2-${date.toDateString()}`;
-        const stored = localStorage.getItem(key);
-        if (stored) return JSON.parse(stored);
-        return defaultItems;
-    };
-
-    // Save to local storage
-    const saveItems = (newItems) => {
-        const key = `sacristy-v2-${date.toDateString()}`;
-        localStorage.setItem(key, JSON.stringify(newItems));
-    };
-
-    const [items, setItems] = useState(getStoredItems);
     const [isCollapsed, setIsCollapsed] = useState(true);
 
-    // Reset when date changes
+    // Sync state when date changes (load new date's data)
     useEffect(() => {
-        setItems(getStoredItems());
-    }, [date]);
+        const stored = localStorage.getItem(storageKey);
+        if (stored) {
+            setItems(JSON.parse(stored));
+        } else {
+            setItems(defaultItems);
+        }
+    }, [storageKey]); // Depend on storageKey which includes date
+
+    // Save to local storage whenever items change
+    // We do manual save in toggle for immediate persistence, 
+    // but we could also use an effect. Sticking to manual save in handler for simplicity.
 
     // Toggle check
     const toggleItem = (id) => {
@@ -69,7 +69,7 @@ export default function SacristyChecklist({ date }) {
             item.id === id ? { ...item, checked: !item.checked } : item
         );
         setItems(newItems);
-        saveItems(newItems);
+        localStorage.setItem(storageKey, JSON.stringify(newItems));
     };
 
     // Calculate progress
@@ -105,15 +105,23 @@ export default function SacristyChecklist({ date }) {
                 </div>
             </div>
 
+            {/* Warning for Sunday/Feasts */}
+            {(!isCollapsed && (date.getDay() === 0 || !color.name.toLowerCase().includes('verde'))) && (
+                <div className="mx-3 mt-2 mb-1 px-3 py-2 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-100 dark:border-yellow-900/30 rounded-lg flex items-center gap-2 animate-fade-in">
+                    <span className="material-symbols-outlined text-yellow-600 dark:text-yellow-400 text-sm">warning</span>
+                    <span className="text-xs font-bold text-yellow-700 dark:text-yellow-300">Revisa que no falte nada para la celebración.</span>
+                </div>
+            )}
+
             {/* Checklist Grid (Collapsible) */}
             <div
-                className={`grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-x-2 gap-y-1 p-2 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-96 opacity-100'}`}
+                className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
             >
                 {items.map(item => (
                     <button
                         key={item.id}
                         onClick={() => toggleItem(item.id)}
-                        className={`flex items-center gap-2 px-2 py-1.5 rounded-md transition-all text-left group
+                        className={`flex items-start gap-2 px-2 py-2 rounded-md transition-all text-left group
                             ${item.checked
                                 ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
                                 : 'hover:bg-white dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
@@ -121,7 +129,7 @@ export default function SacristyChecklist({ date }) {
                         `}
                     >
                         <div className={`
-                            w-3.5 h-3.5 rounded-[3px] border flex items-center justify-center transition-colors shrink-0
+                            mt-0.5 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0
                             ${item.checked
                                 ? 'bg-green-500 border-green-500 text-white'
                                 : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
@@ -129,7 +137,7 @@ export default function SacristyChecklist({ date }) {
                         `}>
                             {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
                         </div>
-                        <span className={`text-[10px] sm:text-xs font-medium truncate w-full ${item.checked ? 'line-through opacity-60' : ''}`}>
+                        <span className={`text-xs font-medium leading-tight ${item.checked ? 'line-through opacity-60' : ''}`}>
                             {item.label}
                         </span>
                     </button>

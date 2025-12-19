@@ -99,24 +99,24 @@ export default function PulpitView({ content, onClose, title }) {
                     <div className="w-px h-8 bg-white/20 mx-1"></div>
 
                     {/* Speed Control */}
-                    <div className="flex flex-col items-center px-2">
+                    <div className="flex flex-col items-center px-1 md:px-2">
                         <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Velocidad</span>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setSpeed(s => Math.max(1, s - 0.5))} className="text-gray-400 hover:text-white"><span className="material-symbols-outlined text-lg">remove</span></button>
+                        <div className="flex items-center gap-1">
+                            <button onClick={() => setSpeed(s => Math.max(1, s - 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">remove</span></button>
                             <span className="text-sm font-bold w-4 text-center text-white">{speed}</span>
-                            <button onClick={() => setSpeed(s => Math.min(10, s + 0.5))} className="text-gray-400 hover:text-white"><span className="material-symbols-outlined text-lg">add</span></button>
+                            <button onClick={() => setSpeed(s => Math.min(10, s + 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">add</span></button>
                         </div>
                     </div>
 
                     <div className="w-px h-8 bg-white/20 mx-1"></div>
 
                     {/* Font Size */}
-                    <div className="flex flex-col items-center px-2">
+                    <div className="flex flex-col items-center px-1 md:px-2">
                         <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Tamaño</span>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setFontSize(s => Math.max(20, s - 4))} className="text-gray-400 hover:text-white"><span className="material-symbols-outlined text-lg">text_decrease</span></button>
-                            <span className="text-sm font-bold w-6 text-center text-white">{fontSize}</span>
-                            <button onClick={() => setFontSize(s => Math.min(100, s + 4))} className="text-gray-400 hover:text-white"><span className="material-symbols-outlined text-lg">text_increase</span></button>
+                        <div className="flex items-center gap-1">
+                            <button onClick={() => setFontSize(s => Math.max(20, s - 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_decrease</span></button>
+                            <span className="text-sm font-bold w-8 text-center text-white">{fontSize}</span>
+                            <button onClick={() => setFontSize(s => Math.min(100, s + 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_increase</span></button>
                         </div>
                     </div>
 

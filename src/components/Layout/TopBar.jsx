@@ -9,7 +9,8 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
     const navItems = [
         { id: 'dashboard', icon: 'home', label: 'Inicio' },
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario' },
-        { id: 'favorites', icon: 'favorite', label: 'Favoritos' },
+        { id: 'directory', icon: 'diversity_3', label: 'Fieles' },
+        { id: 'offerings', icon: 'savings', label: 'Ofrendas' },
         { id: 'generator', icon: 'menu_book', label: 'Liturgia' },
     ];
 
@@ -21,7 +22,9 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
                     <div className="flex items-center gap-3">
                         <img src={logoHome} alt="Liturgia Logo" className="h-8 w-auto object-contain hidden sm:block" />
-                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white font-display">LITÚRG-IA /CG</h1>
+                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white font-display">
+                            LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
+                        </h1>
                     </div>
                 </div>
 

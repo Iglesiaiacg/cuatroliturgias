@@ -17,6 +17,8 @@ import Toast from './components/Common/Toast'
 import HomeView from './components/Views/HomeView'
 import CalendarView from './components/Views/CalendarView'
 import OccasionalServicesView from './components/Views/OccasionalServicesView'
+import OfferingsView from './components/Views/OfferingsView'
+import DirectoryView from './components/Views/DirectoryView'
 import TopBar from './components/Layout/TopBar'
 import PulpitView from './components/Liturgy/PulpitView'
 import BackgroundWrapper from './components/Layout/BackgroundWrapper'
@@ -26,7 +28,7 @@ function App() {
     tradition, setTradition,
     selectedDate, setSelectedDate,
     calculatedFeast,
-    cycleInfo, season,
+    season,
     loading, loadingTip, error,
     docContent, setDocContent,
     generate
@@ -148,12 +150,14 @@ function App() {
         <div className="flex-1 flex flex-col relative overflow-hidden">
 
           {/* Universal TopBar */}
-          <TopBar
-            date={selectedDate}
-            onSettings={() => setIsSettingsOpen(true)}
-            activeTab={activeTab}
-            onNavigate={setActiveTab}
-          />
+          <div className="print:hidden">
+            <TopBar
+              date={selectedDate}
+              onSettings={() => setIsSettingsOpen(true)}
+              activeTab={activeTab}
+              onNavigate={setActiveTab}
+            />
+          </div>
 
           {/* --- DASHBOARD VIEW --- */}
           {activeTab === 'dashboard' && (
@@ -239,13 +243,18 @@ function App() {
             />
           )}
 
-          {/* --- FAVORITES (Placeholder) --- */}
-          {activeTab === 'favorites' && (
-            <div className="flex-1 flex items-center justify-center text-gray-400">
-              <div className="text-center">
-                <span className="material-symbols-outlined text-6xl mb-4">favorite</span>
-                <p>Favoritos próximamente</p>
-              </div>
+          {/* --- DIRECTORY VIEW --- */}
+          {activeTab === 'directory' && (
+            <div className="flex-1 flex flex-col w-full overflow-y-auto px-4 py-6 max-w-7xl mx-auto">
+              <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-6">Directorio de Fieles</h1>
+              <DirectoryView />
+            </div>
+          )}
+
+          {/* --- OFFERINGS VIEW --- */}
+          {activeTab === 'offerings' && (
+            <div className="flex-1 flex flex-col w-full overflow-y-auto">
+              <OfferingsView />
             </div>
           )}
         </div>

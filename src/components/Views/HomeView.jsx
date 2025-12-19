@@ -1,5 +1,13 @@
 import StyledCard from '../Common/StyledCard';
 import SacristyChecklist from '../Dashboard/SacristyChecklist';
+import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
+import FinanceCard from '../Dashboard/FinanceCard';
+import RolesCard from '../Dashboard/RolesCard';
+import IntentionsCard from '../Dashboard/IntentionsCard';
+import InventoryCard from '../Dashboard/InventoryCard';
+import StatsCard from '../Dashboard/StatsCard';
+import NoticesCard from '../Dashboard/NoticesCard';
+import QuickCertCard from '../Dashboard/QuickCertCard';
 
 export default function Dashboard({ onNavigate, date }) {
     return (
@@ -16,9 +24,16 @@ export default function Dashboard({ onNavigate, date }) {
                         return "Buenas noches";
                     })()},
                 </h1>
-                <p className="text-gray-500 dark:text-gray-400">
-                    {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
-                </p>
+                <div className="flex items-center gap-2">
+                    <p className="text-gray-500 dark:text-gray-400">
+                        {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
+                    </p>
+                    {date && new Date().toDateString() !== date.toDateString() && (
+                        <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full font-bold ml-2">
+                            Fecha Seleccionada
+                        </span>
+                    )}
+                </div>
             </div>
 
             {/* Sacristy Digital Checklist */}
@@ -26,49 +41,72 @@ export default function Dashboard({ onNavigate, date }) {
                 <SacristyChecklist date={date} />
             </section>
 
-            {/* Quick Access Grid */}
-            <section>
-                <div className="flex items-center justify-between mb-4 px-1">
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-white font-display">Accesos Rápidos</h3>
+            {/* Dashboard Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+
+                {/* Column 1: Priority (Next Liturgy & Actions) */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
+                        <NextLiturgyCard onClick={() => onNavigate('generator')} />
+                    </section>
+
+                    <section>
+                        <NoticesCard />
+                    </section>
+
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos</h3>
+                        <div className="grid grid-cols-2 gap-4">
+                            <StyledCard
+                                title="Liturgia"
+                                description="Generador"
+                                icon="menu_book"
+                                onClick={() => onNavigate('generator')}
+                                actionText="Ir"
+                                compact={true}
+                            />
+                            <StyledCard
+                                title="Servicios"
+                                description="Ocasionales"
+                                icon="church"
+                                onClick={() => onNavigate('occasional')}
+                                actionText="Ir"
+                                compact={true}
+                            />
+                        </div>
+                    </section>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Card 1: Liturgia */}
-                    <StyledCard
-                        title="Liturgia"
-                        description="Guía de la celebración"
-                        icon="menu_book"
-                        onClick={() => onNavigate('generator')}
-                        actionText="Abrir"
-                    />
 
-                    {/* Card 2: Liturgia Horas */}
-                    <StyledCard
-                        title="Liturgia Horas"
-                        description="Laudes y Vísperas"
-                        icon="schedule"
-                        onClick={() => { }}
-                        actionText="Próximamente"
-                    />
-
-                    {/* Card 3: Santoral */}
-                    <StyledCard
-                        title="Santoral"
-                        description="Vida de Santos"
-                        icon="diversity_3"
-                        onClick={() => { }}
-                        actionText="Próximamente"
-                    />
-
-                    {/* Card 4: Servicios Ocasionales */}
-                    <StyledCard
-                        title="Servicios Ocasionales"
-                        description="Libro de Servicios 2003"
-                        icon="church"
-                        onClick={() => onNavigate('occasional')}
-                        actionText="Abrir"
-                    />
+                {/* Column 2: Management */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
+                        <RolesCard />
+                    </section>
+                    <section>
+                        <StatsCard />
+                    </section>
+                    <section>
+                        <IntentionsCard />
+                    </section>
                 </div>
-            </section>
+
+                {/* Column 3: Finance & Checklist */}
+                <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Administración</h3>
+                        <FinanceCard />
+                    </section>
+                    <section>
+                        <InventoryCard />
+                    </section>
+                    <section>
+                        <QuickCertCard />
+                    </section>
+                </div>
+
+            </div>
         </main>
     );
 }
