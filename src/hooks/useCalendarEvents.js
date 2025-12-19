@@ -135,6 +135,34 @@ export function useCalendarEvents() {
         return events.find(e => e.type === 'roster' && isSameDay(new Date(e.date), date))?.data || {};
     };
 
+    // Daily Reminder Management
+    const updateDailyReminder = (date, text) => {
+        // Remove existing reminder for this date
+        const filtered = events.filter(e => !(e.type === 'daily_reminder' && isSameDay(new Date(e.date), date)));
+
+        if (!text || text.trim() === '') {
+            // If empty, just remove (already done by filter)
+            setEvents(filtered);
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(filtered));
+            return;
+        }
+
+        const reminderEvent = {
+            id: `reminder-${date.toISOString()}`,
+            date: date,
+            type: 'daily_reminder',
+            title: text
+        };
+
+        const newEvents = [...filtered, reminderEvent];
+        setEvents(newEvents);
+        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
+    };
+
+    const getDailyReminder = (date) => {
+        return events.find(e => e.type === 'daily_reminder' && isSameDay(new Date(e.date), date))?.title || '';
+    };
+
     return {
         events,
         getEventsForDate,
@@ -142,6 +170,8 @@ export function useCalendarEvents() {
         deleteEvent,
         updateRoster,
         getRoster,
+        updateDailyReminder,
+        getDailyReminder,
         refresh: loadEvents
     };
 }

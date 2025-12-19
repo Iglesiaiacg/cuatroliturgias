@@ -11,7 +11,7 @@ import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 export default function CalendarView({ selectedDate, onDateChange, onNavigate }) {
     const [currentMonth, setCurrentMonth] = useState(startOfMonth(selectedDate));
     const [viewedDate, setViewedDate] = useState(null); // Date currently shown in modal
-    const { getEventsForDate } = useCalendarEvents();
+    const { getEventsForDate, getDailyReminder } = useCalendarEvents();
 
 
     // Calendar Logic
@@ -85,6 +85,9 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
 
                             {/* Event Indicators */}
                             <div className="mt-auto flex flex-wrap gap-1 content-end w-full">
+                                {getDailyReminder(date) && (
+                                    <span className="text-[10px] text-yellow-600 dark:text-yellow-400">🔔</span>
+                                )}
                                 {events.slice(0, 5).map((evt, idx) => (
                                     <span key={idx} className="text-[10px] leading-none">
                                         {evt.type === 'birthday' && '🎂'}
