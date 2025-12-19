@@ -28,7 +28,7 @@ export default function BackgroundWrapper({ season, children }) {
             <div
                 className="absolute inset-0 -z-10 transition-opacity duration-1000 ease-in-out"
                 style={{
-                    background: `var(--${bgClass})`,
+                    backgroundImage: `var(--${bgClass})`,
                     backgroundColor: '#fafafa', // Fallback
                     backgroundSize: '200% 200%',
                     animation: 'gradientMove 15s ease infinite alternate'
