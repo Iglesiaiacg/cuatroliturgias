@@ -102,10 +102,35 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-lg">
                             {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
                         </div>
-                        <div>
+                        <div className="flex-1">
                             <p className="text-sm font-bold text-gray-900 dark:text-white">{currentUser?.email}</p>
                             <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">Rol: {userRole}</p>
                         </div>
+                        {userRole === 'guest' && (
+                            <button
+                                onClick={async () => {
+                                    if (window.confirm("¿Usar permisos de Desarrollo para ser Admin?")) {
+                                        setLoading(true);
+                                        try {
+                                            const { setDoc, doc } = await import('firebase/firestore');
+                                            await setDoc(doc(db, 'users', currentUser.uid), {
+                                                email: currentUser.email,
+                                                role: 'admin',
+                                                displayName: displayName || 'Admin'
+                                            }, { merge: true });
+                                            window.location.reload();
+                                        } catch (e) {
+                                            alert("Error: " + e.message);
+                                        } finally {
+                                            setLoading(false);
+                                        }
+                                    }
+                                }}
+                                className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded shadow hover:bg-blue-700"
+                            >
+                                Ser Admin
+                            </button>
+                        )}
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">

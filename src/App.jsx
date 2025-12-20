@@ -11,7 +11,7 @@ import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
 import EmptyState from './components/Liturgy/EmptyState'
 import HistoryModal from './components/Common/HistoryModal'
-import HistoryModal from './components/Common/HistoryModal'
+
 import Toast from './components/Common/Toast'
 
 // New Shell Components

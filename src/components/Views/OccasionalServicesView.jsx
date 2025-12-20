@@ -901,6 +901,168 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <p class="rubric">Se concluye en silencio, sin bendición ni despedida, y se sale de la iglesia en silencio.</p>
             </div>
         `,
+        "Bendición de Alimentos (Pascua)": `
+            <div class="liturgy-content">
+                <h1>Bendición de Alimentos (Pascua)</h1>
+                <p class="rubric">Esta bendición se realiza tradicionalmente antes de la primera comida de Pascua.</p>
+
+                <h3>Lectura</h3>
+                <p class="rubric">Deuteronomio 8:1-3</p>
+                <p>Cuidaréis de poner por obra todo mandamiento que yo os ordeno hoy, para que viváis, y seáis multiplicados, y entréis y poseáis la tierra que el Señor prometió con juramento a vuestros padres. Y te acordarás de todo el camino por donde te ha traído el Señor tu Dios estos cuarenta años en el desierto, para afligirte, para probarte, para saber lo que había en tu corazón, si habías de guardar o no sus mandamientos. Y te afligió, y te hizo tener hambre, y te sustentó con maná, comida que no conocías tú, ni tus padres la habían conocido, para hacerte saber que no sólo de pan vivirá el hombre, mas de todo lo que sale de la boca del Señor vivirá el hombre.</p>
+
+                <h3>Bendición de Carnes (Cordero)</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, que por medio de tu siervo Moisés ordenaste a tu pueblo en la liberación de Egipto matar un cordero como figura de nuestro Señor Jesucristo, y mandaste que sus jambas fueran rociadas con su sangre: Dígnate bendecir y santificar esta carne que nosotros, tus siervos, deseamos recibir en alabanza tuya por la resurrección de nuestro Señor Jesucristo. Quien vive y reina por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Bendición de Huevos</h3>
+                <p>Oremos.</p>
+                <p>Te rogamos, Señor, que tu bendición descienda sobre estos huevos, para que sean un saludable alimento para tus fieles, quienes los comemos con acción de gracias por la resurrección de nuestro Señor Jesucristo. Quien vive y reina contigo por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Bendición del Pan</h3>
+                <p>Oremos.</p>
+                <p>Señor Jesucristo, Pan de vida eterna, bendice este pan como bendijiste los cinco panes en el desierto: que todos los que lo coman reciban salud corporal y espiritual. Tú que vives y reinas por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Bendición Final</h3>
+                <p>El Dios de la paz, que resucitó de los muertos a nuestro Señor Jesucristo, el gran Pastor de las ovejas, nos haga aptos en toda obra buena para que hagamos su voluntad, haciendo él en nosotros lo que es agradable delante de él. A él sea la gloria por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Bendición de Hogares (Pascua)": `
+            <div class="liturgy-content">
+                <h1>Bendición de Hogares (Pascua)</h1>
+                <p class="rubric">Esta bendición se usa durante la Cincuentena Pascual.</p>
+
+                <h3>Saludo</h3>
+                <p>La paz sea en esta casa y con todos los que habitan en ella. Aleluya.</p>
+                <p><strong>Y con tu espíritu. Aleluya.</strong></p>
+
+                <h3>Aspersión (Vidi Aquam)</h3>
+                <p class="rubric">El Oficiante rocía las habitaciones con agua bendita mientras se dice:</p>
+                <p>Vi agua que salía del templo, del lado derecho. Aleluya.<br>
+                Y todos aquellos a quienes llegaba esta agua fueron salvados y dirán: Aleluya, Aleluya.</p>
+
+                <h3>Oración</h3>
+                <p>Oremos.</p>
+                <p>Visita, Señor, esta morada y aleja de ella todas las asechanzas del enemigo; que tus santos ángeles habiten en ella para guardarnos en paz, y que tu bendición sea siempre sobre nosotros. Por Cristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+
+                <p>Señor Jesucristo, que dijiste a tus apóstoles: "En cualquier casa donde entréis, decid primero: Paz a esta casa": Bendice esta casa y a todos sus habitantes. Dales salud, santidad y victoria sobre el pecado; y que la gloria de tu resurrección brille siempre en este hogar. Tú que vives y reinas por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Procesión de las Rogativas": `
+            <div class="liturgy-content">
+                <h1>Procesión de las Rogativas</h1>
+                <p class="rubric">Se celebra en los días previos a la Ascensión, pidiendo la bendición de Dios sobre los campos, el trabajo y la industria.</p>
+
+                <h3>Salmo 67</h3>
+                <p>Dios tenga misericordia de nosotros, y nos bendiga; *<br>
+                <strong>haga resplandecer su rostro sobre nosotros;</strong></p>
+                <p>Para que sea conocido en la tierra tu camino, *<br>
+                <strong>en todas las naciones tu salvación.</strong></p>
+                <p>Te alaben los pueblos, oh Dios; *<br>
+                <strong>todos los pueblos te alaben.</strong></p>
+                <p>Alégrense y gócense las naciones, porque juzgarás los pueblos con equidad, *<br>
+                <strong>y pastorearás las naciones en la tierra.</strong></p>
+                <p>Te alaben los pueblos, oh Dios; *<br>
+                <strong>todos los pueblos te alaben.</strong></p>
+                <p>La tierra dará su fruto; *<br>
+                <strong>nos bendecirá Dios, el Dios nuestro.</strong></p>
+                <p>Bendíganos Dios, *<br>
+                <strong>y témanlo todos los términos de la tierra.</strong></p>
+
+                <h3>Peticiones</h3>
+                <p>Oficiante: Acuérdate, Señor, no de nuestras iniquidades, sino de tu misericordia.</p>
+
+                <p>Por los frutos de la tierra y el trabajo de las manos humanas:<br>
+                <strong>Te rogamos, óyenos.</strong></p>
+
+                <p>Por las lluvias oportunas y el clima favorable:<br>
+                <strong>Te rogamos, óyenos.</strong></p>
+
+                <p>Por los que trabajan en la agricultura, la industria y el comercio:<br>
+                <strong>Te rogamos, óyenos.</strong></p>
+
+                <p>Para que des a todos nuestro pan de cada día:<br>
+                <strong>Te rogamos, óyenos.</strong></p>
+
+                <h3>Oración por la Agricultura</h3>
+                <p>Oremos.</p>
+                <p>Dios todopoderoso, Señor del cielo y de la tierra: Te rogamos que derrames tu bendición sobre los campos y ganados; líbralos de sequía, plagas y desastres, y concédenos cosechas abundantes, para que, provistos de lo necesario para la vida, podamos buscar con mayor celo tu Reino eterno. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+
+                <h3>Oración por la Industria y el Trabajo</h3>
+                <p>Oh Dios, que has ordenado que el hombre trabaje para que comparta tu obra creadora: Bendice a todos los que trabajan en la industria y el comercio; que en sus labores busquen no solo su beneficio, sino el bien común, y te glorifiquen en la honestidad de sus tratos. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+
+        "Vigilia de Todos los Santos": `
+            <div class="liturgy-content">
+                <h1>Vigilia de Todos los Santos</h1>
+                <p class="rubric">Esta vigilia celebra la comunión de los santos y se prepara para el día de Todos los Santos (1 de Noviembre).</p>
+
+                <h3>Salmo 149</h3>
+                <p>Cantad al Señor cántico nuevo; *<br>
+                <strong>Su alabanza sea en la congregación de los santos.</strong></p>
+                <p>Alégrese Israel en su Hacedor; *<br>
+                <strong>Los hijos de Sion se gocen en su Rey.</strong></p>
+                <p>Alaben su nombre con danza; *<br>
+                <strong>Con pandero y arpa a él canten.</strong></p>
+                <p>Porque el Señor tiene contentamiento en su pueblo; *<br>
+                <strong>Hermoseará a los humildes con la salvación.</strong></p>
+
+                <h3>Lectura</h3>
+                <p class="rubric">Apocalipsis 19:1, 4-9</p>
+                <p>Después de esto oí una gran voz de gran multitud en el cielo, que decía: ¡Aleluya! Salvación y honra y gloria y poder son del Señor Dios nuestro... Y los veinticuatro ancianos y los cuatro seres vivientes se postraron en tierra y adoraron a Dios que estaba sentado en el trono, y decían: ¡Amén! ¡Aleluya! Y salió del trono una voz que decía: Alabad a nuestro Dios todos sus siervos, y los que le teméis, así pequeños como grandes... Gocémonos y alegrémonos y démosle gloria; porque han llegado las bodas del Cordero, y su esposa se ha preparado. Y a ella se le ha concedido que se vista de lino fino, limpio y resplandeciente; porque el lino fino es las acciones justas de los santos. Y el ángel me dijo: Escribe: Bienaventurados los que son llamados a la cena de las bodas del Cordero.</p>
+
+                <h3>Renovación del Pacto Bautismal</h3>
+                <p class="rubric">Se puede usar la forma de la Vigilia Pascual o una forma abreviada.</p>
+                <p>Oficiante: ¿Creen en Dios Padre?</p>
+                <p><strong>Pueblo: Creo en Dios, Padre todopoderoso, creador del cielo y de la tierra.</strong></p>
+                <p>Oficiante: ¿Creen en Jesucristo?</p>
+                <p><strong>Pueblo: Creo en Jesucristo, su único Hijo...</strong></p>
+                <p>Oficiante: ¿Creen en el Espíritu Santo?</p>
+                <p><strong>Pueblo: Creo en el Espíritu Santo, la santa Iglesia católica, la comunión de los santos...</strong></p>
+
+                <h3>Oración</h3>
+                <p>Oremos.</p>
+                <p>Dios todopoderoso, que has unido a tus elegidos en una sola comunión y compañerismo en el cuerpo místico de tu Hijo: Concédenos la gracia de seguir a tus santos en toda virtud y vida piadosa, para que lleguemos a aquellos gozos inefables que has preparado para los que te aman. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Víspera de Todos los Santos": `
+            <div class="liturgy-content">
+                <h1>Víspera de Todos los Santos</h1>
+                <p class="rubric">Este servicio ofrece una alternativa cristiana a las celebraciones seculares de Halloween, enfocándose en la luz de Cristo y la victoria sobre la muerte.</p>
+
+                <h3>Lucernario</h3>
+                <p class="rubric">Se encienden velas mientras se dice:</p>
+                <p>La luz brilla en las tinieblas, y las tinieblas no prevalecieron contra ella.</p>
+                <p><strong>Jesucristo es la luz del mundo.</strong></p>
+
+                <h3>Salmo 34 (Selección)</h3>
+                <p>Bendeciré al Señor en todo tiempo; *<br>
+                <strong>Su alabanza estará de continuo en mi boca.</strong></p>
+                <p>En el Señor se gloriará mi alma; *<br>
+                <strong>Lo oirán los mansos, y se alegrarán.</strong></p>
+                <p>Engrandeced al Señor conmigo, *<br>
+                <strong>Y exaltemos a una su nombre.</strong></p>
+                <p>Busqué al Señor, y él me oyó, *<br>
+                <strong>Y me libró de todos mis temores.</strong></p>
+                <p>El ángel del Señor acampa alrededor de los que le temen, *<br>
+                <strong>Y los defiende.</strong></p>
+
+                <h3>Oración por la Luz</h3>
+                <p>Oremos.</p>
+                <p>Señor Jesucristo, que destruiste la muerte y sacaste a la luz la vida y la inmortalidad: Disipa las tinieblas del miedo y de la superstición, y haz brillar sobre nosotros la luz de tu verdad; para que caminemos como hijos de luz y no tengamos temor de mal alguno, porque tú estás con nosotros. Quien vives y reinas por los siglos de los siglos.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+
         "Bienvenida a Nuevos": `
             <div class="liturgy-content">
                 <h1>Bienvenida a Nuevos Miembros</h1>
@@ -937,6 +1099,93 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <p>La paz del Señor sea siempre con ustedes.</p>
                 <p><strong>Y con tu espíritu.</strong></p>
                 <p class="rubric">Los nuevos miembros son saludados por la congregación.</p>
+            </div>
+        `,
+        "Despedida de Miembros": `
+            <div class="liturgy-content">
+                <h1>Despedida de Miembros</h1>
+                <p class="rubric">Este rito se usa cuando miembros de la congregación se mudan o dejan la comunidad.</p>
+                
+                <h3>Palabras de Despedida</h3>
+                <p class="rubric">El Oficiante invita a los miembros que parten a pasar adelante.</p>
+                <p>Oficiante: Hermanos, hoy nos despedimos de [Nombres], quienes han sido miembros fieles de esta familia. Aunque nuestros caminos se separen, seguimos unidos en el cuerpo de Cristo.</p>
+
+                <h3>Oración</h3>
+                <p>Oremos.</p>
+                <p>Oh Dios, tú nos has unido en el compañerismo del Evangelio y nos has hecho miembros los unos de los otros en Cristo Jesús: Te damos gracias por el tiempo que [Nombres] han estado entre nosotros. Guíalos en su camino, protégelos en sus viajes y concédeles encontrar amigos y una comunidad de fe dondequiera que vayan. Que tu paz y tu amor los acompañen siempre. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+                
+                <p class="rubric">La congregación puede decir:</p>
+                <p><strong>Vayan en paz, para amar y servir al Señor.</strong></p>
+            </div>
+        `,
+        "Bendición de Casa": `
+            <div class="liturgy-content">
+                <h1>Bendición de Casa</h1>
+                <p class="rubric">Para la bendición y dedicación de una vivienda.</p>
+                
+                <h3>En la Entrada</h3>
+                <p>Paz sea a esta casa y a todos los que entran en ella.</p>
+                
+                <h3>Oración</h3>
+                <p>Oremos.</p>
+                <p>Dios todopoderoso, que has concedido a tus siervos un lugar donde habitar: Bendice esta casa y hazla un lugar de descanso, de alegría y de paz. Que tus santos ángeles la guarden, y que Cristo sea siempre el huésped invisible en cada comida y el oyente silencioso en cada conversación. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Aniversario Matrimonio": `
+            <div class="liturgy-content">
+                <h1>Aniversario Matrimonio</h1>
+                <p class="rubric">Para renovar los votos matrimoniales.</p>
+                
+                <h3>Renovación de Votos</h3>
+                <p class="rubric">El esposo y la esposa se toman de la mano.</p>
+                <p>Esposo: Yo, [Nombre], te recibo de nuevo a ti, [Nombre], como mi esposa...</p>
+                <p>Esposa: Yo, [Nombre], te recibo de nuevo a ti, [Nombre], como mi esposo...</p>
+                
+                <h3>Bendición</h3>
+                <p>Que Dios, que los ha unido en santo matrimonio y los ha conservado en su amor fiel, los bendiga hoy y siempre, y les conceda muchos años más de felicidad juntos. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Servicio de Sanación": `
+            <div class="liturgy-content">
+                <h1>Servicio de Sanación</h1>
+                <p class="rubric">Oración pública con unción o imposición de manos.</p>
+                
+                <h3>Lectura</h3>
+                <p class="rubric">Santiago 5:14-15</p>
+                <p>¿Está alguno enfermo entre vosotros? Llame a los ancianos de la iglesia, y oren por él, ungiéndole con aceite en el nombre del Señor. Y la oración de fe salvará al enfermo, y el Señor lo levantará.</p>
+                
+                <h3>Unción / Imposición</h3>
+                <p class="rubric">El ministro impone manos o unge al enfermo.</p>
+                <p>Te unjo con aceite en el Nombre del Padre, y del Hijo, y del Espíritu Santo. Te impongo las manos en el nombre de nuestro Señor Jesucristo, suplicándole que te sostenga con su poder, te consuele con su amor y te conceda la sanidad según su voluntad.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Bendición Embarazada": `
+            <div class="liturgy-content">
+                <h1>Bendición Embarazada</h1>
+                <p class="rubric">Oración por una mujer encinta.</p>
+                
+                <h3>Oración</h3>
+                <p>Oremos.</p>
+                <p>Padre celestial, creador de toda vida: Te damos gracias por el don de este nuevo ser que se está formando. Protege a tu sierva [Nombre] y al hijo/a que lleva en su vientre. Concédeles a ambos salud y seguridad en el parto, y la alegría de ver tu luz. Por Jesucristo nuestro Señor.<br>
+                <strong>Amén.</strong></p>
+            </div>
+        `,
+        "Entierro no cristiano": `
+            <div class="liturgy-content">
+                <h1>Entierro no cristiano</h1>
+                <p class="rubric">Servicio de encomienda para personas que no profesaban la fe o no eran miembros, a petición de la familia.</p>
+                
+                <h3>Salmo 23</h3>
+                <p>El Señor es mi pastor; nada me faltará... En lugares de delicados pastos me hará descansar...</p>
+                
+                <h3>Encomienda</h3>
+                <p>En las manos de la infinita misericordia de Dios encomendamos a nuestro hermano/a [Nombre], en la esperanza segura de que el Juez de toda la tierra hará lo que es justo.<br>
+                El Señor te bendiga y te guarde; el Señor haga resplandecer su rostro sobre ti y tenga de ti misericordia; el Señor alce sobre ti su rostro y te conceda la paz.<br>
+                <strong>Amén.</strong></p>
             </div>
         `,
     };
