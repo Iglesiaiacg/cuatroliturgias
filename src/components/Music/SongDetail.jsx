@@ -107,18 +107,45 @@ export default function SongDetail({ song, onClose }) {
                     >
                         {showChords ? '# Acordes' : 'T Texto'}
                     </button>
+
+                    {/* Print Button */}
+                    <button
+                        onClick={() => window.print()}
+                        className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        title="Imprimir"
+                    >
+                        <span className="material-symbols-outlined">print</span>
+                    </button>
                 </div>
             </div>
 
             {/* Song Content */}
             <div className="flex-1 overflow-y-auto bg-paper-pattern p-8 sm:p-12 text-center" style={{ fontSize: `${fontSize}px` }}>
                 <h1 className="text-3xl font-display font-bold mb-2">{song.title}</h1>
-                <p className="text-sm text-gray-400 mb-8 italic">Tono Original: {song.key}</p>
+                <p className="text-sm text-gray-400 mb-8 italic print:hidden">Tono Original: {song.key} {transpose !== 0 && `(Transportado: ${transpose})`}</p>
+                {/* Print only info */}
+                <p className="hidden print:block text-xs text-gray-500 mb-8">Cuatro Liturgias - Cantoral</p>
 
-                <div className="font-serif text-gray-800 dark:text-gray-200 whitespace-pre-wrap max-w-3xl mx-auto pb-40">
+                <div className="font-serif text-gray-800 dark:text-gray-200 whitespace-pre-wrap max-w-3xl mx-auto pb-40 print:pb-0 text-left md:text-center inline-block">
                     {content}
                 </div>
             </div>
+
+            {/* Print Styles */}
+            <style>{`
+                @media print {
+                    .fixed { position: static !important; overflow: visible !important; }
+                    button, .material-symbols-outlined { display: none !important; }
+                    /* Hide everything else via global css or specific scopes if needed, but since this is a modal overlay: */
+                    body > *:not(#root) { display: none; }
+                    /* We rely on the fact effectively everything is hidden by this component's z-index and background,
+                       but for print we need to be careful. Ideally we hide siblings. */
+                     /* Quick fix for print visibility of just this content */
+                     @page { margin: 2cm; }
+                     body { background: white; color: black; }
+                     .bg-paper-pattern { background: none; }
+                }
+            `}</style>
         </div>
     );
 }

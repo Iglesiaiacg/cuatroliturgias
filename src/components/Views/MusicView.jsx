@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useMusic } from '../../context/MusicContext';
 import { useAuth } from '../../context/AuthContext';
 import SongDetail from '../Music/SongDetail'; // To be created
+import { HYMNAL } from '../../data/hymnal'; // Import DB
 
 export default function MusicView() {
     const { songs, addSong } = useMusic();
@@ -16,6 +17,28 @@ export default function MusicView() {
     const [newKey, setNewKey] = useState('C');
     const [newLyrics, setNewLyrics] = useState('');
 
+    // --- SMART SEARCH (AUTOCOMPLETE) ---
+    const [suggestions, setSuggestions] = useState([]);
+
+    const handleTitleChange = (e) => {
+        const val = e.target.value;
+        setNewTitle(val);
+        if (val.length > 2) {
+            const matches = HYMNAL.filter(h => h.title.toLowerCase().includes(val.toLowerCase()));
+            setSuggestions(matches);
+        } else {
+            setSuggestions([]);
+        }
+    };
+
+    const selectSuggestion = (hymn) => {
+        setNewTitle(hymn.title);
+        setNewKey(hymn.key);
+        setNewLyrics(hymn.lyrics);
+        setSuggestions([]); // Close
+    };
+    // -----------------------------------
+
     const filtered = songs.filter(s =>
         s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         s.lyrics.toLowerCase().includes(searchTerm.toLowerCase())
@@ -27,6 +50,7 @@ export default function MusicView() {
         setIsCreating(false);
         setNewTitle('');
         setNewLyrics('');
+        setSuggestions([]);
     };
 
     // If detail view
@@ -56,13 +80,35 @@ export default function MusicView() {
             {isCreating && (
                 <div className="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm mb-6 animate-fade-in-up border border-gray-100 dark:border-white/5">
                     <h3 className="font-bold text-lg mb-4">Agregar Nuevo Canto</h3>
-                    <form onSubmit={handleSaveNew} className="space-y-4">
+                    <form onSubmit={handleSaveNew} className="space-y-4 relative">
+                        {/* Hints Container */}
                         <div className="flex gap-4">
-                            <input
-                                className="flex-1 p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
-                                placeholder="Título"
-                                value={newTitle} onChange={e => setNewTitle(e.target.value)} required
-                            />
+                            <div className="flex-1 relative">
+                                <input
+                                    className="w-full p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
+                                    placeholder="Título (Escribe para buscar...)"
+                                    value={newTitle}
+                                    onChange={handleTitleChange} // Use wrapper
+                                    required
+                                    autoComplete="off"
+                                />
+                                {suggestions.length > 0 && (
+                                    <div className="absolute top-full left-0 w-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 rounded-lg shadow-xl z-20 mt-1 max-h-40 overflow-y-auto">
+                                        <div className="p-2 text-xs text-gray-500 font-bold uppercase bg-gray-50 dark:bg-white/5">Sugerencias del Himnario</div>
+                                        {suggestions.map((s, i) => (
+                                            <button
+                                                key={i}
+                                                type="button"
+                                                onClick={() => selectSuggestion(s)}
+                                                className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-white/10 text-sm flex justify-between"
+                                            >
+                                                <span>{s.title}</span>
+                                                <span className="text-gray-400 font-mono text-xs">{s.key}</span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                             <input
                                 className="w-20 p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
                                 placeholder="Tono"
