@@ -12,6 +12,7 @@
   "dependencies": {
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
+    "firebase": "^12.7.0",
     "html-docx-js-typescript": "^0.1.5",
     "html-to-image": "^1.11.13",
     "jspdf": "^3.0.4",

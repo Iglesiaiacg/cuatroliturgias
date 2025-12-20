@@ -1,10 +1,8 @@
 import StyledCard from '../Common/StyledCard';
-import SacristyChecklist from '../Dashboard/SacristyChecklist';
 import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
 import FinanceCard from '../Dashboard/FinanceCard';
 import RolesCard from '../Dashboard/RolesCard';
 import IntentionsCard from '../Dashboard/IntentionsCard';
-import InventoryCard from '../Dashboard/InventoryCard';
 import StatsCard from '../Dashboard/StatsCard';
 import NoticesCard from '../Dashboard/NoticesCard';
 import QuickCertCard from '../Dashboard/QuickCertCard';
@@ -36,10 +34,7 @@ export default function Dashboard({ onNavigate, date }) {
                 </div>
             </div>
 
-            {/* Sacristy Digital Checklist */}
-            <section className="mb-2">
-                <SacristyChecklist key={date ? date.toISOString() : 'default'} date={date} />
-            </section>
+
 
             {/* Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
@@ -98,9 +93,7 @@ export default function Dashboard({ onNavigate, date }) {
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Administración</h3>
                         <FinanceCard />
                     </section>
-                    <section>
-                        <InventoryCard />
-                    </section>
+
                     <section>
                         <QuickCertCard />
                     </section>

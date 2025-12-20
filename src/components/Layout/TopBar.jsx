@@ -11,6 +11,7 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario' },
         { id: 'directory', icon: 'diversity_3', label: 'Fieles' },
         { id: 'offerings', icon: 'savings', label: 'Ofrendas' },
+        { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía' },
         { id: 'generator', icon: 'menu_book', label: 'Liturgia' },
     ];
 

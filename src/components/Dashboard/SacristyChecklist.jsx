@@ -1,75 +1,16 @@
 import { useState } from 'react';
 import { getLiturgicalColor } from '../../services/liturgy';
-
-// Expanded Default items (Comprehensive) - Defined outside to be stable
-const defaultItems = [
-    // Libros
-    { id: 'misal', label: 'Misal', checked: false },
-    { id: 'leccionario', label: 'Leccionario', checked: false },
-    { id: 'evangeliario', label: 'Evangeliario', checked: false },
-    { id: 'guion', label: 'Guión / Oración Fieles', checked: false },
-
-    // Altar y Credencia - Vasos
-    { id: 'caliz', label: 'Cáliz y Patena', checked: false },
-    { id: 'copon', label: 'Copón (si es necesario)', checked: false },
-    { id: 'vinajeras', label: 'Vinajeras (Vino/Agua)', checked: false },
-    { id: 'lavabo', label: 'Jarra y Jofaina (Lavabo)', checked: false },
-
-    // Altar y Credencia - Lencería
-    { id: 'corporal', label: 'Corporal y Purificador', checked: false },
-    { id: 'manutergio', label: 'Manutergio', checked: false },
-    { id: 'manteles', label: 'Manteles de Altar', checked: false },
-
-    // Elementos
-    { id: 'pan', label: 'Hostias (Suficientes)', checked: false },
-    { id: 'velas', label: 'Velas del Altar', checked: false },
-    { id: 'llaves', label: 'Llave del Sagrario', checked: false },
-
-    // Procesión y Ritos
-    { id: 'cruz', label: 'Cruz Alta / Ciriales', checked: false },
-    { id: 'incensario', label: 'Incensario y Naveta', checked: false },
-    { id: 'carbones', label: 'Carbones / Incienso', checked: false },
-    { id: 'acetre', label: 'Acetre e Hisopo (Agua)', checked: false },
-    { id: 'campanilla', label: 'Campanilla', checked: false },
-
-    // Vestiduras
-    { id: 'vestiduras', label: 'Vestiduras (Color)', checked: false },
-    { id: 'micro', label: 'Micrófono / Sonido', checked: false },
-];
+import { useSacristySync } from '../../hooks/useSacristySync';
 
 export default function SacristyChecklist({ date }) {
     const color = getLiturgicalColor(date);
-    const storageKey = `sacristy-v2-${date.toDateString()}`;
-
-    // Initialize state from local storage or default
-    const [items, setItems] = useState(() => {
-        const stored = localStorage.getItem(storageKey);
-        return stored ? JSON.parse(stored) : defaultItems;
-    });
-
+    const { items, toggleItem, loading } = useSacristySync(date);
     const [isCollapsed, setIsCollapsed] = useState(true);
-
-    // Save to local storage whenever items change
-    // We do manual save in toggle for immediate persistence, 
-    // but we could also use an effect. Sticking to manual save in handler for simplicity.
-
-    // Save to local storage whenever items change
-    // We do manual save in toggle for immediate persistence, 
-    // but we could also use an effect. Sticking to manual save in handler for simplicity.
-
-    // Toggle check
-    const toggleItem = (id) => {
-        const newItems = items.map(item =>
-            item.id === id ? { ...item, checked: !item.checked } : item
-        );
-        setItems(newItems);
-        localStorage.setItem(storageKey, JSON.stringify(newItems));
-    };
 
     // Calculate progress
     const completed = items.filter(i => i.checked).length;
     const total = items.length;
-    const progress = Math.round((completed / total) * 100);
+    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return (
         <div className="bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
@@ -84,6 +25,7 @@ export default function SacristyChecklist({ date }) {
                         <h3 className="text-sm font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
                             Sacristía Digital
                             <span className="text-[10px] font-normal text-gray-400 bg-gray-100 dark:bg-white/10 px-1.5 rounded-full">{color.name}</span>
+                            {loading && <span className="text-[10px] text-primary animate-pulse ml-2">Sincronizando...</span>}
                         </h3>
                     </div>
                 </div>
@@ -115,6 +57,7 @@ export default function SacristyChecklist({ date }) {
                     <button
                         key={item.id}
                         onClick={() => toggleItem(item.id)}
+                        disabled={loading}
                         className={`flex items-start gap-2 px-2 py-2 rounded-md transition-all text-left group
                             ${item.checked
                                 ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
