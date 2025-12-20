@@ -3,7 +3,7 @@ import { es } from 'date-fns/locale';
 
 import logoHome from '../../assets/logo.png';
 
-export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
+export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate }) {
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
 
     const navItems = [
@@ -48,14 +48,23 @@ export default function TopBar({ date, onSettings, activeTab, onNavigate }) {
                     ))}
                 </nav>
 
-                {/* 3. Settings */}
-                <button
-                    onClick={onSettings}
-                    aria-label="Configuración"
-                    className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors shrink-0"
-                >
-                    <span className="material-symbols-outlined text-gray-900 dark:text-white" style={{ fontSize: '24px' }}>settings</span>
-                </button>
+                {/* 3. Settings & Profile */}
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={onProfile}
+                        aria-label="Mi Perfil"
+                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors shrink-0"
+                    >
+                        <span className="material-symbols-outlined text-gray-900 dark:text-white" style={{ fontSize: '24px' }}>account_circle</span>
+                    </button>
+                    <button
+                        onClick={onSettings}
+                        aria-label="Configuración"
+                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors shrink-0"
+                    >
+                        <span className="material-symbols-outlined text-gray-900 dark:text-white" style={{ fontSize: '24px' }}>settings</span>
+                    </button>
+                </div>
             </div>
 
             {/* Mobile Navigation (Bottom row of header) */}

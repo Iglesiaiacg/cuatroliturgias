@@ -83,7 +83,7 @@ export default function Dashboard({ onNavigate, date }) {
                         <StatsCard />
                     </section>
                     <section>
-                        <IntentionsCard />
+                        <IntentionsCard date={date} />
                     </section>
                 </div>
 

@@ -1,0 +1,69 @@
+import { useState, useEffect } from 'react';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { db } from '../services/firebase';
+import { format } from 'date-fns';
+
+export function useIntentionsSync(date) {
+    const [intentions, setIntentions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    const dateKey = format(date || new Date(), 'yyyy-MM-dd');
+
+    useEffect(() => {
+        setLoading(true);
+        const docRef = doc(db, 'intentions', dateKey);
+
+        const unsubscribe = onSnapshot(docRef, (snap) => {
+            if (snap.exists()) {
+                setIntentions(snap.data().list || []);
+            } else {
+                setIntentions([]);
+            }
+            setLoading(false);
+        }, (error) => {
+            console.error("Intentions Sync Error:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, [dateKey]);
+
+    const addIntention = async (text, type = 'general') => {
+        const newIntention = { id: Date.now(), text, type, completed: false };
+        const newList = [...intentions, newIntention];
+        setIntentions(newList); // Optimistic
+
+        try {
+            const docRef = doc(db, 'intentions', dateKey);
+            await setDoc(docRef, { list: newList, date: dateKey }, { merge: true });
+        } catch (e) {
+            console.error("Error adding intention:", e);
+        }
+    };
+
+    const removeIntention = async (id) => {
+        const newList = intentions.filter(i => i.id !== id);
+        setIntentions(newList);
+
+        try {
+            const docRef = doc(db, 'intentions', dateKey);
+            await setDoc(docRef, { list: newList }, { merge: true });
+        } catch (e) {
+            console.error("Error removing intention:", e);
+        }
+    };
+
+    // Optional: Toggle completion if we want to mark them as 'read'
+    const toggleIntention = async (id) => {
+        const newList = intentions.map(i => i.id === id ? { ...i, completed: !i.completed } : i);
+        setIntentions(newList);
+        try {
+            const docRef = doc(db, 'intentions', dateKey);
+            await setDoc(docRef, { list: newList }, { merge: true });
+        } catch (e) {
+            console.error("Error toggling intention:", e);
+        }
+    }
+
+    return { intentions, addIntention, removeIntention, toggleIntention, loading };
+}

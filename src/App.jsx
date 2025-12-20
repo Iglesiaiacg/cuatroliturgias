@@ -25,7 +25,9 @@ import TopBar from './components/Layout/TopBar'
 import PulpitView from './components/Liturgy/PulpitView'
 import BackgroundWrapper from './components/Layout/BackgroundWrapper'
 import LoginView from './components/Auth/LoginView'
+
 import UserManagement from './components/Auth/UserManagement'
+import ProfileModal from './components/Auth/ProfileModal'
 
 function AppContent() {
   const { currentUser, userRole, logout } = useAuth()
@@ -44,6 +46,7 @@ function AppContent() {
   const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
+  const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
 
@@ -157,13 +160,21 @@ function AppContent() {
         <HistoryModal
           isOpen={isHistoryOpen}
           onClose={() => setIsHistoryOpen(false)}
-          onRestore={handleRestoreHistory}
+          docContent={docContent}
+          onLoadContent={setDocContent}
+          onToast={setToast}
         />
+
         <SettingsModal
           isOpen={isSettingsOpen}
           onClose={() => setIsSettingsOpen(false)}
-          rubricLevel={rubricLevel}
-          onRubricChange={setRubricLevel}
+          tradition={tradition}
+          setTradition={setTradition}
+        />
+
+        <ProfileModal
+          isOpen={isProfileOpen}
+          onClose={() => setIsProfileOpen(false)}
         />
 
         {/* Main Content Area */}
@@ -174,6 +185,7 @@ function AppContent() {
             <TopBar
               date={selectedDate}
               onSettings={() => setIsSettingsOpen(true)}
+              onProfile={() => setIsProfileOpen(true)}
               activeTab={activeTab}
               onNavigate={setActiveTab}
               onLogout={logout} // Pass logout logic
@@ -318,7 +330,7 @@ function AppContent() {
 
         {/* Footer removed as per request (icons moved to header) */}
       </div>
-    </BackgroundWrapper>
+    </BackgroundWrapper >
   )
 }
 

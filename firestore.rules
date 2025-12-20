@@ -1,0 +1,74 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Helper Functions ---
+
+    // Check if user is logged in
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Get user's role from their user profile document
+    // Note: This costs 1 Read operation.
+    // For high-traffic apps, use Custom Claims (requires Cloud Functions).
+    function getUserRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    // Role Checks
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() == 'admin';
+    }
+
+    function isSacristan() {
+      // Sacristan implies Admin access in some contexts, but let's keep it specific
+      // or allow Admin to act as Sacristan too.
+      return isAuthenticated() && (getUserRole() == 'sacristan' || getUserRole() == 'admin');
+    }
+    
+    function isSecretary() {
+      return isAuthenticated() && (getUserRole() == 'secretary' || getUserRole() == 'admin');
+    }
+
+    // --- Collections ---
+
+    // 1. Users Collection
+    // - Everyone authenticated can read (to form the directory list)
+    // - Only Admin can create/delete/change roles
+    // - Users can update their OWN DisplayName (Profile Modal)
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin() || (request.auth.uid == userId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']));
+    }
+
+    // 2. Inventory (Insumos)
+    // - Read: All Authenticated
+    // - Write: Admin or Sacristan
+    match /inventory/{docId} {
+      allow read: if isAuthenticated();
+      allow write: if isSacristan();
+    }
+
+    // 3. Intentions (Intenciones)
+    // - Read: All Authenticated (Priest needs to read, Secretary writes)
+    // - Write: Admin or Secretary
+    match /intentions/{dateId} {
+      allow read: if isAuthenticated();
+      allow write: if isSecretary();
+    }
+
+    // 4. Transactions (Finanzas)
+    // - Read/Write: ONLY Admin or Secretary. Hidden from others.
+    match /transactions/{docId} {
+      allow read, write: if isSecretary();
+    }
+
+    // Default: Deny everything else
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

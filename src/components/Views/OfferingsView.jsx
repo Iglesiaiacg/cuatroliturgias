@@ -8,20 +8,15 @@ import Receipt from '../Finance/Receipt';
 import AccountSheet from '../Finance/AccountSheet';
 import { FINANCE_CATEGORIES as categories } from '../../utils/financeCategories';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
+import { useFinanceSync } from '../../hooks/useFinanceSync';
 
 export default function OfferingsView() {
     // Categories imported from utils
 
 
     // State for transactions - Init lazy to prevent overwrite
-    const [transactions, setTransactions] = useState(() => {
-        try {
-            const stored = localStorage.getItem('liturgia_offerings');
-            return stored ? JSON.parse(stored) : [];
-        } catch {
-            return [];
-        }
-    });
+    // Real-time Finance Sync
+    const { transactions, addTransaction, deleteTransaction, loading: loadingTransactions } = useFinanceSync(200);
 
     // Month/Year Selection for Sheet
     const [currentDate, setCurrentDate] = useState(new Date());
@@ -70,9 +65,7 @@ export default function OfferingsView() {
     const [receiptData, setReceiptData] = useState(null);
 
     // Save to local storage on change
-    useEffect(() => {
-        localStorage.setItem('liturgia_offerings', JSON.stringify(transactions));
-    }, [transactions]);
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -83,13 +76,12 @@ export default function OfferingsView() {
         if (isNaN(val) || val <= 0) return;
 
         const newTransaction = {
-            id: Date.now().toString(),
             date: new Date().toISOString(),
             ...formData,
             amount: val
         };
 
-        setTransactions(prev => [newTransaction, ...prev]);
+        addTransaction(newTransaction);
         setFormData({ ...formData, description: '', amount: '', beneficiary: '' });
         setShowForm(false);
     };
@@ -134,7 +126,9 @@ export default function OfferingsView() {
 
     const handleDelete = (id) => {
         if (window.confirm('¿Estás seguro de eliminar este registro?')) {
-            setTransactions(transactions.filter(t => t.id !== id));
+            if (window.confirm('¿Estás seguro de eliminar este registro?')) {
+                deleteTransaction(id);
+            }
         }
     };
 

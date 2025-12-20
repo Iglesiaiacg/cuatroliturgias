@@ -58,11 +58,17 @@ export function AuthProvider({ children }) {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 // User is signed in, fetch role from Firestore
-                const userDoc = await getDoc(doc(db, 'users', user.uid));
-                if (userDoc.exists()) {
-                    setUserRole(userDoc.data().role);
-                } else {
-                    // Default fallback or 'pending'
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', user.uid));
+                    if (userDoc.exists()) {
+                        setUserRole(userDoc.data().role);
+                    } else {
+                        // Default fallback or 'pending'
+                        setUserRole('guest');
+                    }
+                } catch (error) {
+                    console.error("Error fetching user role:", error);
+                    // Fallback to guest to allow app to load (and maybe show error later)
                     setUserRole('guest');
                 }
                 setCurrentUser(user);
