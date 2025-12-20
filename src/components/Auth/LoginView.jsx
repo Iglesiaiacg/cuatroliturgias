@@ -33,7 +33,7 @@ export default function LoginView() {
 
                 {/* Header Graphic */}
                 <div className="h-32 bg-primary/10 flex items-center justify-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-10"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-50"></div>
                     <div className="text-center z-10">
                         <span className="material-symbols-outlined text-6xl text-primary mb-2">church</span>
                     </div>
