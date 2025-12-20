@@ -1,50 +1,47 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+const calculateSummary = () => {
+    try {
+        const stored = localStorage.getItem('liturgia_offerings');
+        const transactions = stored ? JSON.parse(stored) : [];
+
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const monthTransactions = transactions.filter(t => {
+            const d = new Date(t.date);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        });
+
+        const income = monthTransactions
+            .filter(t => t.type === 'income')
+            .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+        const expense = monthTransactions
+            .filter(t => t.type === 'expense')
+            .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
+
+        const totalBalance = transactions
+            .reduce((sum, t) => sum + (t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)), 0);
+
+        return {
+            income,
+            expense,
+            balance: totalBalance,
+            monthName: new Intl.DateTimeFormat('es-MX', { month: 'long' }).format(now)
+        };
+
+    } catch (e) {
+        console.error("Error calculating finance summary", e);
+        return { income: 0, expense: 0, balance: 0, monthName: '' };
+    }
+};
 
 export default function FinanceCard() {
-    const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0, monthName: '' });
+    const [summary] = useState(calculateSummary);
     const [isVisible, setIsVisible] = useState(false);
 
-    useEffect(() => {
-        try {
-            const stored = localStorage.getItem('liturgia_offerings');
-            const transactions = stored ? JSON.parse(stored) : [];
-
-            const now = new Date();
-            const currentMonth = now.getMonth();
-            const currentYear = now.getFullYear();
-
-            const monthTransactions = transactions.filter(t => {
-                const d = new Date(t.date);
-                return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-            });
-
-            const income = monthTransactions
-                .filter(t => t.type === 'income')
-                .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-
-            const expense = monthTransactions
-                .filter(t => t.type === 'expense')
-                .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
-
-            // Calculate actual running balance (total cash on hand), not just monthly net
-            // Or should this card show Monthly Net? "Resumen Financiero Mensual" implies monthly flow.
-            // But "Saldo" usually means "Cash in Box".
-            // Let's show Monthly Flow + Total Cash Balance.
-
-            const totalBalance = transactions
-                .reduce((sum, t) => sum + (t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)), 0);
-
-            setSummary({
-                income,
-                expense,
-                balance: totalBalance,
-                monthName: new Intl.DateTimeFormat('es-MX', { month: 'long' }).format(now)
-            });
-
-        } catch (e) {
-            console.error("Error calculating finance summary", e);
-        }
-    }, []);
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);

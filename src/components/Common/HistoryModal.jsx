@@ -1,14 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getHistory } from '../../services/storage';
 
 export default function HistoryModal({ isOpen, onClose, onRestore }) {
-    const [history, setHistory] = useState([]);
-
-    useEffect(() => {
-        if (isOpen) {
-            setHistory(getHistory());
-        }
-    }, [isOpen]);
+    const [history] = useState(() => getHistory());
 
     if (!isOpen) return null;
 

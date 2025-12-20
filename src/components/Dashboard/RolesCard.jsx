@@ -1,27 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function RolesCard() {
-    const [roles, setRoles] = useState({});
-    const [isEditing, setIsEditing] = useState(false);
-
-    // Load roles from storage
-    useEffect(() => {
+    const [roles, setRoles] = useState(() => {
         try {
             const stored = localStorage.getItem('liturgia_roles');
-            if (stored) {
-                setRoles(JSON.parse(stored));
-            } else {
-                // Default empty roles
-                setRoles({
-                    lector: '',
-                    acolito: '',
-                    bienvenida: ''
-                });
-            }
+            if (stored) return JSON.parse(stored);
         } catch (e) {
             console.error(e);
         }
-    }, []);
+        return {
+            lector: '',
+            acolito: '',
+            bienvenida: ''
+        };
+    });
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleSave = () => {
         localStorage.setItem('liturgia_roles', JSON.stringify(roles));

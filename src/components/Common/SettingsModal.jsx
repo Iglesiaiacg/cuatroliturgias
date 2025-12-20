@@ -1,16 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getApiKey, saveApiKey } from '../../services/storage';
 
 export default function SettingsModal({ isOpen, onClose }) {
-    const [key, setKey] = useState('');
+    const [key, setKey] = useState(() => getApiKey());
     const [saved, setSaved] = useState(false);
-
-    useEffect(() => {
-        if (isOpen) {
-            setKey(getApiKey());
-            setSaved(false);
-        }
-    }, [isOpen]);
 
     const handleSave = () => {
         saveApiKey(key.trim());

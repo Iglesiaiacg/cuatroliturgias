@@ -46,8 +46,8 @@ export const identifyFeast = (date) => {
 
     // Moveable Feasts
     const easter = normalizeDate(getEasterDate(year));
-    const christmas = new Date(year, 11, 25);
-    const adventStart = getAdventStart(year);
+    const christmas = normalizeDate(new Date(year, 11, 25));
+    const adventStart = normalizeDate(getAdventStart(year));
 
     // Calculate offsets
     const diffEaster = Math.round((d - easter) / OneDay);
@@ -63,6 +63,7 @@ export const identifyFeast = (date) => {
     }
 
     // 2. CHRISTMAS SEASON (Simplified)
+    // Note: Epiphany range logic might need tuning but basics here
     if (d >= christmas || (month === 0 && day <= 13 && diffEaster < -60)) {
         return "Tiempo de Navidad";
     }
@@ -70,6 +71,7 @@ export const identifyFeast = (date) => {
     // 3. LENT & HOLY WEEK
     const ashWed = new Date(easter);
     ashWed.setDate(easter.getDate() - 46);
+    // ashWed is already noon-based because easter is noon-based
     const diffAsh = Math.round((d - ashWed) / OneDay);
 
     if (diffAsh === 0) return "Miércoles de Ceniza";
@@ -106,9 +108,7 @@ export const identifyFeast = (date) => {
     trinity.setDate(pentecost.getDate() + 7);
     if (d.getTime() === trinity.getTime()) return "Santísima Trinidad";
 
-    // Corpus Christi (Thursday or Sunday depending on region, logic assumes Thursday + Sunday obs option, sticking to common Sunday for generated simplicity or distinct thursday)
-    // Let's assume Corpus is the Sunday after Trinity for general pastoral use unless specified. 
-    // Actually, traditionally Thursday after Trinity. Most diocese move to Sunday.
+    // Corpus Christi
     const corpus = new Date(trinity);
     corpus.setDate(trinity.getDate() + 7); // Following Sunday
     if (d.getTime() === corpus.getTime()) return "Corpus Christi (Solemne)";

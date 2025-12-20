@@ -121,6 +121,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
             {/* Day Details Modal */}
             {viewedDate && (
                 <DayDetailsModal
+                    key={viewedDate.toString()}
                     date={viewedDate}
                     onClose={() => setViewedDate(null)}
                     onGenerate={(d) => {

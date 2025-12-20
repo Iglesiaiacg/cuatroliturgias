@@ -1,61 +1,68 @@
 import { useState, useEffect, useCallback } from 'react';
-import { startOfDay, isSameDay, parse, setYear, format } from 'date-fns';
+import { startOfDay, isSameDay } from 'date-fns';
 
 const EVENTS_STORAGE_KEY = 'parish_calendar_events';
 const DIRECTORY_STORAGE_KEY = 'liturgia_directory';
 
-export function useCalendarEvents() {
-    const [events, setEvents] = useState([]);
-    const [directoryEvents, setDirectoryEvents] = useState([]);
+// Helper to read data (pure function logic)
+const readData = () => {
+    // 1. Manual Events
+    const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
+    const manual = stored ? JSON.parse(stored) : [];
 
-    // Load data
-    const loadEvents = useCallback(() => {
-        // 1. Manual Events
-        const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
-        const manual = stored ? JSON.parse(stored) : [];
+    // 2. Directory Harvest
+    const dirStored = localStorage.getItem(DIRECTORY_STORAGE_KEY);
+    const members = dirStored ? JSON.parse(dirStored) : [];
 
-        // 2. Directory Harvest
-        const dirStored = localStorage.getItem(DIRECTORY_STORAGE_KEY);
-        const members = dirStored ? JSON.parse(dirStored) : [];
+    const harvested = [];
 
-        const harvested = [];
-        const currentYear = new Date().getFullYear();
-
-        members.forEach(m => {
-            if (m.birthDate) {
-                try {
-                    // Assuming birthDate is YYYY-MM-DD or similar standard
-                    const date = new Date(m.birthDate + 'T12:00:00'); // Midday to avoid timezone shifts
-                    if (!isNaN(date)) {
-                        harvested.push({
-                            id: `bd-${m.id}`,
-                            title: `Cumpleaños de ${m.fullName.split(' ')[0]}`,
-                            date: date, // Will be year-adjusted in getter
-                            type: 'birthday',
-                            color: 'blue' // UI indicator color
-                        });
-                    }
-                } catch (e) {
-                    console.error("Error parsing date for", m.fullName, e);
+    members.forEach(m => {
+        if (m.birthDate) {
+            try {
+                // Assuming birthDate is YYYY-MM-DD or similar standard
+                const date = new Date(m.birthDate + 'T12:00:00'); // Midday to avoid timezone shifts
+                if (!isNaN(date)) {
+                    harvested.push({
+                        id: `bd-${m.id}`,
+                        title: `Cumpleaños de ${m.fullName.split(' ')[0]}`,
+                        date: date, // Will be year-adjusted in getter
+                        type: 'birthday',
+                        color: 'blue' // UI indicator color
+                    });
                 }
+            } catch (e) {
+                console.error("Error parsing date for", m.fullName, e);
             }
-            // Add Wedding or Baptism here if fields exist
-        });
+        }
+    });
 
+    return { manual, harvested };
+};
+
+export function useCalendarEvents() {
+    // Lazy initialization
+    const [events, setEvents] = useState(() => readData().manual);
+    const [directoryEvents, setDirectoryEvents] = useState(() => readData().harvested);
+
+    // Refresh function (used for storage listener)
+    const loadEvents = useCallback(() => {
+        const { manual, harvested } = readData();
         setEvents(manual);
         setDirectoryEvents(harvested);
     }, []);
 
-    // Initial Load
+    // Listener for storage changes (sync across tabs/updates)
     useEffect(() => {
-        loadEvents();
-        // Listener for storage changes (sync across tabs/updates)
+        // We already initialized via useState lazy init, so no need to call loadEvents() immediately on mount
+        // unless we want to ensure freshness if storage changed between init and effect (rare).
+        // Standard pattern: just listen.
         window.addEventListener('storage', loadEvents);
         return () => window.removeEventListener('storage', loadEvents);
     }, [loadEvents]);
 
     // Helpers
-    const getEventsForDate = (date) => {
+    const getEventsForDate = useCallback((date) => {
+        if (!date) return [];
         const target = startOfDay(date);
         const targetYear = target.getFullYear();
 
@@ -65,7 +72,6 @@ export function useCalendarEvents() {
         // Filter Directory (adjusted to current year)
         const dayDirectory = directoryEvents.filter(e => {
             const originalDate = new Date(e.date);
-            const thisYearDate = setYear(originalDate, targetYear);
             // Handle leap years edge case if needed, but simple matching mainly:
             return originalDate.getDate() === target.getDate() &&
                 originalDate.getMonth() === target.getMonth();
@@ -98,42 +104,50 @@ export function useCalendarEvents() {
         }
 
         return [...dayManual, ...dayDirectory, ...dayAuto];
-    };
+    }, [events, directoryEvents]);
 
-    const addEvent = (event) => {
-        const newEvents = [...events, { ...event, id: crypto.randomUUID() }];
-        setEvents(newEvents);
-        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-        return newEvents;
-    };
+    const addEvent = useCallback((event) => {
+        setEvents(prev => {
+            const newEvents = [...prev, { ...event, id: crypto.randomUUID() }];
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
+            return newEvents;
+        });
+    }, []);
 
-    const deleteEvent = (id) => {
-        const newEvents = events.filter(e => e.id !== id);
-        setEvents(newEvents);
-        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-    };
+    const deleteEvent = useCallback((id) => {
+        setEvents(prev => {
+            const newEvents = prev.filter(e => e.id !== id);
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
+            return newEvents;
+        });
+    }, []);
 
     // Roster Management (Stored inside manual events for simplicity or separate key)
     // We'll store roster as a special event type='roster' per day
-    const updateRoster = (date, positions) => {
-        // Remove existing roster for this date
-        const filtered = events.filter(e => !(e.type === 'roster' && isSameDay(new Date(e.date), date)));
+    const updateRoster = useCallback((date, positions) => {
+        if (!date) return;
+        setEvents(prev => {
+            // Remove existing roster for this date
+            const filtered = prev.filter(e => !(e.type === 'roster' && isSameDay(new Date(e.date), date)));
 
-        const rosterEvent = {
-            id: `roster-${date.toISOString()}`,
-            date: date,
-            type: 'roster',
-            data: positions // { lector: 'Px', acolyte: 'Py' }
-        };
+            const rosterEvent = {
+                id: `roster-${date.toISOString()}`,
+                date: date,
+                type: 'roster',
+                data: positions // { lector: 'Px', acolyte: 'Py' }
+            };
 
-        const newEvents = [...filtered, rosterEvent];
-        setEvents(newEvents);
-        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-    };
+            const newEvents = [...filtered, rosterEvent];
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
+            return newEvents;
+        });
+    }, []);
 
-    const getRoster = (date) => {
+    const getRoster = useCallback((date) => {
+        if (!date) return {};
+        // Note: 'events' dependency is needed here to get latest state
         return events.find(e => e.type === 'roster' && isSameDay(new Date(e.date), date))?.data || {};
-    };
+    }, [events]);
 
     return {
         events,

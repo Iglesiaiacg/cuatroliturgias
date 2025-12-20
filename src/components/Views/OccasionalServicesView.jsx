@@ -83,7 +83,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
                 <p>Un solo cuerpo somos, aunque muchos, pues todos participamos de un solo pan. *<br>
                 <strong>Reconócete, Señor Jesús, al partir el pan.</strong></p>
-            </div >
+            </div>
         `,
         "Bendiciones Estacionales": `
             <div class="liturgy-content">

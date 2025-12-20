@@ -1,0 +1,13 @@
+﻿
+> temp_project@0.0.0 lint
+> eslint .
+
+
+C:\Users\Anglo\OneDrive\Desktop\cuatroliturgias\src\components\Common\HistoryModal.jsx
+  5:21  error  'setHistory' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Desktop\cuatroliturgias\src\components\Views\DayDetailsModal.jsx
+  1:20  error  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Ô£û 2 problems (2 errors, 0 warnings)
+

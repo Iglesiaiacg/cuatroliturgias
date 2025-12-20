@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { getLiturgicalColor } from '../../services/liturgy';
 
 // Expanded Default items (Comprehensive) - Defined outside to be stable
@@ -49,15 +49,9 @@ export default function SacristyChecklist({ date }) {
 
     const [isCollapsed, setIsCollapsed] = useState(true);
 
-    // Sync state when date changes (load new date's data)
-    useEffect(() => {
-        const stored = localStorage.getItem(storageKey);
-        if (stored) {
-            setItems(JSON.parse(stored));
-        } else {
-            setItems(defaultItems);
-        }
-    }, [storageKey]); // Depend on storageKey which includes date
+    // Save to local storage whenever items change
+    // We do manual save in toggle for immediate persistence, 
+    // but we could also use an effect. Sticking to manual save in handler for simplicity.
 
     // Save to local storage whenever items change
     // We do manual save in toggle for immediate persistence, 

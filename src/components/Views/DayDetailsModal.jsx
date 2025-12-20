@@ -5,22 +5,21 @@ import { getLiturgicalColor, getLiturgicalCycle, identifyFeast } from '../../ser
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 
 export default function DayDetailsModal({ date, onClose, onGenerate }) {
-    if (!date) return null;
+    const { getEventsForDate, addEvent, deleteEvent, updateRoster, getRoster } = useCalendarEvents();
 
     const [activeTab, setActiveTab] = useState('liturgia'); // 'liturgia' | 'parroquia'
-    const { getEventsForDate, addEvent, deleteEvent, updateRoster, getRoster } = useCalendarEvents();
+    const [newEvent, setNewEvent] = useState({ title: '', type: 'pastoral' });
+    const [rosterForm, setRosterForm] = useState(() => getRoster(date));
+
+    if (!date) return null;
 
     // Derived State
     const events = getEventsForDate(date);
-    const roster = getRoster(date);
+    // const roster = getRoster(date); // Not needed as state is used
     const color = getLiturgicalColor(date);
     const feastName = identifyFeast(date);
     const cycle = getLiturgicalCycle(date);
     const isSunday = date.getDay() === 0;
-
-    // Form State
-    const [newEvent, setNewEvent] = useState({ title: '', type: 'pastoral' });
-    const [rosterForm, setRosterForm] = useState(roster);
 
     // Date Format
     const dateStr = format(date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });

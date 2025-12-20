@@ -1,22 +1,15 @@
-import { useState, useEffect } from 'react';
-import { format } from 'date-fns';
-import { es } from 'date-fns/locale';
+import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { PRIVACY_NOTICE } from '../../utils/privacyNotice';
 
 export default function DirectoryView() {
-    const [members, setMembers] = useState([]);
+    const [members, setMembers] = useState(() => {
+        const stored = localStorage.getItem('liturgia_directory');
+        return stored ? JSON.parse(stored) : [];
+    });
     const [selectedMember, setSelectedMember] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-
-    // Initial load
-    useEffect(() => {
-        const stored = localStorage.getItem('liturgia_directory');
-        if (stored) {
-            setMembers(JSON.parse(stored));
-        }
-    }, []);
 
     const saveMembers = (newList) => {
         setMembers(newList);
@@ -93,8 +86,8 @@ export default function DirectoryView() {
         const doc = new jsPDF();
 
         // --- CONFIGURATION ---
+        // --- CONFIGURATION ---
         const marginLeft = 20;
-        const marginRight = 190;
         const toggleY = 10; // Vertical spacing increment
         let y = 35; // Start Y position
 
@@ -305,8 +298,8 @@ export default function DirectoryView() {
 
         let newList;
         if (selectedMember.isNew) {
-            const { isNew, ...memberData } = memberToSave;
-            newList = [...members, memberData];
+            delete memberToSave.isNew;
+            newList = [...members, memberToSave];
         } else {
             newList = members.map(m => m.id === selectedMember.id ? memberToSave : m);
         }

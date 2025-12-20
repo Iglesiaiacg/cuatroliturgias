@@ -5,17 +5,18 @@ import { es } from 'date-fns/locale';
 const AccountSheet = forwardRef(({ transactions, currentMonth, currentYear }, ref) => {
 
     // Calculate running balance and filter for the view
-    const { monthlyTransactions, finalBalance } = useMemo(() => {
+    const { monthlyTransactions } = useMemo(() => {
         // 1. Sort all transactions by date ascending
         const sorted = [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
 
         // 2. Calculate running balance for ALL history
         let runningBalance = 0;
-        const withBalance = sorted.map(t => {
+        const withBalance = [];
+        for (const t of sorted) {
             if (t.type === 'income') runningBalance += t.amount;
             else if (t.type === 'expense') runningBalance -= t.amount;
-            return { ...t, balanceAfter: runningBalance };
-        });
+            withBalance.push({ ...t, balanceAfter: runningBalance });
+        }
 
         // 3. Filter for the selected month/year
         const filtered = withBalance.filter(t => {
@@ -23,7 +24,7 @@ const AccountSheet = forwardRef(({ transactions, currentMonth, currentYear }, re
             return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
         });
 
-        return { monthlyTransactions: filtered, finalBalance: runningBalance };
+        return { monthlyTransactions: filtered };
     }, [transactions, currentMonth, currentYear]);
 
     const monthName = format(new Date(currentYear, currentMonth, 1), 'MMMM', { locale: es });

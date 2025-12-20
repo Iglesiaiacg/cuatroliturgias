@@ -1,15 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function IntentionsCard() {
-    const [intentions, setIntentions] = useState([]);
-    const [inputValue, setInputValue] = useState('');
-
-    useEffect(() => {
+    const [intentions, setIntentions] = useState(() => {
         const stored = localStorage.getItem('liturgia_intentions');
-        if (stored) {
-            setIntentions(JSON.parse(stored));
-        }
-    }, []);
+        return stored ? JSON.parse(stored) : [];
+    });
+    const [inputValue, setInputValue] = useState('');
 
     const saveIntentions = (newIntentions) => {
         setIntentions(newIntentions);

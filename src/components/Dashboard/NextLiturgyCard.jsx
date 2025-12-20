@@ -1,34 +1,29 @@
-import { useState, useEffect } from 'react';
 import { identifyFeast, getLiturgicalColor, getLiturgicalCycle } from '../../services/liturgy';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export default function NextLiturgyCard({ onClick }) {
-    const [info, setInfo] = useState(null);
+    // Calculate Next Sunday (Derived State)
+    const today = new Date();
+    const nextSunday = new Date(today);
+    nextSunday.setDate(today.getDate() + (7 - today.getDay()) % 7);
 
-    useEffect(() => {
-        // Calculate Next Sunday
-        const today = new Date();
-        const nextSunday = new Date(today);
-        nextSunday.setDate(today.getDate() + (7 - today.getDay()) % 7);
-        // If today is Sunday, showing today is usually better for "Current/Next" context, 
-        // but if it's late, maybe next week. Let's stick to "Upcoming or Today" logic:
-        // If today is Sunday, keep it. If not, go to next Sunday.
-        if (today.getDay() !== 0) {
-            nextSunday.setDate(today.getDate() + (7 - today.getDay()));
-        }
+    // If today is NOT Sunday, move to next Sunday.
+    // If today IS Sunday, we keep it as nextSunday (same day) to show today's liturgy.
+    if (today.getDay() !== 0) {
+        nextSunday.setDate(today.getDate() + (7 - today.getDay()));
+    }
 
-        const feast = identifyFeast(nextSunday);
-        const color = getLiturgicalColor(nextSunday);
-        const cycle = getLiturgicalCycle(nextSunday);
+    const feast = identifyFeast(nextSunday);
+    const color = getLiturgicalColor(nextSunday);
+    const cycle = getLiturgicalCycle(nextSunday);
 
-        setInfo({
-            date: nextSunday,
-            feast,
-            color,
-            cycle
-        });
-    }, []);
+    const info = {
+        date: nextSunday,
+        feast,
+        color,
+        cycle
+    };
 
     if (!info) return null;
 

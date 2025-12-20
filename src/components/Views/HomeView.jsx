@@ -38,7 +38,7 @@ export default function Dashboard({ onNavigate, date }) {
 
             {/* Sacristy Digital Checklist */}
             <section className="mb-2">
-                <SacristyChecklist date={date} />
+                <SacristyChecklist key={date ? date.toISOString() : 'default'} date={date} />
             </section>
 
             {/* Dashboard Grid */}

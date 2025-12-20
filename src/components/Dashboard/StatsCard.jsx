@@ -1,28 +1,10 @@
-import { useState, useEffect } from 'react';
-import { format, subDays } from 'date-fns';
+import { useState } from 'react';
+import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export default function StatsCard() {
-    const [stats, setStats] = useState({
-        men: '',
-        women: '',
-        children: '',
-        communicants: ''
-    });
-    const [lastWeek, setLastWeek] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-
-    // Key includes the date of the nearest Sunday? 
-    // For simplicity, let's just store "Latest Entry" and "Previous Entry" logic 
-    // or just store by specific date key.
-    // Let's default to "This Sunday" (or nearest past Sunday if today is Monday-Sat)
-
+    // Key calculation
     const getSundayDate = () => {
-        const d = new Date();
-        const day = d.getDay();
-        const diff = d.getDate() - day + (day === 0 ? 0 : 7); // Next Sunday if Mon-Sat? 
-        // Usually stats are entered FOR the service. If it's Sunday, today. If Monday, yesterday.
-        // Let's just use "Last Sunday" logic if today is not Sunday.
         const current = new Date();
         if (current.getDay() !== 0) { // Not Sunday
             current.setDate(current.getDate() - current.getDay());
@@ -30,26 +12,38 @@ export default function StatsCard() {
         return current.toDateString();
     };
 
-    const dateKey = getSundayDate();
+    // We calculate dateKey once per render, but strictly it might fluctuate if render spans midnight.
+    // However, for lazy init, we call it inside the initializer.
+    // To make it stable for updates, `dateKey` is derived.
 
-    useEffect(() => {
-        try {
-            const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
-            if (allStats[dateKey]) {
-                setStats(allStats[dateKey]);
-            }
+    // We can't easily use "dateKey" inside useState(initializer) unless we copy logic or use a ref.
+    // But since `getSundayDate` is cheap...
 
-            // Find previous entry
-            const keys = Object.keys(allStats).sort((a, b) => new Date(b) - new Date(a));
-            const prevKey = keys.find(k => k !== dateKey);
-            if (prevKey) {
-                setLastWeek({ date: prevKey, ...allStats[prevKey] });
-            }
+    const [dateKey] = useState(() => getSundayDate()); // Store dateKey in state to keep it stable? 
+    // Or just calculate it. It shouldn't change.
+    // If we calculate it outside, we can pass it to lazy init.
 
-        } catch (e) {
-            console.error(e);
-        }
-    }, [dateKey]);
+    const [stats, setStats] = useState(() => {
+        const key = getSundayDate();
+        const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
+        return allStats[key] || {
+            men: '',
+            women: '',
+            children: '',
+            communicants: ''
+        };
+    });
+
+    const [lastWeek] = useState(() => {
+        const key = getSundayDate();
+        const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
+
+        const keys = Object.keys(allStats).sort((a, b) => new Date(b) - new Date(a));
+        const prevKey = keys.find(k => k !== key);
+        return prevKey ? { date: prevKey, ...allStats[prevKey] } : null;
+    });
+
+    const [isEditing, setIsEditing] = useState(false);
 
     const handleSave = () => {
         const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');

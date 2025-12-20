@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function NoticesCard() {
-    const [notices, setNotices] = useState([]);
+    const [notices, setNotices] = useState(() => {
+        const stored = localStorage.getItem('liturgia_notices');
+        return stored ? JSON.parse(stored) : [];
+    });
     const [inputValue, setInputValue] = useState('');
     const [readMode, setReadMode] = useState(false);
-
-    useEffect(() => {
-        const stored = localStorage.getItem('liturgia_notices');
-        if (stored) {
-            setNotices(JSON.parse(stored));
-        }
-    }, []);
 
     const saveNotices = (newNotices) => {
         setNotices(newNotices);

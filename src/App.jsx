@@ -136,15 +136,20 @@ function App() {
         {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
 
         {/* Modals */}
-        <HistoryModal
-          isOpen={isHistoryOpen}
-          onClose={() => setIsHistoryOpen(false)}
-          onRestore={handleRestoreHistory}
-        />
-        <SettingsModal
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-        />
+        {/* Modals */}
+        {isHistoryOpen && (
+          <HistoryModal
+            isOpen={isHistoryOpen}
+            onClose={() => setIsHistoryOpen(false)}
+            onRestore={handleRestoreHistory}
+          />
+        )}
+        {isSettingsOpen && (
+          <SettingsModal
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+          />
+        )}
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col relative overflow-hidden">

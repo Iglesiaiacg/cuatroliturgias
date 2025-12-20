@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const DEFAULT_ITEMS = [
     { id: 'wine', name: 'Vino de Consagrar' },
@@ -9,19 +9,15 @@ const DEFAULT_ITEMS = [
 ];
 
 export default function InventoryCard() {
-    const [inventory, setInventory] = useState({});
-
-    useEffect(() => {
+    const [inventory, setInventory] = useState(() => {
         const stored = localStorage.getItem('liturgia_inventory');
-        if (stored) {
-            setInventory(JSON.parse(stored));
-        } else {
-            // Initialize defaults: 0 = OK, 1 = Warning, 2 = Critical
-            const defaults = {};
-            DEFAULT_ITEMS.forEach(item => defaults[item.id] = 0);
-            setInventory(defaults);
-        }
-    }, []);
+        if (stored) return JSON.parse(stored);
+
+        // Initialize defaults: 0 = OK, 1 = Warning, 2 = Critical
+        const defaults = {};
+        DEFAULT_ITEMS.forEach(item => defaults[item.id] = 0);
+        return defaults;
+    });
 
     const toggleStatus = (id) => {
         setInventory(prev => {

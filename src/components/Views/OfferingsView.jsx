@@ -17,7 +17,7 @@ export default function OfferingsView() {
         try {
             const stored = localStorage.getItem('liturgia_offerings');
             return stored ? JSON.parse(stored) : [];
-        } catch (e) {
+        } catch {
             return [];
         }
     });
