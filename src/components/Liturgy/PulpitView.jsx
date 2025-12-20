@@ -7,9 +7,29 @@ export default function PulpitView({ content, onClose, title }) {
     const [speed, setSpeed] = useState(2); // 1-5
     const [showControls, setShowControls] = useState(true);
 
+    // Timer State
+    const [timerSeconds, setTimerSeconds] = useState(0);
+    const [isTimerActive, setIsTimerActive] = useState(false);
+    const [, setTick] = useState(0); // Force re-render for clock
+
     const containerRef = useRef(null);
     const animationRef = useRef(null);
     const controlsTimeoutRef = useRef(null);
+
+    // Clock Interval
+    useEffect(() => {
+        const i = setInterval(() => setTick(t => t + 1), 1000); // Update clock every second
+        return () => clearInterval(i);
+    }, []);
+
+    // Stopwatch Interval
+    useEffect(() => {
+        let i;
+        if (isTimerActive) {
+            i = setInterval(() => setTimerSeconds(s => s + 1), 1000);
+        }
+        return () => clearInterval(i);
+    }, [isTimerActive]);
 
     // Handle ESC key to exit
     useEffect(() => {
@@ -87,6 +107,21 @@ export default function PulpitView({ content, onClose, title }) {
 
                 {/* Main Control Deck */}
                 <div className="flex items-center gap-2 md:gap-3 bg-black/80 backdrop-blur-md p-2 md:p-3 rounded-2xl shadow-2xl border border-white/10 max-w-[92vw] overflow-x-auto no-scrollbar">
+
+                    {/* Timer & Clock Display (New) */}
+                    <div className="flex flex-col items-center px-2 mr-2 border-r border-white/20">
+                        {/* Real-time Clock */}
+                        <div className="text-xs font-bold text-gray-400 font-mono mb-1">
+                            {new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        {/* User Timer */}
+                        <div onClick={() => setIsTimerActive(!isTimerActive)} className="cursor-pointer flex items-center gap-1 group">
+                            <span className={`w-2 h-2 rounded-full ${isTimerActive ? 'bg-red-500 animate-pulse' : 'bg-gray-600'}`} />
+                            <span className={`text-xl font-mono font-bold ${isTimerActive ? 'text-white' : 'text-gray-500'}`}>
+                                {new Date(timerSeconds * 1000).toISOString().substr(14, 5)}
+                            </span>
+                        </div>
+                    </div>
 
                     {/* Play/Pause */}
                     <button

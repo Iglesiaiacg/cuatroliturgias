@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
@@ -40,6 +40,13 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
+
+  // Settings State
+  const [rubricLevel, setRubricLevel] = useState(() => localStorage.getItem('rubricLevel') || 'simple'); // 'simple' | 'solemn'
+
+  useEffect(() => {
+    localStorage.setItem('rubricLevel', rubricLevel);
+  }, [rubricLevel]);
 
   // Navigation State
   const [serviceTitle, setServiceTitle] = useState(null)
@@ -136,20 +143,17 @@ function App() {
         {toast.message && <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />}
 
         {/* Modals */}
-        {/* Modals */}
-        {isHistoryOpen && (
-          <HistoryModal
-            isOpen={isHistoryOpen}
-            onClose={() => setIsHistoryOpen(false)}
-            onRestore={handleRestoreHistory}
-          />
-        )}
-        {isSettingsOpen && (
-          <SettingsModal
-            isOpen={isSettingsOpen}
-            onClose={() => setIsSettingsOpen(false)}
-          />
-        )}
+        <HistoryModal
+          isOpen={isHistoryOpen}
+          onClose={() => setIsHistoryOpen(false)}
+          onRestore={handleRestoreHistory}
+        />
+        <SettingsModal
+          isOpen={isSettingsOpen}
+          onClose={() => setIsSettingsOpen(false)}
+          rubricLevel={rubricLevel}
+          onRubricChange={setRubricLevel}
+        />
 
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col relative overflow-hidden">
@@ -218,7 +222,7 @@ function App() {
                       onDownloadBulletin={() => handleDownload('bulletin')}
                       onPulpitMode={() => setIsPulpitOpen(true)}
                     />
-                    <Preview ref={previewRef} content={docContent} season={season} />
+                    <Preview ref={previewRef} content={docContent} season={season} rubricLevel={rubricLevel} />
                   </div>
                 ) : (
                   <EmptyState />

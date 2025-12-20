@@ -5,22 +5,23 @@ import { getLiturgicalColor, getLiturgicalCycle, identifyFeast } from '../../ser
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 
 export default function DayDetailsModal({ date, onClose, onGenerate }) {
-    const { getEventsForDate, addEvent, deleteEvent, updateRoster, getRoster } = useCalendarEvents();
+
+    const { getEventsForDate, addEvent, deleteEvent, updateRoster, getRoster, updateDailyReminder, getDailyReminder } = useCalendarEvents();
 
     const [activeTab, setActiveTab] = useState('liturgia'); // 'liturgia' | 'parroquia'
-    const [newEvent, setNewEvent] = useState({ title: '', type: 'pastoral' });
-    const [rosterForm, setRosterForm] = useState(() => getRoster(date));
-
-    if (!date) return null;
 
     // Derived State
     const events = getEventsForDate(date);
-    // const roster = getRoster(date); // Not needed as state is used
+    const dailyReminderText = getDailyReminder(date);
     const color = getLiturgicalColor(date);
     const feastName = identifyFeast(date);
     const cycle = getLiturgicalCycle(date);
     const isSunday = date.getDay() === 0;
 
+    // Form State
+    const [newEvent, setNewEvent] = useState({ title: '', type: 'pastoral' });
+    const [rosterForm, setRosterForm] = useState(() => getRoster(date));
+    const [reminderForm, setReminderForm] = useState(dailyReminderText);
     // Date Format
     const dateStr = format(date, "EEEE, d 'de' MMMM 'de' yyyy", { locale: es });
     const formattedDate = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
@@ -105,6 +106,21 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                                     <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Ciclo Leccionario</span>
                                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{cycle.text}</span>
                                 </div>
+                            </div>
+
+                            {/* Daily Reminder Section */}
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1 flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-[14px]">notifications_active</span>
+                                    Recordatorio del Día
+                                </label>
+                                <textarea
+                                    className="w-full bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/30 rounded-lg p-3 text-sm min-h-[80px] focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all font-medium text-gray-700 dark:text-gray-200"
+                                    placeholder="Escribe una nota o recordatorio para este día..."
+                                    value={reminderForm}
+                                    onChange={(e) => setReminderForm(e.target.value)}
+                                    onBlur={() => updateDailyReminder(date, reminderForm)}
+                                />
                             </div>
 
                             <button
