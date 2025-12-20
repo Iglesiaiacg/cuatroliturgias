@@ -57,13 +57,6 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     >
                         <span className="material-symbols-outlined text-gray-900 dark:text-white" style={{ fontSize: '24px' }}>account_circle</span>
                     </button>
-                    <button
-                        onClick={onSettings}
-                        aria-label="Configuración"
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors shrink-0"
-                    >
-                        <span className="material-symbols-outlined text-gray-900 dark:text-white" style={{ fontSize: '24px' }}>settings</span>
-                    </button>
                 </div>
             </div>
 

@@ -3,9 +3,14 @@ import { useAuth } from '../../context/AuthContext';
 import { updateProfile, updatePassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
+import { getApiKey, saveApiKey } from '../../services/storage';
 
-export default function ProfileModal({ isOpen, onClose }) {
+export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout } = useAuth();
+
+    // API Key State
+    const [apiKey, setApiKey] = useState(() => getApiKey());
+    const [keySaved, setKeySaved] = useState(false);
 
     const [displayName, setDisplayName] = useState(currentUser?.displayName || '');
     const [newPassword, setNewPassword] = useState('');
@@ -20,6 +25,12 @@ export default function ProfileModal({ isOpen, onClose }) {
         setLoading(true);
         setMessage('');
         setError('');
+
+        // Save API Key if changed
+        if (apiKey !== getApiKey()) {
+            saveApiKey(apiKey.trim());
+            setKeySaved(true);
+        }
 
         try {
             // Update Auth Profile
@@ -43,7 +54,7 @@ export default function ProfileModal({ isOpen, onClose }) {
                 setNewPassword('');
             }
 
-            if (!message && displayName === currentUser.displayName && !newPassword) {
+            if (!message && displayName === currentUser.displayName && !newPassword && !keySaved) {
                 setMessage('No hubo cambios.');
             }
 
@@ -98,6 +109,42 @@ export default function ProfileModal({ isOpen, onClose }) {
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
+
+                        {/* Global Settings Section */}
+                        <div className="border border-gray-200 dark:border-white/10 rounded-xl p-4 bg-gray-50 dark:bg-black/20 space-y-4">
+                            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ajustes Globales</h3>
+
+                            {/* Rubric Toggle */}
+                            <div className="flex items-center justify-between">
+                                <div>
+                                    <p className="text-sm font-bold text-gray-900 dark:text-white">Modo Director de Culto</p>
+                                    <p className="text-[10px] text-gray-500">Muestra todas las instrucciones ceremoniales.</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => onRubricChange(rubricLevel === 'simple' ? 'solemn' : 'simple')}
+                                    className={`w-10 h-5 rounded-full transition-colors relative ${rubricLevel === 'solemn' ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}
+                                >
+                                    <div className={`absolute top-1 left-1 w-3 h-3 rounded-full bg-white transition-transform ${rubricLevel === 'solemn' ? 'translate-x-5' : ''}`} />
+                                </button>
+                            </div>
+
+                            {/* API Key */}
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
+                                <input
+                                    type="password"
+                                    value={apiKey}
+                                    onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
+                                    placeholder="Clave API (Opcional si usa .env)"
+                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-xs font-mono bg-white dark:bg-black/40"
+                                />
+                                <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                            </div>
+                        </div>
+
+                        {/* Profile Fields */}
+                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Datos Personales</h3>
                         <div>
                             <label className="block text-xs font-bold text-gray-500 mb-1">Nombre para Mostrar</label>
                             <input

@@ -11,7 +11,7 @@ import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
 import EmptyState from './components/Liturgy/EmptyState'
 import HistoryModal from './components/Common/HistoryModal'
-import SettingsModal from './components/Common/SettingsModal'
+import HistoryModal from './components/Common/HistoryModal'
 import Toast from './components/Common/Toast'
 
 // New Shell Components
@@ -45,7 +45,6 @@ function AppContent() {
   // UI State
   const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
@@ -74,7 +73,7 @@ function AppContent() {
     } catch (e) {
       handleToast(e.message || "Error al generar", "error")
       if (e.message.includes('API Key')) {
-        setTimeout(() => setIsSettingsOpen(true), 1500)
+        setTimeout(() => setIsProfileOpen(true), 1500)
       }
     }
   }
@@ -165,16 +164,11 @@ function AppContent() {
           onToast={setToast}
         />
 
-        <SettingsModal
-          isOpen={isSettingsOpen}
-          onClose={() => setIsSettingsOpen(false)}
-          tradition={tradition}
-          setTradition={setTradition}
-        />
-
         <ProfileModal
           isOpen={isProfileOpen}
           onClose={() => setIsProfileOpen(false)}
+          rubricLevel={rubricLevel}
+          onRubricChange={setRubricLevel}
         />
 
         {/* Main Content Area */}
@@ -184,7 +178,6 @@ function AppContent() {
           <div className="print:hidden">
             <TopBar
               date={selectedDate}
-              onSettings={() => setIsSettingsOpen(true)}
               onProfile={() => setIsProfileOpen(true)}
               activeTab={activeTab}
               onNavigate={setActiveTab}
