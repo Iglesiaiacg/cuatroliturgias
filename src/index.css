@@ -90,6 +90,20 @@
 
 @layer components {
 
+    .material-symbols-outlined {
+        font-family: 'Material Symbols Outlined';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;  /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+    }
+
     /* Editorial Drop Cap */
     .drop-cap {
         @apply float-left text-primary mr-3 mb-1 font-display font-bold leading-none;
