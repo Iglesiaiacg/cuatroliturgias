@@ -3,17 +3,25 @@ import { es } from 'date-fns/locale';
 
 import logoHome from '../../assets/logo.png';
 
-export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate }) {
+export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission }) {
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
 
     const navItems = [
-        { id: 'dashboard', icon: 'home', label: 'Inicio' },
-        { id: 'calendar', icon: 'calendar_month', label: 'Calendario' },
-        { id: 'directory', icon: 'diversity_3', label: 'Fieles' },
-        { id: 'offerings', icon: 'savings', label: 'Ofrendas' },
-        { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía' },
-        { id: 'generator', icon: 'menu_book', label: 'Liturgia' },
+        { id: 'dashboard', icon: 'home', label: 'Inicio', permission: null }, // Everyone needs home
+        { id: 'calendar', icon: 'calendar_month', label: 'Calendario', permission: 'view_calendar' },
+        { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía', permission: 'view_sacristy' },
+        { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'view_liturgy' },
+        { id: 'music', icon: 'music_note', label: 'Cantoral', permission: 'view_music' },
+        { id: 'directory', icon: 'diversity_3', label: 'Fieles', permission: 'view_directory' },
+        { id: 'offerings', icon: 'savings', label: 'Ofrendas', permission: 'view_offerings' },
+        { id: 'users', icon: 'manage_accounts', label: 'Usuarios', permission: 'manage_users' },
     ];
+
+    // Filter items based on permission
+    const visibleNavItems = navItems.filter(item => {
+        if (!item.permission) return true;
+        return checkPermission && checkPermission(item.permission);
+    });
 
     return (
         <header className="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-gray-200 dark:border-white/5 px-4 pt-4 pb-2 transition-colors duration-300">
@@ -31,7 +39,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
                 {/* 2. Navigation (Center) - Desktop & Tablet */}
                 <nav className="hidden md:flex items-center bg-gray-100 dark:bg-white/5 p-1 rounded-full border border-gray-200 dark:border-white/5">
-                    {navItems.map((item) => (
+                    {visibleNavItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
@@ -62,7 +70,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
             {/* Mobile Navigation (Bottom row of header) */}
             <nav className="md:hidden flex justify-around items-center pt-4 pb-1 border-t border-gray-100 dark:border-white/5 mt-3">
-                {navItems.map((item) => (
+                {visibleNavItems.map((item) => (
                     <button
                         key={item.id}
                         onClick={() => onNavigate(item.id)}

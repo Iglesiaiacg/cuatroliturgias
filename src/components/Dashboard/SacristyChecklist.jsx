@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { getLiturgicalColor } from '../../services/liturgy';
 import { useSacristySync } from '../../hooks/useSacristySync';
+import AssignmentModal from '../Common/AssignmentModal';
 
 export default function SacristyChecklist({ date }) {
     const color = getLiturgicalColor(date);
     const { items, toggleItem, loading } = useSacristySync(date);
     const [isCollapsed, setIsCollapsed] = useState(true);
+    const [assigningItem, setAssigningItem] = useState(null);
 
     // Calculate progress
     const completed = items.filter(i => i.checked).length;
     const total = items.length;
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
+    return (
     return (
         <div className="bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
             {/* Header (Compact) */}
@@ -54,32 +57,49 @@ export default function SacristyChecklist({ date }) {
                 className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
             >
                 {items.map(item => (
-                    <button
-                        key={item.id}
-                        onClick={() => toggleItem(item.id)}
-                        disabled={loading}
-                        className={`flex items-start gap-2 px-2 py-2 rounded-md transition-all text-left group
-                            ${item.checked
-                                ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300'
-                                : 'hover:bg-white dark:hover:bg-white/5 text-gray-500 dark:text-gray-400'
-                            }
-                        `}
-                    >
-                        <div className={`
-                            mt-0.5 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0
-                            ${item.checked
-                                ? 'bg-green-500 border-green-500 text-white'
-                                : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
-                            }
-                        `}>
-                            {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
-                        </div>
-                        <span className={`text-xs font-medium leading-tight ${item.checked ? 'line-through opacity-60' : ''}`}>
-                            {item.label}
-                        </span>
-                    </button>
+                    <div key={item.id} className="group relative flex items-center gap-2 p-2 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors">
+                        <button
+                            onClick={() => toggleItem(item.id)}
+                            disabled={loading}
+                            className={`flex flex-1 items-start gap-2 text-left transition-all
+                                ${item.checked ? 'opacity-60' : ''}
+                            `}
+                        >
+                            <div className={`
+                                mt-0.5 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0
+                                ${item.checked
+                                    ? 'bg-green-500 border-green-500 text-white'
+                                    : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
+                                }
+                            `}>
+                                {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
+                            </div>
+                            <span className={`text-xs font-medium leading-tight ${item.checked ? 'text-gray-400 line-through' : 'text-gray-700 dark:text-gray-200'}`}>
+                                {item.label}
+                            </span>
+                        </button>
+
+                        {/* Assign Button - Visible on hover or touch */}
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setAssigningItem(item);
+                            }}
+                            className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full transition-all"
+                            title="Asignar tarea"
+                        >
+                            <span className="material-symbols-outlined text-lg">person_add</span>
+                        </button>
+                    </div>
                 ))}
             </div>
+
+            <AssignmentModal
+                isOpen={!!assigningItem}
+                onClose={() => setAssigningItem(null)}
+                taskName={assigningItem?.label}
+                onAssign={() => setAssigningItem(null)}
+            />
         </div>
     );
 }

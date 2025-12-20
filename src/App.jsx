@@ -3,6 +3,9 @@ import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
 import { AuthProvider, useAuth } from './context/AuthContext'
+import { ChatProvider } from './context/ChatContext';
+import { DirectoryProvider } from './context/DirectoryContext';
+import { MusicProvider } from './context/MusicContext';
 
 // Components
 import GeneratorToolbar from './components/Liturgy/GeneratorToolbar'
@@ -11,6 +14,7 @@ import Preview from './components/Liturgy/Preview'
 import Loading from './components/Liturgy/Loading'
 import EmptyState from './components/Liturgy/EmptyState'
 import HistoryModal from './components/Common/HistoryModal'
+import AssignmentModal from './components/Common/AssignmentModal'
 
 import Toast from './components/Common/Toast'
 
@@ -25,12 +29,14 @@ import TopBar from './components/Layout/TopBar'
 import PulpitView from './components/Liturgy/PulpitView'
 import BackgroundWrapper from './components/Layout/BackgroundWrapper'
 import LoginView from './components/Auth/LoginView'
+import ChatWidget from './components/Chat/ChatWidget';
+import MusicView from './components/Views/MusicView';
 
 import UserManagement from './components/Auth/UserManagement'
 import ProfileModal from './components/Auth/ProfileModal'
 
 function AppContent() {
-  const { currentUser, userRole, logout } = useAuth()
+  const { currentUser, userRole, logout, checkPermission } = useAuth()
 
   const {
     tradition, setTradition,
@@ -48,6 +54,7 @@ function AppContent() {
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
+  const [isAssignmentOpen, setIsAssignmentOpen] = useState(false)
 
   // Settings State
   const [rubricLevel, setRubricLevel] = useState(() => localStorage.getItem('rubricLevel') || 'simple'); // 'simple' | 'solemn'
@@ -143,6 +150,9 @@ function AppContent() {
     <BackgroundWrapper season={season}>
       <div className="h-[100dvh] w-full flex flex-col overflow-hidden bg-transparent text-gray-800 font-sans selection:bg-primary selection:text-white transition-colors duration-300">
 
+        {/* Chat Widget */}
+        <ChatWidget />
+
         {/* Pulpit Mode Overlay */}
         {isPulpitOpen && docContent && (
           <PulpitView
@@ -171,6 +181,13 @@ function AppContent() {
           onRubricChange={setRubricLevel}
         />
 
+        <AssignmentModal
+          isOpen={isAssignmentOpen}
+          onClose={() => setIsAssignmentOpen(false)}
+          taskName="" // Empty for ad-hoc
+          onAssign={() => setIsAssignmentOpen(false)}
+        />
+
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col relative overflow-hidden">
 
@@ -183,6 +200,7 @@ function AppContent() {
               onNavigate={setActiveTab}
               onLogout={logout} // Pass logout logic
               userRole={userRole} // For UI adaptation
+              checkPermission={checkPermission}
             />
           </div>
 
@@ -239,6 +257,7 @@ function AppContent() {
                       onDownloadFull={() => handleDownload('full')}
                       onDownloadBulletin={() => handleDownload('bulletin')}
                       onPulpitMode={() => setIsPulpitOpen(true)}
+                      onMinistries={() => setIsAssignmentOpen(true)}
                     />
                     <Preview ref={previewRef} content={docContent} season={season} rubricLevel={rubricLevel} />
                   </div>
@@ -272,8 +291,8 @@ function AppContent() {
 
           {/* --- DIRECTORY VIEW --- */}
           {activeTab === 'directory' && (
-            /* ROLE GUARD: Only Admin/Secretary */
-            (userRole === 'admin' || userRole === 'secretary') ? (
+            /* ROLE GUARD: Permission check */
+            (checkPermission && checkPermission('view_directory')) ? (
               <div className="flex-1 flex flex-col w-full overflow-y-auto px-4 py-6 max-w-7xl mx-auto">
                 <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-6">Directorio de Fieles</h1>
                 <DirectoryView />
@@ -288,10 +307,24 @@ function AppContent() {
 
           {/* --- OFFERINGS VIEW --- */}
           {activeTab === 'offerings' && (
-            /* ROLE GUARD: Only Admin/Secretary */
-            (userRole === 'admin' || userRole === 'secretary') ? (
+            /* ROLE GUARD: Permission check */
+            (checkPermission && checkPermission('view_offerings')) ? (
               <div className="flex-1 flex flex-col w-full overflow-y-auto">
                 <OfferingsView />
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full text-gray-400 flex-col">
+                <span className="material-symbols-outlined text-6xl mb-4">lock</span>
+                <p>Acceso restringido a este módulo.</p>
+              </div>
+            )
+          )}
+
+          {/* --- MUSIC VIEW --- */}
+          {activeTab === 'music' && (
+            (checkPermission && checkPermission('view_music')) ? (
+              <div className="flex-1 flex flex-col w-full overflow-y-auto">
+                <MusicView />
               </div>
             ) : (
               <div className="flex items-center justify-center h-full text-gray-400 flex-col">
@@ -308,7 +341,7 @@ function AppContent() {
 
           {/* --- USERS VIEW (Admin Only) --- */}
           {activeTab === 'users' && (
-            (userRole === 'admin') ? (
+            (checkPermission && checkPermission('manage_users')) ? (
               <div className="flex-1 flex flex-col w-full overflow-y-auto p-8">
                 <UserManagement />
               </div>
@@ -327,10 +360,17 @@ function AppContent() {
   )
 }
 
+
 function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <DirectoryProvider>
+        <MusicProvider>
+          <ChatProvider>
+            <AppContent />
+          </ChatProvider>
+        </MusicProvider>
+      </DirectoryProvider>
     </AuthProvider>
   );
 }

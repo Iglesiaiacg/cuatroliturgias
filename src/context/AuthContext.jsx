@@ -82,12 +82,33 @@ export function AuthProvider({ children }) {
         return unsubscribe;
     }, []);
 
+    // Default Permissions (fallback)
+    const DEFAULT_PERMISSIONS = {
+        admin: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'manage_users', 'view_treasury'],
+        treasurer: ['view_calendar', 'view_offerings', 'view_treasury'],
+        secretary: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings'],
+        sacristan: ['view_liturgy', 'view_calendar', 'view_sacristy'],
+        reader: ['view_liturgy', 'view_calendar'],
+        guest: ['view_liturgy']
+    };
+
+    function checkPermission(permissionId) {
+        if (!userRole) return false;
+        if (userRole === 'admin') return true; // Admin has all rights by default fallback
+
+        // In a real app, we'd load these from DB. For now, use the constant map.
+        // We could also allow passing overrides via props if needed, but Context is best.
+        const rolePerms = DEFAULT_PERMISSIONS[userRole] || [];
+        return rolePerms.includes(permissionId);
+    }
+
     const value = {
         currentUser,
         userRole,
         login,
         logout,
-        assignRole
+        assignRole,
+        checkPermission
     };
 
     return (
