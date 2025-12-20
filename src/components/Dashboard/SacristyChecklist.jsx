@@ -15,7 +15,6 @@ export default function SacristyChecklist({ date }) {
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return (
-    return (
         <div className="bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
             {/* Header (Compact) */}
             <div
