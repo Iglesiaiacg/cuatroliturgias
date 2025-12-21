@@ -62,9 +62,17 @@ service cloud.firestore {
     }
 
     // 4. Transactions (Finanzas)
-    // - Read/Write: ONLY Admin or Secretary. Hidden from others.
+    // - Read/Write: ONLY Admin or Secretary or Treasurer.
     match /transactions/{docId} {
-      allow read, write: if isSecretary();
+      allow read, write: if isSecretary() || getUserRole() == 'treasurer';
+    }
+
+    // 5. Sacristy Checks (Checklist)
+    // - Read: All Authenticated
+    // - Write: Sacristan or Admin
+    match /sacristy_checks/{dateId} {
+      allow read: if isAuthenticated();
+      allow write: if isSacristan();
     }
 
     // Default: Deny everything else
