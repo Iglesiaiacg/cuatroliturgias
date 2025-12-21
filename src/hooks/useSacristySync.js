@@ -43,13 +43,13 @@ export function useSacristySync(date) {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser } = useAuth();
+    const { currentUser, checkPermission, userRole } = useAuth();
 
     // Using dateKey in dependancy array is fine
     const dateKey = format(date, 'yyyy-MM-dd');
 
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
             setItems(defaultItems);
             setLoading(false);
             return;
@@ -73,7 +73,7 @@ export function useSacristySync(date) {
         });
 
         return () => unsubscribe();
-    }, [dateKey, currentUser]);
+    }, [dateKey, currentUser, checkPermission, userRole]);
 
     const toggleItem = async (id) => {
         // Optimistic update

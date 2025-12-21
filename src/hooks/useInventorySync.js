@@ -15,14 +15,14 @@ export function useInventorySync() {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser } = useAuth();
+    const { currentUser, checkPermission, userRole } = useAuth();
 
     // Using a single document for all inventory for simplicity in this MVP
     // collection: 'inventory', doc: 'sacristy_main'
     const docRef = doc(db, 'inventory', 'sacristy_main');
 
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
             setItems(defaultItems);
             setLoading(false);
             return;
@@ -43,7 +43,7 @@ export function useInventorySync() {
         });
 
         return () => unsubscribe();
-    }, [currentUser]);
+    }, [currentUser, checkPermission, userRole]);
 
     const initializeInventory = async () => {
         try {

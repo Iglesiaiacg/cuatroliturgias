@@ -8,13 +8,13 @@ export function useIntentionsSync(date) {
     const [intentions, setIntentions] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser } = useAuth();
+    const { currentUser, checkPermission, userRole } = useAuth();
 
     // Using dateKey in dependancy array is fine
     const dateKey = format(date || new Date(), 'yyyy-MM-dd');
 
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser || !checkPermission || !checkPermission('view_liturgy')) {
             setIntentions([]);
             setLoading(false);
             return;
@@ -36,7 +36,7 @@ export function useIntentionsSync(date) {
         });
 
         return () => unsubscribe();
-    }, [dateKey, currentUser]);
+    }, [dateKey, currentUser, checkPermission, userRole]);
 
     const addIntention = async (text, type = 'general') => {
         const newIntention = { id: Date.now(), text, type, completed: false };

@@ -6,10 +6,11 @@ import { db } from '../services/firebase';
 export function useFinanceSync(limitCount = 100) {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useAuth(); // Assume we can import useAuth, wait, I need to import it.
+    const { currentUser, checkPermission, userRole } = useAuth(); // Import userRole and checkPermission
 
     useEffect(() => {
-        if (!currentUser) {
+        // Guard: Auth & Permission
+        if (!currentUser || !checkPermission || !checkPermission('view_treasury')) {
             setTransactions([]);
             setLoading(false);
             return;
@@ -36,7 +37,7 @@ export function useFinanceSync(limitCount = 100) {
         });
 
         return () => unsubscribe();
-    }, [limitCount, currentUser]);
+    }, [limitCount, currentUser, checkPermission, userRole]);
 
     const addTransaction = async (transaction) => {
         // Optimistic update not needed as listener is fast, 
