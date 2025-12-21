@@ -46,6 +46,18 @@ export function AuthProvider({ children }) {
         return userCredential;
     }
 
+    // Assign Role (Admin Function)
+    async function assignRole(uid, role, displayName) {
+        if (!userRole === 'admin') throw new Error("Solo administradores pueden asignar roles");
+
+        const userRef = doc(db, 'users', uid);
+        await setDoc(userRef, {
+            role: role,
+            displayName: displayName, // Update name if provided
+            updatedAt: new Date()
+        }, { merge: true });
+    }
+
     // Logout
     function logout() {
         return signOut(auth);
