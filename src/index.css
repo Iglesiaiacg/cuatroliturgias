@@ -1,95 +1,98 @@
 @import "tailwindcss";
 
 @theme {
-    /* Classic / Solemn Theme */
-    --color-primary: #78181b;
-
-    /* Base Colors - Explicit mapping */
-    --color-text-base: #1c1917;
-    /* dark for light mode */
-    --color-text-muted: #57534e;
-    /* stone-600 */
-
-    /* Liturgical Red (Rubric) */
-    --color-background-light: #fdfbf7;
-    /* Warm Cream (Paper) */
-    --color-background-dark: #1c1917;
-    /* Warm Dark Grey */
-    --color-surface-dark: #292524;
-    /* Stone Grey */
-    --color-surface-light: #ffffff;
-    /* White */
-    --font-display: "Newsreader", serif;
-
-    /* --- LITURGICAL ATMOSPHERES (Mesh Gradients) --- */
-    /* Ordinario (Green/Nature) */
-    --bg-ordinary: radial-gradient(at 0% 0%, hsla(153, 40%, 90%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 0%, hsla(120, 30%, 95%, 1) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(160, 35%, 92%, 1) 0, transparent 50%);
-
-    /* Adviento (Purple/Expectation) */
-    --bg-advent: radial-gradient(at 0% 0%, hsla(270, 40%, 94%, 1) 0, transparent 55%),
-        radial-gradient(at 50% 100%, hsla(290, 30%, 96%, 1) 0, transparent 55%),
-        radial-gradient(at 100% 0%, hsla(260, 40%, 93%, 1) 0, transparent 55%);
-
-    /* Navidad / Pascua (Gold/White/Joy) */
-    --bg-festive: radial-gradient(at 0% 0%, hsla(45, 60%, 94%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(50, 80%, 96%, 1) 0, transparent 50%),
-        radial-gradient(at 100% 100%, hsla(40, 50%, 92%, 1) 0, transparent 50%);
-
-    /* Cuaresma (Grey/Purple/Somber) */
-    --bg-lent: radial-gradient(at 20% 20%, hsla(260, 15%, 90%, 1) 0, transparent 50%),
-        radial-gradient(at 80% 80%, hsla(0, 0%, 92%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(280, 10%, 95%, 1) 0, transparent 50%);
-
-    --bg-martyr: radial-gradient(at 10% 10%, hsla(0, 50%, 96%, 1) 0, transparent 50%),
-        radial-gradient(at 90% 90%, hsla(10, 60%, 97%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(350, 40%, 95%, 1) 0, transparent 50%);
-
-    /* --- SACRED TYPOGRAPHY --- */
-    /* Updated for Editorial Feel */
-    --drop-cap-size: 3.5em;
-    --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-}
-
-/* --- DARK MODE OVERRIDES (Class Strategy) --- */
-:root.dark {
-    /* Typography adjustments for dark mode */
-    --color-primary: #fca5a5;
-
-    --color-text-base: #fafaf9;
-    /* stone-50 */
-    --color-text-muted: #a8a29e;
-    /* stone-400 */
-
-    --color-background-light: #1c1917;
+    /* --- SEMANTIC TOKENS (The "Senior" System) --- */
+    /* These map directly to the CSS variables below */
 
     /* Backgrounds */
-    --bg-ordinary: radial-gradient(at 0% 0%, hsla(153, 30%, 10%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 0%, hsla(120, 20%, 12%, 1) 0, transparent 50%),
-        radial-gradient(at 100% 0%, hsla(160, 25%, 11%, 1) 0, transparent 50%);
+    --color-canvas: var(--bg-canvas);
+    /* Main page background */
+    --color-surface: var(--bg-surface);
+    /* Card background */
+    --color-surface-highlight: var(--bg-surface-highlight);
+    /* Hover/Active states */
 
-    --bg-advent: radial-gradient(at 0% 0%, hsla(270, 30%, 12%, 1) 0, transparent 55%),
-        radial-gradient(at 50% 100%, hsla(290, 20%, 10%, 1) 0, transparent 55%),
-        radial-gradient(at 100% 0%, hsla(260, 30%, 11%, 1) 0, transparent 55%);
+    /* Typography */
+    --color-txt-primary: var(--text-primary);
+    /* Main body text */
+    --color-txt-secondary: var(--text-secondary);
+    /* Subtitles, muted text */
+    --color-txt-inverted: var(--text-inverted);
+    /* Text on button/primary backgrounds */
 
-    --bg-festive: radial-gradient(at 0% 0%, hsla(45, 40%, 15%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(50, 50%, 12%, 1) 0, transparent 50%),
-        radial-gradient(at 100% 100%, hsla(40, 30%, 10%, 1) 0, transparent 50%);
+    /* Borders & Lines */
+    --color-border-base: var(--border-color);
 
-    --bg-lent: radial-gradient(at 20% 20%, hsla(260, 10%, 12%, 1) 0, transparent 50%),
-        radial-gradient(at 80% 80%, hsla(0, 0%, 10%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(280, 5%, 14%, 1) 0, transparent 50%);
+    /* Brand */
+    --color-primary: var(--color-brand);
 
-    --bg-martyr: radial-gradient(at 10% 10%, hsla(0, 40%, 12%, 1) 0, transparent 50%),
-        radial-gradient(at 90% 90%, hsla(10, 50%, 10%, 1) 0, transparent 50%),
-        radial-gradient(at 50% 50%, hsla(350, 30%, 13%, 1) 0, transparent 50%);
+    /* Fonts */
+    --font-display: "Newsreader", serif;
 }
 
-/* Ensure body uses valid colors */
+/* --- LIGHT MODE TOKENS (Default) --- */
+:root {
+    /* Palette Definition */
+    --bg-canvas: #fdfbf7;
+    /* Warm Cream */
+    --bg-surface: #ffffff;
+    /* Pure White */
+    --bg-surface-highlight: #f3f4f6;
+    /* gray-100 */
+
+    --text-primary: #1c1917;
+    /* stone-900 (Deep Black) */
+    --text-secondary: #57534e;
+    /* stone-600 (Dark Grey) */
+    --text-inverted: #ffffff;
+    /* White */
+
+    --border-color: #e5e7eb;
+    /* gray-200 */
+
+    --color-brand: #78181b;
+    /* Liturgical Red */
+
+    /* Legacy Variables - Keeping for compatibility during refactor */
+    --drop-cap-size: 3.5em;
+    --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    --color-background-light: var(--bg-canvas);
+    /* Aliasing for legacy code */
+}
+
+/* --- DARK MODE TOKENS (Overrides) --- */
+:root.dark {
+    /* Palette Definition */
+    --bg-canvas: #0c0a09;
+    /* stone-950 (Deep Background) */
+    --bg-surface: #1c1917;
+    /* stone-900 (Card Background - Lighter than canvas) */
+    --bg-surface-highlight: #292524;
+    /* stone-800 */
+
+    --text-primary: #fafaf9;
+    /* stone-50 (Near White) */
+    --text-secondary: #a8a29e;
+    /* stone-400 (Light Grey) */
+    --text-inverted: #000000;
+    /* Black */
+
+    --border-color: #292524;
+    /* stone-800 */
+
+    --color-brand: #fca5a5;
+    /* Red-300 (Lighter red for dark mode contrast) */
+
+    /* Legacy Aliases */
+    --color-background-light: var(--bg-canvas);
+}
+
+/* Global Reset using Semantic Tokens */
 body {
-    color: var(--color-text-base);
-    background-color: var(--color-background-light);
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* Smooth toggle transition */
 }
 
 @layer components {
