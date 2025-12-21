@@ -82,7 +82,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden animate-slide-up">
+            <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden animate-slide-up max-h-[90vh] flex flex-col">
 
                 {/* Header */}
                 <div className="bg-primary/5 p-6 border-b border-gray-100 dark:border-white/5 flex justify-between items-center">
@@ -96,7 +96,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                 </div>
 
                 {/* Content */}
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
                     <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-lg">

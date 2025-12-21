@@ -101,7 +101,7 @@ export default function MusicView() {
                     <h3 className="font-bold text-lg mb-4">Agregar Nuevo Canto</h3>
                     <form onSubmit={handleSaveNew} className="space-y-4 relative">
                         {/* Hints Container */}
-                        <div className="flex gap-4">
+                        <div className="flex flex-col sm:flex-row gap-4">
                             <div className="flex-1 relative">
                                 <input
                                     className="w-full p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
@@ -129,7 +129,7 @@ export default function MusicView() {
                                 )}
                             </div>
                             <input
-                                className="w-20 p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
+                                className="w-full sm:w-20 p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
                                 placeholder="Tono"
                                 value={newKey} onChange={e => setNewKey(e.target.value)}
                             />

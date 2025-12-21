@@ -249,41 +249,43 @@ export default function UserManagement() {
                         ) : users.length === 0 ? (
                             <div className="p-8 text-center text-gray-400">No hay usuarios con roles asignados.</div>
                         ) : (
-                            <div className="overflow-x-auto">
-                                <table className="w-full text-left text-sm">
-                                    <thead className="bg-gray-50 dark:bg-white/5 text-gray-500 uppercase font-bold text-xs">
-                                        <tr>
-                                            <th className="px-6 py-3">Nombre</th>
-                                            <th className="px-6 py-3">Rol</th>
-                                            <th className="px-6 py-3 font-mono">UID</th>
-                                            <th className="px-6 py-3 text-right">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                                        {users.map(user => (
-                                            <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">
-                                                    {user.displayName || 'Sin Nombre'}
-                                                    {user.id === currentUser.uid && <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase">Tú</span>}
-                                                </td>
-                                                <td className="px-6 py-3 text-gray-600 dark:text-gray-300">
-                                                    {getRoleLabel(user.role)}
-                                                </td>
-                                                <td className="px-6 py-3 font-mono text-xs text-gray-400 truncate max-w-[150px]" title={user.id}>
-                                                    {user.id}
-                                                </td>
-                                                <td className="px-6 py-3 text-right">
-                                                    <button
-                                                        onClick={() => handleEdit(user)}
-                                                        className="text-primary hover:text-red-800 font-bold text-xs uppercase"
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                </td>
+                            <div className="overflow-x-auto -mx-4 sm:mx-0">
+                                <div className="inline-block min-w-full align-middle">
+                                    <table className="min-w-full text-left text-sm">
+                                        <thead className="bg-gray-50 dark:bg-white/5 text-gray-500 uppercase font-bold text-xs">
+                                            <tr>
+                                                <th className="px-6 py-3">Nombre</th>
+                                                <th className="px-6 py-3">Rol</th>
+                                                <th className="px-6 py-3 font-mono">UID</th>
+                                                <th className="px-6 py-3 text-right">Acciones</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                                            {users.map(user => (
+                                                <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                                                    <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">
+                                                        {user.displayName || 'Sin Nombre'}
+                                                        {user.id === currentUser.uid && <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase">Tú</span>}
+                                                    </td>
+                                                    <td className="px-6 py-3 text-gray-600 dark:text-gray-300">
+                                                        {getRoleLabel(user.role)}
+                                                    </td>
+                                                    <td className="px-6 py-3 font-mono text-xs text-gray-400 truncate max-w-[150px]" title={user.id}>
+                                                        {user.id}
+                                                    </td>
+                                                    <td className="px-6 py-3 text-right">
+                                                        <button
+                                                            onClick={() => handleEdit(user)}
+                                                            className="text-primary hover:text-red-800 font-bold text-xs uppercase"
+                                                        >
+                                                            Editar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         )}
                     </div>
