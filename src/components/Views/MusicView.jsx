@@ -3,6 +3,7 @@ import { useMusic } from '../../context/MusicContext';
 import { useAuth } from '../../context/AuthContext';
 import SongDetail from '../Music/SongDetail'; // To be created
 import { HYMNAL } from '../../data/hymnal'; // Import DB
+import { parseChordsFromText } from '../../utils/chordParser'; // Import parser
 
 export default function MusicView() {
     const { songs, addSong } = useMusic();
@@ -16,6 +17,24 @@ export default function MusicView() {
     const [newTitle, setNewTitle] = useState('');
     const [newKey, setNewKey] = useState('C');
     const [newLyrics, setNewLyrics] = useState('');
+
+    // --- PASTE HANDLER ---
+    const handleSmartPaste = async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            const formatted = parseChordsFromText(text);
+            setNewLyrics(formatted);
+        } catch (err) {
+            console.error(err);
+            alert("No se pudo leer del portapapeles. Permiso denegado.");
+        }
+    };
+
+    const handleWebSearch = () => {
+        const query = encodeURIComponent(`acordes ${newTitle} letras`);
+        window.open(`https://www.google.com/search?q=${query}`, '_blank');
+    };
+    // ---------------------
 
     // --- SMART SEARCH (AUTOCOMPLETE) ---
     const [suggestions, setSuggestions] = useState([]);
@@ -115,12 +134,38 @@ export default function MusicView() {
                                 value={newKey} onChange={e => setNewKey(e.target.value)}
                             />
                         </div>
-                        <textarea
-                            className="w-full p-2 border rounded-lg h-32 font-mono text-sm dark:bg-black/20 dark:border-white/10"
-                            placeholder="Letra con acordes: [C] Hola [G] Mundo..."
-                            value={newLyrics} onChange={e => setNewLyrics(e.target.value)} required
-                        />
-                        <div className="flex justify-end gap-2">
+
+                        {/* Lyrics Editor with Tools */}
+                        <div className="relative">
+                            <div className="absolute top-2 right-2 flex gap-2">
+                                <button
+                                    type="button"
+                                    onClick={handleWebSearch}
+                                    disabled={!newTitle}
+                                    className="p-1 px-2 bg-blue-50 text-blue-600 rounded text-xs font-bold hover:bg-blue-100 disabled:opacity-50 flex items-center gap-1"
+                                    title="Buscar en Google"
+                                >
+                                    <span className="material-symbols-outlined text-sm">search</span>
+                                    Web
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleSmartPaste}
+                                    className="p-1 px-2 bg-green-50 text-green-600 rounded text-xs font-bold hover:bg-green-100 flex items-center gap-1"
+                                    title="Pegar y Convertir acordes de la web"
+                                >
+                                    <span className="material-symbols-outlined text-sm">magic_button</span>
+                                    Pegar Mágico
+                                </button>
+                            </div>
+                            <textarea
+                                className="w-full p-4 border rounded-lg h-64 font-mono text-sm dark:bg-black/20 dark:border-white/10"
+                                placeholder={`Letra y acordes...\n[C] Ejemplo de [G] formato\n\nTambién puedes copiar de la web (acordes arriba) y usar "Pegar Mágico".`}
+                                value={newLyrics}
+                                onChange={e => setNewLyrics(e.target.value)}
+                                required
+                            />
+                        </div>                        <div className="flex justify-end gap-2">
                             <button type="button" onClick={() => setIsCreating(false)} className="px-4 py-2 text-gray-500">Cancelar</button>
                             <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg">Guardar</button>
                         </div>
@@ -129,15 +174,29 @@ export default function MusicView() {
             )}
 
             {/* Search */}
-            <div className="relative mb-6">
-                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
-                <input
-                    type="text"
-                    placeholder="Buscar canción..."
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border-none shadow-sm bg-white dark:bg-surface-dark focus:ring-2 focus:ring-primary dark:text-white"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
+            <div className="relative mb-6 flex gap-2">
+                <div className="relative flex-1">
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                    <input
+                        type="text"
+                        placeholder="Buscar canción..."
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border-none shadow-sm bg-white dark:bg-surface-dark focus:ring-2 focus:ring-primary dark:text-white"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <button
+                    onClick={() => {
+                        const query = encodeURIComponent(`acordes cantoral ${searchTerm} letras`);
+                        window.open(`https://www.google.com/search?q=${query}`, '_blank');
+                    }}
+                    disabled={!searchTerm}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-xl shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-bold"
+                    title="Buscar en Google"
+                >
+                    <span className="material-symbols-outlined">public</span>
+                    <span className="hidden sm:inline">Buscar en Web</span>
+                </button>
             </div>
 
             {/* Grid */}
