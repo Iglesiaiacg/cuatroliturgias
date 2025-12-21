@@ -66,7 +66,58 @@ export function AuthProvider({ children }) {
         return signOut(auth);
     }, []);
 
-    // ... useEffect ...
+    useEffect(() => {
+        let unsubscribeUserDoc = null;
+
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                setCurrentUser(user);
+                // Listen to user role in real-time
+                const userRef = doc(db, 'users', user.uid);
+
+                // Backup auto-create (in case signup didn't run, e.g. direct auth)
+                try {
+                    const docSnap = await getDoc(userRef);
+                    if (!docSnap.exists()) {
+                        const year = new Date().getFullYear();
+                        const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                        await setDoc(userRef, {
+                            email: user.email,
+                            role: 'guest',
+                            credentialId: `${year}-${suffix}`,
+                            displayName: user.email.split('@')[0],
+                            createdAt: new Date()
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error auto-creating profile", e);
+                }
+
+                unsubscribeUserDoc = onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        setUserRole(docSnap.data().role);
+                    } else {
+                        setUserRole('guest');
+                    }
+                    setLoading(false);
+                }, (error) => {
+                    console.error("Error fetching user role:", error);
+                    setUserRole('guest');
+                    setLoading(false);
+                });
+            } else {
+                setCurrentUser(null);
+                setUserRole(null);
+                setLoading(false);
+                if (unsubscribeUserDoc) unsubscribeUserDoc();
+            }
+        });
+
+        return () => {
+            if (unsubscribeAuth) unsubscribeAuth();
+            if (unsubscribeUserDoc) unsubscribeUserDoc();
+        };
+    }, []);
 
     // Default Permissions (fallback)
     const DEFAULT_PERMISSIONS = {
