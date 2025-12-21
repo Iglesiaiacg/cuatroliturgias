@@ -1,98 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-    /* --- SEMANTIC TOKENS (The "Senior" System) --- */
-    /* These map directly to the CSS variables below */
-
-    /* Backgrounds */
-    --color-canvas: var(--bg-canvas);
-    /* Main page background */
-    --color-surface: var(--bg-surface);
-    /* Card background */
-    --color-surface-highlight: var(--bg-surface-highlight);
-    /* Hover/Active states */
-
-    /* Typography */
-    --color-txt-primary: var(--text-primary);
-    /* Main body text */
-    --color-txt-secondary: var(--text-secondary);
-    /* Subtitles, muted text */
-    --color-txt-inverted: var(--text-inverted);
-    /* Text on button/primary backgrounds */
-
-    /* Borders & Lines */
-    --color-border-base: var(--border-color);
-
-    /* Brand */
-    --color-primary: var(--color-brand);
-
-    /* Fonts */
+    /* Classic / Solemn Theme Colors - mapped explicitly to avoid confusion */
+    --color-primary: #78181b;
     --font-display: "Newsreader", serif;
 }
 
-/* --- LIGHT MODE TOKENS (Default) --- */
+/* --- ROBUST COLOR DEFINITIONS --- */
 :root {
-    /* Palette Definition */
-    --bg-canvas: #fdfbf7;
-    /* Warm Cream */
-    --bg-surface: #ffffff;
-    /* Pure White */
-    --bg-surface-highlight: #f3f4f6;
-    /* gray-100 */
+    /* Light Mode (Cream/Dark Text) */
+    --bg-main: #fdfbf7;
+    --text-main: #1c1917;
 
-    --text-primary: #1c1917;
-    /* stone-900 (Deep Black) */
-    --text-secondary: #57534e;
-    /* stone-600 (Dark Grey) */
-    --text-inverted: #ffffff;
-    /* White */
+    /* Fallback variables for legacy code */
+    --color-background-light: #fdfbf7;
+    --color-text-base: #1c1917;
 
-    --border-color: #e5e7eb;
-    /* gray-200 */
-
-    --color-brand: #78181b;
-    /* Liturgical Red */
-
-    /* Legacy Variables - Keeping for compatibility during refactor */
     --drop-cap-size: 3.5em;
     --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-    --color-background-light: var(--bg-canvas);
-    /* Aliasing for legacy code */
 }
 
-/* --- DARK MODE TOKENS (Overrides) --- */
+/* Dark Mode Overrides (Explicit methodology) */
 :root.dark {
-    /* Palette Definition */
-    --bg-canvas: #0c0a09;
-    /* stone-950 (Deep Background) */
-    --bg-surface: #1c1917;
-    /* stone-900 (Card Background - Lighter than canvas) */
-    --bg-surface-highlight: #292524;
-    /* stone-800 */
+    /* Dark Mode (Black/White Text) */
+    --bg-main: #0c0a09;
+    --text-main: #fafaf9;
 
-    --text-primary: #fafaf9;
-    /* stone-50 (Near White) */
-    --text-secondary: #a8a29e;
-    /* stone-400 (Light Grey) */
-    --text-inverted: #000000;
-    /* Black */
+    --color-primary: #fca5a5;
 
-    --border-color: #292524;
-    /* stone-800 */
-
-    --color-brand: #fca5a5;
-    /* Red-300 (Lighter red for dark mode contrast) */
-
-    /* Legacy Aliases */
-    --color-background-light: var(--bg-canvas);
+    /* Legacy aliases */
+    --color-background-light: #0c0a09;
+    --color-text-base: #fafaf9;
 }
 
-/* Global Reset using Semantic Tokens */
+/* Force Body Colors */
 body {
-    background-color: var(--bg-canvas);
-    color: var(--text-primary);
-    transition: background-color 0.3s ease, color 0.3s ease;
-    /* Smooth toggle transition */
+    background-color: var(--bg-main);
+    color: var(--text-main);
 }
 
 @layer components {

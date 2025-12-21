@@ -55,9 +55,9 @@ export default function RolesCard({ docContent }) {
 
     return (
         <>
-            <div className="bg-surface rounded-2xl p-6 shadow-sm border border-border-base h-full flex flex-col">
+            <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 shadow-sm border border-stone-200 dark:border-stone-800 h-full flex flex-col">
                 <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-2 text-txt-secondary">
+                    <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400">
                         <span className="material-symbols-outlined text-sm">assignment_ind</span>
                         <span className="text-xs font-bold uppercase tracking-wider">Ministerios</span>
                     </div>
@@ -72,15 +72,15 @@ export default function RolesCard({ docContent }) {
                             <div
                                 key={slot.id}
                                 onClick={() => handleAssignClick(slot)}
-                                className="flex items-center justify-between p-2 rounded-lg hover:bg-surface-highlight cursor-pointer group transition-colors border border-transparent hover:border-border-base"
+                                className="flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 cursor-pointer group transition-colors border border-transparent hover:border-stone-200 dark:hover:border-stone-800"
                             >
                                 <div className="flex items-center gap-3">
-                                    <span className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${assignedId ? 'bg-primary/10 text-primary' : 'bg-surface-highlight text-txt-secondary'}`}>
+                                    <span className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${assignedId ? 'bg-primary/10 text-primary' : 'bg-stone-100 dark:bg-white/10 text-stone-400'}`}>
                                         <span className="material-symbols-outlined text-sm">{slot.icon}</span>
                                     </span>
                                     <div>
-                                        <div className="text-xs font-bold text-txt-secondary uppercase tracking-widest leading-none mb-1">{slot.label}</div>
-                                        <div className={`text-sm font-medium ${assignedName ? 'text-txt-primary' : 'text-txt-secondary italic opacity-70'}`}>
+                                        <div className="text-xs font-bold text-stone-500 dark:text-stone-400 uppercase tracking-widest leading-none mb-1">{slot.label}</div>
+                                        <div className={`text-sm font-medium ${assignedName ? 'text-stone-900 dark:text-stone-50' : 'text-stone-400 italic opacity-70'}`}>
                                             {assignedName || "Sin asignar"}
                                         </div>
                                     </div>

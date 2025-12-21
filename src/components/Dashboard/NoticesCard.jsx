@@ -34,9 +34,9 @@ export default function NoticesCard() {
                     <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Avisos Parroquiales</h2>
                     <button
                         onClick={() => setReadMode(false)}
-                        className="p-3 bg-surface-highlight rounded-full hover:bg-border-base transition-colors"
+                        className="p-3 bg-stone-100 dark:bg-white/10 rounded-full hover:bg-stone-200 transition-colors"
                     >
-                        <span className="material-symbols-outlined text-2xl text-txt-primary">close</span>
+                        <span className="material-symbols-outlined text-2xl text-stone-900 dark:text-white">close</span>
                     </button>
                 </div>
                 <div className="flex-1 overflow-y-auto space-y-8 max-w-4xl mx-auto w-full">
@@ -46,7 +46,7 @@ export default function NoticesCard() {
                         notices.map((notice, idx) => (
                             <div key={notice.id} className="flex gap-6 items-start">
                                 <span className="text-4xl font-bold text-primary/30">{idx + 1}</span>
-                                <p className="text-3xl md:text-4xl text-txt-primary font-medium leading-relaxed">
+                                <p className="text-3xl md:text-4xl text-stone-900 dark:text-white font-medium leading-relaxed">
                                     {notice.text}
                                 </p>
                             </div>
@@ -58,9 +58,9 @@ export default function NoticesCard() {
     }
 
     return (
-        <div className="bg-surface rounded-2xl p-6 shadow-sm border border-border-base h-full flex flex-col">
+        <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 shadow-sm border border-stone-200 dark:border-stone-800 h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-txt-secondary">
+                <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400">
                     <span className="material-symbols-outlined text-sm">campaign</span>
                     <span className="text-xs font-bold uppercase tracking-wider">Avisos</span>
                 </div>
@@ -80,7 +80,7 @@ export default function NoticesCard() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Nuevo aviso..."
-                    className="flex-1 bg-surface-highlight text-txt-primary placeholder-txt-secondary border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="flex-1 bg-stone-50 dark:bg-white/10 text-stone-900 dark:text-white placeholder-stone-400 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                 />
                 <button
                     type="submit"
@@ -98,8 +98,8 @@ export default function NoticesCard() {
                     </div>
                 ) : (
                     notices.map(item => (
-                        <div key={item.id} className="group flex items-center justify-between p-2 rounded-lg hover:bg-surface-highlight transition-colors text-sm">
-                            <span className="text-txt-primary line-clamp-2">{item.text}</span>
+                        <div key={item.id} className="group flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 transition-colors text-sm">
+                            <span className="text-stone-900 dark:text-stone-100 line-clamp-2">{item.text}</span>
                             <button
                                 onClick={() => handleDelete(item.id)}
                                 className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all shrink-0 ml-2"
