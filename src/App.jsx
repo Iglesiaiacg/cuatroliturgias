@@ -158,6 +158,7 @@ function AppContent() {
           <PulpitView
             content={docContent}
             title={calculatedFeast || serviceTitle}
+            date={selectedDate}
             onClose={() => setIsPulpitOpen(false)}
           />
         )}

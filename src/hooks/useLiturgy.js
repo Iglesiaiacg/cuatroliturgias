@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { getLiturgicalCycle, getSeason, getTips, buildPrompt, identifyFeast } from '../services/liturgy';
 import { generateLiturgy } from '../services/gemini';
 import { getPreferences, savePreferences, addToHistory } from '../services/storage';
+import { db, auth } from '../services/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { marked } from 'marked';
 
 export const useLiturgy = () => {
@@ -69,8 +71,24 @@ export const useLiturgy = () => {
 
             setDocContent(cleanText);
 
-            // Save to history
+            // Save to history (Local + Cloud)
             addToHistory(cleanText, label, tradition);
+
+            // SAVE TO FIREBASE IF LOGGED IN
+            if (auth.currentUser) {
+                try {
+                    await addDoc(collection(db, 'liturgies'), {
+                        userId: auth.currentUser.uid,
+                        title: label,
+                        date: selectedDate, // Save as Date object or Timestamp
+                        content: cleanText,
+                        tradition: tradition,
+                        createdAt: serverTimestamp()
+                    });
+                } catch (e) {
+                    console.error("Error saving to cloud history:", e);
+                }
+            }
 
         } catch (err) {
             setError(err.message || "Error al generar la liturgia");

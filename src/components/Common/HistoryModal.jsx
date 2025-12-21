@@ -1,8 +1,51 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getHistory } from '../../services/storage';
+import { db, auth } from '../../services/firebase';
+import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 
 export default function HistoryModal({ isOpen, onClose, onRestore }) {
-    const [history] = useState(() => getHistory());
+    const [history, setHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const fetchHistory = async () => {
+            setLoading(true);
+            try {
+                // 1. Local fallback
+                const local = getHistory();
+
+                // 2. Cloud if logged in
+                if (auth.currentUser) {
+                    const q = query(
+                        collection(db, 'liturgies'),
+                        where('userId', '==', auth.currentUser.uid),
+                        orderBy('createdAt', 'desc'),
+                        limit(10)
+                    );
+                    const snapshot = await getDocs(q);
+                    const cloudDocs = snapshot.docs.map(d => ({
+                        id: d.id,
+                        ...d.data(),
+                        // standardize date for UI
+                        date: d.data().date?.toDate ? d.data().date.toDate().toISOString() : d.data().date
+                    }));
+                    setHistory(cloudDocs); // Prefer cloud
+                } else {
+                    setHistory(local);
+                }
+            } catch (e) {
+                console.error("Error fetching history", e);
+                // Fallback to local on error
+                setHistory(getHistory());
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchHistory();
+    }, [isOpen]);
 
     if (!isOpen) return null;
 
@@ -24,7 +67,11 @@ export default function HistoryModal({ isOpen, onClose, onRestore }) {
 
                 {/* List */}
                 <div className="p-2 overflow-y-auto flex-1">
-                    {history.length === 0 ? (
+                    {loading ? (
+                        <div className="flex justify-center items-center h-32">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                        </div>
+                    ) : history.length === 0 ? (
                         <p className="text-center text-gray-400 py-8">No hay historial reciente.</p>
                     ) : (
                         history.map((item) => (

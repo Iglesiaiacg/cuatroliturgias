@@ -1,11 +1,23 @@
 import { useState, useEffect, useRef } from 'react';
+import { useIntentionsSync } from '../../hooks/useIntentionsSync';
 
-export default function PulpitView({ content, onClose, title }) {
+export default function PulpitView({ content, onClose, title, date }) {
     const [fontSize, setFontSize] = useState(36); // Start larger for pulpit
     const [theme, setTheme] = useState('light'); // light, sepia, dark
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(2); // 1-5
+
     const [showControls, setShowControls] = useState(true);
+    const [showBriefing, setShowBriefing] = useState(false);
+
+    // Data for Briefing
+    const { intentions } = useIntentionsSync(date || new Date());
+    const [notices, setNotices] = useState([]);
+
+    useEffect(() => {
+        const stored = localStorage.getItem('liturgia_notices');
+        if (stored) setNotices(JSON.parse(stored));
+    }, [showBriefing]); // Refresh when opening
 
     // Timer State
     const [timerSeconds, setTimerSeconds] = useState(0);
@@ -145,6 +157,21 @@ export default function PulpitView({ content, onClose, title }) {
 
                     <div className="w-px h-8 bg-white/20 mx-1"></div>
 
+                    {/* Briefing Toggle */}
+                    <button
+                        onClick={() => setShowBriefing(!showBriefing)}
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${showBriefing ? 'bg-amber-500 text-white' : 'bg-white/10 text-gray-400 hover:text-white hover:bg-white/20'}`}
+                        title="Notas del Celebrante"
+                    >
+                        <span className="material-symbols-outlined text-2xl">assignment</span>
+                        {/* Dot indicator if there are items */}
+                        {(intentions.length > 0 || notices.length > 0) && (
+                            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+                        )}
+                    </button>
+
+                    <div className="w-px h-8 bg-white/20 mx-1"></div>
+
                     {/* Font Size */}
                     <div className="flex flex-col items-center px-1 md:px-2">
                         <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Tamaño</span>
@@ -209,6 +236,57 @@ export default function PulpitView({ content, onClose, title }) {
                     <div dangerouslySetInnerHTML={{ __html: content }} />
                 </div>
             </div>
+            {/* Briefing Sidebar (Celebrant's Notes) */}
+            <div className={`fixed top-0 right-0 h-full w-full md:w-96 bg-gray-900/95 backdrop-blur-xl border-l border-white/10 z-[110] transition-transform duration-300 transform ${showBriefing ? 'translate-x-0' : 'translate-x-full'} overflow-y-auto`}>
+                <div className="p-6">
+                    <div className="flex justify-between items-center mb-8">
+                        <h2 className="text-xl font-display font-bold text-amber-500 flex items-center gap-2">
+                            <span className="material-symbols-outlined">assignment</span>
+                            Mesa del Celebrante
+                        </h2>
+                        <button onClick={() => setShowBriefing(false)} className="text-gray-400 hover:text-white">
+                            <span className="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    {/* Intentions Section */}
+                    <div className="mb-8">
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Intenciones</h3>
+                        {intentions.length === 0 ? (
+                            <p className="text-gray-600 italic text-sm">No hay intenciones.</p>
+                        ) : (
+                            <ul className="space-y-3">
+                                {intentions.map(i => (
+                                    <li key={i.id} className="bg-white/5 rounded-lg p-3 border border-white/5">
+                                        <span className={`text-[10px] font-bold uppercase block mb-1 ${i.type === 'difuntos' ? 'text-gray-400' : 'text-amber-400'}`}>
+                                            {i.type === 'difuntos' ? '✞ Difunto' : i.type === 'salud' ? 'Salud' : 'Acción de Gracias'}
+                                        </span>
+                                        <span className="text-gray-200 font-medium text-lg">{i.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+
+                    {/* Notices Section */}
+                    <div>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Avisos Parroquiales</h3>
+                        {notices.length === 0 ? (
+                            <p className="text-gray-600 italic text-sm">No hay avisos.</p>
+                        ) : (
+                            <ul className="space-y-4">
+                                {notices.map((n, idx) => (
+                                    <li key={n.id} className="flex gap-3 items-start">
+                                        <span className="text-amber-500 font-bold text-lg">{idx + 1}.</span>
+                                        <span className="text-gray-300 leading-relaxed text-lg">{n.text}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 }

@@ -94,7 +94,8 @@
         font-family: 'Material Symbols Outlined';
         font-weight: normal;
         font-style: normal;
-        font-size: 24px;  /* Preferred icon size */
+        font-size: 24px;
+        /* Preferred icon size */
         display: inline-block;
         line-height: 1;
         text-transform: none;
@@ -143,6 +144,27 @@
             /* Inner shadow */
             0 20px 50px rgba(0, 0, 0, 0.1);
         /* Drop shadow */
+        /* Drop shadow */
+    }
+
+    .animate-scale-in {
+        animation: scaleIn 0.2s ease-out forwards;
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out forwards;
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 }
 
@@ -535,7 +557,8 @@
 /* Solemn Rubrics - Hidden by default unless enabled */
 .rubric-solemn {
     @apply text-red-700 font-bold bg-red-50 p-2 rounded border-l-4 border-red-500 text-xs mt-2 mb-4;
-    display: none; /* Default state: hidden (Simple mode) */
+    display: none;
+    /* Default state: hidden (Simple mode) */
 }
 
 /* When parent has class 'mode-solemn', show solemn rubrics */
@@ -545,8 +568,15 @@
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Mystagogical Annotations */

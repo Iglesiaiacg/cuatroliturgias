@@ -85,7 +85,47 @@ export default function UserManagement() {
         return () => unsubscribeUsers();
     }, []);
 
-    // ... (keep handleAssign, handleEdit, etc.)
+    const [isEditing, setIsEditing] = useState(false);
+
+    const getRoleLabel = (r) => {
+        const found = roles.find(item => item.id === r);
+        return found ? found.label : r;
+    };
+
+    const resetForm = () => {
+        setUid('');
+        setName('');
+        setRole('sacristan');
+        setIsEditing(false);
+        setMessage('');
+    };
+
+    const handleEdit = (user) => {
+        setUid(user.id);
+        setName(user.displayName || '');
+        setRole(user.role || 'guest');
+        setIsEditing(true);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleAssign = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage('');
+        try {
+            await assignRole(uid, role, name);
+            setMessage('Usuario actualizado correctamente.');
+            if (isEditing) resetForm();
+            else {
+                setUid(''); // Clear UID for next add, but maybe keep name?
+                setName('');
+            }
+        } catch (error) {
+            console.error(error);
+            setMessage('Error: ' + error.message);
+        }
+        setLoading(false);
+    };
 
     // Permission Toggle Handler (local state for now)
     const togglePermission = (roleId, permId) => {

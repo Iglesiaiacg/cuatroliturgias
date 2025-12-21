@@ -14,7 +14,8 @@ service cloud.firestore {
     // Note: This costs 1 Read operation.
     // For high-traffic apps, use Custom Claims (requires Cloud Functions).
     function getUserRole() {
-      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+       let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
+       return userDoc != null ? userDoc.data.role : 'guest'; // Safely handle missing doc
     }
 
     // Role Checks

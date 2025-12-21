@@ -6,7 +6,7 @@ import {
     onAuthStateChanged,
     createUserWithEmailAndPassword
 } from 'firebase/auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -19,9 +19,31 @@ export function AuthProvider({ children }) {
     const [userRole, setUserRole] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Initial Login (LoginView uses this)
+    // Initial Login
     function login(email, password) {
         return signInWithEmailAndPassword(auth, email, password);
+    }
+
+    // Sign Up with Credential ID
+    async function signup(email, password, userData = {}) {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // Generate printable Credential ID (e.g., 2025-A7B9)
+        const year = new Date().getFullYear();
+        const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const credentialId = `${year}-${suffix}`;
+
+        // Write profile to Firestore immediately
+        await setDoc(doc(db, 'users', user.uid), {
+            email: email,
+            role: 'guest',
+            credentialId: credentialId,
+            ...userData,
+            createdAt: new Date()
+        }, { merge: true });
+
+        return userCredential;
     }
 
     // Logout
@@ -29,57 +51,57 @@ export function AuthProvider({ children }) {
         return signOut(auth);
     }
 
-    // Admin function to create sub-users
-    async function createSubUser(email, password, role, name) {
-        // Note: Firebase Auth doesn't easily allow creating a SECOND user while logged in as the FIRST
-        // without logging out the first.
-        // For a simple 'internal tool' MVP, we can use a secondary "Firebase Admin" app instance 
-        // OR simply creating it temporarily.
-        // A common pattern for client-side app-creation without backend functions:
-        // 1. Current admin logs out. 2. Create new account. 3. Re-login as admin.
-        // BUT for MVP simplicity, we might just assume manual creation in console OR 
-        // implement a Cloud Function later.
-
-        // Let's stick to the simplest approach: Map UID to Role in Firestore.
-        // The user must be created.
-        throw new Error("La creación directa requiere función de backend. Por ahora crea el usuario en consola y asígnale rol aquí.");
-    }
-
-    // Helper to manually assign role to a UID (used during development/setup)
-    async function assignRole(uid, role, name) {
-        await setDoc(doc(db, 'users', uid), {
-            role,
-            displayName: name,
-            updatedAt: new Date()
-        }, { merge: true });
-    }
-
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        let unsubscribeUserDoc = null;
+
+        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // User is signed in, fetch role from Firestore
+                setCurrentUser(user);
+                // Listen to user role in real-time
+                const userRef = doc(db, 'users', user.uid);
+
+                // Backup auto-create (in case signup didn't run, e.g. direct auth)
                 try {
-                    const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    if (userDoc.exists()) {
-                        setUserRole(userDoc.data().role);
+                    const docSnap = await getDoc(userRef);
+                    if (!docSnap.exists()) {
+                        const year = new Date().getFullYear();
+                        const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                        await setDoc(userRef, {
+                            email: user.email,
+                            role: 'guest',
+                            credentialId: `${year}-${suffix}`,
+                            displayName: user.email.split('@')[0],
+                            createdAt: new Date()
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error auto-creating profile", e);
+                }
+
+                unsubscribeUserDoc = onSnapshot(userRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        setUserRole(docSnap.data().role);
                     } else {
-                        // Default fallback or 'pending'
                         setUserRole('guest');
                     }
-                } catch (error) {
+                    setLoading(false);
+                }, (error) => {
                     console.error("Error fetching user role:", error);
-                    // Fallback to guest to allow app to load (and maybe show error later)
                     setUserRole('guest');
-                }
-                setCurrentUser(user);
+                    setLoading(false);
+                });
             } else {
                 setCurrentUser(null);
                 setUserRole(null);
+                setLoading(false);
+                if (unsubscribeUserDoc) unsubscribeUserDoc();
             }
-            setLoading(false);
         });
 
-        return unsubscribe;
+        return () => {
+            if (unsubscribeAuth) unsubscribeAuth();
+            if (unsubscribeUserDoc) unsubscribeUserDoc();
+        };
     }, []);
 
     // Default Permissions (fallback)
@@ -106,6 +128,7 @@ export function AuthProvider({ children }) {
         currentUser,
         userRole,
         login,
+        signup,
         logout,
         assignRole,
         checkPermission
