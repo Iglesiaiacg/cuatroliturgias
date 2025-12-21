@@ -348,7 +348,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         INSTRUCCIONES ESPECÍFICAS: ${specificInstructions}
         ESTRUCTURA (COMPLETA Y DETALLADA - INCLUIR TEXTOS DE LAS PARTES FIJAS PARA EL PUEBLO):
         1. Ritos Iniciales (PROCESIÓN DE ENTRADA [Canto/Antífona], Saludo, [SI ES ADVIENTO: RITO DE LUZ/CORONA], Acto Penitencial, Kyrie, Gloria [VERIFICAR REGLAS DE OMISIÓN], Oración Colecta).
-        2. Liturgia de la Palabra (1ª Lectura, Salmo Responsorial [textos completos], 2ª Lectura, Aleluya/Aclamación [VERIFICAR OMISIÓN], Evangelio).
+        2. Liturgia de la Palabra (1ª Lectura [OBLIGATORIO: TEXTO BÍBLICO COMPLETO], Salmo Responsorial [OBLIGATORIO: TEXTO COMPLETO con respuesta], 2ª Lectura [OBLIGATORIO: TEXTO BÍBLICO COMPLETO], Aleluya/Aclamación, Evangelio [OBLIGATORIO: TEXTO BÍBLICO COMPLETO]). NO PONER SOLO LAS CITAS, ESCRIBIR LAS LECTURAS.
         3. Homilía (Bosquejo breve), Credo, Oración Universal (Peticiones temáticas).
         4. Liturgia Eucarística ${eucharistDetail}.
         5. Rito de Conclusión (Bendición Solemne, Despedida).
