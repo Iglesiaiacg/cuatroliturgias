@@ -123,7 +123,7 @@ export function AuthProvider({ children }) {
     const DEFAULT_PERMISSIONS = {
         admin: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'manage_users', 'view_treasury'],
         treasurer: ['view_calendar', 'view_offerings', 'view_treasury'],
-        secretary: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings'],
+        secretary: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'view_treasury'],
         sacristan: ['view_liturgy', 'view_calendar', 'view_sacristy'],
         reader: ['view_liturgy', 'view_calendar'],
         guest: ['view_liturgy']
