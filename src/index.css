@@ -35,6 +35,8 @@
     --shadow-inner: inset 4px 4px 8px #16181e, inset -4px -4px 8px #404458;
 
     /* Accents */
+    --color-primary: #ef4444;
+    /* Red-500 for better contrast on dark */
     --color-primary-dim: #fca5a5;
     --icon-color: #9ca3af;
 }

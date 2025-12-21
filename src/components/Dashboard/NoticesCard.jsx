@@ -80,7 +80,7 @@ export default function NoticesCard() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Nuevo aviso..."
-                    className="flex-1 neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent"
+                    className="flex-1 neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent text-stone-900 dark:text-stone-100"
                 />
                 <button
                     type="submit"

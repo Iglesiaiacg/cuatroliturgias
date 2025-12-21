@@ -71,19 +71,19 @@ export default function QuickCertCard() {
                 <span className="text-xs font-bold uppercase tracking-wider">Constancias Express</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
                 <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Nombre completo..."
-                    className="w-full neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent"
+                    placeholder="Nombre del Fiel"
+                    className="w-full neumorphic-inset p-3 bg-transparent outline-none text-stone-900 dark:text-stone-100 placeholder-gray-400"
                 />
 
                 <select
                     value={type}
                     onChange={(e) => setType(e.target.value)}
-                    className="w-full neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent appearance-none cursor-pointer"
+                    className="w-full neumorphic-inset p-3 bg-transparent outline-none text-stone-900 dark:text-stone-100"
                 >
                     <option value="membresia">Membresía</option>
                     <option value="asistencia">Asistencia</option>
