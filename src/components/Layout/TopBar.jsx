@@ -25,7 +25,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
     });
 
     return (
-        <header className="sticky top-0 z-50 bg-[#fdfbf7]/95 dark:bg-[#0c0a09]/95 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 px-4 pt-4 pb-2 transition-colors duration-300">
+        <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-4 pb-2 transition-colors duration-300 shadow-sm">
             <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
                 {/* 1. Logo & Date */}
                 <div className="flex flex-col shrink-0">
@@ -39,15 +39,14 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </div>
 
                 {/* 2. Navigation (Center) - Desktop & Tablet */}
-                <nav className="hidden md:flex items-center bg-stone-100 dark:bg-white/5 p-1 rounded-full border border-stone-200 dark:border-stone-800">
+                <nav className="hidden md:flex items-center gap-4">
                     {visibleNavItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ${activeTab === item.id
-                                ? 'bg-white dark:bg-stone-800 text-primary shadow-sm font-bold'
-                                : 'text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-200/50 dark:hover:bg-white/5 font-medium'
-                                }`}
+                            className={`h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-300 ${activeTab === item.id
+                                ? 'neumorphic-inset font-bold text-primary shadow-inner'
+                                : 'neumorphic-btn text-gray-500 hover:text-primary'}`}
                         >
                             <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                                 {item.icon}
@@ -62,18 +61,18 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     {/* Theme Toggle */}
                     <button
                         onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-100 dark:hover:bg-white/10 transition-colors shrink-0"
+                        className="w-10 h-10 neumorphic-btn"
                     >
-                        <span className="material-symbols-outlined text-stone-900 dark:text-white">
+                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200">
                             {theme === 'dark' ? 'light_mode' : 'dark_mode'}
                         </span>
                     </button>
                     <button
                         onClick={onProfile}
                         aria-label="Mi Perfil"
-                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-stone-100 dark:hover:bg-white/10 transition-colors shrink-0"
+                        className="w-10 h-10 neumorphic-btn"
                     >
-                        <span className="material-symbols-outlined text-stone-900 dark:text-white" style={{ fontSize: '24px' }}>account_circle</span>
+                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200" style={{ fontSize: '24px' }}>account_circle</span>
                     </button>
                 </div>
             </div>

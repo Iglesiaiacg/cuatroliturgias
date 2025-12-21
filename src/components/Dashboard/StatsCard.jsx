@@ -60,7 +60,7 @@ export default function StatsCard() {
     const trend = total - lastTotal;
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/5 h-full">
+        <div className="neumorphic-card p-6 h-full">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                     <span className="material-symbols-outlined text-sm">equalizer</span>
@@ -104,7 +104,7 @@ export default function StatsCard() {
 
 function StatInput({ icon, label, value, onChange, isEditing, highlight }) {
     return (
-        <div className={`flex flex-col items-center p-2 rounded-lg ${highlight ? 'bg-primary/5 dark:bg-white/5 border border-primary/10' : 'bg-gray-50 dark:bg-black/20'}`}>
+        <div className={`flex flex-col items-center p-2 rounded-lg ${highlight ? 'neumorphic-inset box-shadow-inner' : 'neumorphic-inset'}`}>
             <span className="material-symbols-outlined text-sm text-gray-400 mb-1">{icon}</span>
             {isEditing ? (
                 <input

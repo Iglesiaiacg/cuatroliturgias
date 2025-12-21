@@ -34,9 +34,9 @@ export default function NoticesCard() {
                     <h2 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Avisos Parroquiales</h2>
                     <button
                         onClick={() => setReadMode(false)}
-                        className="p-3 bg-stone-100 dark:bg-white/10 rounded-full hover:bg-stone-200 transition-colors"
+                        className="w-10 h-10 neumorphic-btn"
                     >
-                        <span className="material-symbols-outlined text-2xl text-stone-900 dark:text-white">close</span>
+                        <span className="material-symbols-outlined text-xl">close</span>
                     </button>
                 </div>
                 <div className="flex-1 overflow-y-auto space-y-8 max-w-4xl mx-auto w-full">
@@ -58,9 +58,9 @@ export default function NoticesCard() {
     }
 
     return (
-        <div className="bg-white dark:bg-stone-900 rounded-2xl p-6 shadow-sm border border-stone-200 dark:border-stone-800 h-full flex flex-col">
+        <div className="neumorphic-card p-6 h-full flex flex-col">
             <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2 text-stone-500 dark:text-stone-400">
+                <div className="flex items-center gap-2 text-gray-500">
                     <span className="material-symbols-outlined text-sm">campaign</span>
                     <span className="text-xs font-bold uppercase tracking-wider">Avisos</span>
                 </div>
@@ -80,7 +80,7 @@ export default function NoticesCard() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Nuevo aviso..."
-                    className="flex-1 bg-stone-50 dark:bg-white/10 text-stone-900 dark:text-white placeholder-stone-400 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="flex-1 neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent"
                 />
                 <button
                     type="submit"

@@ -48,7 +48,7 @@ export default function FinanceCard() {
     };
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/5 flex flex-col justify-between h-full">
+        <div className="neumorphic-card p-6 flex flex-col justify-between h-full">
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                     <span className="material-symbols-outlined text-sm">savings</span>

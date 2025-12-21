@@ -1,42 +1,92 @@
 @import "tailwindcss";
 
 @theme {
-    /* Classic / Solemn Theme Colors - mapped explicitly to avoid confusion */
+    /* Neumorphic Palette */
     --color-primary: #78181b;
+    /* Keep brand color */
     --font-display: "Newsreader", serif;
 }
 
-/* --- ROBUST COLOR DEFINITIONS --- */
 :root {
-    /* Light Mode (Cream/Dark Text) */
-    --bg-main: #fdfbf7;
-    --text-main: #1c1917;
+    /* Light Mode Neumorphism (Soft Grey/Blue) */
+    --bg-main: #e0e5ec;
+    --text-main: #4a4a4a;
 
-    /* Fallback variables for legacy code */
-    --color-background-light: #fdfbf7;
-    --color-text-base: #1c1917;
+    /* Neumorphic Shadows - Light */
+    --shadow-outer: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
+    --shadow-inner: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+
+    /* Accents */
+    --color-primary-dim: #78181b;
+    --icon-color: #6c757d;
 
     --drop-cap-size: 3.5em;
     --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-/* Dark Mode Overrides (Explicit methodology) */
 :root.dark {
-    /* Dark Mode (Black/White Text) */
-    --bg-main: #0c0a09;
-    --text-main: #fafaf9;
+    /* Dark Mode Neumorphism (Deep Blue/Grey) */
+    --bg-main: #2b2e3b;
+    /* #21242b */
+    --text-main: #e1e1e1;
 
-    --color-primary: #fca5a5;
+    /* Neumorphic Shadows - Dark */
+    --shadow-outer: 6px 6px 12px #16181e, -6px -6px 12px #404458;
+    --shadow-inner: inset 4px 4px 8px #16181e, inset -4px -4px 8px #404458;
 
-    /* Legacy aliases */
-    --color-background-light: #0c0a09;
-    --color-text-base: #fafaf9;
+    /* Accents */
+    --color-primary-dim: #fca5a5;
+    --icon-color: #9ca3af;
 }
 
-/* Force Body Colors */
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
+    transition: background-color 0.3s ease;
+}
+
+@layer utilities {
+
+    /* Standard Card (Popped Out) */
+    .neumorphic-card {
+        background: var(--bg-main);
+        box-shadow: var(--shadow-outer);
+        border-radius: 20px;
+        border: none;
+        /* No borders in pure neumorphism */
+    }
+
+    /* Pressed/Inset Element (Input, Active Button) */
+    .neumorphic-inset {
+        background: var(--bg-main);
+        box-shadow: var(--shadow-inner);
+        border-radius: 12px;
+        border: none;
+    }
+
+    /* Button (Popped Out -> Pressed on Active) */
+    .neumorphic-btn {
+        background: var(--bg-main);
+        box-shadow: var(--shadow-outer);
+        border-radius: 50%;
+        /* Default round for icons */
+        transition: all 0.2s ease;
+        color: var(--text-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .neumorphic-btn:active,
+    .neumorphic-btn.active {
+        box-shadow: var(--shadow-inner);
+        transform: scale(0.98);
+    }
+
+    .neumorphic-text {
+        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.1);
+        /* Subtle depth on text */
+    }
 }
 
 @layer components {

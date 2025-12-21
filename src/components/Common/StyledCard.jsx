@@ -6,10 +6,9 @@ export default function StyledCard({ title, description, icon, onClick, actionTe
         <button
             onClick={onClick}
             className="group relative flex flex-col items-center justify-center p-4 m-0 
-            bg-white dark:bg-surface-dark/50 rounded-lg shadow-sm
-            border border-gray-100 dark:border-white/5
+            neumorphic-card
             transition-all duration-300 ease-out
-            hover:shadow-lg hover:-translate-y-1 hover:border-[var(--color-primary)]/30
+            hover:-translate-y-1
             cursor-pointer w-full text-center h-full"
         >
             {/* Icon Container - Compact & Light */}
