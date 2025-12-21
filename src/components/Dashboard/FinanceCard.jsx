@@ -1,16 +1,29 @@
 import { useState } from 'react';
+import { useFinanceSync } from '../../hooks/useFinanceSync';
+import { useAuth } from '../../context/AuthContext';
 
-const calculateSummary = () => {
-    try {
-        const stored = localStorage.getItem('liturgia_offerings');
-        const transactions = stored ? JSON.parse(stored) : [];
+export default function FinanceCard() {
+    // Only fetch last ~50 transactions for summary to save bandwidth, 
+    // or fetch all if needed for accurate monthly balance. 
+    // For a card, catching 100 is safe.
+    const { transactions, loading } = useFinanceSync(100);
+    const { checkPermission } = useAuth();
+    const [isVisible, setIsVisible] = useState(false);
 
+    // If no permission, show nothing or placeholder
+    if (!checkPermission('view_treasury')) {
+        return null;
+    }
+
+    const calculateSummary = () => {
         const now = new Date();
         const currentMonth = now.getMonth();
         const currentYear = now.getFullYear();
 
         const monthTransactions = transactions.filter(t => {
-            const d = new Date(t.date);
+            if (!t.date) return false;
+            // Handle Firestore Timestamp or ISO string
+            const d = t.date.toDate ? t.date.toDate() : new Date(t.date);
             return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
         });
 
@@ -22,6 +35,10 @@ const calculateSummary = () => {
             .filter(t => t.type === 'expense')
             .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
+        // Overall balance logic might require fetching ALL history, 
+        // using just monthly balance for now or summing visible transactions.
+        // For a simple card, let's use the sum of loaded transactions as "Current Balance" (Assuming transactions is descending valid list)
+        // OR better: Just show Monthly balance flow.
         const totalBalance = transactions
             .reduce((sum, t) => sum + (t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)), 0);
 
@@ -31,24 +48,22 @@ const calculateSummary = () => {
             balance: totalBalance,
             monthName: new Intl.DateTimeFormat('es-MX', { month: 'long' }).format(now)
         };
+    };
 
-    } catch (e) {
-        console.error("Error calculating finance summary", e);
-        return { income: 0, expense: 0, balance: 0, monthName: '' };
-    }
-};
-
-export default function FinanceCard() {
-    const [summary] = useState(calculateSummary);
-    const [isVisible, setIsVisible] = useState(false);
-
+    const summary = calculateSummary();
 
     const formatMoney = (amount) => {
         return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
     };
 
     return (
-        <div className="neumorphic-card p-6 flex flex-col justify-between h-full">
+        <div className="neumorphic-card p-6 flex flex-col justify-between h-full relative overflow-hidden">
+            {loading && (
+                <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center backdrop-blur-sm">
+                    <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            )}
+
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                     <span className="material-symbols-outlined text-sm">savings</span>
@@ -66,7 +81,7 @@ export default function FinanceCard() {
 
             <div className="space-y-4">
                 <div>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Saldo en Caja</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Saldo (Registrado)</span>
                     <div className="text-2xl font-mono font-bold text-gray-900 dark:text-white mt-1">
                         {isVisible ? formatMoney(summary.balance) : '****'}
                     </div>
