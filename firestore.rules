@@ -40,8 +40,8 @@ service cloud.firestore {
     // - Users can update their OWN DisplayName (Profile Modal)
     match /users/{userId} {
       allow read: if isAuthenticated();
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin() || (request.auth.uid == userId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName']));
+      // Allow Admin to manage, OR User to manage themselves (Create/Update profile)
+      allow write: if isAdmin() || request.auth.uid == userId;
     }
 
     // 2. Inventory (Insumos)
