@@ -7,7 +7,7 @@ import StatsCard from '../Dashboard/StatsCard';
 import NoticesCard from '../Dashboard/NoticesCard';
 import QuickCertCard from '../Dashboard/QuickCertCard';
 
-export default function Dashboard({ onNavigate, date }) {
+export default function Dashboard({ onNavigate, date, docContent }) {
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
 
@@ -77,7 +77,7 @@ export default function Dashboard({ onNavigate, date }) {
                 <div className="space-y-6">
                     <section>
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
-                        <RolesCard />
+                        <RolesCard docContent={docContent} />
                     </section>
                     <section>
                         <StatsCard />

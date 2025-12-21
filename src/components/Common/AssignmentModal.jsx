@@ -1,9 +1,18 @@
-export default function AssignmentModal({ isOpen, onClose, taskName, onAssign }) {
+export default function AssignmentModal({ isOpen, onClose, taskName, contextData, onAssign }) {
     if (!isOpen) return null;
 
     const { members } = useDirectory();
     const [selectedMemberId, setSelectedMemberId] = useState("");
     const [customMessage, setCustomMessage] = useState("");
+
+    // Pre-fill message with context (Reading text) if available
+    useEffect(() => {
+        if (contextData) {
+            setCustomMessage(`Aquí tienes el texto para preparar:\n\n"${contextData.substring(0, 500)}..."\n\n(Revisa el leccionario completo)`);
+        } else {
+            setCustomMessage("");
+        }
+    }, [contextData]);
 
     const handleSend = () => {
         const member = members.find(m => m.id === selectedMemberId);
@@ -13,13 +22,13 @@ export default function AssignmentModal({ isOpen, onClose, taskName, onAssign })
         const phone = member.phone.replace(/\D/g, '');
 
         // Construct message
-        const text = `Hola ${member.fullName.split(' ')[0]}, se te ha asignado: ${taskName}. ${customMessage}`;
+        const text = `Hola ${member.fullName.split(' ')[0]}, se te ha asignado: *${taskName}*.\n\n${customMessage}`;
         const encodedText = encodeURIComponent(text);
 
         // Open WhatsApp
         window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
 
-        onClose();
+        onAssign(selectedMemberId);
     };
 
     return (
@@ -51,10 +60,13 @@ export default function AssignmentModal({ isOpen, onClose, taskName, onAssign })
                 </div>
 
                 <div className="mb-6">
-                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Mensaje Adicional</label>
+                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                        Mensaje / Texto Litúrgico
+                        {contextData && <span className="ml-2 text-[10px] text-green-600 bg-green-50 px-2 rounded-full">Automático</span>}
+                    </label>
                     <textarea
-                        className="w-full p-2 border rounded dark:bg-black/20 dark:border-white/10 text-sm"
-                        rows="3"
+                        className="w-full p-2 border rounded dark:bg-black/20 dark:border-white/10 text-sm h-32"
+                        rows="5"
                         placeholder="Instrucciones especiales..."
                         value={customMessage}
                         onChange={e => setCustomMessage(e.target.value)}

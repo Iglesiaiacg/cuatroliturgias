@@ -211,6 +211,7 @@ function AppContent() {
               <HomeView
                 key="home-refresh-v3"
                 date={selectedDate}
+                docContent={docContent}
                 onNavigate={setActiveTab}
               />
             </div>
