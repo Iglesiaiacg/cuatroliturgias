@@ -31,10 +31,12 @@ export default function NextLiturgyCard({ onClick }) {
         <div
             onClick={onClick}
             className={`
-                relative overflow-hidden rounded-2xl p-6 shadow-sm hover:shadow-md transition-all cursor-pointer group
-                ${info.color.classes}
+                neumorphic-card relative overflow-hidden p-6 cursor-pointer group
+                transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]
             `}
         >
+            {/* Semantic Color Indicator Strip */}
+            <div className={`absolute left-0 top-0 bottom-0 w-2 ${info.color.classes.replace('bg-', 'bg-').split(' ')[0] || 'bg-primary'}`}></div>
             {/* Background Pattern/Icon based on color? Optional */}
             <div className="absolute top-0 right-0 p-4 opacity-10">
                 <span className="material-symbols-outlined text-9xl">church</span>
@@ -66,7 +68,7 @@ export default function NextLiturgyCard({ onClick }) {
                         <span className="font-bold text-sm">{info.cycle.text}</span>
                     </div>
 
-                    <button className="w-10 h-10 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors">
+                    <button className="w-10 h-10 neumorphic-btn">
                         <span className="material-symbols-outlined">arrow_forward</span>
                     </button>
                 </div>

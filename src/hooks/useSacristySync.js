@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { format } from 'date-fns';
@@ -42,9 +43,18 @@ export function useSacristySync(date) {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
+    const { currentUser } = useAuth();
+
+    // Using dateKey in dependancy array is fine
     const dateKey = format(date, 'yyyy-MM-dd');
 
     useEffect(() => {
+        if (!currentUser) {
+            setItems(defaultItems);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         const docRef = doc(db, 'sacristy_checks', dateKey);
 
@@ -63,7 +73,7 @@ export function useSacristySync(date) {
         });
 
         return () => unsubscribe();
-    }, [dateKey]);
+    }, [dateKey, currentUser]);
 
     const toggleItem = async (id) => {
         // Optimistic update

@@ -1,12 +1,20 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
 export function useFinanceSync(limitCount = 100) {
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { currentUser } = useAuth(); // Assume we can import useAuth, wait, I need to import it.
 
     useEffect(() => {
+        if (!currentUser) {
+            setTransactions([]);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         // Query transactions ordered by date descending
         const q = query(
@@ -28,7 +36,7 @@ export function useFinanceSync(limitCount = 100) {
         });
 
         return () => unsubscribe();
-    }, [limitCount]);
+    }, [limitCount, currentUser]);
 
     const addTransaction = async (transaction) => {
         // Optimistic update not needed as listener is fast, 

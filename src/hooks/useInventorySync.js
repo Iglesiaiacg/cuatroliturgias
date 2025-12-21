@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
@@ -14,11 +15,19 @@ export function useInventorySync() {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
+    const { currentUser } = useAuth();
+
     // Using a single document for all inventory for simplicity in this MVP
     // collection: 'inventory', doc: 'sacristy_main'
     const docRef = doc(db, 'inventory', 'sacristy_main');
 
     useEffect(() => {
+        if (!currentUser) {
+            setItems(defaultItems);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         const unsubscribe = onSnapshot(docRef, (snap) => {
             if (snap.exists()) {
@@ -34,7 +43,7 @@ export function useInventorySync() {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [currentUser]);
 
     const initializeInventory = async () => {
         try {

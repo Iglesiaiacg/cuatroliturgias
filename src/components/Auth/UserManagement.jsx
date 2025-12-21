@@ -52,12 +52,17 @@ export default function UserManagement() {
 
     // Fetch users and permissions on mount
     useEffect(() => {
+        if (!currentUser) return;
+
         const unsubscribeUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
             const userList = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
             setUsers(userList);
+            setLoadingList(false);
+        }, (error) => {
+            console.error("User Sync Error:", error);
             setLoadingList(false);
         });
 
@@ -83,7 +88,7 @@ export default function UserManagement() {
         loadPermissions();
 
         return () => unsubscribeUsers();
-    }, []);
+    }, [currentUser]);
 
     const [isEditing, setIsEditing] = useState(false);
 

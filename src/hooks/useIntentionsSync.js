@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { format } from 'date-fns';
@@ -7,9 +8,18 @@ export function useIntentionsSync(date) {
     const [intentions, setIntentions] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const { currentUser } = useAuth();
+
+    // Using dateKey in dependancy array is fine
     const dateKey = format(date || new Date(), 'yyyy-MM-dd');
 
     useEffect(() => {
+        if (!currentUser) {
+            setIntentions([]);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         const docRef = doc(db, 'intentions', dateKey);
 
@@ -26,7 +36,7 @@ export function useIntentionsSync(date) {
         });
 
         return () => unsubscribe();
-    }, [dateKey]);
+    }, [dateKey, currentUser]);
 
     const addIntention = async (text, type = 'general') => {
         const newIntention = { id: Date.now(), text, type, completed: false };

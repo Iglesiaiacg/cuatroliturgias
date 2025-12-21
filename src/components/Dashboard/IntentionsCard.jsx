@@ -23,7 +23,7 @@ export default function IntentionsCard({ date }) {
     };
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/5 h-full flex flex-col relative overflow-hidden">
+        <div className="neumorphic-card p-6 h-full flex flex-col relative overflow-hidden">
             {loading && (
                 <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center backdrop-blur-sm">
                     <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
@@ -47,10 +47,10 @@ export default function IntentionsCard({ date }) {
                     </div>
                 ) : (
                     intentions.map(item => (
-                        <div key={item.id} className="flex items-center justify-between group bg-gray-50 dark:bg-white/5 p-2 rounded-lg hover:bg-white dark:hover:bg-white/10 border border-transparent hover:border-gray-100 dark:hover:border-white/5 transition-all">
+                        <div key={item.id} className="flex items-center justify-between group neumorphic-inset p-3 rounded-xl transition-all">
                             <div>
                                 <span className={`text-[10px] font-bold uppercase mr-2 ${item.type === 'difuntos' ? 'text-gray-500' :
-                                        item.type === 'salud' ? 'text-red-400' : 'text-yellow-500'
+                                    item.type === 'salud' ? 'text-red-400' : 'text-yellow-500'
                                     }`}>
                                     {getTypeLabel(item.type)}
                                 </span>
@@ -74,9 +74,9 @@ export default function IntentionsCard({ date }) {
                             key={t}
                             type="button"
                             onClick={() => setType(t)}
-                            className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase whitespace-nowrap transition-colors ${type === t
-                                    ? 'bg-primary text-white'
-                                    : 'bg-gray-100 dark:bg-white/5 text-gray-500 hover:bg-gray-200 dark:hover:bg-white/10'
+                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${type === t
+                                ? 'neumorphic-inset text-primary box-shadow-inner'
+                                : 'neumorphic-btn text-gray-500 hover:text-gray-700'
                                 }`}
                         >
                             {getTypeLabel(t)}
@@ -89,12 +89,13 @@ export default function IntentionsCard({ date }) {
                         value={newItem}
                         onChange={(e) => setNewItem(e.target.value)}
                         placeholder="Nombre / Intención..."
-                        className="flex-1 bg-gray-50 dark:bg-black/20 border-none rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none"
+                        placeholder="Nombre / Intención..."
+                        className="flex-1 neumorphic-inset px-4 py-2 text-sm outline-none bg-transparent"
                     />
                     <button
                         type="submit"
                         disabled={!newItem.trim()}
-                        className="bg-primary hover:bg-red-800 text-white p-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="neumorphic-btn w-10 h-10 text-primary disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <span className="material-symbols-outlined text-lg">add</span>
                     </button>
