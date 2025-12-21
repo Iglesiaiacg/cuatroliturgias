@@ -45,6 +45,19 @@ body {
     transition: background-color 0.3s ease;
 }
 
+/* Global Text Selection Override */
+::selection {
+    background-color: var(--color-primary);
+    color: #ffffff;
+}
+
+:root.dark ::selection {
+    background-color: var(--color-primary-dim);
+    /* Light Pink */
+    color: #000000;
+    /* Black text for contrast */
+}
+
 @layer utilities {
 
     /* Standard Card (Popped Out) */
