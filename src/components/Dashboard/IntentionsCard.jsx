@@ -89,7 +89,6 @@ export default function IntentionsCard({ date }) {
                         value={newItem}
                         onChange={(e) => setNewItem(e.target.value)}
                         placeholder="Nombre / Intención..."
-                        placeholder="Nombre / Intención..."
                         className="flex-1 neumorphic-inset px-4 py-2 text-sm outline-none bg-transparent"
                     />
                     <button

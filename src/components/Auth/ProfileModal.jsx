@@ -82,10 +82,10 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
-            <div className="bg-white dark:bg-surface-dark rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden animate-slide-up max-h-[90vh] flex flex-col">
+            <div className="bg-[var(--bg-main)] rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden animate-slide-up max-h-[90vh] flex flex-col border-none">
 
                 {/* Header */}
-                <div className="bg-primary/5 p-6 border-b border-gray-100 dark:border-white/5 flex justify-between items-center">
+                <div className="p-6 flex justify-between items-center bg-[var(--bg-main)]">
                     <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">account_circle</span>
                         Mi Perfil
@@ -98,8 +98,8 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                 {/* Content */}
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
-                    <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-600 dark:text-blue-300 font-bold text-lg">
+                    <div className="neumorphic-card p-4 rounded-xl flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-full neumorphic-inset flex items-center justify-center text-primary font-bold text-lg">
                             {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
                         </div>
                         <div className="flex-1">
@@ -136,7 +136,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
 
                         {/* Global Settings Section */}
-                        <div className="border border-gray-200 dark:border-white/10 rounded-xl p-4 bg-gray-50 dark:bg-black/20 space-y-4">
+                        <div className="neumorphic-card p-4 space-y-4">
                             <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ajustes Globales</h3>
 
                             {/* Rubric Toggle */}
@@ -162,7 +162,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                     value={apiKey}
                                     onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
                                     placeholder="Clave API (Opcional si usa .env)"
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-xs font-mono bg-white dark:bg-black/40"
+                                    className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
                                 />
                                 <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
                             </div>
@@ -176,7 +176,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                 type="text"
                                 value={displayName}
                                 onChange={(e) => setDisplayName(e.target.value)}
-                                className="w-full rounded-lg border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-black/20 p-2 text-sm"
+                                className="w-full neumorphic-inset p-2 text-sm outline-none bg-transparent"
                                 placeholder="Ej: Padre Juan"
                             />
                         </div>
@@ -187,7 +187,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                 type="password"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
-                                className="w-full rounded-lg border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-black/20 p-2 text-sm"
+                                className="w-full neumorphic-inset p-2 text-sm outline-none bg-transparent"
                                 placeholder="Dejar en blanco para no cambiar"
                             />
                         </div>
@@ -199,7 +199,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-gray-900 dark:bg-white text-white dark:text-gray-900 py-2.5 rounded-xl font-bold shadow-sm hover:opacity-90 transition-opacity disabled:opacity-50"
+                                className="w-full neumorphic-btn py-2.5 font-bold shadow-sm transition-opacity disabled:opacity-50 text-gray-900 dark:text-gray-100"
                             >
                                 {loading ? 'Actualizando...' : 'Guardar Cambios'}
                             </button>

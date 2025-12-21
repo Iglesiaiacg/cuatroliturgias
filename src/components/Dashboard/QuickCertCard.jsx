@@ -77,13 +77,11 @@ export default function QuickCertCard() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Nombre completo..."
-                    placeholder="Nombre completo..."
                     className="w-full neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent"
                 />
 
                 <select
                     value={type}
-                    onChange={(e) => setType(e.target.value)}
                     onChange={(e) => setType(e.target.value)}
                     className="w-full neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent appearance-none cursor-pointer"
                 >
@@ -92,8 +90,6 @@ export default function QuickCertCard() {
                 </select>
 
                 <button
-                    onClick={generatePDF}
-                    disabled={!name.trim() || loading}
                     onClick={generatePDF}
                     disabled={!name.trim() || loading}
                     className="w-full neumorphic-btn py-3 text-sm font-bold active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-primary"

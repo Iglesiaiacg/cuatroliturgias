@@ -27,11 +27,11 @@ export default function StatsHistoryModal({ onClose }) {
     return (
         <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in" onClick={onClose}>
             <div
-                className="bg-white dark:bg-surface-dark w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-white/10 flex flex-col max-h-[90vh] print:fixed print:inset-0 print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:z-[100] print:bg-white"
+                className="bg-[var(--bg-main)] w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] print:fixed print:inset-0 print:max-w-none print:max-h-none print:rounded-none print:shadow-none print:z-[100] print:bg-white"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header (No Print) */}
-                <div className="flex items-center justify-between p-6 border-b border-gray-100 dark:border-white/10 print:hidden">
+                <div className="flex items-center justify-between p-6 print:hidden">
                     <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">history</span>
                         Historial de Asistencia
@@ -39,12 +39,12 @@ export default function StatsHistoryModal({ onClose }) {
                     <div className="flex gap-2">
                         <button
                             onClick={handlePrint}
-                            className="px-4 py-2 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 text-gray-700 dark:text-gray-200 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors"
+                            className="neumorphic-btn px-4 py-2 text-gray-700 dark:text-gray-200 text-sm font-bold flex items-center gap-2"
                         >
                             <span className="material-symbols-outlined text-lg">print</span>
                             Imprimir
                         </button>
-                        <button onClick={onClose} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors">
+                        <button onClick={onClose} className="neumorphic-btn w-10 h-10">
                             <span className="material-symbols-outlined">close</span>
                         </button>
                     </div>
@@ -57,9 +57,9 @@ export default function StatsHistoryModal({ onClose }) {
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 overflow-auto p-0">
-                    <table className="w-full text-left border-collapse">
-                        <thead className="bg-gray-50 dark:bg-white/5 sticky top-0 z-10 print:static">
+                <div className="flex-1 overflow-auto p-4">
+                    <table className="w-full text-left border-collapse neumorphic-inset rounded-xl overflow-hidden">
+                        <thead className="bg-[#e0e5ec] dark:bg-[#16181e] sticky top-0 z-10 print:static">
                             <tr>
                                 <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100 dark:border-white/10">Fecha</th>
                                 <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-100 dark:border-white/10 text-center">Hombres</th>

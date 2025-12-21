@@ -45,7 +45,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
     return (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}>
             <div
-                className="bg-white dark:bg-surface-dark w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border border-gray-100 dark:border-white/10 transform transition-all animate-scale-in flex flex-col max-h-[90vh]"
+                className="bg-[var(--bg-main)] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border-none transform transition-all animate-scale-in flex flex-col max-h-[90vh]"
                 onClick={e => e.stopPropagation()}
             >
                 {/* Header with Color */}
@@ -54,7 +54,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                         <span className="material-symbols-outlined text-xl">close</span>
                     </button>
                     <div className="absolute -bottom-6 left-6">
-                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg bg-white dark:bg-gray-800`}>
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg neumorphic-card`}>
                             <span className="text-2xl">📅</span>
                         </div>
                     </div>
@@ -71,13 +71,13 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                     <div className="flex gap-4 border-b border-gray-100 dark:border-white/10 mb-6">
                         <button
                             onClick={() => setActiveTab('liturgia')}
-                            className={`pb-2 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'liturgia' ? 'text-primary border-b-2 border-primary' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'liturgia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             Liturgia
                         </button>
                         <button
                             onClick={() => setActiveTab('parroquia')}
-                            className={`pb-2 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'parroquia' ? 'text-primary border-b-2 border-primary' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'parroquia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-400 hover:text-gray-600'}`}
                         >
                             Parroquia {events.length > 0 && <span className="ml-1 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full text-[10px]">{events.length}</span>}
                         </button>
@@ -95,14 +95,14 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                     {activeTab === 'liturgia' && (
                         <div className="space-y-6 animate-fade-in">
                             <div className="grid grid-cols-2 gap-3">
-                                <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-white/5">
+                                <div className="p-3 neumorphic-card">
                                     <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Color Litúrgico</span>
                                     <div className="flex items-center gap-2">
                                         <span className={`w-3 h-3 rounded-full ${color.classes.replace('bg-', 'bg-').split(' ')[0].replace('100', '500')}`}></span>
                                         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{color.name}</span>
                                     </div>
                                 </div>
-                                <div className="p-3 bg-gray-50 dark:bg-white/5 rounded-lg border border-gray-100 dark:border-white/5">
+                                <div className="p-3 neumorphic-card">
                                     <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Ciclo Leccionario</span>
                                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{cycle.text}</span>
                                 </div>
@@ -115,7 +115,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                                     Recordatorio del Día
                                 </label>
                                 <textarea
-                                    className="w-full bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/30 rounded-lg p-3 text-sm min-h-[80px] focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all font-medium text-gray-700 dark:text-gray-200"
+                                    className="w-full neumorphic-inset rounded-lg p-3 text-sm min-h-[80px] outline-none transition-all font-medium text-gray-700 dark:text-gray-200 bg-transparent"
                                     placeholder="Escribe una nota o recordatorio para este día..."
                                     value={reminderForm}
                                     onChange={(e) => setReminderForm(e.target.value)}
@@ -125,7 +125,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
 
                             <button
                                 onClick={() => { onGenerate(date); onClose(); }}
-                                className="w-full bg-primary hover:bg-red-700 text-white py-3 rounded-xl font-bold shadow-lg shadow-red-900/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+                                className="w-full neumorphic-btn py-3 font-bold active:scale-95 transition-all flex items-center justify-center gap-2 text-primary"
                             >
                                 <span className="material-symbols-outlined">auto_awesome</span>
                                 Generar Liturgia
