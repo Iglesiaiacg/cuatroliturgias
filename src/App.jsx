@@ -6,6 +6,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext';
 import { DirectoryProvider } from './context/DirectoryContext';
 import { MusicProvider } from './context/MusicContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 // Components
 import GeneratorToolbar from './components/Liturgy/GeneratorToolbar'
@@ -113,27 +114,27 @@ function AppContent() {
     }
 
     const css = `
-          <style>
-              body { font-family: 'Times New Roman', serif; font-size: 11pt; }
-              h1 { text-align: center; font-size: 16pt; border-bottom: 1px solid #ccc; font-weight: bold; margin-bottom: 12pt; }
-              h2 { color: #9f1239; font-size: 13pt; margin-top: 15pt; }
-              .rubric { color: red; font-style: italic; font-size: 10pt; }
-              strong { font-weight: bold; }
-              table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
-              td, th { border: 1px solid #000; padding: 5pt; }
-              @page { size: letter; margin: 2.54cm; }
-          </style>
-      `
+  < style >
+  body { font - family: 'Times New Roman', serif; font - size: 11pt; }
+              h1 { text - align: center; font - size: 16pt; border - bottom: 1px solid #ccc; font - weight: bold; margin - bottom: 12pt; }
+              h2 { color: #9f1239; font - size: 13pt; margin - top: 15pt; }
+              .rubric { color: red; font - style: italic; font - size: 10pt; }
+              strong { font - weight: bold; }
+              table { border - collapse: collapse; width: 100 %; margin - bottom: 10pt; }
+td, th { border: 1px solid #000; padding: 5pt; }
+@page { size: letter; margin: 2.54cm; }
+          </style >
+  `
 
     const htmlContent = `
-          <html>
+  < html >
           <head>
               <meta charset='utf-8'>
               ${css}
           </head>
           <body>${contentToSave}</body>
-          </html>
-      `
+          </html >
+  `
 
     asBlob(htmlContent).then(blob => {
       saveAs(blob, `Liturgia_${selectedDate.toISOString().split('T')[0]}.docx`)
@@ -365,15 +366,17 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <DirectoryProvider>
-        <MusicProvider>
-          <ChatProvider>
-            <AppContent />
-          </ChatProvider>
-        </MusicProvider>
-      </DirectoryProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <DirectoryProvider>
+          <MusicProvider>
+            <ChatProvider>
+              <AppContent />
+            </ChatProvider>
+          </MusicProvider>
+        </DirectoryProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

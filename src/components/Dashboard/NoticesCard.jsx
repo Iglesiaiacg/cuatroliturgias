@@ -80,7 +80,7 @@ export default function NoticesCard() {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Nuevo aviso..."
-                    className="flex-1 bg-gray-50 dark:bg-black/20 border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                    className="flex-1 bg-gray-50 dark:bg-white/10 dark:text-white border-none rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none"
                 />
                 <button
                     type="submit"

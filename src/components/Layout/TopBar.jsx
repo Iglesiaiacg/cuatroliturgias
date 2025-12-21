@@ -1,9 +1,10 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-
+import { useTheme } from '../../context/ThemeContext'; // Import hook
 import logoHome from '../../assets/logo.png';
 
 export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission }) {
+    const { theme, setTheme } = useTheme();
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
 
     const navItems = [
@@ -58,6 +59,15 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
                 {/* 3. Settings & Profile */}
                 <div className="flex items-center gap-2">
+                    {/* Theme Toggle */}
+                    <button
+                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                        className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors shrink-0"
+                    >
+                        <span className="material-symbols-outlined text-gray-900 dark:text-white">
+                            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
+                        </span>
+                    </button>
                     <button
                         onClick={onProfile}
                         aria-label="Mi Perfil"
