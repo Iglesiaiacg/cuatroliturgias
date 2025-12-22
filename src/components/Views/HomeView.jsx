@@ -6,6 +6,7 @@ import IntentionsCard from '../Dashboard/IntentionsCard';
 import StatsCard from '../Dashboard/StatsCard';
 import NoticesCard from '../Dashboard/NoticesCard';
 import QuickCertCard from '../Dashboard/QuickCertCard';
+import SacristyStatusCard from '../Dashboard/SacristyStatusCard';
 
 export default function Dashboard({ onNavigate, date, docContent }) {
     return (
@@ -89,6 +90,11 @@ export default function Dashboard({ onNavigate, date, docContent }) {
 
                 {/* Column 3: Finance & Checklist */}
                 <div className="space-y-6">
+                    <section>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
+                        <SacristyStatusCard date={date} />
+                    </section>
+
                     <section>
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Administración</h3>
                         <FinanceCard />

@@ -87,6 +87,8 @@ export function AuthProvider({ children }) {
                         // We have access, safe to listen for changes
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
                             if (snap.exists()) setUserRole(snap.data().role);
+                        }, (error) => {
+                            console.warn("User role snapshot error (graceful fallback):", error.code);
                         });
                     } else {
                         // Profile doesn't exist, create it
@@ -103,6 +105,8 @@ export function AuthProvider({ children }) {
                         // Listen (assuming creation implies read access)
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
                             if (snap.exists()) setUserRole(snap.data().role);
+                        }, (error) => {
+                            console.warn("User role snapshot error (graceful fallback):", error.code);
                         });
                     }
                 } catch (e) {
