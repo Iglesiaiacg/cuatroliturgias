@@ -1,10 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-    /* Neumorphic Palette */
+
+    /* Rubric Levels */
+    .rubrics-simple .rubric-solemn,
+    .rubrics-simple .rubric,
+    .rubrics-simple .rubric-text {
+        display: none !important;
+    }
+
+    /* Base Neumorphic Variables */
     --color-primary: #78181b;
     /* Keep brand color */
-    --font-display: "Newsreader", serif;
+    --font-display: "Newsreader",
+    serif;
 }
 
 :root {

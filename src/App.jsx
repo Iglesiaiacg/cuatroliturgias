@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
+import { useSettings } from './hooks/useSettings'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext';
 import { DirectoryProvider } from './context/DirectoryContext';
@@ -49,6 +50,10 @@ function AppContent() {
     generate
   } = useLiturgy()
 
+  // Use centralized settings hook
+  const { settings, updateSetting } = useSettings();
+  const rubricLevel = settings.rubricLevel;
+
   // UI State
   const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -57,12 +62,6 @@ function AppContent() {
   const [toast, setToast] = useState({ message: '', type: '' })
   const [isAssignmentOpen, setIsAssignmentOpen] = useState(false)
 
-  // Settings State
-  const [rubricLevel, setRubricLevel] = useState(() => localStorage.getItem('rubricLevel') || 'simple'); // 'simple' | 'solemn'
-
-  useEffect(() => {
-    localStorage.setItem('rubricLevel', rubricLevel);
-  }, [rubricLevel]);
 
   // Navigation State
   const [serviceTitle, setServiceTitle] = useState(null)
@@ -181,7 +180,7 @@ function AppContent() {
           isOpen={isProfileOpen}
           onClose={() => setIsProfileOpen(false)}
           rubricLevel={rubricLevel}
-          onRubricChange={setRubricLevel}
+          onRubricChange={(val) => updateSetting('rubricLevel', val)}
         />
 
         <AssignmentModal
@@ -204,6 +203,8 @@ function AppContent() {
               onLogout={logout} // Pass logout logic
               userRole={userRole} // For UI adaptation
               checkPermission={checkPermission}
+              rubricLevel={rubricLevel}
+              onToggleRubric={() => updateSetting('rubricLevel', rubricLevel === 'solemn' ? 'simple' : 'solemn')}
             />
           </div>
 
