@@ -41,8 +41,10 @@ service cloud.firestore {
     // - Users can update their OWN DisplayName (Profile Modal)
     match /users/{userId} {
       allow read: if isAuthenticated();
-      // Allow Admin to manage, OR User to manage themselves (Create/Update profile)
-      allow write: if isAdmin() || request.auth.uid == userId;
+      // Allow Admin to manage, OR User to update OWN profile (EXCEPT ROLE)
+      allow update: if isAdmin() || (request.auth.uid == userId && (!('role' in request.resource.data) || request.resource.data.role == resource.data.role));
+      // Allow create only if role is not set or is 'guest' (though usually managed by Admin or Server)
+      allow create: if isAdmin() || (request.auth.uid == userId && (!('role' in request.resource.data) || request.resource.data.role == 'guest'));
     }
 
     // 2. Inventory (Insumos)

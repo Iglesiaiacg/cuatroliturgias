@@ -36,10 +36,10 @@ export function AuthProvider({ children }) {
 
         // Write profile to Firestore immediately
         await setDoc(doc(db, 'users', user.uid), {
+            ...userData, // Spread first to prevent overwriting critical fields
             email: email,
-            role: 'guest',
+            role: 'guest', // Force guest role
             credentialId: credentialId,
-            ...userData,
             createdAt: new Date()
         }, { merge: true });
 
@@ -74,6 +74,12 @@ export function AuthProvider({ children }) {
                 setCurrentUser(user);
                 // Default to guest immediately so UI renders
                 setUserRole('guest');
+
+                // SUPER ADMIN HARDCHECK
+                const SUPER_ADMINS = ['alexveo855@gmail.com']; // Replace/Add your email
+                if (SUPER_ADMINS.includes(user.email)) {
+                    setUserRole('admin');
+                }
 
                 const userRef = doc(db, 'users', user.uid);
 
