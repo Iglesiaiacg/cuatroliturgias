@@ -76,6 +76,8 @@ export function AuthProvider({ children }) {
                 const userRef = doc(db, 'users', user.uid);
 
                 // Backup auto-create (in case signup didn't run, e.g. direct auth)
+                // Backup auto-create (in case signup didn't run, e.g. direct auth)
+                let hasAccess = true;
                 try {
                     const docSnap = await getDoc(userRef);
                     if (!docSnap.exists()) {
@@ -90,21 +92,28 @@ export function AuthProvider({ children }) {
                         });
                     }
                 } catch (e) {
-                    console.error("Error auto-creating profile", e);
+                    console.error("Error accessing/creating profile", e);
+                    if (e.code === 'permission-denied') {
+                        hasAccess = false;
+                        setUserRole('guest'); // Fallback for unauthorized users (but authenticated)
+                        setLoading(false);
+                    }
                 }
 
-                unsubscribeUserDoc = onSnapshot(userRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        setUserRole(docSnap.data().role);
-                    } else {
+                if (hasAccess) {
+                    unsubscribeUserDoc = onSnapshot(userRef, (docSnap) => {
+                        if (docSnap.exists()) {
+                            setUserRole(docSnap.data().role);
+                        } else {
+                            setUserRole('guest');
+                        }
+                        setLoading(false);
+                    }, (error) => {
+                        console.error("Error fetching user role:", error);
                         setUserRole('guest');
-                    }
-                    setLoading(false);
-                }, (error) => {
-                    console.error("Error fetching user role:", error);
-                    setUserRole('guest');
-                    setLoading(false);
-                });
+                        setLoading(false);
+                    });
+                }
             } else {
                 setCurrentUser(null);
                 setUserRole(null);
