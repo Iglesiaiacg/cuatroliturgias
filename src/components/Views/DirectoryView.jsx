@@ -291,7 +291,7 @@ export default function DirectoryView() {
     return (
         <div className="flex flex-col md:flex-row neumorphic-card overflow-hidden h-[calc(100vh-140px)] animate-fade-in">
             {/* Sidebar List (Hidden on mobile if member selected) */}
-            <div className={`${selectedMember ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 min-w-[300px] border-r border-gray-200 dark:border-white/10 flex-col bg-white dark:bg-surface-dark h-full`}>
+            <div className={`${selectedMember ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 min-w-[300px] border-r border-gray-200 flex-col bg-transparent h-full`}>
                 <div className="p-4 border-b border-gray-100 dark:border-white/5 space-y-3">
                     <div className="flex justify-between items-center">
                         <h2 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -563,7 +563,7 @@ function Field({ label, value, onChange, editing, type = "text", placeholder, op
                     <select
                         value={value}
                         onChange={e => onChange(e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all"
+                        className="w-full neumorphic-inset px-3 py-2 text-sm outline-none transition-all"
                     >
                         {options.map(opt => <option key={opt} value={opt}>{opt}</option>)}
                     </select>
@@ -572,7 +572,7 @@ function Field({ label, value, onChange, editing, type = "text", placeholder, op
                         type={type}
                         value={value}
                         onChange={e => onChange(e.target.value)}
-                        className="w-full bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-gray-300"
+                        className="w-full neumorphic-inset px-3 py-2 text-sm outline-none transition-all placeholder:text-gray-300"
                         placeholder={placeholder}
                         autoFocus={focus}
                     />

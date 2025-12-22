@@ -22,7 +22,7 @@ export default function InventoryCard() {
     };
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-2xl p-6 shadow-sm border border-gray-100 dark:border-white/5 h-full relative overflow-hidden">
+        <div className="neumorphic-card p-6 h-full relative overflow-hidden">
             {loading && (
                 <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center backdrop-blur-sm">
                     <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>

@@ -5,8 +5,6 @@
     --color-primary: #78181b;
     /* Keep brand color */
     --font-display: "Newsreader", serif;
-    --color-surface-dark: #2b2e3b;
-    --color-background-dark: #21242b;
 }
 
 :root {
@@ -26,23 +24,6 @@
     --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
 }
 
-:root.dark {
-    /* Dark Mode Neumorphism (Deep Blue/Grey) */
-    --bg-main: #2b2e3b;
-    /* #21242b */
-    --text-main: #e1e1e1;
-
-    /* Neumorphic Shadows - Dark */
-    --shadow-outer: 6px 6px 12px #16181e, -6px -6px 12px #404458;
-    --shadow-inner: inset 4px 4px 8px #16181e, inset -4px -4px 8px #404458;
-
-    /* Accents */
-    --color-primary: #ef4444;
-    /* Red-500 for better contrast on dark */
-    --color-primary-dim: #fca5a5;
-    --icon-color: #9ca3af;
-}
-
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
@@ -53,13 +34,6 @@ body {
 ::selection {
     background-color: var(--color-primary);
     color: #ffffff;
-}
-
-:root.dark ::selection {
-    background-color: var(--color-primary-dim);
-    /* Light Pink */
-    color: #000000;
-    /* Black text for contrast */
 }
 
 @layer utilities {
@@ -231,21 +205,7 @@ body {
     letter-spacing: 0.025em;
 }
 
-@media (prefers-color-scheme: dark) {
-    .rubric {
-        color: #ef4444;
-        /* red-500 for better visibility on dark */
-    }
 
-    .liturgy-content {
-        color: #e5e7eb;
-        /* gray-200 */
-    }
-
-    .liturgy-content strong {
-        color: #ffffff;
-    }
-}
 
 /* Bold text for people's responses */
 .liturgy-content strong {

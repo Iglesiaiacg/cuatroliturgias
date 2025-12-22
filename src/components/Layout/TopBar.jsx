@@ -58,15 +58,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
                 {/* 3. Settings & Profile */}
                 <div className="flex items-center gap-2">
-                    {/* Theme Toggle */}
-                    <button
-                        onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                        className="w-10 h-10 neumorphic-btn"
-                    >
-                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200">
-                            {theme === 'dark' ? 'light_mode' : 'dark_mode'}
-                        </span>
-                    </button>
+
                     <button
                         onClick={onProfile}
                         aria-label="Mi Perfil"

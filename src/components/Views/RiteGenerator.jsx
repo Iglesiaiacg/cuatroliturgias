@@ -44,7 +44,7 @@ export default function RiteGenerator({ rite, onGenerate, onCancel }) {
                             <input
                                 type="date"
                                 id={input.id}
-                                className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all text-gray-900 dark:text-white"
+                                className="w-full neumorphic-inset px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all text-gray-700"
                                 onChange={(e) => handleChange(input.id, e.target.value)}
                             />
                         ) : (
@@ -52,7 +52,7 @@ export default function RiteGenerator({ rite, onGenerate, onCancel }) {
                                 type="text"
                                 id={input.id}
                                 placeholder={input.placeholder}
-                                className="w-full bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-lg px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all text-gray-900 dark:text-white placeholder:text-gray-400"
+                                className="w-full neumorphic-inset px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20 transition-all text-gray-700 placeholder:text-gray-400"
                                 onChange={(e) => handleChange(input.id, e.target.value)}
                             />
                         )}

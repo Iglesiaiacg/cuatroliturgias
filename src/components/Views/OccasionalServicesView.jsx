@@ -116,7 +116,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
     return (
         <main className="flex-1 flex flex-col w-full h-full animate-fade-in overflow-hidden">
             {/* Header */}
-            <div className="flex items-center gap-4 px-6 py-4 bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-white/5 shrink-0 z-10 shadow-sm">
+            <div className="flex items-center gap-4 px-6 py-4 shrink-0 z-10">
                 <button
                     onClick={() => onNavigate('dashboard')}
                     className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 transition-colors -ml-2"

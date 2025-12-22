@@ -160,7 +160,7 @@ export default function OfferingsView() {
             {/* Main Content (Hidden on Print) */}
             <div className="flex flex-col w-full h-full print:hidden">
                 {/* Header / Summary Section */}
-                <div className="bg-white dark:bg-surface-dark border-b border-gray-100 dark:border-white/5 p-6 shadow-sm z-10 shrink-0">
+                <div className="p-6 shrink-0 z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h2 className="text-2xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
@@ -239,7 +239,7 @@ export default function OfferingsView() {
                                 <select
                                     value={formData.type}
                                     onChange={(e) => setFormData({ ...formData, type: e.target.value, category: categories[e.target.value][0].id })}
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
                                 >
                                     <option value="income">Entrada (+)</option>
                                     <option value="expense">Salida (-)</option>
@@ -267,7 +267,7 @@ export default function OfferingsView() {
                                 <select
                                     value={formData.category}
                                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
                                 >
                                     {categories[formData.type].map(cat => (
                                         <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -294,7 +294,7 @@ export default function OfferingsView() {
                                             setFormData({ ...formData, eventId: '', eventTitle: '', uniqueId: '' });
                                         }
                                     }}
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
                                 >
                                     <option value="">-- Ninguno --</option>
                                     {recentEvents.map(ev => (
@@ -312,7 +312,7 @@ export default function OfferingsView() {
                                     required
                                     value={formData.description}
                                     onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
                                     placeholder="Ej: Colecta Misa 10am"
                                 />
                             </div>
@@ -325,7 +325,7 @@ export default function OfferingsView() {
                                     type="text"
                                     value={formData.beneficiary}
                                     onChange={(e) => setFormData({ ...formData, beneficiary: e.target.value })}
-                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 text-sm bg-white dark:bg-black/20"
+                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
                                     placeholder={formData.type === 'income' ? 'Ej: Familia Pérez' : 'Ej: CFE'}
                                 />
                             </div>

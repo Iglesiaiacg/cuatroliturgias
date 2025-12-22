@@ -104,7 +104,7 @@ export default function MusicView() {
                         <div className="flex flex-col sm:flex-row gap-4">
                             <div className="flex-1 relative">
                                 <input
-                                    className="w-full p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
+                                    className="w-full neumorphic-inset p-2"
                                     placeholder="Título (Escribe para buscar...)"
                                     value={newTitle}
                                     onChange={handleTitleChange} // Use wrapper
@@ -129,7 +129,7 @@ export default function MusicView() {
                                 )}
                             </div>
                             <input
-                                className="w-full sm:w-20 p-2 border rounded-lg dark:bg-black/20 dark:border-white/10"
+                                className="w-full sm:w-20 neumorphic-inset p-2"
                                 placeholder="Tono"
                                 value={newKey} onChange={e => setNewKey(e.target.value)}
                             />
@@ -159,7 +159,7 @@ export default function MusicView() {
                                 </button>
                             </div>
                             <textarea
-                                className="w-full p-4 border rounded-lg h-64 font-mono text-sm dark:bg-black/20 dark:border-white/10"
+                                className="w-full neumorphic-inset p-4 h-64 font-mono text-sm"
                                 placeholder={`Letra y acordes...\n[C] Ejemplo de [G] formato\n\nTambién puedes copiar de la web (acordes arriba) y usar "Pegar Mágico".`}
                                 value={newLyrics}
                                 onChange={e => setNewLyrics(e.target.value)}
@@ -205,7 +205,7 @@ export default function MusicView() {
                     <div
                         key={song.id}
                         onClick={() => setSelectedSong(song)}
-                        className="bg-white dark:bg-surface-dark p-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer border border-transparent hover:border-primary/20 group"
+                        className="neumorphic-card p-4 transition-all cursor-pointer hover:-translate-y-1 group"
                     >
                         <div className="flex justify-between items-start">
                             <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors">{song.title}</h3>
