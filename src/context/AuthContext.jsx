@@ -72,39 +72,48 @@ export function AuthProvider({ children }) {
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 setCurrentUser(user);
-                // Listen to user role in real-time
+                // Default to guest immediately so UI renders
+                setUserRole('guest');
+
                 const userRef = doc(db, 'users', user.uid);
 
-                unsubscribeUserDoc = onSnapshot(userRef, async (docSnap) => {
+                try {
+                    // Check existence/permission ONCE before listening
+                    const docSnap = await getDoc(userRef);
+
                     if (docSnap.exists()) {
                         setUserRole(docSnap.data().role);
+
+                        // We have access, safe to listen for changes
+                        unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
+                            if (snap.exists()) setUserRole(snap.data().role);
+                        });
                     } else {
-                        // Profile doesn't exist, try to create it
-                        try {
-                            const year = new Date().getFullYear();
-                            const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
-                            await setDoc(userRef, {
-                                email: user.email,
-                                role: 'guest',
-                                credentialId: `${year}-${suffix}`,
-                                displayName: user.email.split('@')[0],
-                                createdAt: new Date()
-                            });
-                            // After creation, onSnapshot will fire again with the new data
-                            // So we can set guest temporarily here
-                            setUserRole('guest');
-                        } catch (createError) {
-                            console.error("Error auto-creating profile:", createError);
-                            setUserRole('guest');
-                        }
+                        // Profile doesn't exist, create it
+                        const year = new Date().getFullYear();
+                        const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                        await setDoc(userRef, {
+                            email: user.email,
+                            role: 'guest',
+                            credentialId: `${year}-${suffix}`,
+                            displayName: user.email.split('@')[0],
+                            createdAt: new Date()
+                        });
+
+                        // Listen (assuming creation implies read access)
+                        unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
+                            if (snap.exists()) setUserRole(snap.data().role);
+                        });
                     }
-                    setLoading(false);
-                }, (error) => {
-                    // Handle permission denied or other errors gracefully
-                    console.error("Error fetching user profile:", error.code);
-                    setUserRole('guest');
-                    setLoading(false);
-                });
+                } catch (e) {
+                    // Squelch permission errors - they get 'guest' role by default
+                    if (e.code === 'permission-denied') {
+                        console.warn("Guest access: No profile permission.");
+                    } else {
+                        console.error("Profile Error:", e);
+                    }
+                }
+                setLoading(false);
             } else {
                 setCurrentUser(null);
                 setUserRole(null);
