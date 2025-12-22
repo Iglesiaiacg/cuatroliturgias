@@ -29,7 +29,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 onNavigate('generator');
             }
         } else {
-            console.log("Contenido no disponible para:", item.title);
+            // console.log("Contenido no disponible para:", item.title);
         }
     };
 
