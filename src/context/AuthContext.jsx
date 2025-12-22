@@ -103,7 +103,7 @@ export function AuthProvider({ children }) {
                 setUserRole('guest');
 
                 // SUPER ADMIN HARDCHECK
-                const SUPER_ADMINS = ['alexveo855@gmail.com']; // Replace/Add your email
+                const SUPER_ADMINS = ['alexveo855@gmail.com', 'gonzalezmatusalexis@gmail.com']; // Replace/Add your email
                 if (SUPER_ADMINS.includes(user.email)) {
                     setUserRole('admin');
                 }
