@@ -266,5 +266,6 @@ export default function LoginView() {
                 </div>
             </div>
 
-            );
+        </div>
+    );
 }
