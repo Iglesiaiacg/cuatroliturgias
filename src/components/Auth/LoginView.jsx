@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LoginView() {
-    const { login, signup } = useAuth();
+    const { login, signup, loginWithGoogle } = useAuth();
     const [isRegistering, setIsRegistering] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -68,6 +68,18 @@ export default function LoginView() {
         }
         setLoading(false);
     }
+
+    const handleGoogleLogin = async () => {
+        setError('');
+        setLoading(true);
+        try {
+            await loginWithGoogle();
+        } catch (err) {
+            console.error(err);
+            setError('Error con Google: ' + err.message);
+        }
+        setLoading(false);
+    };
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-background-light dark:bg-background-dark p-4">
@@ -216,6 +228,29 @@ export default function LoginView() {
                         >
                             {loading ? 'Procesando...' : (isRegistering ? 'Registrarse' : 'Iniciar Sesión')}
                         </button>
+
+                        {!isRegistering && (
+                            <>
+                                <div className="relative my-6">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <div className="w-full border-t border-gray-200 dark:border-white/10"></div>
+                                    </div>
+                                    <div className="relative flex justify-center text-sm">
+                                        <span className="px-2 bg-white dark:bg-surface-dark text-gray-500">O continúa con</span>
+                                    </div>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    onClick={handleGoogleLogin}
+                                    disabled={loading}
+                                    className="w-full bg-white dark:bg-white/5 text-gray-700 dark:text-white font-bold py-3 rounded-xl border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10 transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" className="w-5 h-5" alt="Google" />
+                                    Google
+                                </button>
+                            </>
+                        )}
                     </form>
 
                     <div className="mt-6 text-center">
@@ -230,6 +265,6 @@ export default function LoginView() {
                     </div>
                 </div>
             </div>
-        </div>
-    );
+
+            );
 }
