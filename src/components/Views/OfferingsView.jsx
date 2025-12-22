@@ -155,7 +155,7 @@ export default function OfferingsView() {
     const balance = totalIncome - totalExpense;
 
     return (
-        <main className="flex-1 flex flex-col w-full h-full bg-gray-50 dark:bg-background-dark animate-fade-in overflow-hidden">
+        <main className="flex-1 flex flex-col w-full h-full animate-fade-in overflow-hidden">
 
             {/* Main Content (Hidden on Print) */}
             <div className="flex flex-col w-full h-full print:hidden">

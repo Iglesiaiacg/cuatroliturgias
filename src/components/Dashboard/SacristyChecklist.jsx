@@ -15,7 +15,7 @@ export default function SacristyChecklist({ date }) {
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return (
-        <div className="bg-white dark:bg-surface-dark rounded-lg shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden transition-all duration-300">
+        <div className="neumorphic-card overflow-hidden transition-all duration-300">
             {/* Header (Compact) */}
             <div
                 className={`px-4 py-2 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 transition-colors border-b ${color.classes.replace('text-', 'border-').split(' ')[2]}`}

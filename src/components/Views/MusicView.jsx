@@ -78,7 +78,7 @@ export default function MusicView() {
     }
 
     return (
-        <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-black/20 p-4 w-full max-w-7xl mx-auto">
+        <div className="flex-1 flex flex-col h-full p-4 w-full max-w-7xl mx-auto">
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Cantoral</h1>

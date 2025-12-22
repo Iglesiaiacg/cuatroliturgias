@@ -5,7 +5,7 @@ import SacristyChecklist from '../Dashboard/SacristyChecklist';
 
 export default function SacristyView({ date }) {
     return (
-        <div className="flex-1 flex flex-col w-full h-full overflow-y-auto bg-gray-50/50 dark:bg-black/20">
+        <div className="flex-1 flex flex-col w-full h-full overflow-y-auto">
             <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-6">
 
                 {/* Header */}

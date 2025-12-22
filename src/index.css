@@ -5,6 +5,8 @@
     --color-primary: #78181b;
     /* Keep brand color */
     --font-display: "Newsreader", serif;
+    --color-surface-dark: #2b2e3b;
+    --color-background-dark: #21242b;
 }
 
 :root {

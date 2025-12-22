@@ -18,7 +18,7 @@ export default function RiteGenerator({ rite, onGenerate, onCancel }) {
     };
 
     return (
-        <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-surface-dark shadow-lg rounded-xl animate-fade-in relative">
+        <div className="max-w-2xl mx-auto p-6 neumorphic-card animate-fade-in relative">
             <button
                 onClick={onCancel}
                 className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
