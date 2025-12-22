@@ -4,7 +4,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    createUserWithEmailAndPassword
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup
 } from 'firebase/auth';
 import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 
@@ -22,6 +24,31 @@ export function AuthProvider({ children }) {
     // Initial Login
     const login = useCallback((email, password) => {
         return signInWithEmailAndPassword(auth, email, password);
+    }, []);
+
+    // Google Login
+    const loginWithGoogle = useCallback(async () => {
+        const provider = new GoogleAuthProvider();
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        // Check/Create Profile
+        const userRef = doc(db, 'users', user.uid);
+        const docSnap = await getDoc(userRef);
+
+        if (!docSnap.exists()) {
+            const year = new Date().getFullYear();
+            const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+            await setDoc(userRef, {
+                email: user.email,
+                role: 'guest',
+                credentialId: `${year}-${suffix}`,
+                displayName: user.displayName,
+                createdAt: new Date()
+            });
+        }
+        return result;
     }, []);
 
     // Sign Up with Credential ID
@@ -162,6 +189,7 @@ export function AuthProvider({ children }) {
         currentUser,
         userRole,
         login,
+        loginWithGoogle,
         signup,
         logout,
         assignRole,
