@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 
 export default function UserManagement() {
@@ -120,6 +120,8 @@ export default function UserManagement() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    const [searchTerm, setSearchTerm] = useState('');
+
     const handleAssign = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -138,6 +140,29 @@ export default function UserManagement() {
         }
         setLoading(false);
     };
+
+    const handleDelete = async (userId) => {
+        if (!window.confirm("¿Estás seguro de eliminar este perfil? El usuario perderá su rol y acceso. (Nota: Para borrar el login definitivamente, hazlo en Firebase Console).")) {
+            return;
+        }
+        try {
+            await deleteDoc(doc(db, 'users', userId));
+            setMessage('Usuario eliminado correctamente.');
+            if (uid === userId) resetForm();
+        } catch (error) {
+            console.error("Error deleting user:", error);
+            setMessage('Error al eliminar: ' + error.message);
+        }
+    };
+
+    const filteredUsers = users.filter(user => {
+        const term = searchTerm.toLowerCase();
+        return (
+            (user.displayName && user.displayName.toLowerCase().includes(term)) ||
+            (user.email && user.email.toLowerCase().includes(term)) ||
+            (user.id && user.id.toLowerCase().includes(term))
+        );
+    });
 
     // Permission Toggle Handler (local state for now)
     const togglePermission = (roleId, permId) => {
@@ -292,14 +317,28 @@ export default function UserManagement() {
 
                     {/* Users List */}
                     <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
-                        <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5">
+                        <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between md:items-center gap-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">Usuarios Activos</h3>
+
+                            {/* Search Bar */}
+                            <div className="relative w-full md:w-64">
+                                <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-lg">search</span>
+                                <input
+                                    type="text"
+                                    placeholder="Buscar por nombre..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-lg text-sm focus:ring-2 focus:ring-primary/50 outline-none"
+                                />
+                            </div>
                         </div>
 
                         {loadingList ? (
                             <div className="p-8 text-center text-gray-400">Cargando usuarios...</div>
-                        ) : users.length === 0 ? (
-                            <div className="p-8 text-center text-gray-400">No hay usuarios con roles asignados.</div>
+                        ) : filteredUsers.length === 0 ? (
+                            <div className="p-8 text-center text-gray-400">
+                                {searchTerm ? 'No se encontraron usuarios.' : 'No hay usuarios con roles asignados.'}
+                            </div>
                         ) : (
                             <div className="overflow-x-auto -mx-4 sm:mx-0">
                                 <div className="inline-block min-w-full align-middle">
@@ -313,10 +352,11 @@ export default function UserManagement() {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                                            {users.map(user => (
+                                            {filteredUsers.map(user => (
                                                 <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                                                     <td className="px-6 py-3 font-medium text-gray-900 dark:text-white">
                                                         {user.displayName || 'Sin Nombre'}
+                                                        <div className="text-xs text-gray-400 font-normal">{user.email}</div>
                                                         {user.id === currentUser.uid && <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase">Tú</span>}
                                                     </td>
                                                     <td className="px-6 py-3 text-gray-600 dark:text-gray-300">
@@ -325,13 +365,22 @@ export default function UserManagement() {
                                                     <td className="px-6 py-3 font-mono text-xs text-gray-400 truncate max-w-[150px]" title={user.id}>
                                                         {user.id}
                                                     </td>
-                                                    <td className="px-6 py-3 text-right">
+                                                    <td className="px-6 py-3 text-right space-x-2">
                                                         <button
                                                             onClick={() => handleEdit(user)}
                                                             className="text-primary hover:text-red-800 font-bold text-xs uppercase"
                                                         >
                                                             Editar
                                                         </button>
+                                                        {user.id !== currentUser.uid && (
+                                                            <button
+                                                                onClick={() => handleDelete(user.id)}
+                                                                className="text-gray-400 hover:text-red-600 font-bold text-xs uppercase ml-2"
+                                                                title="Eliminar Perfil"
+                                                            >
+                                                                <span className="material-symbols-outlined text-lg align-middle">delete</span>
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             ))}
