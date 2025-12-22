@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { useDirectory } from '../../context/DirectoryContext';
+
 export default function AssignmentModal({ isOpen, onClose, taskName, contextData, onAssign }) {
     if (!isOpen) return null;
 
@@ -33,12 +36,12 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-            <div className="bg-white dark:bg-surface-dark rounded-xl shadow-2xl p-6 w-full max-w-md animate-scale-in max-h-[90vh] overflow-y-auto">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Asignar Ministerio</h3>
+            <div className="neumorphic-card p-6 w-full max-w-md animate-scale-in max-h-[90vh] overflow-y-auto">
+                <h3 className="text-lg font-bold text-gray-900 mb-4">Asignar Ministerio</h3>
 
                 <div className="mb-4">
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Tarea</label>
-                    <div className="p-2 bg-gray-100 dark:bg-white/5 rounded text-gray-800 dark:text-white font-medium">
+                    <div className="neumorphic-inset p-2 text-gray-800 font-medium">
                         {taskName}
                     </div>
                 </div>
@@ -46,7 +49,7 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
                 <div className="mb-4">
                     <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Asignar a</label>
                     <select
-                        className="w-full p-2 border rounded dark:bg-black/20 dark:border-white/10"
+                        className="w-full neumorphic-inset p-2 outline-none"
                         value={selectedMemberId}
                         onChange={e => setSelectedMemberId(e.target.value)}
                     >
@@ -65,7 +68,7 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
                         {contextData && <span className="ml-2 text-[10px] text-green-600 bg-green-50 px-2 rounded-full">Automático</span>}
                     </label>
                     <textarea
-                        className="w-full p-2 border rounded dark:bg-black/20 dark:border-white/10 text-sm h-32"
+                        className="w-full neumorphic-inset p-2 text-sm h-32 outline-none"
                         rows="5"
                         placeholder="Instrucciones especiales..."
                         value={customMessage}
@@ -74,11 +77,11 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
                 </div>
 
                 <div className="flex justify-end gap-2">
-                    <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancelar</button>
+                    <button onClick={onClose} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded transition-colors font-medium">Cancelar</button>
                     <button
                         onClick={handleSend}
                         disabled={!selectedMemberId}
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
+                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 flex items-center gap-2 font-bold shadow-md transition-all active:scale-95"
                     >
                         <span className="material-symbols-outlined text-lg">send</span>
                         Enviar WhatsApp
@@ -88,6 +91,3 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
         </div>
     );
 }
-
-import { useState } from 'react';
-import { useDirectory } from '../../context/DirectoryContext';

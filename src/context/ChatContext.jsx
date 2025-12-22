@@ -26,7 +26,7 @@ export function ChatProvider({ children }) {
 
     // Subscribe to messages
     useEffect(() => {
-        if (!currentUser) {
+        if (!currentUser || userRole === 'guest') {
             setMessages([]);
             return;
         }
@@ -56,7 +56,7 @@ export function ChatProvider({ children }) {
         });
 
         return unsubscribe;
-    }, [currentUser, isOpen]);
+    }, [currentUser, isOpen, userRole]);
 
     const sendMessage = async (text) => {
         if (!currentUser || !text.trim()) return;

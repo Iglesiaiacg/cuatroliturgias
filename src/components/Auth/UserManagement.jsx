@@ -51,8 +51,15 @@ export default function UserManagement() {
     };
 
     // Fetch users and permissions on mount
+    // Fetch users and permissions on mount
     useEffect(() => {
         if (!currentUser) return;
+
+        // Guard: Only admins can listen to users list
+        if (!checkPermission || !checkPermission('manage_users')) {
+            setLoadingList(false);
+            return;
+        }
 
         const unsubscribeUsers = onSnapshot(collection(db, 'users'), (snapshot) => {
             const userList = snapshot.docs.map(doc => ({
