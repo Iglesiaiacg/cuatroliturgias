@@ -57,6 +57,8 @@ const DUTIES = {
     }
 };
 
+import { createPortal } from 'react-dom';
+
 export default function DutiesModal({ role, isOpen, onClose }) {
     if (!isOpen || !DUTIES[role]) return null;
 
@@ -88,8 +90,8 @@ export default function DutiesModal({ role, isOpen, onClose }) {
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+    return createPortal(
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
             <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-amber-500/30 max-h-[90vh] flex flex-col">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-amber-700 to-amber-900 p-6 text-white text-center relative shrink-0">
@@ -151,6 +153,7 @@ export default function DutiesModal({ role, isOpen, onClose }) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
