@@ -20,7 +20,11 @@ service cloud.firestore {
 
     // Role Checks
     function isAdmin() {
-      return isAuthenticated() && getUserRole() == 'admin';
+      return isAuthenticated() && (
+        getUserRole() == 'admin' || 
+        request.auth.token.email == 'alexveo855@gmail.com' || 
+        request.auth.token.email == 'gonzalezmatusalexis@gmail.com'
+      );
     }
 
     function isSacristan() {
