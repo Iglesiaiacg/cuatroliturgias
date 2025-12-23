@@ -77,6 +77,23 @@ export default function Dashboard({ onNavigate, date }) {
                             <span className="material-symbols-outlined">menu_book</span>
                             SEGUIR LITURGIA
                         </button>
+                        <div className="flex items-center gap-2">
+                            <button
+                                onClick={() => window.print()}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 transition-colors"
+                                title="Imprimir para el Altar"
+                            >
+                                <span className="material-symbols-outlined text-sm">print</span>
+                                <span className="hidden sm:inline">Imprimir</span>
+                            </button>
+                            <button
+                                onClick={() => setIsReadingPinned(true)}
+                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors"
+                            >
+                                <span className="material-symbols-outlined text-sm">open_in_full</span>
+                                <span className="hidden sm:inline">Leer</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
