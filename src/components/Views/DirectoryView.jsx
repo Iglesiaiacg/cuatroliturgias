@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { PRIVACY_NOTICE } from '../../utils/privacyNotice';
 import { useDirectory } from '../../context/DirectoryContext';
+import { useChat } from '../../context/ChatContext';
 
 export default function DirectoryView() {
     const { members, addMember, updateMember, deleteMember } = useDirectory();
+    const { startPrivateChat } = useChat();
     const [selectedMember, setSelectedMember] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [isEditing, setIsEditing] = useState(false);
@@ -402,6 +404,15 @@ export default function DirectoryView() {
                                 </div>
                             </div>
                             <div className="flex gap-2">
+                                <button
+                                    onClick={() => startPrivateChat(selectedMember)}
+                                    disabled={!selectedMember.id}
+                                    className="px-4 py-2 bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 disabled:opacity-50"
+                                    title="Enviar Mensaje Privado"
+                                >
+                                    <span className="material-symbols-outlined text-sm">chat</span>
+                                    <span className="hidden md:inline">MENSAJE</span>
+                                </button>
                                 <button
                                     onClick={handleDownloadForm}
                                     className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"

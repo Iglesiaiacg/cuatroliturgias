@@ -7,7 +7,8 @@ import {
     orderBy,
     limit,
     onSnapshot,
-    serverTimestamp
+    serverTimestamp,
+    where
 } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
@@ -23,53 +24,95 @@ export function ChatProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [unreadCount, setUnreadCount] = useState(0);
+    const [activeChat, setActiveChat] = useState(null); // null = General, object = Private User
 
-    // Subscribe to messages
+    // Helper to get consistent Chat ID
+    const getChatId = (uid1, uid2) => {
+        if (!uid1 || !uid2) return 'general';
+        return [uid1, uid2].sort().join('_');
+    };
+
+    const currentChatId = activeChat
+        ? getChatId(currentUser?.uid, activeChat.id)
+        : 'general';
+
+    // Subscribe to messages based on current view
     useEffect(() => {
         if (!currentUser || userRole === 'guest') {
             setMessages([]);
             return;
         }
 
-        const q = query(
-            collection(db, 'messages'),
-            orderBy('createdAt', 'desc'),
-            limit(50)
-        );
+        let q;
+
+        if (activeChat) {
+            // Private Chat Query
+            q = query(
+                collection(db, 'messages'),
+                where('chatId', '==', currentChatId),
+                orderBy('createdAt', 'desc'),
+                limit(50)
+            );
+        } else {
+            // General Chat Query
+            // We use client-side filtering below for legacy 'general' messages
+            q = query(
+                collection(db, 'messages'),
+                orderBy('createdAt', 'desc'),
+                limit(100)
+            );
+        }
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            const msgs = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            })).reverse(); // Reverse to show oldest first at top
+            const msgs = snapshot.docs
+                .map(doc => ({ id: doc.id, ...doc.data() }))
+                .filter(msg => {
+                    if (activeChat) {
+                        return msg.chatId === currentChatId;
+                    } else {
+                        // General View: Show only 'general' or undefined (legacy)
+                        // AND ENSURE we don't show private messages meant for others
+                        // A message is general if:
+                        // 1. It has chatId === 'general'
+                        // 2. OR it has NO chatId (legacy) AND NO isPrivate flag
+                        return (!msg.chatId && !msg.isPrivate) || msg.chatId === 'general';
+                    }
+                })
+                .reverse();
 
             setMessages(msgs);
             setLoading(false);
 
-            // Simple unread logic: if chat is closed, increment
-            // In a real app, track lastReadTimestamp per user
             if (!isOpen) {
-                // This is a naive implementation, ideally we compare with last view time
-                // For now, we won't auto-increment here to avoid infinite loops or complexity
-                // We'll rely on a manual "new message" visual cue if needed
+                // Unread logic placeholder
             }
         });
 
         return unsubscribe;
-    }, [currentUser, isOpen, userRole]);
+    }, [currentUser, isOpen, userRole, activeChat, currentChatId]);
 
     const sendMessage = async (text) => {
         if (!currentUser || !text.trim()) return;
 
         try {
-            await addDoc(collection(db, 'messages'), {
+            const messageData = {
                 text,
                 uid: currentUser.uid,
                 displayName: currentUser.displayName || currentUser.email.split('@')[0],
                 photoURL: currentUser.photoURL,
                 role: userRole || 'guest',
-                createdAt: serverTimestamp()
-            });
+                createdAt: serverTimestamp(),
+                chatId: currentChatId
+            };
+
+            if (activeChat) {
+                messageData.recipientId = activeChat.id;
+                messageData.isPrivate = true;
+            } else {
+                messageData.chatId = 'general';
+            }
+
+            await addDoc(collection(db, 'messages'), messageData);
         } catch (error) {
             console.error("Error sending message:", error);
         }
@@ -80,12 +123,20 @@ export function ChatProvider({ children }) {
         if (!isOpen) setUnreadCount(0);
     };
 
+    const startPrivateChat = (targetUser) => {
+        setActiveChat(targetUser);
+        setIsOpen(true);
+    };
+
     const value = {
         messages,
         sendMessage,
         isOpen,
         toggleChat,
-        unreadCount
+        unreadCount,
+        activeChat,
+        setActiveChat,
+        startPrivateChat
     };
 
     return (
