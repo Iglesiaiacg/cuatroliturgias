@@ -36,6 +36,10 @@ export function ChatProvider({ children }) {
         ? getChatId(currentUser?.uid, activeChat.id)
         : 'general';
 
+    // Sound for notifications
+    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    const previousLastMessageIdRef = useRef(null);
+
     // Subscribe to messages based on current view
     useEffect(() => {
         if (!currentUser || userRole === 'guest') {
@@ -55,7 +59,6 @@ export function ChatProvider({ children }) {
             );
         } else {
             // General Chat Query
-            // We use client-side filtering below for legacy 'general' messages
             q = query(
                 collection(db, 'messages'),
                 orderBy('createdAt', 'desc'),
@@ -69,6 +72,7 @@ export function ChatProvider({ children }) {
                 .filter(msg => {
                     if (activeChat) {
                         return msg.chatId === currentChatId;
+                    } else {
                         // General View: Show 'general' OR private messages meant for THIS user
                         const isForMe = msg.chatId && msg.chatId.includes(currentUser.uid);
                         const isGeneral = (!msg.chatId && !msg.isPrivate) || msg.chatId === 'general';
@@ -80,21 +84,38 @@ export function ChatProvider({ children }) {
             setMessages(msgs);
             setLoading(false);
 
-            if (!isOpen) {
-                // Heuristic: If last message is NOT from me, increment/set badge
-                const lastMsg = msgs[msgs.length - 1];
-                if (lastMsg && lastMsg.uid !== currentUser.uid) {
-                    setUnreadCount(1); // Simple dot
-                    if ('setAppBadge' in navigator) {
-                        navigator.setAppBadge(1).catch(e => console.error(e));
+            // Notification Logic (Sound + Badge)
+            const lastMsg = msgs[msgs.length - 1];
+
+            // Check if it's a NEW message (diff from last tracked)
+            if (lastMsg && lastMsg.id !== previousLastMessageIdRef.current) {
+                // Determine if we should notify
+                const isIncoming = lastMsg.uid !== currentUser.uid;
+
+                if (isIncoming) {
+                    // Play Sound (only if not initial load check - but relying on previousRef changing implies new data)
+                    // We check if previousRef was populated to avoid sound on first mount
+                    if (previousLastMessageIdRef.current) {
+                        notificationSound.play().catch(e => console.log('Audio play blocked:', e));
                     }
-                } else {
-                    setUnreadCount(0);
-                    if ('clearAppBadge' in navigator) {
-                        navigator.clearAppBadge().catch(e => console.error(e));
+
+                    // Update Badge/Unread count if chat closed
+                    if (!isOpen) {
+                        setUnreadCount(prev => prev + 1);
+                        if ('setAppBadge' in navigator) {
+                            navigator.setAppBadge(1).catch(e => console.error(e));
+                        }
                     }
                 }
-            } else {
+
+                // Update ref
+                previousLastMessageIdRef.current = lastMsg.id;
+            } else if (!lastMsg) {
+                previousLastMessageIdRef.current = null;
+            }
+
+            // Clear badge if open
+            if (isOpen) {
                 if ('clearAppBadge' in navigator) {
                     navigator.clearAppBadge().catch(e => console.error(e));
                 }
