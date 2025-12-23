@@ -177,19 +177,30 @@ export function AuthProvider({ children }) {
         guest: [] // Guests only see Home (where pinned liturgy lives) and public Chat
     };
 
+    const [previewRole, setPreviewRole] = useState(null); // START OF CHANGES
+
+    // Derived effective role for UI
+    const effectiveRole = previewRole || userRole;
+
     const checkPermission = useCallback((permissionId) => {
-        if (!userRole) return false;
-        if (userRole === 'admin') return true; // Admin has all rights by default fallback
+        if (!effectiveRole) return false;
+
+        // ADMIN Override: IF acting as admin (no preview) -> ALL Access
+        // IF acting as preview (e.g. sacristan) -> Only that role's access
+        if (effectiveRole === 'admin') return true;
 
         // In a real app, we'd load these from DB. For now, use the constant map.
         // We could also allow passing overrides via props if needed, but Context is best.
-        const rolePerms = DEFAULT_PERMISSIONS[userRole] || [];
+        const rolePerms = DEFAULT_PERMISSIONS[effectiveRole] || [];
         return rolePerms.includes(permissionId);
-    }, [userRole]);
+    }, [effectiveRole]);
 
     const value = {
         currentUser,
-        userRole,
+        userRole: effectiveRole, // EXPOSE EFFECTIVE ROLE so components react to preview
+        realRole: userRole,      // Expose real role for Admin controls
+        previewRole,             // Expose preview state
+        setPreviewRole,          // Expose setter
         login,
         loginWithGoogle,
         signup,
