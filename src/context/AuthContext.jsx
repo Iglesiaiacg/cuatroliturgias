@@ -8,7 +8,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -103,7 +103,6 @@ export function AuthProvider({ children }) {
                 setUserRole('guest');
 
                 // SUPER ADMIN HARDCHECK
-                // SUPER ADMIN HARDCHECK
                 const SUPER_ADMINS = ['alexveo855@gmail.com', 'gonzalezmatusalexis@gmail.com']; // Replace/Add your email
                 const isSuperAdmin = SUPER_ADMINS.includes(user.email);
 
@@ -114,13 +113,22 @@ export function AuthProvider({ children }) {
                     const docSnap = await getDoc(userRef);
 
                     if (docSnap.exists()) {
+                        const dbRole = docSnap.data().role;
+
                         // Force Admin if super admin, else use DB role
-                        setUserRole(isSuperAdmin ? 'admin' : docSnap.data().role);
+                        setUserRole(isSuperAdmin ? 'admin' : dbRole);
+
+                        // CRITICAL: If Super Admin has wrong role in DB, FIX IT immediately.
+                        // This allows firestore.rules (isAdmin()) to pass.
+                        if (isSuperAdmin && dbRole !== 'admin') {
+                            await updateDoc(userRef, { role: 'admin' });
+                        }
 
                         // We have access, safe to listen for changes
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
                             if (snap.exists()) {
-                                setUserRole(isSuperAdmin ? 'admin' : snap.data().role);
+                                const role = snap.data().role;
+                                setUserRole(isSuperAdmin ? 'admin' : role);
                             }
                         }, (error) => {
                             console.warn("User role snapshot error (graceful fallback):", error.code);
