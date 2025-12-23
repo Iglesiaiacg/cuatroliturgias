@@ -1,24 +1,12 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // --- Helper Functions ---
-
-    // Check if user is logged in
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-
-    // Get user's role from their user profile document
-    // Note: This costs 1 Read operation.
-    // For high-traffic apps, use Custom Claims (requires Cloud Functions).
+    function isAuthenticated() { return request.auth != null; }
     function getUserRole() {
        let userDoc = get(/databases/$(database)/documents/users/$(request.auth.uid));
-       return userDoc != null ? userDoc.data.role : 'guest'; // Safely handle missing doc
+       return userDoc != null ? userDoc.data.role : 'guest';
     }
-
-    // Role Checks
     function isAdmin() {
       return isAuthenticated() && (
         getUserRole() == 'admin' || 
@@ -26,78 +14,39 @@ service cloud.firestore {
         request.auth.token.email == 'gonzalezmatusalexis@gmail.com'
       );
     }
+    function isMusician() { return isAuthenticated() && (getUserRole() == 'musician' || isAdmin()); }
+    function isSacristan() { return isAuthenticated() && (getUserRole() == 'sacristan' || isAdmin()); }
+    function isSecretary() { return isAuthenticated() && (getUserRole() == 'secretary' || isAdmin()); }
 
-    function isSacristan() {
-      // Sacristan implies Admin access in some contexts, but let's keep it specific
-      // or allow Admin to act as Sacristan too.
-      return isAuthenticated() && (getUserRole() == 'sacristan' || getUserRole() == 'admin');
-    }
-    
-    function isSecretary() {
-      return isAuthenticated() && (getUserRole() == 'secretary' || getUserRole() == 'admin');
-    }
+    // --- REGLAS ---
 
-    // --- Collections ---
-
-    // 1. Users Collection
-    // - Everyone authenticated can read (to form the directory list)
-    // - Only Admin can create/delete/change roles
-    // - Users can update their OWN DisplayName (Profile Modal)
     match /users/{userId} {
       allow read: if isAuthenticated();
-      // Allow Admin to manage everything.
-      // Allow Users to update their OWN profile (except role).
-      // Allow Authenticated users to create/update MANUAL directory entries (origin == 'directory_manual').
-      allow update: if isAdmin() 
-                    || (request.auth.uid == userId && (!('role' in request.resource.data) || request.resource.data.role == resource.data.role))
-                    || (isAuthenticated() && resource.data.origin == 'directory_manual'); 
-                    
-      allow create: if isAdmin() 
-                    || (request.auth.uid == userId)
-                    || (isAuthenticated() && request.resource.data.origin == 'directory_manual');
-      
-      allow delete: if isAdmin() || (isAuthenticated() && resource.data.origin == 'directory_manual');
+      allow write: if isAdmin() || request.auth.uid == userId;
     }
 
-    // 2. Inventory (Insumos)
-    // - Read: All Authenticated
-    // - Write: Admin or Sacristan
-    match /inventory/{docId} {
+    match /songs/{songId} {
       allow read: if isAuthenticated();
-      allow write: if isSacristan();
+      allow write: if isMusician() || isAdmin();
     }
 
-    // 3. Intentions (Intenciones)
-    // - Read: All Authenticated (Priest needs to read, Secretary writes)
-    // - Write: Admin or Secretary
+    match /liturgies/{liturgyId} {
+      allow read, write: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    match /transactions/{docId} { allow read, write: if isAdmin() || getUserRole() == 'treasurer'; }
+    match /inventory/{docId} { allow read, write: if isAdmin() || isSacristan(); }
+    match /sacristy_checks/{dateId} { allow read: if isAuthenticated(); allow write: if isSacristan(); }
+    match /active_duties/{dutyId} { allow read: if isAuthenticated(); allow write: if isAdmin(); }
+    
+    // INTENTIONS - The fix for your current error
     match /intentions/{dateId} {
       allow read: if isAuthenticated();
       allow write: if isSecretary();
     }
 
-    // 4. Transactions (Finanzas)
-    // - Read/Write: ONLY Admin or Secretary or Treasurer.
-    match /transactions/{docId} {
-      allow read, write: if isSecretary() || getUserRole() == 'treasurer';
-    }
-
-    // 5. Sacristy Checks (Checklist)
-    // - Read: All Authenticated
-    // - Write: Sacristan or Admin
-    match /sacristy_checks/{dateId} {
-      allow read: if isAuthenticated();
-      allow write: if isSacristan();
-    }
-
-    // 6. Messages (Chat)
-    // - Read/Write: All Authenticated Users
-    match /messages/{msgId} {
-      allow read, write: if isAuthenticated();
-    }
-
-    // Default: Deny everything else
-    match /{document=**} {
-      allow read, write: if false;
-    }
+    match /messages/{msgId} { allow read, write: if isAuthenticated(); }
+    
+    match /{document=**} { allow read, write: if false; }
   }
 }
