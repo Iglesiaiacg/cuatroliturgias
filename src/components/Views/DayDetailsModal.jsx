@@ -4,6 +4,8 @@ import { es } from 'date-fns/locale';
 import { getLiturgicalColor, getLiturgicalCycle, identifyFeast } from '../../services/liturgy';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 
+import { createPortal } from 'react-dom';
+
 export default function DayDetailsModal({ date, onClose, onGenerate }) {
 
     const { getEventsForDate, addEvent, deleteEvent, updateRoster, getRoster, updateDailyReminder, getDailyReminder } = useCalendarEvents();
@@ -42,7 +44,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
         updateRoster(date, newRoster);
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-fade-in" onClick={onClose}>
             <div
                 className="bg-[var(--bg-main)] w-full max-w-md rounded-2xl shadow-2xl overflow-hidden border-none transform transition-all animate-scale-in flex flex-col max-h-[90vh]"
@@ -245,6 +247,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
 
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
