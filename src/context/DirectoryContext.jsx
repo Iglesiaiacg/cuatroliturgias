@@ -1,4 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
+import { db } from '../services/firebase';
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
 
 const DirectoryContext = createContext();
 
@@ -11,58 +13,92 @@ export const useDirectory = () => {
 };
 
 export const DirectoryProvider = ({ children }) => {
-    const [members, setMembers] = useState(() => {
-        const stored = localStorage.getItem('liturgia_directory');
-        return stored ? JSON.parse(stored) : [];
-    });
+    const [members, setMembers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    const saveMembers = (newList) => {
-        setMembers(newList);
-        localStorage.setItem('liturgia_directory', JSON.stringify(newList));
-    };
+    // Sync with Firestore 'users' collection
+    useEffect(() => {
+        const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+            const usersList = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    ...data,
+                    // Map Auth fields to Directory fields if missing
+                    fullName: data.fullName || data.displayName || 'Sin Nombre',
+                    memberId: data.memberId || data.credentialId || 'PENDIENTE',
+                    // Ensure other fields exist to avoid UI errors
+                    phone: data.phone || '',
+                    email: data.email || '',
+                    address: data.address || '',
+                    role: data.role || 'guest'
+                };
+            });
+            setMembers(usersList);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error reading directory:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const generateMemberId = (fullName, currentList) => {
         if (!fullName) return '';
-
-        // Initials: First letter of each word (up to 3)
         const words = fullName.trim().toUpperCase().split(/\s+/);
         const initials = words.slice(0, 3).map(w => w[0]).join('');
         const prefix = `IACG_${initials}`;
-
-        // Find consecutive number
         const matchingIds = currentList
             .filter(m => m.memberId && m.memberId.startsWith(prefix))
             .map(m => {
                 const parts = m.memberId.split('_');
                 return parseInt(parts[parts.length - 1]) || 0;
             });
-
         const nextNum = (matchingIds.length > 0 ? Math.max(...matchingIds) : 0) + 1;
-        const paddedNum = nextNum.toString().padStart(3, '0');
-
-        return `${prefix}_${paddedNum}`;
+        return `${prefix}_${nextNum.toString().padStart(3, '0')}`;
     };
 
-    const addMember = (memberData) => {
-        const newMember = { ...memberData };
-        if (!newMember.id) newMember.id = crypto.randomUUID();
-        if (!newMember.memberId) {
-            newMember.memberId = generateMemberId(newMember.fullName, members);
+    const addMember = async (memberData) => {
+        try {
+            const dataToSave = { ...memberData };
+            if (!dataToSave.memberId) {
+                dataToSave.memberId = generateMemberId(dataToSave.fullName, members);
+            }
+            // For manual members (not linked to Auth UID), let Firestore gen ID
+            await addDoc(collection(db, 'users'), {
+                ...dataToSave,
+                createdAt: new Date(),
+                role: 'guest', // Default role for manual entries
+                origin: 'directory_manual'
+            });
+        } catch (error) {
+            console.error("Error adding member:", error);
+            throw error;
         }
-
-        const newList = [...members, newMember];
-        saveMembers(newList);
-        return newMember;
     };
 
-    const updateMember = (id, updates) => {
-        const newList = members.map(m => m.id === id ? { ...m, ...updates } : m);
-        saveMembers(newList);
+    const updateMember = async (id, updates) => {
+        try {
+            const userRef = doc(db, 'users', id);
+            await updateDoc(userRef, {
+                ...updates,
+                // Update displayName if fullName changes to keep sync
+                ...(updates.fullName ? { displayName: updates.fullName } : {})
+            });
+        } catch (error) {
+            console.error("Error updating member:", error);
+            throw error;
+        }
     };
 
-    const deleteMember = (id) => {
-        const newList = members.filter(m => m.id !== id);
-        saveMembers(newList);
+    const deleteMember = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'users', id));
+        } catch (error) {
+            console.error("Error deleting member:", error);
+            throw error;
+        }
     };
 
     const getMember = (id) => members.find(m => m.id === id);
@@ -73,7 +109,8 @@ export const DirectoryProvider = ({ children }) => {
             addMember,
             updateMember,
             deleteMember,
-            getMember
+            getMember,
+            loading
         }}>
             {children}
         </DirectoryContext.Provider>
