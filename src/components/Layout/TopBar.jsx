@@ -67,7 +67,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
                     {/* ADMIN VIEW SWITCHER - Only visible to Real Admins */}
                     {realRole === 'admin' && (
-                        <div className="hidden lg:flex items-center bg-red-50 dark:bg-red-900/20 rounded-lg px-2 py-1 mr-2 border border-red-100 dark:border-red-800/30">
+                        <div className="flex items-center bg-red-50 dark:bg-red-900/20 rounded-lg px-2 py-1 mr-2 border border-red-100 dark:border-red-800/30">
                             <span className="material-symbols-outlined text-red-400 text-sm mr-2">visibility</span>
                             <select
                                 value={propRole || 'admin'}
@@ -76,7 +76,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                     setPreviewRole(newRole);
                                     if (onNavigate) onNavigate('dashboard'); // Reset view to home
                                 }}
-                                className="bg-transparent text-xs font-bold text-red-800 dark:text-red-200 outline-none cursor-pointer border-none focus:ring-0 w-32"
+                                className="bg-transparent text-xs font-bold text-red-800 dark:text-red-200 outline-none cursor-pointer border-none focus:ring-0 w-24 md:w-32"
                             >
                                 <option value="admin">Modo Rector</option>
                                 <option value="treasurer">Ver: Tesorero</option>
