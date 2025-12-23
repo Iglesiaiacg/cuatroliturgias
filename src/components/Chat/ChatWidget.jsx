@@ -131,9 +131,12 @@ export default function ChatWidget() {
             {/* Toggle Button */}
             <button
                 onClick={toggleChat}
-                className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all bg-[var(--color-primary)] text-white hover:scale-105 active:scale-95 pointer-events-auto ${isOpen ? 'opacity-0 scale-0 absolute' : 'opacity-100 scale-100'}`}
+                className={`relative w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all bg-[var(--color-primary)] text-white hover:scale-105 active:scale-95 pointer-events-auto ${isOpen ? 'opacity-0 scale-0 absolute' : 'opacity-100 scale-100'}`}
             >
                 <span className="material-symbols-outlined text-2xl">chat</span>
+                {!isOpen && messages.length > 0 && messages[messages.length - 1]?.uid !== currentUser?.uid && (
+                    <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 border-2 border-white dark:border-gray-900 rounded-full animate-pulse shadow-sm"></span>
+                )}
             </button>
         </div>
     );
