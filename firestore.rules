@@ -10,8 +10,7 @@ service cloud.firestore {
     function isAdmin() {
       return isAuthenticated() && (
         getUserRole() == 'admin' || 
-        request.auth.token.email == 'alexveo855@gmail.com' || 
-        request.auth.token.email == 'gonzalezmatusalexis@gmail.com'
+        request.auth.token.email == 'alexveo855@gmail.com' // PRIMACÍA TOTAL
       );
     }
     function isMusician() { return isAuthenticated() && (getUserRole() == 'musician' || isAdmin()); }
@@ -34,17 +33,21 @@ service cloud.firestore {
       allow read, write: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
     }
 
-    match /transactions/{docId} { allow read, write: if isAdmin() || getUserRole() == 'treasurer'; }
-    match /inventory/{docId} { allow read, write: if isAdmin() || isSacristan(); }
-    match /sacristy_checks/{dateId} { allow read: if isAuthenticated(); allow write: if isSacristan(); }
-    match /active_duties/{dutyId} { allow read: if isAuthenticated(); allow write: if isAdmin(); }
-    
-    // INTENTIONS - The fix for your current error
+    // --- DIAGNOSTICO: LECTURA ABIERTA TEMPORAL ---
     match /intentions/{dateId} {
-      allow read: if isAuthenticated();
+      allow read: if true; 
       allow write: if isSecretary();
     }
 
+    match /sacristy_checks/{dateId} {
+      allow read: if true;
+      allow write: if isSacristan();
+    }
+    // ----------------------------------------------
+
+    match /transactions/{docId} { allow read, write: if isAdmin() || getUserRole() == 'treasurer'; }
+    match /inventory/{docId} { allow read, write: if isAdmin() || isSacristan(); }
+    match /active_duties/{dutyId} { allow read: if isAuthenticated(); allow write: if isAdmin(); }
     match /messages/{msgId} { allow read, write: if isAuthenticated(); }
     
     match /{document=**} { allow read, write: if false; }
