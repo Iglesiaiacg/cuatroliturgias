@@ -81,7 +81,23 @@ export function ChatProvider({ children }) {
             setLoading(false);
 
             if (!isOpen) {
-                // Unread logic placeholder
+                // Heuristic: If last message is NOT from me, increment/set badge
+                const lastMsg = msgs[msgs.length - 1];
+                if (lastMsg && lastMsg.uid !== currentUser.uid) {
+                    setUnreadCount(1); // Simple dot
+                    if ('setAppBadge' in navigator) {
+                        navigator.setAppBadge(1).catch(e => console.error(e));
+                    }
+                } else {
+                    setUnreadCount(0);
+                    if ('clearAppBadge' in navigator) {
+                        navigator.clearAppBadge().catch(e => console.error(e));
+                    }
+                }
+            } else {
+                if ('clearAppBadge' in navigator) {
+                    navigator.clearAppBadge().catch(e => console.error(e));
+                }
             }
         });
 
@@ -116,8 +132,14 @@ export function ChatProvider({ children }) {
     };
 
     const toggleChat = () => {
-        setIsOpen(!isOpen);
-        if (!isOpen) setUnreadCount(0);
+        const nextState = !isOpen;
+        setIsOpen(nextState);
+        if (nextState) {
+            setUnreadCount(0);
+            if ('clearAppBadge' in navigator) {
+                navigator.clearAppBadge().catch(e => console.error(e));
+            }
+        }
     };
 
     const startPrivateChat = (targetUser) => {
