@@ -103,10 +103,9 @@ export function AuthProvider({ children }) {
                 setUserRole('guest');
 
                 // SUPER ADMIN HARDCHECK
+                // SUPER ADMIN HARDCHECK
                 const SUPER_ADMINS = ['alexveo855@gmail.com', 'gonzalezmatusalexis@gmail.com']; // Replace/Add your email
-                if (SUPER_ADMINS.includes(user.email)) {
-                    setUserRole('admin');
-                }
+                const isSuperAdmin = SUPER_ADMINS.includes(user.email);
 
                 const userRef = doc(db, 'users', user.uid);
 
@@ -115,11 +114,14 @@ export function AuthProvider({ children }) {
                     const docSnap = await getDoc(userRef);
 
                     if (docSnap.exists()) {
-                        setUserRole(docSnap.data().role);
+                        // Force Admin if super admin, else use DB role
+                        setUserRole(isSuperAdmin ? 'admin' : docSnap.data().role);
 
                         // We have access, safe to listen for changes
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
-                            if (snap.exists()) setUserRole(snap.data().role);
+                            if (snap.exists()) {
+                                setUserRole(isSuperAdmin ? 'admin' : snap.data().role);
+                            }
                         }, (error) => {
                             console.warn("User role snapshot error (graceful fallback):", error.code);
                         });
@@ -127,17 +129,23 @@ export function AuthProvider({ children }) {
                         // Profile doesn't exist, create it
                         const year = new Date().getFullYear();
                         const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+
+                        // If Super Admin, create as admin
+                        const initialRole = isSuperAdmin ? 'admin' : 'guest';
+
                         await setDoc(userRef, {
                             email: user.email,
-                            role: 'guest',
+                            role: initialRole,
                             credentialId: `${year}-${suffix}`,
                             displayName: user.email.split('@')[0],
                             createdAt: new Date()
                         });
 
-                        // Listen (assuming creation implies read access)
+                        // Listen
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
-                            if (snap.exists()) setUserRole(snap.data().role);
+                            if (snap.exists()) {
+                                setUserRole(isSuperAdmin ? 'admin' : snap.data().role);
+                            }
                         }, (error) => {
                             console.warn("User role snapshot error (graceful fallback):", error.code);
                         });
