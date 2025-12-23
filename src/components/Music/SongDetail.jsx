@@ -1,6 +1,8 @@
 import { useState, useMemo } from 'react';
 import { transposeChords } from '../../utils/chordParser';
 
+import { createPortal } from 'react-dom';
+
 export default function SongDetail({ song, onClose }) {
     const [transpose, setTranspose] = useState(0);
     const [fontSize, setFontSize] = useState(18); // Default 18px
@@ -57,7 +59,7 @@ export default function SongDetail({ song, onClose }) {
     //     return () => clearInterval(interval);
     // }, [autoScroll]);
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col animate-fade-in">
             {/* Toolbar (Atril Controls) */}
             <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-white/10 p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg shrink-0">
@@ -127,6 +129,7 @@ export default function SongDetail({ song, onClose }) {
                      .bg-paper-pattern { background: none; }
                 }
             `}</style>
-        </div>
+        </div>,
+        document.body
     );
 }
