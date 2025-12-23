@@ -167,10 +167,12 @@ export function AuthProvider({ children }) {
 
     // Default Permissions (fallback)
     const DEFAULT_PERMISSIONS = {
-        admin: ['generate_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'manage_users', 'view_treasury'],
-        treasurer: ['view_calendar', 'view_offerings', 'view_treasury'],
-        secretary: ['view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'view_treasury'],
-        sacristan: ['view_calendar', 'view_sacristy'],
+        admin: ['generate_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'manage_users', 'view_treasury', 'view_music', 'manage_music', 'view_dashboard_admin'],
+        treasurer: ['view_calendar', 'view_offerings', 'view_treasury', 'view_dashboard_treasurer'],
+        secretary: ['view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'view_treasury', 'view_dashboard_secretary'],
+        sacristan: ['view_calendar', 'view_sacristy', 'view_dashboard_sacristan'],
+        musician: ['view_calendar', 'view_music', 'manage_music', 'view_dashboard_musician'],
+        acolyte: ['view_calendar', 'view_dashboard_acolyte'],
         reader: ['view_calendar'],
         guest: [] // Guests only see Home (where pinned liturgy lives) and public Chat
     };

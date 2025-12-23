@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import Preview from '../Liturgy/Preview'; // Re-use preview for display? Or just a button to open?
-// Better: Detailed Card that opens a Modal or expands. PROPOSAL: Expandable Card.
+import { useAuth } from '../../context/AuthContext'; // NEW: Auth Hook
+import Preview from '../Liturgy/Preview';
 
+// Common Components
 import StyledCard from '../Common/StyledCard';
 import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
 import FinanceCard from '../Dashboard/FinanceCard';
@@ -14,7 +15,12 @@ import NoticesCard from '../Dashboard/NoticesCard';
 import QuickCertCard from '../Dashboard/QuickCertCard';
 import SacristyStatusCard from '../Dashboard/SacristyStatusCard';
 
-export default function Dashboard({ onNavigate, date }) {
+// Role Dashboards
+import { TreasurerDashboard, SacristanDashboard, SecretaryDashboard, MusicianDashboard, AcolyteDashboard } from '../Dashboard/RoleDashboards';
+import GuestDashboard from '../Dashboard/GuestDashboard';
+
+export default function HomeView({ onNavigate, date, docContent }) {
+    const { userRole } = useAuth(); // Get current role
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
 
@@ -29,9 +35,44 @@ export default function Dashboard({ onNavigate, date }) {
         return () => unsub();
     }, []);
 
+    // --- RENDER LOGIC BASED ON ROLE ---
+
+    // 1. ACOLYTE (Simplified View)
+    if (userRole === 'acolyte') {
+        return <AcolyteDashboard pinnedLiturgy={pinnedLiturgy} />;
+    }
+
+    // 2. TREASURER
+    if (userRole === 'treasurer') {
+        return <TreasurerDashboard onNavigate={onNavigate} />;
+    }
+
+    // 3. SACRISTAN
+    if (userRole === 'sacristan') {
+        return <SacristanDashboard onNavigate={onNavigate} date={date} />;
+    }
+
+    // 4. SECRETARY
+    if (userRole === 'secretary') {
+        return <SecretaryDashboard onNavigate={onNavigate} date={date} />;
+    }
+
+    // 5. MUSICIAN
+    if (userRole === 'musician') {
+        return <MusicianDashboard onNavigate={onNavigate} />;
+    }
+
+    // 6. GUEST / FAITHFUL (Devotional View)
+    if (userRole === 'guest' || userRole === 'reader') {
+        return <GuestDashboard onNavigate={onNavigate} pinnedLiturgy={pinnedLiturgy} date={date} />;
+    }
+
+    // 7. ADMIN (Full Dashboard)
+    // Guests only see limited actions if permissions are blocked, but UI structure is same "Home".
+    // We kept the existing layout for Admins.
+
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
-
 
             {/* Greeting Header */}
             <div className="mb-6">
@@ -47,6 +88,7 @@ export default function Dashboard({ onNavigate, date }) {
                     <p className="text-gray-500 dark:text-gray-400">
                         {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
                     </p>
+                    {userRole === 'admin' && <span className="bg-red-100 text-red-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Modo Director</span>}
                 </div>
             </div>
 
@@ -140,7 +182,7 @@ export default function Dashboard({ onNavigate, date }) {
                     </section>
 
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos</h3>
+                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <StyledCard
                                 title="Liturgia"

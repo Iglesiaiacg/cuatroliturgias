@@ -1,31 +1,5 @@
 import { useState, useMemo } from 'react';
-
-// Simple Transpose Logic
-const SCALES = {
-    sharp: ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'],
-    flat: ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
-};
-
-const transposeChord = (chord, semi) => {
-    // Basic implementation handling major/minor
-    let root = chord.replace(/m|maj|dim|aug|7|sus|add|9/g, '');
-    let suffix = chord.substring(root.length);
-
-    // Find index
-    let scale = SCALES.sharp;
-    let idx = scale.indexOf(root);
-    if (idx === -1) {
-        scale = SCALES.flat;
-        idx = scale.indexOf(root);
-    }
-
-    if (idx === -1) return chord; // Unknown
-
-    let newIdx = (idx + semi) % 12;
-    if (newIdx < 0) newIdx += 12;
-
-    return scale[newIdx] + suffix;
-};
+import { transposeChords } from '../../utils/chordParser';
 
 export default function SongDetail({ song, onClose }) {
     const [transpose, setTranspose] = useState(0);
@@ -35,8 +9,12 @@ export default function SongDetail({ song, onClose }) {
 
     // Process Lyrics
     const content = useMemo(() => {
-        // Regex to find chords [C#]
+        // First, apply transposition to the whole block if needed (cleaner than line by line regex in render)
+        // Actually, we need to respect the bracket structure for styling.
+
+        // Let's iterate lines
         const lines = song.lyrics.split('\n');
+
         return lines.map((line, i) => {
             // Split by chords
             const parts = line.split(/(\[.*?\])/g);
@@ -47,12 +25,15 @@ export default function SongDetail({ song, onClose }) {
                             // It's a chord
                             if (!showChords) return null; // Hide if toggled off
 
-                            const rawChord = part.slice(1, -1);
-                            const transposedChord = transpose === 0 ? rawChord : transposeChord(rawChord, transpose);
+                            // Transpose using utility
+                            // Utility expects "[C]", gives back "[D]"
+                            const transposed = transposeChords(part, transpose);
+                            // Strip brackets for display
+                            const displayChord = transposed.slice(1, -1);
 
                             return (
                                 <span key={j} className="text-red-600 font-bold mx-1 select-none" style={{ fontSize: '0.9em' }}>
-                                    {transposedChord}
+                                    {displayChord}
                                 </span>
                             );
                         } else {

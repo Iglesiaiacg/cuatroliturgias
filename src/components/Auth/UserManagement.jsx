@@ -25,8 +25,10 @@ export default function UserManagement() {
         { id: 'admin', label: 'Sacerdote (Admin)' },
         { id: 'treasurer', label: 'Tesorero (Finanzas)' },
         { id: 'sacristan', label: 'Sacristán (Sacristía)' },
-        { id: 'secretary', label: 'Secretaría (Admin sin Liturgia)' },
-        { id: 'reader', label: 'Lector/Músico (Solo Lectura)' },
+        { id: 'secretary', label: 'Secretario/a (Admin)' },
+        { id: 'musician', label: 'Líder de Canto' },
+        { id: 'acolyte', label: 'Acólito / Servidor' },
+        { id: 'reader', label: 'Lector (Solo Lectura)' },
     ];
 
     const AVAILABLE_PERMISSIONS = [

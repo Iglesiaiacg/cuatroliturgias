@@ -98,3 +98,44 @@ function formatInlineChords(line) {
     // Turn "C G Am F" into "[C] [G] [Am] [F]"
     return line.replace(/(\S+)/g, '[$1]');
 }
+
+// --- TRANSPOSITION UTILS ---
+
+const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const FLATS = { 'Bb': 'A#', 'Eb': 'D#', 'Ab': 'G#', 'Db': 'C#', 'Gb': 'F#' };
+
+export function transposeChords(text, semitones) {
+    if (!text) return '';
+    if (semitones === 0) return text;
+
+    return text.replace(/\[(.*?)\]/g, (match, chord) => {
+        // Handle complex chords like C/G or Asus4
+        if (chord.includes('/')) {
+            const parts = chord.split('/');
+            return `[${transposeNote(parts[0], semitones)}/${transposeNote(parts[1], semitones)}]`;
+        } else {
+            return `[${transposeNote(chord, semitones)}]`;
+        }
+    });
+}
+
+function transposeNote(note, semitones) {
+    // Extract root note (e.g., "C" from "Cmaj7")
+    const match = note.match(/^([A-G][b#]?)(.*)$/);
+    if (!match) return note;
+
+    let root = match[1];
+    const suffix = match[2];
+
+    // Normalize flats to sharps
+    if (FLATS[root]) root = FLATS[root];
+
+    let index = NOTES.indexOf(root);
+    if (index === -1) return note; // Unknown note
+
+    // Shift
+    let newIndex = (index + semitones) % 12;
+    if (newIndex < 0) newIndex += 12;
+
+    return NOTES[newIndex] + suffix;
+}
