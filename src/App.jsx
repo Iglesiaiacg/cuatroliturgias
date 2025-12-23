@@ -203,8 +203,7 @@ function AppContent() {
               onLogout={logout} // Pass logout logic
               userRole={userRole} // For UI adaptation
               checkPermission={checkPermission}
-              rubricLevel={rubricLevel}
-              onToggleRubric={() => updateSetting('rubricLevel', rubricLevel === 'solemn' ? 'simple' : 'solemn')}
+              checkPermission={checkPermission}
             />
           </div>
 
@@ -263,6 +262,8 @@ function AppContent() {
                       onDownloadBulletin={() => handleDownload('bulletin')}
                       onPulpitMode={() => setIsPulpitOpen(true)}
                       onMinistries={() => setIsAssignmentOpen(true)}
+                      rubricLevel={rubricLevel}
+                      onToggleRubric={() => updateSetting('rubricLevel', rubricLevel === 'solemn' ? 'simple' : 'solemn')}
                     />
                     <Preview ref={previewRef} content={docContent} season={season} rubricLevel={rubricLevel} />
                   </div>

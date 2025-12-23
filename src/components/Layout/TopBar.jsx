@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useTheme } from '../../context/ThemeContext'; // Restoring hook
 
-export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission, rubricLevel, onToggleRubric }) {
+export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission }) {
     const { theme, setTheme } = useTheme();
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
 
@@ -58,16 +58,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 {/* 3. Settings & Profile */}
                 <div className="flex items-center gap-2">
 
-                    {/* Rubric Level Toggle */}
-                    <button
-                        onClick={onToggleRubric}
-                        title={`Nivel de Rúbricas: ${rubricLevel === 'solemn' ? 'Solemne (Completo)' : 'Simple (Reducido)'}`}
-                        className="w-10 h-10 neumorphic-btn group"
-                    >
-                        <span className={`material-symbols-outlined transition-transform ${rubricLevel === 'simple' ? 'text-gray-400' : 'text-primary'}`}>
-                            {rubricLevel === 'solemn' ? 'format_list_bulleted' : 'short_text'}
-                        </span>
-                    </button>
+
 
                     <button
                         onClick={onProfile}
