@@ -149,7 +149,7 @@ export default function Dashboard({ onNavigate, date }) {
                 <div className="space-y-6">
                     <section>
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
-                        <RolesCard docContent={pinnedLiturgy?.content} />
+                        <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
                     </section>
                     <section>
                         <StatsCard />

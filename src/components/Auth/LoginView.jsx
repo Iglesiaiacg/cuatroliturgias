@@ -14,7 +14,7 @@ export default function LoginView() {
     const [showRegModal, setShowRegModal] = useState(false);
     const [regData, setRegData] = useState({
         displayName: '',
-        phone: '',
+        phone: '+52 ',
         address: '',
         postalCode: ''
     });
@@ -111,7 +111,7 @@ export default function LoginView() {
                                     value={regData.phone}
                                     onChange={e => setRegData({ ...regData, phone: e.target.value })}
                                     className="w-full p-3 bg-gray-50 dark:bg-black/20 border border-gray-200 dark:border-white/10 rounded-xl"
-                                    placeholder="Ej: 55 1234 5678"
+                                    placeholder="Ej: +52 55 1234 5678"
                                 />
                             </div>
                             <div className="grid grid-cols-3 gap-4">
