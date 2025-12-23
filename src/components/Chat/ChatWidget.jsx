@@ -80,25 +80,40 @@ export default function ChatWidget() {
 
                         {messages.map((msg) => {
                             const isMe = msg.uid === currentUser.uid;
+                            const isPrivateMsg = msg.isPrivate || (msg.chatId && msg.chatId !== 'general');
+
                             return (
-                                <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                                    <div className={`max-w-[80%] rounded-2xl px-4 py-2 shadow-sm ${isMe
-                                        ? (activeChat ? 'bg-purple-600 text-white rounded-br-none' : 'bg-[var(--color-primary)] text-white rounded-br-none')
-                                        : 'bg-white dark:bg-surface-dark dark:text-gray-200 border border-gray-100 dark:border-white/5 rounded-bl-none'
-                                        }`}>
+                                <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                                    <div
+                                        onClick={() => !activeChat && isPrivateMsg && !isMe ? startPrivateChat({ id: msg.uid, fullName: msg.displayName }) : null}
+                                        className={`max-w-[85%] rounded-2xl px-4 py-2 shadow-sm relative group cursor-pointer ${isMe
+                                            ? (activeChat || isPrivateMsg ? 'bg-purple-600 text-white rounded-br-none' : 'bg-[var(--color-primary)] text-white rounded-br-none')
+                                            : (isPrivateMsg
+                                                ? 'bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-bl-none'
+                                                : 'bg-white dark:bg-surface-dark dark:text-gray-200 border border-gray-100 dark:border-white/5 rounded-bl-none')
+                                            }`}
+                                    >
                                         <div className="flex items-center gap-2 mb-1">
                                             {!isMe && (
-                                                <span className="text-[10px] font-bold opacity-70 uppercase tracking-wider">
-                                                    {msg.displayName}
+                                                <span className={`text-[10px] font-bold uppercase tracking-wider ${isPrivateMsg ? 'text-purple-600 dark:text-purple-300' : 'opacity-70'}`}>
+                                                    {msg.displayName} {isPrivateMsg && '🔒 PRIVADO'}
                                                 </span>
                                             )}
                                         </div>
-                                        <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>
-                                        <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-white/70' : 'text-gray-400'}`}>
+                                        <p className={`text-sm leading-relaxed whitespace-pre-wrap ${!isMe && isPrivateMsg ? 'text-purple-900 dark:text-purple-100' : ''}`}>
+                                            {msg.text}
+                                        </p>
+                                        <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-white/70' : (isPrivateMsg ? 'text-purple-400' : 'text-gray-400')}`}>
                                             {msg.createdAt?.seconds
                                                 ? format(new Date(msg.createdAt.seconds * 1000), 'p', { locale: es })
                                                 : 'Enviando...'}
                                         </div>
+
+                                        {!activeChat && isPrivateMsg && !isMe && (
+                                            <div className="absolute -bottom-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity bg-black/70 text-white text-[10px] px-2 py-1 rounded">
+                                                Clic para responder
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );

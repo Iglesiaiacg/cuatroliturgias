@@ -69,13 +69,10 @@ export function ChatProvider({ children }) {
                 .filter(msg => {
                     if (activeChat) {
                         return msg.chatId === currentChatId;
-                    } else {
-                        // General View: Show only 'general' or undefined (legacy)
-                        // AND ENSURE we don't show private messages meant for others
-                        // A message is general if:
-                        // 1. It has chatId === 'general'
-                        // 2. OR it has NO chatId (legacy) AND NO isPrivate flag
-                        return (!msg.chatId && !msg.isPrivate) || msg.chatId === 'general';
+                        // General View: Show 'general' OR private messages meant for THIS user
+                        const isForMe = msg.chatId && msg.chatId.includes(currentUser.uid);
+                        const isGeneral = (!msg.chatId && !msg.isPrivate) || msg.chatId === 'general';
+                        return isGeneral || isForMe;
                     }
                 })
                 .reverse();
