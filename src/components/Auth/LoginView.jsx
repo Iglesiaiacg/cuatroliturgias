@@ -114,8 +114,8 @@ export default function LoginView() {
                                     placeholder="Ej: +52 55 1234 5678"
                                 />
                             </div>
-                            <div className="grid grid-cols-3 gap-4">
-                                <div className="col-span-2">
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div className="sm:col-span-2">
                                     <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Dirección</label>
                                     <input
                                         value={regData.address}
