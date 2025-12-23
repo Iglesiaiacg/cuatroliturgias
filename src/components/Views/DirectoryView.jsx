@@ -283,10 +283,20 @@ export default function DirectoryView() {
         setIsEditing(false);
     };
 
-    const filteredMembers = members.filter(m =>
-        m.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (m.phone && m.phone.includes(searchTerm))
-    );
+    const normalizeText = (text) => {
+        return text
+            ? text.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            : "";
+    };
+
+    const filteredMembers = members.filter(m => {
+        const term = normalizeText(searchTerm);
+        const name = normalizeText(m.fullName);
+        const phone = normalizeText(m.phone);
+        const id = normalizeText(m.memberId);
+
+        return name.includes(term) || phone.includes(term) || id.includes(term);
+    });
 
     return (
         <div className="flex flex-col md:flex-row neumorphic-card overflow-hidden h-[calc(100vh-140px)] animate-fade-in">
