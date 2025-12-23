@@ -25,6 +25,7 @@
     --shadow-inner: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
 
     /* Accents */
+    --color-primary: #78181b;
     --color-primary-dim: #78181b;
     --icon-color: #6c757d;
 

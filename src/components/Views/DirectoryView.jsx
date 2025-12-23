@@ -398,8 +398,14 @@ export default function DirectoryView() {
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                         {selectedMember.fullName || 'Nuevo Registro'}
                                     </h2>
-                                    <p className="text-sm text-gray-500">
-                                        {selectedMember.memberId ? <span className="font-mono font-bold text-primary bg-primary/10 px-2 py-0.5 rounded">{selectedMember.memberId}</span> : 'ID Pendiente'}
+                                    <p className="text-sm text-gray-500 mt-1">
+                                        {selectedMember.memberId ? (
+                                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm">
+                                                {selectedMember.memberId}
+                                            </span>
+                                        ) : (
+                                            <span className="text-xs italic text-gray-400">ID Pendiente</span>
+                                        )}
                                     </p>
                                 </div>
                             </div>
