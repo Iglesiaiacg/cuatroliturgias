@@ -10,7 +10,8 @@ export default function GeneratorToolbar({
     selectedDate, setSelectedDate,
     calculatedFeast,
     onGenerate,
-    onHistory
+    onHistory,
+    onPin
 }) {
 
     const traditions = [
@@ -81,6 +82,15 @@ export default function GeneratorToolbar({
                     <span className="material-symbols-outlined text-lg">auto_awesome</span>
                     <span>Generar</span>
                 </button>
+                {onPin && (
+                    <button
+                        onClick={onPin}
+                        className="h-9 w-9 rounded-lg flex items-center justify-center hover:bg-red-50 text-red-600 border border-red-200 transition-colors"
+                        title="Fijar en Inicio (Publicar)"
+                    >
+                        <span className="material-symbols-outlined text-lg">push_pin</span>
+                    </button>
+                )}
             </div>
         </div>
     );

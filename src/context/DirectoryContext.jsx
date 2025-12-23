@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../services/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 const DirectoryContext = createContext();
 
@@ -13,11 +14,19 @@ export const useDirectory = () => {
 };
 
 export const DirectoryProvider = ({ children }) => {
+    const { currentUser } = useAuth();
     const [members, setMembers] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Sync with Firestore 'users' collection
     useEffect(() => {
+        if (!currentUser) {
+            setMembers([]);
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
         const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
             const usersList = snapshot.docs.map(doc => {
                 const data = doc.data();
@@ -42,7 +51,7 @@ export const DirectoryProvider = ({ children }) => {
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [currentUser]);
 
     const generateMemberId = (fullName, currentList) => {
         if (!fullName) return '';

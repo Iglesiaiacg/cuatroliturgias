@@ -3,6 +3,8 @@ import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
 import { useSettings } from './hooks/useSettings'
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from './services/firebase';
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext';
 import { DirectoryProvider } from './context/DirectoryContext';
@@ -82,6 +84,24 @@ function AppContent() {
       if (e.message.includes('API Key')) {
         setTimeout(() => setIsProfileOpen(true), 1500)
       }
+    }
+  }
+
+  const handlePinLiturgy = async () => {
+    if (!docContent) return;
+    try {
+      await setDoc(doc(db, 'config', 'pinned_liturgy'), {
+        content: docContent,
+        date: selectedDate,
+        title: calculatedFeast || serviceTitle || "Liturgia",
+        rubricLevel: rubricLevel,
+        pinnedAt: new Date(),
+        pinnedBy: currentUser?.email || 'unknown'
+      });
+      handleToast("Liturgia fijada en el Inicio para todos", "success");
+    } catch (e) {
+      console.error(e);
+      handleToast("Error al fijar liturgia: " + e.message, "error");
     }
   }
 
@@ -227,6 +247,7 @@ function AppContent() {
                 calculatedFeast={calculatedFeast}
                 onGenerate={handleGenerate}
                 onHistory={() => setIsHistoryOpen(true)}
+                onPin={handlePinLiturgy}
               />
 
               <main className="flex-1 py-8 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center w-full">

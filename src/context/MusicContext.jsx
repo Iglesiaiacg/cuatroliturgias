@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import { db, auth } from '../services/firebase';
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { useAuth } from './AuthContext';
 
 const MusicContext = createContext();
 
@@ -8,48 +10,122 @@ export function useMusic() {
 }
 
 export function MusicProvider({ children }) {
+    const { currentUser } = useAuth();
     const [songs, setSongs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Initial load from localStorage
+    // Initial load from Firestore
     useEffect(() => {
-        const stored = localStorage.getItem('liturgia_songs');
-        if (stored) {
-            try {
-                setSongs(JSON.parse(stored));
-            } catch (e) {
-                console.error("Error parsing songs", e);
+        if (!currentUser) {
+            setSongs([]);
+            setLoading(false);
+            return;
+        }
+
+        setLoading(true);
+        // Query songs ordered by title
+        const q = query(collection(db, 'songs'), orderBy('title', 'asc'));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const list = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+
+            // MIGRATION LOGIC: If cloud is empty but local has data, migrate it!
+            if (list.length === 0) {
+                const stored = localStorage.getItem('liturgia_songs');
+                if (stored) {
+                    try {
+                        const localSongs = JSON.parse(stored);
+                        if (localSongs.length > 0) {
+                            console.log("Migrating local songs to cloud...", localSongs.length);
+                            migrateSongs(localSongs);
+                        }
+                    } catch (e) {
+                        console.error("Migration parse error", e);
+                    }
+                } else {
+                    // Seed if absolutely nothing exists
+                    seedData();
+                }
+            } else {
+                setSongs(list);
             }
-        } else {
-            // Seed some data for demo if empty
-            const seed = [
-                { id: '1', title: 'Pescador de Hombres', key: 'C', lyrics: '[C] Tú has venido a la [G] orilla,\n[F] no has buscado ni a [G] sabios ni a ricos,\n[C] tan solo [G] quieres que yo te [C] siga.\n\n[C] Señor, [F] me has mirado a los [C] ojos...' },
-                { id: '2', title: 'Cordero de Dios', key: 'G', lyrics: '[G] Cordero de Dios que [C] quitas\nel pe[D]cado del [G] mundo,\n[C] ten pie[D]dad de no[G]sotros.' }
-            ];
-            setSongs(seed);
-            localStorage.setItem('liturgia_songs', JSON.stringify(seed));
-        }
-        setLoading(false);
-    }, []);
+            setLoading(false);
+        }, (err) => {
+            console.error("Music Sync Error:", err);
+            setError(err.message);
+            // Fallback to local if permission denied or offline
+            const stored = localStorage.getItem('liturgia_songs');
+            if (stored) setSongs(JSON.parse(stored));
+            setLoading(false);
+        });
 
-    // Save on change
-    useEffect(() => {
-        if (!loading) {
-            localStorage.setItem('liturgia_songs', JSON.stringify(songs));
-        }
-    }, [songs, loading]);
+        return () => unsubscribe();
+    }, [currentUser]);
 
-    const addSong = (song) => {
-        const newSong = { ...song, id: uuidv4(), updatedAt: new Date().toISOString() };
-        setSongs(prev => [...prev, newSong]);
+    // Helper: Migrate local to cloud
+    const migrateSongs = async (localList) => {
+        // Prevent infinite loop by setting loading true, but logic above handles it via snapshot
+        for (const song of localList) {
+            try {
+                const { id, ...data } = song; // Remove local ID, let Firestore generate new one or use it?
+                // Let's use addDoc for fresh IDs to avoid collision issues, or setDoc if we trust UUIDs.
+                // Using addDoc is safer for migration.
+                await addDoc(collection(db, 'songs'), {
+                    ...data,
+                    migratedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            } catch (e) {
+                console.error("Error migrating song:", song.title, e);
+            }
+        }
+        // Clear local after successful migration trigger?
+        // Maybe keep as backup for now.
+        // localStorage.removeItem('liturgia_songs'); 
     };
 
-    const updateSong = (id, updates) => {
-        setSongs(prev => prev.map(s => s.id === id ? { ...s, ...updates, updatedAt: new Date().toISOString() } : s));
+    const seedData = async () => {
+        // Only seed if user is admin? Or just let it be empty.
+        // Let's skip auto-seeding to keep it clean, user can add manually.
     };
 
-    const deleteSong = (id) => {
-        setSongs(prev => prev.filter(s => s.id !== id));
+    const addSong = async (song) => {
+        try {
+            await addDoc(collection(db, 'songs'), {
+                ...song,
+                createdBy: auth.currentUser?.email || 'anonymous',
+                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp()
+            });
+        } catch (e) {
+            console.error("Error adding song:", e);
+            throw e;
+        }
+    };
+
+    const updateSong = async (id, updates) => {
+        try {
+            await updateDoc(doc(db, 'songs', id), {
+                ...updates,
+                updatedAt: serverTimestamp()
+            });
+        } catch (e) {
+            console.error("Error updating song:", e);
+            throw e;
+        }
+    };
+
+    const deleteSong = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'songs', id));
+        } catch (e) {
+            console.error("Error deleting song:", e);
+            throw e;
+        }
     };
 
     const value = {
@@ -57,7 +133,8 @@ export function MusicProvider({ children }) {
         addSong,
         updateSong,
         deleteSong,
-        loading
+        loading,
+        error
     };
 
     return (
