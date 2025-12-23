@@ -624,3 +624,55 @@ body {
     content: "❓";
     @apply text-[10px] align-top ml-0.5 opacity-50;
 }
+
+/* PRINT EXPORT STYLES (Clean PDF) */
+@media print {
+
+    /* Hide everything by default */
+    body * {
+        visibility: hidden;
+    }
+
+    /* Show only the print-only container and its children */
+    .print-only,
+    .print-only * {
+        visibility: visible;
+    }
+
+    /* Position the print content at top-left */
+    .print-only {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 2cm !important;
+        /* Standard margin for church docs */
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        max-height: none !important;
+        /* Override HomeView restriction */
+        overflow: visible !important;
+    }
+
+    /* Specific overrides for key elements */
+    .liturgy-content {
+        font-size: 12pt !important;
+        line-height: 1.5 !important;
+        font-family: 'Times New Roman', serif !important;
+        /* Traditional feel */
+    }
+
+    /* Force background removal for ink saving */
+    * {
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    /* Hide the "Read Full" overlay button in HomeView */
+    .print-only .absolute {
+        display: none !important;
+    }
+}
