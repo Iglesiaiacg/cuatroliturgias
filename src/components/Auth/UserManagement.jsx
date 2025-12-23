@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { collection, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, deleteDoc, doc, writeBatch } from 'firebase/firestore'; // Added writeBatch
 import { db } from '../../services/firebase';
 
 export default function UserManagement() {
@@ -143,6 +143,34 @@ export default function UserManagement() {
         setLoading(false);
     };
 
+
+    const handleSeedUsers = async () => {
+        if (!window.confirm("¿Generar usuarios de prueba? Esto creará perfiles ficticios para Tesorero, Sacristán, etc.")) return;
+        setLoading(true);
+        try {
+            const batch = writeBatch(db);
+            const demoUsers = [
+                { id: 'demo-treasurer', displayName: 'Hno. Tesorero', role: 'treasurer', email: 'tesoreria@iglesia.com' },
+                { id: 'demo-sacristan', displayName: 'Hno. Sacristán', role: 'sacristan', email: 'sacristia@iglesia.com' },
+                { id: 'demo-secretary', displayName: 'Hna. Secretaria', role: 'secretary', email: 'oficina@iglesia.com' },
+                { id: 'demo-musician', displayName: 'Dir. Música', role: 'musician', email: 'coro@iglesia.com' },
+                { id: 'demo-acolyte', displayName: 'Joven Acólito', role: 'acolyte', email: 'acolitos@iglesia.com' },
+            ];
+
+            demoUsers.forEach(u => {
+                const ref = doc(db, 'users', u.id);
+                batch.set(ref, { ...u, createdAt: new Date(), isDemo: true });
+            });
+
+            await batch.commit();
+            setMessage("Usuarios de prueba generados correctamente. Ahora aparecen en la lista.");
+        } catch (error) {
+            console.error(error);
+            setMessage("Error al generar: " + error.message);
+        }
+        setLoading(false);
+    };
+
     const handleDelete = async (userId) => {
         if (!window.confirm("¿Estás seguro de eliminar este perfil? El usuario perderá su rol y acceso. (Nota: Para borrar el login definitivamente, hazlo en Firebase Console).")) {
             return;
@@ -232,14 +260,22 @@ export default function UserManagement() {
                             <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">
                                 {isEditing ? 'Editar Usuario' : 'Asignar Nuevo Rol'}
                             </h2>
-                            {isEditing && (
+                            <div className="flex gap-4 mb-2">
                                 <button
-                                    onClick={resetForm}
-                                    className="text-xs text-gray-500 hover:text-gray-900 dark:hover:text-white underline"
+                                    onClick={handleSeedUsers}
+                                    className="text-xs bg-gray-200 dark:bg-white/10 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-white/20 transition-colors"
                                 >
-                                    Cancelar Edición
+                                    + Generar Equipo Demo
                                 </button>
-                            )}
+                                {isEditing && (
+                                    <button
+                                        onClick={resetForm}
+                                        className="text-xs text-gray-500 hover:text-gray-900 dark:hover:text-white underline"
+                                    >
+                                        Cancelar Edición
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         {!isEditing && (
