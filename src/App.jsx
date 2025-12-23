@@ -203,7 +203,6 @@ function AppContent() {
               onLogout={logout} // Pass logout logic
               userRole={userRole} // For UI adaptation
               checkPermission={checkPermission}
-              checkPermission={checkPermission}
             />
           </div>
 
