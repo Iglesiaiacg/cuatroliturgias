@@ -3,6 +3,8 @@ import { getHistory } from '../../services/storage';
 import { db, auth } from '../../services/firebase';
 import { collection, query, where, orderBy, limit, getDocs } from 'firebase/firestore';
 
+import { createPortal } from 'react-dom';
+
 export default function HistoryModal({ isOpen, onClose, onRestore }) {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -49,7 +51,7 @@ export default function HistoryModal({ isOpen, onClose, onRestore }) {
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
@@ -101,6 +103,7 @@ export default function HistoryModal({ isOpen, onClose, onRestore }) {
                     <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Se guardan los últimos 5</p>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

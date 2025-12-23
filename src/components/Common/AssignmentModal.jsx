@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useDirectory } from '../../context/DirectoryContext';
 
+import { createPortal } from 'react-dom';
+
 export default function AssignmentModal({ isOpen, onClose, taskName, contextData, onAssign }) {
 
     const { members } = useDirectory();
@@ -35,7 +37,7 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
 
     if (!isOpen) return null;
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
             <div className="neumorphic-card p-6 w-full max-w-md animate-scale-in max-h-[90vh] overflow-y-auto">
                 <h3 className="text-lg font-bold text-gray-900 mb-4">Asignar Ministerio</h3>
@@ -89,6 +91,7 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
