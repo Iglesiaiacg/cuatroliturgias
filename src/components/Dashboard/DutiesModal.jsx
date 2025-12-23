@@ -89,10 +89,10 @@ export default function DutiesModal({ role, isOpen, onClose }) {
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-amber-500/30">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
+            <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-amber-500/30 max-h-[90vh] flex flex-col">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-amber-700 to-amber-900 p-6 text-white text-center relative">
+                <div className="bg-gradient-to-r from-amber-700 to-amber-900 p-6 text-white text-center relative shrink-0">
                     <div className="mx-auto w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-3 backdrop-blur-md">
                         <span className="material-symbols-outlined text-4xl">{icon}</span>
                     </div>
@@ -108,7 +108,7 @@ export default function DutiesModal({ role, isOpen, onClose }) {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 md:p-8 space-y-6">
+                <div className="p-6 md:p-8 space-y-6 overflow-y-auto custom-scrollbar">
                     <div className="space-y-4">
                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Responsabilidades Clave</h3>
                         <ul className="space-y-3">
