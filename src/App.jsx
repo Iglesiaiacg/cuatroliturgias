@@ -211,7 +211,7 @@ function AppContent() {
         />
 
         {/* Main Content Area */}
-        <div className="flex-1 flex flex-col relative overflow-hidden">
+        <div className="flex-1 flex flex-col relative overflow-hidden pb-24 md:pb-0">
 
           {/* Universal TopBar */}
           <div className="print:hidden">

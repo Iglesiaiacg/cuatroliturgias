@@ -129,7 +129,7 @@ export default function MusicView() {
                                 )}
                             </div>
                             <input
-                                className="w-full sm:w-20 neumorphic-inset p-2"
+                                className="w-full sm:w-20 neumorphic-inset p-2 text-center font-mono font-bold"
                                 placeholder="Tono"
                                 value={newKey} onChange={e => setNewKey(e.target.value)}
                             />

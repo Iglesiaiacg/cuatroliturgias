@@ -105,18 +105,18 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </div>
             </div>
 
-            {/* Mobile Navigation (Bottom row of header) */}
-            <nav className="md:hidden flex justify-around items-center pt-4 pb-1 border-t border-stone-200 dark:border-stone-800 mt-3">
+            {/* Mobile Navigation (Fixed Bottom Bar) */}
+            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--bg-main)]/95 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 pb-safe-area pt-2 px-2 flex justify-around items-center z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
                 {visibleNavItems.map((item) => (
                     <button
                         key={item.id}
                         onClick={() => onNavigate(item.id)}
-                        className={`flex flex-col items-center justify-center gap-1 w-16 group ${activeTab === item.id ? 'text-primary' : 'text-stone-500 dark:text-stone-400'}`}
+                        className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-all active:scale-95 ${activeTab === item.id ? 'text-primary' : 'text-stone-500 dark:text-stone-400'}`}
                     >
-                        <span className={`material-symbols-outlined text-[24px] transition-transform group-active:scale-90 ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
+                        <span className={`material-symbols-outlined text-[24px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                             {item.icon}
                         </span>
-                        {/* <span className="text-[9px] font-medium">{item.label}</span>  Optional on mobile to save space */}
+                        <span className="text-[9px] font-medium truncate w-full text-center">{item.label}</span>
                     </button>
                 ))}
             </nav>

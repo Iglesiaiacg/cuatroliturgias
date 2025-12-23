@@ -67,6 +67,9 @@ body {
     background-color: var(--bg-main);
     color: var(--text-main);
     transition: background-color 0.3s ease;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll on mobile */
+    width: 100%;
 }
 
 /* Global Text Selection Override */
@@ -270,12 +273,14 @@ body {
 /* --- CUSTOM CLOCK STYLES (Uiverse) --- */
 .clock-container {
     /* Scaled down to fit header */
+    /* Scaled down to fit header */
     transform: scale(0.25);
     transform-origin: center;
     width: 333px;
-    /* Fixed width from original CSS to ensure scaling works */
     height: 333px;
     display: flex;
+    /* Ensure it doesn't affect flow layout width significantly */
+    max-width: 100%;
     justify-content: center;
     align-items: center;
 }
