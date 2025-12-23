@@ -106,67 +106,45 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                             <p className="text-sm font-bold text-gray-900 dark:text-white">{currentUser?.email}</p>
                             <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">Rol: {userRole}</p>
                         </div>
-                        {userRole === 'guest' && (
-                            <button
-                                onClick={async () => {
-                                    if (window.confirm("¿Usar permisos de Desarrollo para ser Admin?")) {
-                                        setLoading(true);
-                                        try {
-                                            const { setDoc, doc } = await import('firebase/firestore');
-                                            await setDoc(doc(db, 'users', currentUser.uid), {
-                                                email: currentUser.email,
-                                                role: 'admin',
-                                                displayName: displayName || 'Admin'
-                                            }, { merge: true });
-                                            window.location.reload();
-                                        } catch (e) {
-                                            alert("Error: " + e.message);
-                                        } finally {
-                                            setLoading(false);
-                                        }
-                                    }
-                                }}
-                                className="text-[10px] bg-blue-600 text-white px-2 py-1 rounded shadow hover:bg-blue-700"
-                            >
-                                Ser Admin
-                            </button>
-                        )}
+                        {/* Debug Button Removed for Production */}
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
 
-                        {/* Global Settings Section */}
-                        <div className="neumorphic-card p-4 space-y-4">
-                            <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ajustes Globales</h3>
+                        {/* Global Settings Section - HIDDEN FOR GUESTS */}
+                        {userRole !== 'guest' && (
+                            <div className="neumorphic-card p-4 space-y-4">
+                                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ajustes Globales</h3>
 
-                            {/* Rubric Toggle */}
-                            <div className="flex items-center justify-between">
-                                <div>
-                                    <p className="text-sm font-bold text-gray-900 dark:text-white">Modo Director de Culto</p>
-                                    <p className="text-[10px] text-gray-500">Muestra todas las instrucciones ceremoniales.</p>
+                                {/* Rubric Toggle */}
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <p className="text-sm font-bold text-gray-900 dark:text-white">Modo Director de Culto</p>
+                                        <p className="text-[10px] text-gray-500">Muestra todas las instrucciones ceremoniales.</p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={() => onRubricChange(rubricLevel === 'simple' ? 'solemn' : 'simple')}
+                                        className={`w-10 h-5 rounded-full transition-colors relative ${rubricLevel === 'solemn' ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}
+                                    >
+                                        <div className={`absolute top-1 left-1 w-3 h-3 rounded-full bg-white transition-transform ${rubricLevel === 'solemn' ? 'translate-x-5' : ''}`} />
+                                    </button>
                                 </div>
-                                <button
-                                    type="button"
-                                    onClick={() => onRubricChange(rubricLevel === 'simple' ? 'solemn' : 'simple')}
-                                    className={`w-10 h-5 rounded-full transition-colors relative ${rubricLevel === 'solemn' ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'}`}
-                                >
-                                    <div className={`absolute top-1 left-1 w-3 h-3 rounded-full bg-white transition-transform ${rubricLevel === 'solemn' ? 'translate-x-5' : ''}`} />
-                                </button>
-                            </div>
 
-                            {/* API Key */}
-                            <div>
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
-                                <input
-                                    type="password"
-                                    value={apiKey}
-                                    onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
-                                    placeholder="Clave API (Opcional si usa .env)"
-                                    className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
-                                />
-                                <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                {/* API Key */}
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
+                                    <input
+                                        type="password"
+                                        value={apiKey}
+                                        onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
+                                        placeholder="Clave API (Opcional si usa .env)"
+                                        className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
+                                    />
+                                    <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         {/* Profile Fields */}
                         <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Datos Personales</h3>
