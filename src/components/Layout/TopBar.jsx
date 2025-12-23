@@ -89,31 +89,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         </div>
                     )}
 
-                    {/* ADMIN VIEW SWITCHER */}
-                    {checkPermission('manage_users') && (
-                        <div className="hidden md:flex items-center bg-gray-100 dark:bg-white/10 rounded-full px-3 py-1 mr-2 border border-gray-200 dark:border-white/10">
-                            <span className="material-symbols-outlined text-gray-500 text-sm mr-2">visibility</span>
-                            <select
-                                value={userRole}
-                                onChange={(e) => {
-                                    if (onNavigate) onNavigate('dashboard'); // Go home when switching to see effect
-                                    // We access context directly via hook inside component usually, but here props passed?
-                                    // Wait, TopBar receives userRole prop. We should probably use the hook inside TopBar if possible or pass setPreviewRole.
-                                    // Let's rely on the hook since we imported it below (I need to add import to file top or assume it's passed).
-                                    // Actually, TopBar props list has userRole. Let's assume we need to use the hook.
-                                }}
-                                className="bg-transparent text-xs font-bold text-gray-700 dark:text-gray-300 outline-none cursor-pointer"
-                            >
-                                <option value="admin">Vista: Rector</option>
-                                <option value="treasurer">Vista: Tesorero</option>
-                                <option value="sacristan">Vista: Sacristán</option>
-                                <option value="secretary">Vista: Secretaría</option>
-                                <option value="musician">Vista: Músico</option>
-                                <option value="acolyte">Vista: Acólito</option>
-                                <option value="guest">Vista: Fiel</option>
-                            </select>
-                        </div>
-                    )}
+
 
 
 
