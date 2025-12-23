@@ -5,6 +5,8 @@ import { auth, db } from '../../services/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getApiKey, saveApiKey } from '../../services/storage';
 
+import { createPortal } from 'react-dom';
+
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout } = useAuth();
 
@@ -78,7 +80,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
         }
     };
 
-    return (
+    return createPortal(
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
@@ -195,6 +197,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                     </div>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
