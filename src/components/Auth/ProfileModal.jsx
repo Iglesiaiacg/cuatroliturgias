@@ -11,7 +11,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
     const { currentUser, userRole, logout } = useAuth();
 
     // API Key State
-    const [apiKey, setApiKey] = useState(() => getApiKey());
+    const [apiKey, setApiKey] = useState(() => import.meta.env.VITE_GOOGLE_API_KEY || getApiKey());
     const [keySaved, setKeySaved] = useState(false);
 
     const [displayName, setDisplayName] = useState(currentUser?.displayName || '');
