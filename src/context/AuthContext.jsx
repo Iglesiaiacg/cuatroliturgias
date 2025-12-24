@@ -106,6 +106,14 @@ export function AuthProvider({ children }) {
                 const SUPER_ADMINS = ['alexveo855@gmail.com']; // Replace/Add your email
                 const isSuperAdmin = SUPER_ADMINS.includes(user.email);
 
+                // PRE-EMPTIVE ROLE ASSIGNMENT
+                // If Super Admin, grant access immediately so UI works even if Firestore permissions fail
+                if (isSuperAdmin) {
+                    setUserRole('admin');
+                } else {
+                    setUserRole('guest');
+                }
+
                 const userRef = doc(db, 'users', user.uid);
 
                 try {
@@ -115,8 +123,11 @@ export function AuthProvider({ children }) {
                     if (docSnap.exists()) {
                         const dbRole = docSnap.data().role;
 
-                        // Force Admin if super admin, else use DB role
-                        setUserRole(isSuperAdmin ? 'admin' : dbRole);
+                        // Only update state from DB if NOT super admin (who is already 'admin')
+                        // Or if we want to sync displayName etc.
+                        if (!isSuperAdmin) {
+                            setUserRole(dbRole);
+                        }
 
                         // CRITICAL: If Super Admin has wrong role in DB, FIX IT immediately.
                         // This allows firestore.rules (isAdmin()) to pass.
@@ -128,7 +139,7 @@ export function AuthProvider({ children }) {
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
                             if (snap.exists()) {
                                 const role = snap.data().role;
-                                setUserRole(isSuperAdmin ? 'admin' : role);
+                                if (!isSuperAdmin) setUserRole(role);
                             }
                         }, (error) => {
                             console.warn("User role snapshot error (graceful fallback):", error.code);
