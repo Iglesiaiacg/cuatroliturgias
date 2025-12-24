@@ -46,7 +46,8 @@ export const generateLiturgy = async (prompt) => {
 
         const candidate = data.candidates?.[0];
         if (!candidate || !candidate.content?.parts?.[0]?.text) {
-            throw new Error("Respuesta inválida o incompleta de la IA.");
+            console.error("Gemini Incomplete Response:", JSON.stringify(data, null, 2));
+            throw new Error(`Respuesta incompleta de Google. Razón: ${candidate?.finishReason || 'Desconocida'}. Revisa la consola.`);
         }
 
         return candidate.content.parts[0].text;
