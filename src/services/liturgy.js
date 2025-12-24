@@ -311,10 +311,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         `;
     } else if (tradition === 'ordinariato') {
         specificInstructions = `
-            FUENTE: 'Uso del Ordinariato' (Adaptación libre al Español). 
-            IDIOMA DE SALIDA: ESPAÑOL (Estilo Sacro/Castellano 'Vosotros'). NO GENERAR NADA EN INGLÉS.
-            MANDATORIO (NO RESUMIR): Genera el texto de la **PLEGARIA EUCARÍSTICA I (CANON ROMANO)** completo en ESPAÑOL.
-            CRÍTICO - RUBRICAS SECRETAS: Incluir las oraciones que el sacerdote dice en voz baja (Vox Secreta) como rúbricas rojas (En Latín o Español). (Ej. 'Aufer a nobis', 'Oramus te Domine', 'Haec commixtio').
+            FUENTE: 'Canon Romano Tradicional' (Texto de Dominio Público). 
+            IDIOMA DE SALIDA: ESPAÑOL (Estilo Sacro). 
+            INSTRUCCIÓN ANTI-COPYRIGHT: NO uses traducciones modernas protegidas. Usa tu propia traducción fiel al latín o textos de dominio público.
+            MANDATORIO: Genera el texto de la **PLEGARIA EUCARÍSTICA I (CANON ROMANO)** completo en ESPAÑOL.
+            CRÍTICO - RUBRICAS SECRETAS: Incluir las oraciones que el sacerdote dice en voz baja (Vox Secreta) como rúbricas rojas.
             Incluir 'Prayer of Humble Access' (Oración de Humilde Acceso) traducida al español antes de la comunión.
         `;
         eucharistDetail = `
