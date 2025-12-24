@@ -311,18 +311,24 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         `;
     } else if (tradition === 'ordinariato') {
         specificInstructions = `
-            FUENTE: 'Canon Romano Tradicional' (Texto de Dominio Público). 
-            IDIOMA DE SALIDA: ESPAÑOL (Estilo Sacro). 
-            INSTRUCCIÓN: Genera el texto DE DOMINIO PÚBLICO del Canon Romano.
-            MANDATORIO: Genera el texto de la **PLEGARIA EUCARÍSTICA I (CANON ROMANO)** COMPLETAMENTE DESARROLLADO en ESPAÑOL (Te igitur, Memento, Communicantes, etc.).
-            CRÍTICO - RUBRICAS SECRETAS: Incluir las oraciones que el sacerdote dice en voz baja (Vox Secreta) como rúbricas rojas.
-            Incluir 'Prayer of Humble Access' (Oración de Humilde Acceso) traducida al español antes de la comunión.
+            FUENTE: 'Orden del Ordinariato'. 
+            IDIOMA DE SALIDA: ESPAÑOL (Estilo Sacro).
+            
+            ⚠️ INSTRUCCIÓN DE SEGURIDAD (ANTI-RECITATION): 
+            NO generes el texto completo de la Plegaria Eucarística ni del Canon Romano.
+            EN SU LUGAR, escribe solo los TÍTULOS de las secciones en mayúsculas (ej. "TE IGITUR", "MEMENTO DOMINE") y una breve descripción de la acción litúrgica.
+            
+            CÉNTRATE EN GENERAR EL CONTENIDO VARIABLE DEL DÍA:
+            1. Introito y Colecta.
+            2. TODAS LAS LECTURAS BÍBLICAS COMPLETAS y el Salmo.
+            3. La HOMILÍA completa.
+            4. La 'Oración de Humilde Acceso' (Prayer of Humble Access) completa en español (Esta sí escribirla completa).
         `;
         eucharistDetail = `
-            1. Ofertorio (Con oraciones secretas 'Suscipe Sancte Pater', 'Offerimus tibi').
-            2. Orate Fratres, Prayer over the Offerings.
-            3. CANON ROMANO COMPLETO (Texto tradicional desarrollado).
-            4. Rito de Comunión (Padre Nuestro, Prayer of Humble Access, Agnus Dei).
+            1. Ofertorio (Resumido con rúbricas).
+            2. Orate Fratres.
+            3. CANON ROMANO (Solo Títulos y Rúbricas. NO escribir el texto fijo).
+            4. Rito de Comunión (Padre Nuestro, Oración de Humilde Acceso COMPLETA, Agnus Dei).
         `;
     } else {
         specificInstructions = `
