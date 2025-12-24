@@ -58,12 +58,13 @@ export default function LoginView() {
         try {
             await login(email, password);
         } catch (err) {
+            console.error("LOGIN ERROR DETAILED:", err);
             if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-                setError('Credenciales incorrectas.');
+                setError(`Credenciales incorrectas (${err.code}).`);
             } else if (err.code === 'auth/too-many-requests') {
                 setError('Demasiados intentos. Espera un momento.');
             } else {
-                setError('Error al iniciar sesión: ' + err.message);
+                setError(`Error al iniciar sesión: ${err.message} (${err.code})`);
             }
         }
         setLoading(false);
