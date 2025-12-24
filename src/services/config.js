@@ -1,7 +1,7 @@
 export const CONFIG = {
     // API_KEY removed for security. Use Settings Modal.
     ENDPOINTS: {
-        GENERATE: "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent"
+        GENERATE: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent"
     },
     ICONS: {
         adviento: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="liturgy-icon"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor"/><path d="M12 2v20M2 12h20M12 8a4 4 0 0 1 4 4M8 12a4 4 0 0 1 4-4" fill="none" stroke="currentColor"/></svg>`,
