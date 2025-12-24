@@ -86,7 +86,8 @@ export const useLiturgy = () => {
                         createdAt: serverTimestamp()
                     });
                 } catch (e) {
-                    console.error("Error saving to cloud history:", e);
+                    console.warn("Cloud backup skipped (offline or permissions):", e.code);
+                    // Do NOT set UI error, just warn silently
                 }
             }
 
