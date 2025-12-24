@@ -22,9 +22,9 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
 
 export const generateLiturgy = async (prompt) => {
     try {
-        const userKey = getApiKey();
+        const userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
         if (!userKey) {
-            throw new Error("Falta la API Key. Configúrala en el menú ⚙️");
+            throw new Error("Falta la API Key. Configúrala en el menú ⚙️ o en .env");
         }
 
         const response = await fetchWithRetry(`${CONFIG.ENDPOINTS.GENERATE}?key=${userKey}`, {
