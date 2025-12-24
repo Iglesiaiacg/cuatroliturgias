@@ -16,13 +16,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Enable Offline Persistence (Critical for Churches with bad Wi-Fi)
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+// Enable Offline Persistence (Critical for Churches with bad Wi-Fi)
+// import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 
-const db = initializeFirestore(app, {
-    localCache: persistentLocalCache({
-        tabManager: persistentMultipleTabManager()
-    })
-});
+// const db = initializeFirestore(app, {
+//     localCache: persistentLocalCache({
+//         tabManager: persistentMultipleTabManager()
+//     })
+// });
+
+// TEMPORARY FIX: Disable persistence to resolve crash (Internal Assertion Failed)
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 export { db, auth };
