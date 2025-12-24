@@ -36,11 +36,12 @@ export const generateLiturgy = async (prompt) => {
 
         if (data.error) {
             // Handle specific Google API error codes
+            console.error("Gemini Raw Error:", data.error);
             const msg = data.error.message || "Error desconocido de Google";
             if (msg.includes('API key') || data.error.code === 403) {
-                throw new Error("Tu API Key no es válida o expiró. Verifica en ⚙️");
+                throw new Error(`Tu API Key no es válida (Code ${data.error.code}). Verifica en ⚙️`);
             }
-            throw new Error(msg);
+            throw new Error(`Google Error ${data.error.code}: ${msg}`);
         }
 
         const candidate = data.candidates?.[0];
