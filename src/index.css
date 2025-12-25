@@ -239,35 +239,109 @@ body {
 }
 
 /* Document Preview Styles */
+/* Document Preview Styles - SENIOR EDITORIAL DESIGN */
 .liturgy-content {
-    /* Base typography handled by Tailwind classes in Preview.jsx, but specifics here */
+    /* Base typography */
     color: #1f2937;
-    /* gray-900 */
+    font-family: 'Merriweather', 'Georgia', serif;
+    /* Use Serif for main text */
+    font-size: 1.05rem;
+    line-height: 1.8;
+    /* Generous spacing */
+    overflow-wrap: break-word;
+    /* Prevent horizontal scroll */
+    word-wrap: break-word;
+    /* Legacy support */
 }
 
-/* Paragraph spacing - Critical for avoiding "run-on" text */
+/* Paragraph spacing */
 .liturgy-content p {
-    margin-bottom: 1em;
-    line-height: 1.6;
+    margin-bottom: 1.5em;
+    text-align: justify;
+    /* Formal text alignment */
+    hyphens: auto;
+    /* Clean justification */
+}
+
+/* Headings */
+.liturgy-content h1,
+.liturgy-content h2,
+.liturgy-content h3 {
+    font-family: 'Newsreader', 'Times New Roman', serif;
+    color: var(--color-primary);
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-weight: 700;
+    text-align: center;
+    /* Centered headers for liturgical style */
+    line-height: 1.2;
+}
+
+.liturgy-content h1 {
+    font-size: 2em;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding-bottom: 0.5em;
+}
+
+.liturgy-content h2 {
+    font-size: 1.5em;
+    font-variant: small-caps;
+}
+
+.liturgy-content h3 {
+    font-size: 1.25em;
+    font-style: italic;
+    color: #4b5563;
+}
+
+/* Lists (Bulleted/Ordered) - Add padding */
+.liturgy-content ul,
+.liturgy-content ol {
+    margin-bottom: 1.5em;
+    padding-left: 1.5em;
+    list-style-position: outside;
+}
+
+.liturgy-content li {
+    margin-bottom: 0.5em;
 }
 
 /* Rubrics (Red instructions) */
 .rubric {
     color: #b91c1c;
-    /* red-700 */
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Deep Red */
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    /* Sans-serif for contrast */
     font-style: italic;
     font-weight: 600;
-    font-size: 0.85em;
-    letter-spacing: 0.025em;
+    font-size: 0.9em;
+    display: block;
+    margin: 1em 0;
+    text-align: center;
+    /* Rubrics often centered */
 }
 
-
-
-/* Bold text for people's responses */
+/* Bold text for people's responses (Pueblo) */
 .liturgy-content strong {
-    font-weight: 700;
-    color: #000;
+    font-weight: 800;
+    color: #111827;
+    /* Near black */
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .liturgy-content {
+        font-size: 1rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .liturgy-content p {
+        text-align: left;
+        /* Justify can be weird on mobile */
+    }
 }
 
 /* --- CUSTOM CLOCK STYLES (Uiverse) --- */

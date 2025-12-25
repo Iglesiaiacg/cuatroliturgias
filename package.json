@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/merriweather": "^5.2.11",
+    "@fontsource/newsreader": "^5.2.10",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "firebase": "^12.7.0",

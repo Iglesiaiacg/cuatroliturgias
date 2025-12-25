@@ -46,7 +46,7 @@ const Preview = forwardRef(({ content, season, rubricLevel }, ref) => {
                 ref={ref}
                 id="doc-content"
                 onClick={handleContentClick}
-                className="page-preview liturgy-content preview-paper-texture mx-auto min-h-[50vh] md:min-h-[29.7cm] w-full md:w-[21cm] p-4 md:p-[2cm] outline-none text-[10pt] md:text-[11pt] leading-relaxed break-words transition-all duration-300 relative"
+                className="page-preview liturgy-content preview-paper-texture mx-auto min-h-[50vh] md:min-h-[29.7cm] w-full max-w-full md:w-[21cm] p-6 md:p-[2cm] outline-none text-[10pt] md:text-[11pt] leading-relaxed break-words transition-all duration-300 relative shadow-xl"
                 contentEditable={true}
                 suppressContentEditableWarning={true}
             >
