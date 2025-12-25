@@ -31,6 +31,8 @@ export default function HomeView({ onNavigate, date, docContent }) {
             } else {
                 setPinnedLiturgy(null);
             }
+        }, (error) => {
+            console.error("Error fetching pinned liturgy:", error);
         });
         return () => unsub();
     }, []);

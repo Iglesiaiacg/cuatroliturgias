@@ -120,6 +120,8 @@ export function ChatProvider({ children }) {
                     navigator.clearAppBadge().catch(e => console.error(e));
                 }
             }
+        }, (error) => {
+            console.error("Chat sync error:", error);
         });
 
         return unsubscribe;
