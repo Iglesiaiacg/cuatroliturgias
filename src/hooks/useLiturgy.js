@@ -5,6 +5,7 @@ import { getPreferences, savePreferences, addToHistory } from '../services/stora
 import { db, auth } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { marked } from 'marked';
+import { LITURGIA_FIJA } from '../data/liturgia_constants';
 
 export const useLiturgy = () => {
     // Init state: Tradition from local storage, Date is always today by default
@@ -59,7 +60,14 @@ export const useLiturgy = () => {
                 celebrationLabel: label
             });
 
-            const markdown = await generateLiturgy(prompt);
+            let markdown = await generateLiturgy(prompt);
+
+            // ⚠️ HYBRID INJECTION: Replace placeholders with constant texts
+            // This happens BEFORE markdown parsing to ensure the injected text is formatted correctly
+            Object.keys(LITURGIA_FIJA).forEach((key) => {
+                // Global replace of the placeholder with the constant text
+                markdown = markdown.split(key).join(LITURGIA_FIJA[key]);
+            });
 
             // 1. Convert Markdown to HTML
             const htmlContent = marked.parse(markdown);

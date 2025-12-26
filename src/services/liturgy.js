@@ -522,36 +522,52 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         FUENTE: Misal Romano (3ª Edición).
         IDIOMA: Español.
         
-        ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
-        0. PROCESIÓN DE ENTRADA (Rúbrica e Himno).
-        1. Ritos Iniciales: Antífona, Saludo, Acto Penitencial (Confieso completo), Kyrie, Gloria, Colecta.
-        2. Liturgia de la Palabra: 
-           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim).
-           - Salmo Responsorial [SALMISTA]: (Indica respuesta y estrofas COMPLETAS).
+        ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
+        NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
+        EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
+        - [[INSERTAR_YO_CONFIESO]]
+        - [[INSERTAR_GLORIA]]
+        - [[INSERTAR_CREDO]]
+        - [[INSERTAR_SANTO]]
+        - [[INSERTAR_PADRE_NUESTRO]]
+        - [[INSERTAR_CORDERO]]
+
+        ESTRUCTURA OBLIGATORIA:
+        1. RITOS INICIALES:
+           - Rúbrica de entrada y Saludo.
+           - Acto Penitencial: USA EL MARCADOR \`[[INSERTAR_YO_CONFIESO]]\`.
+           - Kyrie (Señor ten piedad).
+           - Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo o Fiesta).
+           - Oración Colecta (Propia del día).
+
+        2. LITURGIA DE LA PALABRA:
+           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim - Usa Torres Amat).
+           - Salmo Responsorial [SALMISTA]: (Respuesta y estrofas completas).
            - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim).
-           - ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).
-           - Evangelio [DIÁCONO o SACERDOTE]: ⚠️ TEXTO DEL EVANGELIO COMPLETO.
-        3. Homilía y Credo. 
-        4. ORACIÓN UNIVERSAL (ADAPTADA A LAS LECTURAS DE HOY).
-        5. Liturgia Eucarística:
-           - Ofertorio (Bendito seas Señor...).
-           - Oración sobre ofrendas.
-           - PLEGARIA EUCARÍSTICA II (Texto COMPLETO obligatotio):
-             - PREFACIO PROPIO y Santo.
-             - "Santo eres en verdad, Señor, fuente de toda santidad..."
-             - Relato de Institución (Verbatim).
-             - "Este es el Sacramento de nuestra fe..." (Aclamación).
-             - Anamnesis ("Así pues, Padre...").
-             - Epíclesis de comunión y Doxología.
-        6. Rito de Comunión:
-           - Padre Nuestro (Completo).
-           - EMBOLISMO ("Líbranos de todos los males, Señor...").
-           - Doxología ("Tuyo es el reino...").
-           - Paz, Cordero, Comunión, Oración Post-comunión.
+           - ALELUYA [CORO]: Verso propio.
+           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ TEXTO COMPLETO (Verbatim).
+        
+        3. HOMILÍA Y CREDO:
+           - Homilía (Reflexión breve).
+           - Credo: USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.
+
+        4. ORACIÓN UNIVERSAL:
+           - Redacta peticiones adaptadas a las lecturas de hoy.
+
+        5. LITURGIA EUCARÍSTICA:
+           - Ofertorio y Oración sobre las ofrendas.
+           - PLEGARIA EUCARÍSTICA:
+             - Prefacio y Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+             - Plegaria Eucarística II (Texto completo, consagración verbatim).
+             - Doxología final.
+
+        6. RITO DE COMUNIÓN:
+           - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
+           - Embolismo y Rito de la Paz.
+           - Cordero: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
+           - Comunión y Oración Post-comunión.
+
         7. RITO DE CONCLUSIÓN:
-           - AVISOS PARROQUIALES BREVES.
-           - Bendición final.
-           - DESPEDIDA: "Podéis ir en paz" - "Demos gracias a Dios".
-           - PROCESIÓN DE SALIDA (Canto Final).
+           - Avisos y Bendición final.
     `;
 };
