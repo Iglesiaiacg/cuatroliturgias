@@ -271,6 +271,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         Para las oraciones que el sacerdote dice en secreto (Secreto, Ofertorio, Canon bajo), usa el formato de CITA (Blockquote con >).
         Ejemplo: 
         > Suscipe, Sancte Pater, omnipotens aeterne Deus...
+
+        ⚠️ REGLA DE ETIQUETADO LITÚRGICO (STRICT):
+        1. Usa "V." y "R." para todos los diálogos (V. El Señor esté con ustedes. R. Y con tu espíritu).
+        2. Marca el "Incipit" (inicio entonado) separándolo si aplica (Ej: Gloria, Credo).
+        3. Etiqueta claramente: "Antífona", "Embolismo", "Doxología" donde corresponda.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
