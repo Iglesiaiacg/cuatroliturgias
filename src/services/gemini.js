@@ -1,5 +1,4 @@
-import { CONFIG } from './config';
-import { getApiKey } from './storage';
+import { getGlobalSettings } from './settings';
 
 const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     try {
@@ -22,7 +21,23 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
 
 export const generateLiturgy = async (prompt, isRetry = false) => {
     try {
-        const userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
+        // STRATEGY: 1. ENV, 2. LocalStorage, 3. Firestore (Cloud)
+        let userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
+
+        if (!userKey || userKey === "") {
+            // Try fetching from Cloud
+            try {
+                const globalSettings = await getGlobalSettings();
+                if (globalSettings?.googleApiKey) {
+                    userKey = globalSettings.googleApiKey;
+                    // Optional: Cache it locally to save reads? 
+                    // saveApiKey(userKey); // Maybe risky if we want it purely cloud managed. Let's keep it direct for now.
+                }
+            } catch (err) {
+                console.warn("Could not fetch cloud settings:", err);
+            }
+        }
+
         if (!userKey) {
             throw new Error("Falta la API Key. Configúrala en el menú ⚙️ o en .env");
         }

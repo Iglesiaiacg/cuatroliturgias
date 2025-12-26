@@ -4,6 +4,7 @@ import { updateProfile, updatePassword } from 'firebase/auth';
 import { auth, db } from '../../services/firebase';
 import { doc, updateDoc } from 'firebase/firestore';
 import { getApiKey, saveApiKey } from '../../services/storage';
+import { saveGlobalSettings } from '../../services/settings';
 
 import { createPortal } from 'react-dom';
 
@@ -30,7 +31,17 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
 
         // Save API Key if changed (AND we are Admin, so we don't accidentally wipe it while hidden)
         if (userRole === 'admin' && apiKey !== getApiKey()) {
-            saveApiKey(apiKey.trim());
+            saveApiKey(apiKey.trim()); // Local Backup
+
+            // CLOUD SYNC: Save to Firestore
+            try {
+                await saveGlobalSettings({ googleApiKey: apiKey.trim() });
+                console.log("API Key synced to Cloud.");
+            } catch (e) {
+                console.error("Cloud sync failed:", e);
+                // Don't block UI on this, local save worked.
+            }
+
             setKeySaved(true);
         }
 
