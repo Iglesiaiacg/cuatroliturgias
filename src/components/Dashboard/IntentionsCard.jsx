@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useIntentionsSync } from '../../hooks/useIntentionsSync';
+import { useAuth } from '../../context/AuthContext';
 
 export default function IntentionsCard({ date }) {
+    const { userRole, checkPermission } = useAuth();
     const { intentions, addIntention, removeIntention, loading } = useIntentionsSync(date);
     const [newItem, setNewItem] = useState('');
     const [type, setType] = useState('difuntos'); // difuntos, salud, accion_gracias
