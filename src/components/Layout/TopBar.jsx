@@ -4,6 +4,7 @@ import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
 import MobileMenuOverlay from './MobileMenuOverlay';
+import JerusalemCross from '../UI/JerusalemCross';
 
 export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole: propRole, checkPermission, canGoBack, onBack }) {
     const { theme, setTheme } = useTheme();
@@ -53,7 +54,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         ) : (
                             // MODE 2: Standard Brand Text Only (No Icons)
-                            <div className="flex items-center justify-center w-full py-2 animate-fade-in">
+                            <div className="flex items-center justify-center w-full py-2 animate-fade-in gap-2">
+                                <JerusalemCross className="w-6 h-6 text-[#991b1b]" />
                                 <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
                                     LITÚRG-<span style={{ color: '#991b1b' }}>IA</span>
                                 </h1>
@@ -66,7 +68,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         <div className="flex flex-col shrink-0">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
                             <div className="flex items-center gap-3">
-                                <span className="material-symbols-outlined text-primary text-3xl">church</span>
+                                <JerusalemCross className="w-8 h-8 text-[#991b1b]" />
                                 <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
                                     LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
                                 </h1>
