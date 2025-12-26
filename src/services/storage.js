@@ -6,7 +6,7 @@ const KEYS = {
 };
 
 export const getApiKey = () => {
-    return localStorage.getItem(KEYS.API_KEY) || "AIzaSyAmH9G7lmfnwWDaABRZiF-dSMbrODaXqVY" || import.meta.env.VITE_GOOGLE_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || "";
+    return localStorage.getItem(KEYS.API_KEY) || "AIzaSyCHq1a0v00iiJWiEOoNBDWR71Bc6JTHkj0" || import.meta.env.VITE_GOOGLE_API_KEY || import.meta.env.VITE_GEMINI_API_KEY || "";
 }
 
 export const saveApiKey = (key) => {
