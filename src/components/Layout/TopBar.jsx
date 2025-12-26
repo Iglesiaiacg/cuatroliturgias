@@ -38,7 +38,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
                     <div className="flex items-center gap-3">
                         <span className="material-symbols-outlined text-primary text-3xl">church</span>
-                        <h1 className="text-xl md:text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
+                        <h1 className="hidden md:block text-xl md:text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
                             LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
                         </h1>
                     </div>
