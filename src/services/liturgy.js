@@ -315,7 +315,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             FUENTE: Missale Romanum 1962.
             IDIOMA: LATÍN (Texto Principal) y ESPAÑOL (Rúbricas).
             
-            ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO):
+            ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO CON SU TÍTULO):
             
             I. RITOS INICIALES Y ANTEPREPARACIÓN
             0. PROCESIÓN DE ENTRADA (Rúbrica de revestimiento y procesión al altar).
@@ -327,7 +327,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             II. INSTRUCCIÓN (MISA DE LOS CATECÚMENOS)
             5. Colecta (Propia del día). 
             6. Epístola (Lectura completa - Rúbrica: LEÍDA POR EL SUBDIÁCONO O LECTOR, de espaldas al pueblo).
-            7. Gradual y Aleluya (o Tracto en Cuaresma). NO es un salmo responsorial, es un canto continuo.
+            7. Gradual y Aleluya (o Tracto en Cuaresma).
+               ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo ("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
             8. Evangelio (Lectura completa - Rúbrica: CANTADO POR EL DIÁCONO O SACERDOTE hacia el norte).
             9. Credo (Texto latino completo, si aplica).
             
@@ -381,47 +382,51 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         return `
             ${basePrompt}
             FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
-            ESTILO: Español Solemne (Usted/Tú reverente). NO usar "vos" antiguo.
+            ESTILO: Español Moderno Solemne ("Tú/Usted"). 
+            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
             
-            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - ORDEN BCP 2019):
+            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - CON TÍTULOS CLAROS):
             0. PROCESIÓN DE ENTRADA (Himno y Rúbrica).
             1. RITOS INICIALES:
                - Aclamación Inicial ("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
                - Colecta de Pureza ("Omnipotente Dios, para quien todos los corazones...").
             2. EL DECÁLOGO o EL SUMARIO DE LA LEY (Leído completo).
-            3. KYRIE ELEISON (Señor, ten piedad) y GLORIA (si corresponde por tiempo litúrgico).
+            3. KYRIE ELEISON (Señor, ten piedad) y GLORIA (si corresponde).
             4. COLECTA DEL DÍA (Propia).
             5. LITURGIA DE LA PALABRA:
-               - Primera Lectura (Antiguo Testamento - Leído por Lector).
-               - SALMO (Leído o cantado por antifonía, entero o porción seleccionada).
-               - Segunda Lectura (Epístola - Leído por Lector).
+               - Primera Lectura (Antiguo Testamento).
+               - SALMO RESPONSORIAL (Indica la Antífona y las Estrofas).
+               - Segunda Lectura (Epístola).
+               - ALELUYA (Incluye el VERSO propio antes del Evangelio).
                - Evangelio (Leído por Diácono/Sacerdote).
             6. HOMILÍA y CREDO NICENO (Texto completo "Creemos en un solo Dios...").
-            7. ORACIÓN DE LOS FIELES (Forma completa BCP).
+            7. ORACIÓN DE LOS FIELES:
+               ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio/Lecturas de hoy.
+               (Formato BCP completo).
             8. CONFESIÓN Y ABSOLUCIÓN:
                - Exhortación breve.
                - Confesión General ("Omnipotente y misericordiosísimo Padre...").
                - Absolución y Palabras de Consuelo.
-            9. LA PAZ (Rúbrica).
+            9. LA PAZ.
             10. LITURGIA EUCARÍSTICA:
-               - Ofertorio (Versículos y Presentación del Pan y Vino).
+               - Ofertorio.
                - Doxología.
-               - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística - Standard Text 2019):
+               - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística):
                  - Sursum Corda ("El Señor esté con ustedes...").
                  - Prefacio Propio y Sanctus.
-                 - Oración de Consagración (Texto completo con Institución).
-                 - Aclamación Memorial ("Cristo ha muerto...").
+                 - Oración de Consagración (Texto completo).
+                 - Aclamación Memorial.
                  - Epíclesis y Doxología Final.
             11. RITO DE COMUNIÓN:
                - PADRE NUESTRO ("Y ahora, como nuestro Salvador Cristo nos enseñó...").
                - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
                - Agnus Dei (Cordero de Dios).
-               - Ministration of Communion (Comunión de los fieles).
+               - Comunión de los fieles.
             12. POST-COMUNIÓN:
-               - Oración de Acción de Gracias ("Omnipotente y sempiterno Dios...").
+               - Oración de Acción de Gracias.
             13. RITOS FINALES:
                - AVISOS DE LA COMUNIDAD.
-               - BENDICIÓN Y DESPEDIDA ("Vayan en paz para amar y servir al Señor...").
+               - BENDICIÓN Y DESPEDIDA.
                - PROCESIÓN DE SALIDA.
         `;
     }
@@ -433,19 +438,19 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             FUENTE: Divine Worship: The Missal.
             ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
             
-            ESTRUCTURA OBLIGATORIA:
+            ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
             0. PROCESIÓN DE ENTRADA.
             1. Introit y Ritos Iniciales (Colecta de Pureza obligatoria).
             2. Palabra: 
                - Profecía (Lector).
                - Gradual o Tracto (Canto interleccional).
                - Epístola (Subdiácono/Lector).
-               - Aleluya.
+               - ALELUYA (Incluye el texto del VERSO propio).
                - Evangelio (Diácono/Sacerdote).
             3. Sermón y Credo.
             4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
-               - Intercesiones (Forma Ordinariato).
-               - Confesión y Absolución (Si no se hizo al inicio).
+               - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
+               - Confesión y Absolución.
             5. Ofertorio (Antífona) y Orate Fratres.
             6. CANON DE LA MISA (VERSIÓN PATRIMONIAL):
                - Prefacio y Sanctus.
@@ -470,17 +475,18 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         FUENTE: Misal Romano (3ª Edición).
         IDIOMA: Español.
         
-        ESTRUCTURA OBLIGATORIA:
+        ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
         0. PROCESIÓN DE ENTRADA (Rúbrica e Himno).
         1. Ritos Iniciales: Antífona, Saludo, Acto Penitencial (Confieso completo), Kyrie, Gloria, Colecta.
         2. Liturgia de la Palabra: 
            - 1ª Lectura (Lector).
-           - Salmo Responsorial (Salmista).
+           - Salmo Responsorial (Salmista - Indica respuesta).
            - 2ª Lectura (Lector).
-           - Aleluya.
+           - ALELUYA (Incluye el VERSO propio antes del Evangelio).
            - Evangelio (Diácono/Sacerdote).
-        3. Homilía y Credo. Oración Universal.
-        4. Liturgia Eucarística:
+        3. Homilía y Credo. 
+        4. ORACIÓN UNIVERSAL (ADAPTADA A LAS LECTURAS DE HOY).
+        5. Liturgia Eucarística:
            - Ofertorio (Bendito seas Señor...).
            - Oración sobre ofrendas.
            - PLEGARIA EUCARÍSTICA II (Texto COMPLETO obligatotio):
@@ -490,8 +496,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
              - "Este es el Sacramento de nuestra fe..." (Aclamación).
              - Anamnesis ("Así pues, Padre...").
              - Epíclesis de comunión y Doxología.
-        5. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
-        6. RITO DE CONCLUSIÓN:
+        6. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
+        7. RITO DE CONCLUSIÓN:
            - AVISOS PARROQUIALES BREVES.
            - Bendición final.
            - DESPEDIDA: "Podéis ir en paz" - "Demos gracias a Dios".
