@@ -1,11 +1,9 @@
 @import "tailwindcss";
 
 @theme {
-    /* Base Neumorphic Variables */
+    /* Base Variables */
     --color-primary: #78181b;
-    /* Keep brand color */
-    --font-display: "Newsreader",
-        serif;
+    --font-display: "Newsreader", serif;
 }
 
 /* Rubric Levels */
@@ -16,18 +14,29 @@
 }
 
 :root {
-    /* Light Mode Neumorphism (Soft Grey/Blue) */
-    --bg-main: #e0e5ec;
-    --text-main: #4a4a4a;
+    /* Modern Card Theme Variables (Stone/Paper Inspiration) */
+    /* Light Mode */
+    --bg-main: #f5f5f4;
+    /* Stone-100 - Cleaner, warm gray */
+    --bg-card: #ffffff;
+    --text-main: #1c1917;
+    /* Stone-900 */
 
-    /* Neumorphic Shadows - Light */
-    --shadow-outer: 9px 9px 16px rgb(163, 177, 198, 0.6), -9px -9px 16px rgba(255, 255, 255, 0.5);
-    --shadow-inner: inset 6px 6px 10px 0 rgba(163, 177, 198, 0.7), inset -6px -6px 10px 0 rgba(255, 255, 255, 0.8);
+    /* Modern Shadows (Not Neumorphic) */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    /* shadow-md */
+    --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* shadow-2xl */
 
-    /* Accents */
+    /* Borders */
+    --border-subtle: 1px solid #e7e5e4;
+    /* Stone-200 */
+
+    /* Accents - Retaining Brand Red */
     --color-primary: #78181b;
-    --color-primary-dim: #78181b;
-    --icon-color: #6c757d;
+    --color-primary-dim: #991b1b;
+    --icon-color: #57534e;
+    /* Stone-600 */
 
     --drop-cap-size: 3.5em;
     --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -36,30 +45,19 @@
 /* Dark Mode Overrides */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-main: #121212;
-        --text-main: #e0e0e0;
+        --bg-main: #0c0a09;
+        /* Stone-950 */
+        --bg-card: #1c1917;
+        /* Stone-900 */
+        --text-main: #f5f5f4;
+        /* Stone-100 */
 
-        /* Neumorphic Shadows - Dark */
-        --shadow-outer: 5px 5px 10px #0a0a0a, -5px -5px 10px #1e1e1e;
-        --shadow-inner: inset 5px 5px 10px #0a0a0a, inset -5px -5px 10px #1e1e1e;
+        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        --border-subtle: 1px solid #292524;
+        /* Stone-800 */
 
-        --color-primary-dim: #ffcccc;
-        /* Lighter red for visibility on dark */
-    }
-}
-
-/* Dark Mode Overrides */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg-main: #121212;
-        --text-main: #e0e0e0;
-
-        /* Neumorphic Shadows - Dark */
-        --shadow-outer: 5px 5px 10px #0a0a0a, -5px -5px 10px #1e1e1e;
-        --shadow-inner: inset 5px 5px 10px #0a0a0a, inset -5px -5px 10px #1e1e1e;
-
-        --color-primary-dim: #ffcccc;
-        /* Lighter red for visibility on dark */
+        --color-primary-dim: #e11d48;
+        /* Rose-600 */
     }
 }
 
@@ -68,8 +66,8 @@ body {
     color: var(--text-main);
     transition: background-color 0.3s ease;
     overflow-x: hidden;
-    /* Prevent horizontal scroll on mobile */
     width: 100%;
+    font-family: system-ui, -apple-system, sans-serif;
 }
 
 /* Global Text Selection Override */
@@ -91,33 +89,52 @@ body {
     .border-primary {
         border-color: var(--color-primary) !important;
     }
-}
 
-@layer utilities {
+    /* REPLACING NEUMORPHIC CLASSES WITH MODERN CARD STYLES */
+    /* Keeping class NAMES to avoid breaking JSX, but changing APPEARANCE */
 
-    /* Standard Card (Popped Out) */
+    /* The Main Container Card */
     .neumorphic-card {
-        background: var(--bg-main);
-        box-shadow: var(--shadow-outer);
-        border-radius: 20px;
-        border: none;
-        /* No borders in pure neumorphism */
+        background: var(--bg-card);
+        box-shadow: var(--shadow-card);
+        border: var(--border-subtle);
+        border-radius: 1rem;
+        /* rounded-2xl look */
+        /* overflow: hidden; Removed generally to allow dropdowns/modals if needed, specific cases handle overflow */
     }
 
-    /* Pressed/Inset Element (Input, Active Button) */
+    /* Inputs/Form Fields - Now Flat with border */
     .neumorphic-inset {
         background: var(--bg-main);
-        box-shadow: var(--shadow-inner);
-        border-radius: 12px;
-        border: none;
+        /* Slightly darker/lighter than card */
+        border: 1px solid transparent;
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+        /* Subtle inner shadow */
+        border-radius: 0.5rem;
+        /* rounded-lg */
+        color: var(--text-main);
     }
 
-    /* Button (Popped Out -> Pressed on Active) */
+    .dark .neumorphic-inset {
+        background: rgba(0, 0, 0, 0.2);
+        border-color: #44403c;
+    }
+
+    .neumorphic-inset:focus {
+        background: var(--bg-card);
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px rgba(120, 24, 27, 0.1);
+        /* Focus ring */
+        outline: none;
+    }
+
+    /* Buttons - Now Solid/Flat/Ghost but NOT extruded */
     .neumorphic-btn {
-        background: var(--bg-main);
-        box-shadow: var(--shadow-outer);
-        border-radius: 50%;
-        /* Default round for icons */
+        background: var(--bg-card);
+        box-shadow: var(--shadow-card);
+        border-radius: 9999px;
+        /* full circle */
+        border: var(--border-subtle);
         transition: all 0.2s ease;
         color: var(--text-main);
         display: flex;
@@ -125,15 +142,46 @@ body {
         justify-content: center;
     }
 
+    .neumorphic-btn:hover {
+        background: var(--bg-main);
+        transform: translateY(-1px);
+    }
+
+    .dark .neumorphic-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
     .neumorphic-btn:active,
     .neumorphic-btn.active {
-        box-shadow: var(--shadow-inner);
-        transform: scale(0.98);
+        background: var(--color-primary);
+        color: white;
+        border-color: var(--color-primary);
+        transform: scale(0.95) translateY(0);
+        box-shadow: none;
     }
 
     .neumorphic-text {
-        text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.1);
-        /* Subtle depth on text */
+        text-shadow: none;
+        /* Clean text */
+    }
+
+    .glass-nav {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .dark .glass-nav {
+        background: rgba(28, 25, 23, 0.9);
+        /* Stone-900 alpha */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    /* Text Shadow Utility */
+    .text-shadow {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 }
 
@@ -214,27 +262,6 @@ body {
             opacity: 1;
             transform: scale(1);
         }
-    }
-}
-
-@layer utilities {
-    .text-shadow {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-
-    .neumorphic {
-        border-radius: 20px;
-        background: linear-gradient(145deg, #f0f0f0, #cacaca);
-        box-shadow: 5px 5px 15px #777777,
-            -5px -5px 15px #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .glass-nav {
-        background: rgba(26, 16, 34, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
 }
 
@@ -333,7 +360,7 @@ body {
 
 /* Lists (Bulleted/Ordered) - Add padding */
 .liturgy-content ul,
-.liturgy-content ol {
+.liturgy-content o {
     margin-bottom: 1.5em;
     padding-left: 1.5em;
     list-style-position: outside;
@@ -382,7 +409,6 @@ body {
 /* --- CUSTOM CLOCK STYLES (Uiverse) --- */
 .clock-container {
     /* Scaled down to fit header */
-    /* Scaled down to fit header */
     transform: scale(0.25);
     transform-origin: center;
     width: 333px;
@@ -397,17 +423,20 @@ body {
 .clock-face {
     width: 300px;
     height: 300px;
-    background-color: #e0e5ec;
+    background-color: var(--bg-main);
+    /* Match new bg */
     border-radius: 50%;
-    box-shadow:
-        12px 12px 24px #a3b1c6,
-        -12px -12px 24px #ffffff;
+    box-shadow: var(--shadow-floating);
+    /* Modern shadow */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 4px solid white;
+    /* Adding white rim for contrast on stone bg */
 }
 
+/* Clock inner details */
 .clock-face::before {
     content: "";
     position: absolute;
@@ -415,9 +444,8 @@ body {
     height: 92%;
     background-color: transparent;
     border-radius: 50%;
-    box-shadow:
-        inset 8px 8px 16px #a3b1c6,
-        inset -8px -8px 16px #ffffff;
+    box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.05);
+    /* Lighter inset */
 }
 
 .marker {
@@ -435,12 +463,11 @@ body {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #e0e5ec;
-    box-shadow:
-        inset 1px 1px 2px #a3b1c6,
-        inset -1px -1px 2px #ffffff;
+    background-color: #a8a29e;
+    /* Stone-400 */
 }
 
+/* .. (Markers Rotation - Standard) .. */
 .marker-1 {
     transform: rotate(30deg);
 }
@@ -516,13 +543,13 @@ body {
     text-align: center;
     font-size: 24px;
     font-weight: 600;
-    color: #b8c1d1;
-    text-shadow:
-        1px 1px 1px #ffffff,
-        -1px -1px 1px #a3b1c6;
+    color: #78716c;
+    /* Stone-500 */
+    text-shadow: none;
     z-index: 2;
 }
 
+/* .. (Number Rotation) .. */
 .number-1 {
     transform: rotate(30deg);
 }
@@ -639,60 +666,37 @@ body {
     border-radius: 10px 10px 0 0;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
     transition: transform 0.1s cubic-bezier(0.4, 2.08, 0.55, 0.44);
-    /* Elastic tick */
 }
 
 .hour-hand {
     width: 8px;
     height: 70px;
-    /* Adjusted length */
-    background: #4a5463;
+    background: #44403c;
     z-index: 5;
 }
 
 .minute-hand {
     width: 6px;
     height: 100px;
-    /* Adjusted length */
-    background: #7a8a9e;
+    background: #78716c;
     z-index: 6;
 }
 
 .second-hand {
     width: 3px;
     height: 120px;
-    /* Adjusted length */
-    background: #e65e5e;
+    background: #ef4444;
     z-index: 7;
 }
 
 .center-pin {
     width: 20px;
     height: 20px;
-    background: #e0e5ec;
+    background: #e5e7eb;
     border-radius: 50%;
     position: absolute;
     z-index: 10;
-    box-shadow:
-        inset 3px 3px 6px #a3b1c6,
-        inset -3px -3px 6px #ffffff;
-}
-
-.center-pin::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 6px;
-    height: 6px;
-    background: #4a5463;
-    border-radius: 50%;
-}
-
-.mask-linear-fade {
-    mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 10px, black 90%, transparent);
+    box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* Rubrics Customization */
@@ -700,14 +704,11 @@ body {
     @apply text-red-600 italic text-sm my-2 block;
 }
 
-/* Solemn Rubrics - Hidden by default unless enabled */
 .rubric-solemn {
     @apply text-red-700 font-bold bg-red-50 p-2 rounded border-l-4 border-red-500 text-xs mt-2 mb-4;
     display: none;
-    /* Default state: hidden (Simple mode) */
 }
 
-/* When parent has class 'mode-solemn', show solemn rubrics */
 .mode-solemn .rubric-solemn {
     display: block;
     animation: fadeIn 0.3s ease-in-out;
@@ -741,19 +742,15 @@ body {
 
 /* PRINT EXPORT STYLES (Clean PDF) */
 @media print {
-
-    /* Hide everything by default */
     body * {
         visibility: hidden;
     }
 
-    /* Show only the print-only container and its children */
     .print-only,
     .print-only * {
         visibility: visible;
     }
 
-    /* Position the print content at top-left */
     .print-only {
         position: absolute;
         left: 0;
@@ -761,31 +758,25 @@ body {
         width: 100%;
         margin: 0;
         padding: 2cm !important;
-        /* Standard margin for church docs */
         background: white !important;
         color: black !important;
         box-shadow: none !important;
         max-height: none !important;
-        /* Override HomeView restriction */
         overflow: visible !important;
     }
 
-    /* Specific overrides for key elements */
     .liturgy-content {
         font-size: 12pt !important;
         line-height: 1.5 !important;
         font-family: 'Times New Roman', serif !important;
-        /* Traditional feel */
     }
 
-    /* Force background removal for ink saving */
     * {
         background: transparent !important;
         box-shadow: none !important;
         text-shadow: none !important;
     }
 
-    /* Hide the "Read Full" overlay button in HomeView */
     .print-only .absolute {
         display: none !important;
     }
