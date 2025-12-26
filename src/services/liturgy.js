@@ -261,6 +261,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
         ESCRIBE EL TEXTO LITÚRGICO COMPLETO VERBATIM (Palabra por palabra).
         Si es una oración fija (Te Igitur, Pater Noster), ESCRIBELA COMPLETA.
+
+        ⚠️ REGLA DE VERSIONES BÍBLICAS (CRÍTICO):
+        NUNCA USES EL NOMBRE "JEHOVÁ". ES PROHIBIDO EN ESTA LITURGIA.
+        Usa siempre "EL SEÑOR" o "DIOS" (Tradición Católica/Anglicana).
+        Usa versiones como Biblia de Jerusalén, Nácar-Colunga o BCP.
         
         ⚠️ REGLA DE FORMATO "VOX SECRETA":
         Para las oraciones que el sacerdote dice en secreto (Secreto, Ofertorio, Canon bajo), usa el formato de CITA (Blockquote con >).
