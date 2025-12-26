@@ -6,7 +6,7 @@ import { useState } from 'react';
 import MobileMenuOverlay from './MobileMenuOverlay';
 import JerusalemCross from '../UI/JerusalemCross';
 
-export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole: propRole, checkPermission, canGoBack, onBack }) {
+export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission, canGoBack, onBack }) {
     const { theme, setTheme } = useTheme();
     const { setPreviewRole, realRole } = useAuth();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -177,7 +177,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
                 // Pass Role Props for Admin Switcher in Menu
                 realRole={realRole}
-                userRole={propRole}
+                userRole={userRole}
                 setPreviewRole={setPreviewRole}
             />
         </>
