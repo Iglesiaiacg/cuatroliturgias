@@ -38,7 +38,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
     return (
         <>
-            <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-8 md:pt-4 pb-2 transition-colors duration-300 shadow-sm">
+            <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-2 md:pt-4 pb-2 transition-colors duration-300 shadow-sm">
                 <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
 
                     {/* MOBILE DYNAMIC HEADER */}
@@ -52,16 +52,11 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 <h1 className="text-lg font-bold text-stone-900 dark:text-white">{title}</h1>
                             </div>
                         ) : (
-                            // MODE 2: Standard Logo & Brand (Centered & Clean)
+                            // MODE 2: Standard Brand Text Only (No Icons)
                             <div className="flex items-center justify-center w-full py-2 animate-fade-in">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 bg-primary/10 rounded-full">
-                                        <span className="material-symbols-outlined text-primary text-3xl">church</span>
-                                    </div>
-                                    <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
-                                        LITÚRG-<span style={{ color: '#991b1b' }}>IA</span>
-                                    </h1>
-                                </div>
+                                <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
+                                    LITÚRG-<span style={{ color: '#991b1b' }}>IA</span>
+                                </h1>
                             </div>
                         )}
                     </div>
