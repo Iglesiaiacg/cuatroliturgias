@@ -343,7 +343,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             13. Suscipe Sancta Trinitas (>). Orate Fratres. Secreta (Propia).
             
             IV. CANON MISSAE (LO MÁS IMPORTANTE - TODO TEXTO LATINO COMPLETO)
-            14. Prefacio (Propio o Común) y Sanctus.
+            14. PREFACIO PROPIO (Del Tiempo o Fiesta) y Sanctus.
             15. TE IGITUR:
                > Te igitur, clementissime Pater... (hasta el final).
             16. MEMENTO VIVORUM:
@@ -363,17 +363,18 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                > Nobis quoque peccatoribus...
             
             V. COMUNIÓN Y RITOS FINALES
-            20. Pater Noster (Completo). Libera nos (>).
-            21. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
-            22. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
-            23. Post-Comunión (Propia). 
-            24. AVISOS PARROQUIALES (Rubrica breve).
-            25. Ite Missa est.
-            26. PLACEAT TIBI (Oración final secreta ante el altar >):
+            20. Pater Noster (Completo). 
+            21. EMBOLISMO ("Libera nos, quaesumus..." - VOX SECRETA > Completo).
+            22. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
+            23. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
+            24. Post-Comunión (Propia). 
+            25. AVISOS PARROQUIALES (Rubrica breve).
+            26. Ite Missa est.
+            27. PLACEAT TIBI (Oración final secreta ante el altar >):
                > Placeat tibi, sancta Trinitas, obsequium servitutis meae...
-            27. BENDICIÓN FINAL (Benedicat vos omnipotens Deus...).
-            28. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
-            29. PROCESIÓN DE SALIDA (Rúbrica).
+            28. BENDICIÓN FINAL (Benedicat vos omnipotens Deus...).
+            29. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
+            30. PROCESIÓN DE SALIDA (Rúbrica).
         `;
     }
 
@@ -413,12 +414,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Doxología.
                - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística):
                  - Sursum Corda ("El Señor esté con ustedes...").
-                 - Prefacio Propio y Sanctus.
+                 - PREFACIO PROPIO (Estacional o de Fiesta) y Sanctus.
                  - Oración de Consagración (Texto completo).
                  - Aclamación Memorial.
                  - Epíclesis y Doxología Final.
             11. RITO DE COMUNIÓN:
                - PADRE NUESTRO ("Y ahora, como nuestro Salvador Cristo nos enseñó...").
+               - DOXOLOGÍA O EMBOLISMO (Según uso BCP: "Porque tuyo es el reino...").
                - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
                - Agnus Dei (Cordero de Dios).
                - Comunión de los fieles.
@@ -453,12 +455,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Confesión y Absolución.
             5. Ofertorio (Antífona) y Orate Fratres.
             6. CANON DE LA MISA (VERSIÓN PATRIMONIAL):
-               - Prefacio y Sanctus.
+               - PREFACIO PROPIO y Sanctus.
                - CANON ROMANO COMPLETO (Texto: "Te igitur" versión DW).
                > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim).
                > Rúbricas de genuflexión y elevación claras.
             7. Rito de Comunión:
                - Padre Nuestro.
+               - EMBOLISMO ("Líbranos Señor..." - Divine Worship text).
                - Rito de la Paz.
                - Agnus Dei.
                - Oración de Humilde Acceso ("No presumimos...").
@@ -490,13 +493,17 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - Ofertorio (Bendito seas Señor...).
            - Oración sobre ofrendas.
            - PLEGARIA EUCARÍSTICA II (Texto COMPLETO obligatotio):
-             - Prefacio y Santo.
+             - PREFACIO PROPIO y Santo.
              - "Santo eres en verdad, Señor, fuente de toda santidad..."
              - Relato de Institución (Verbatim).
              - "Este es el Sacramento de nuestra fe..." (Aclamación).
              - Anamnesis ("Así pues, Padre...").
              - Epíclesis de comunión y Doxología.
-        6. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
+        6. Rito de Comunión:
+           - Padre Nuestro (Completo).
+           - EMBOLISMO ("Líbranos de todos los males, Señor...").
+           - Doxología ("Tuyo es el reino...").
+           - Paz, Cordero, Comunión, Oración Post-comunión.
         7. RITO DE CONCLUSIÓN:
            - AVISOS PARROQUIALES BREVES.
            - Bendición final.
