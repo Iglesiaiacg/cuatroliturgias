@@ -28,8 +28,8 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
         setMessage('');
         setError('');
 
-        // Save API Key if changed
-        if (apiKey !== getApiKey()) {
+        // Save API Key if changed (AND we are Admin, so we don't accidentally wipe it while hidden)
+        if (userRole === 'admin' && apiKey !== getApiKey()) {
             saveApiKey(apiKey.trim());
             setKeySaved(true);
         }
