@@ -61,7 +61,7 @@ export default function RiteGenerator({ rite, onGenerate, onCancel }) {
 
                 <button
                     onClick={handleSubmit}
-                    className="w-full py-3 bg-primary hover:bg-red-800 text-white font-bold rounded-lg shadow-lg hover:shadow-primary/30 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-8"
+                    className="w-full btn-primary py-3 flex items-center justify-center gap-2 mt-8"
                 >
                     <span className="material-symbols-outlined">auto_awesome</span>
                     Generar Rito Personalizado

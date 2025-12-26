@@ -184,18 +184,18 @@ export default function OfferingsView() {
 
                             <button
                                 onClick={handlePrintSheet}
-                                className="bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-xl font-bold shadow-sm transition-all flex items-center gap-2"
+                                className="btn-secondary"
                                 title="Imprimir Hoja Mensual"
                             >
-                                <span className="material-symbols-outlined">print</span>
+                                <span className="material-symbols-outlined text-lg">print</span>
                                 <span className="hidden sm:inline">Hoja Mensual</span>
                             </button>
 
                             <button
                                 onClick={() => setShowForm(!showForm)}
-                                className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-xl font-bold shadow-lg shadow-primary/20 transition-all active:scale-95 flex items-center gap-2 justify-center"
+                                className="btn-primary"
                             >
-                                <span className="material-symbols-outlined">add_circle</span>
+                                <span className="material-symbols-outlined text-lg">add_circle</span>
                                 <span className="hidden sm:inline">Nuevo</span>
                             </button>
                         </div>
@@ -204,25 +204,25 @@ export default function OfferingsView() {
                     {/* Financial Cards */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Income Card */}
-                        <div className="bg-green-50 dark:bg-green-900/10 p-4 rounded-xl border border-green-100 dark:border-green-900/30">
-                            <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase tracking-wider">Entradas</span>
-                            <div className="text-2xl font-mono font-bold text-green-700 dark:text-green-300 mt-1">
+                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Entradas</span>
+                            <div className="text-3xl font-mono font-bold text-green-700 dark:text-green-400">
                                 ${totalIncome.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
 
                         {/* Expense Card */}
-                        <div className="bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/30">
-                            <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wider">Salidas</span>
-                            <div className="text-2xl font-mono font-bold text-red-700 dark:text-red-300 mt-1">
+                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Salidas</span>
+                            <div className="text-3xl font-mono font-bold text-red-700 dark:text-red-400">
                                 ${totalExpense.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
 
                         {/* Balance Card */}
-                        <div className={`p-4 rounded-xl border ${balance >= 0 ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-100' : 'bg-orange-50 border-orange-100'}`}>
-                            <span className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance Actual</span>
-                            <div className={`text-2xl font-mono font-bold mt-1 ${balance >= 0 ? 'text-blue-700 dark:text-blue-300' : 'text-orange-700'}`}>
+                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Balance Actual</span>
+                            <div className={`text-3xl font-mono font-bold ${balance >= 0 ? 'text-primary' : 'text-red-600'}`}>
                                 ${balance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
                             </div>
                         </div>
@@ -453,7 +453,7 @@ export default function OfferingsView() {
                                                     </button>
                                                     <button
                                                         onClick={() => handleDelete(t.id)}
-                                                        className="flex items-center gap-1 text-xs font-medium text-red-600 bg-red-50 px-2 py-1 rounded-lg"
+                                                        className="btn-danger p-1 aspect-square flex items-center justify-center !rounded-lg"
                                                     >
                                                         <span className="material-symbols-outlined text-sm">delete</span>
                                                     </button>
