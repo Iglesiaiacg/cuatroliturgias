@@ -53,6 +53,22 @@ export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfi
                             </span>
                         </button>
                     ))}
+
+                    {/* PROFILE / LOGOUT BUTTON */}
+                    <button
+                        onClick={() => {
+                            if (onProfile) onProfile();
+                            onClose();
+                        }}
+                        className="flex flex-col items-center gap-2 p-2 rounded-2xl active:scale-95 transition-transform hover:bg-gray-50 dark:hover:bg-white/5"
+                    >
+                        <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-sm bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border border-gray-100 dark:border-stone-700">
+                            <span className="material-symbols-outlined">account_circle</span>
+                        </div>
+                        <span className="text-[10px] font-medium text-center leading-tight truncate w-full text-stone-600 dark:text-stone-400">
+                            Mi Cuenta
+                        </span>
+                    </button>
                 </div>
 
                 <button
