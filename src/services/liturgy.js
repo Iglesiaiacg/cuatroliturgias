@@ -262,10 +262,15 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         ESCRIBE EL TEXTO LITÚRGICO COMPLETO VERBATIM (Palabra por palabra).
         Si es una oración fija (Te Igitur, Pater Noster), ESCRIBELA COMPLETA.
 
-        ⚠️ REGLA DE VERSIONES BÍBLICAS (CRÍTICO):
+        ⚠️ REGLA DE VERSIONES BÍBLICAS (CRÍTICO - ANTI COPYRIGTH):
         NUNCA USES EL NOMBRE "JEHOVÁ". ES PROHIBIDO EN ESTA LITURGIA.
-        Usa siempre "EL SEÑOR" o "DIOS" (Tradición Católica/Anglicana).
-        Usa versiones aceptadas (Biblia de Jerusalén, Nácar-Colunga) PERO SI DETECTAS RIESGO DE COPYRIGHT, cambia a versiones CATÓLICAS antiguas (Torres Amat, Vulgata) para asegurar que el texto salga COMPLETO. NUNCA USES REINA VALERA.
+        Usa siempre "EL SEÑOR" o "DIOS".
+        PARA EVITAR BLOQUEOS DE COPYRIGHT Y GARANTIZAR TEXTO COMPLETO:
+        USA ÚNICAMENTE VERSIONES DE DOMINIO PÚBLICO:
+        - "Torres Amat" (Católica Antigua).
+        - "Vulgata Traducida".
+        NO USES "Biblia de Jerusalén" ni "Latinoamericana" (Tienen Copyright estricto).
+        NUNCA USES REINA VALERA (Protestante).
         
         ⚠️ ESTRATEGIA ANTI-BLOQUEO (COPYRIGHT/RECITATION):
         TU PRIORIDAD ES DAR EL TEXTO COMPLETO. NO LO RECORTES.
@@ -285,7 +290,27 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         - SACERDOTE (Celebrante): Ritos Iniciales, Colecta, Homilía, Plegaria Eucarística (Canon), Bendición.
         - PUEBLO/ASAMBLEA: Respuestas ("Y con tu espíritu", "Te alabamos Señor", "Amén").
         
-        ETIQUETA CLARAMENTE QUIÉN HABLA (Ej: "Lector:", "Sacerdote:", "Pueblo:").
+        ETIQUETA CLARAMENTE QUIÉN HABLA.
+
+        ⚠️ REGLA DE ESTILO Y FORMATO (ELEGANCIA VISUAL - IMPORTANTÍSIMO):
+        El usuario exige un documento "LUCIDO", "ELEGANTE" y "CUIDADO".
+        
+        1. ESTRUCTURA VISUAL DE LUJO:
+           - Usa Markdown \`# TÍTULO DE LA FIESTA\` al inicio (Se renderizará centrado y grande).
+           - Usa Markdown \`## GRANDES PARTES\` para secciones (RITOS INICIALES, LITURGIA DE LA PALABRA...).
+           - Usa separadores \`---\` para dividir momentos clave.
+
+        2. RÚBRICAS (ROJAS):
+           - TODA instrucción (sentarse, de pie, hacer la señal de la cruz) DEBE ir entre DOBLES CORCHETES: \`[[Todos hacen la señal de la cruz]]\`.
+           - NO uses paréntesis normales para las rúbricas. Usa \`[[...]]\`.
+
+        3. ROLES (CLARIDAD ABSOLUTA):
+           - Usa SIEMPRE negrita y mayúsculas para el que habla: \`**SACERDOTE:**\`, \`**LECTOR:**\`, \`**TODOS:**\`.
+           - Alinea los diálogos para que sean fáciles de leer en voz alta.
+
+        4. CALIDAD DEL TEXTO:
+           - Evita textos "burdos" o telegráficos. Usa un lenguaje solemne.
+           - Deja líneas en blanco entre rúbricas y oraciones para que respire el texto.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
