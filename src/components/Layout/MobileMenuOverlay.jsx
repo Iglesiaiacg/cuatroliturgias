@@ -3,6 +3,11 @@ import React, { useEffect, useState } from 'react';
 export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfile, visibleNavItems, activeTab, realRole, userRole, setPreviewRole }) {
     const [animate, setAnimate] = useState(false);
 
+    // Debug Access
+    console.log("MobileMenuOverlay Render:", { isOpen, realRole, userRole });
+
+    const isRealAdmin = realRole === 'admin';
+
     useEffect(() => {
         if (isOpen) {
             setAnimate(true);
@@ -30,8 +35,8 @@ export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfi
                 <div className="w-12 h-1.5 bg-gray-300 dark:bg-stone-700 rounded-full mx-auto mb-6" />
 
                 {/* ADMIN ROLE SWITCHER (If Real Admin) */}
-                {realRole === 'admin' && (
-                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800/30 flex items-center justify-between">
+                {isRealAdmin && (
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800/30 flex items-center justify-between shadow-sm">
                         <div className="flex items-center gap-3">
                             <span className="material-symbols-outlined text-red-500 text-xl">admin_panel_settings</span>
                             <div className="flex flex-col">
