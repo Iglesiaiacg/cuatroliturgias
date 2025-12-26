@@ -45,7 +45,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
             </div>
 
             {/* Days Header */}
-            <div className="grid grid-cols-7 bg-red-50 dark:bg-red-900/20 border-b border-red-100 dark:border-red-900/50">
+            <div className="grid grid-cols-7 bg-gray-50 dark:bg-white/5 border-b border-gray-200 dark:border-white/10">
                 {weekDaysShort.map((day, i) => (
                     <div key={day} className="py-3 text-center text-red-800 dark:text-red-200 font-bold text-xs uppercase tracking-wider">
                         <span className="hidden sm:inline">{weekDays[i]}</span>

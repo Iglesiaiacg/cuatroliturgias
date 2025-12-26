@@ -87,7 +87,7 @@ export default function MusicView() {
                 {(checkPermission && checkPermission('manage_music') || userRole === 'admin') && (
                     <button
                         onClick={() => setIsCreating(true)}
-                        className="bg-primary text-white px-4 py-2 rounded-lg shadow-sm hover:bg-red-800 transition-colors flex items-center gap-2"
+                        className="btn-primary"
                     >
                         <span className="material-symbols-outlined">add</span>
                         <span className="hidden sm:inline">Nuevo Canto</span>
@@ -141,8 +141,7 @@ export default function MusicView() {
                                 <button
                                     type="button"
                                     onClick={handleWebSearch}
-                                    disabled={!newTitle}
-                                    className="p-1 px-2 bg-blue-50 text-blue-600 rounded text-xs font-bold hover:bg-blue-100 disabled:opacity-50 flex items-center gap-1"
+                                    className="btn-secondary !text-blue-600 !bg-blue-50 hover:!bg-blue-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
                                     title="Buscar en Google"
                                 >
                                     <span className="material-symbols-outlined text-sm">search</span>
@@ -150,8 +149,7 @@ export default function MusicView() {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={handleSmartPaste}
-                                    className="p-1 px-2 bg-green-50 text-green-600 rounded text-xs font-bold hover:bg-green-100 flex items-center gap-1"
+                                    className="btn-secondary !text-green-600 !bg-green-50 hover:!bg-green-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
                                     title="Pegar y Convertir acordes de la web"
                                 >
                                     <span className="material-symbols-outlined text-sm">magic_button</span>
@@ -166,8 +164,8 @@ export default function MusicView() {
                                 required
                             />
                         </div>                        <div className="flex justify-end gap-2">
-                            <button type="button" onClick={() => setIsCreating(false)} className="px-4 py-2 text-gray-500">Cancelar</button>
-                            <button type="submit" className="bg-primary text-white px-4 py-2 rounded-lg">Guardar</button>
+                            <button type="button" onClick={() => setIsCreating(false)} className="btn-ghost">Cancelar</button>
+                            <button type="submit" className="btn-primary">Guardar</button>
                         </div>
                     </form>
                 </div>
@@ -191,7 +189,7 @@ export default function MusicView() {
                         window.open(`https://www.google.com/search?q=${query}`, '_blank');
                     }}
                     disabled={!searchTerm}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-xl shadow-sm hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 font-bold"
+                    className="btn-secondary"
                     title="Buscar en Google"
                 >
                     <span className="material-symbols-outlined">public</span>
