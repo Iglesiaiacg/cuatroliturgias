@@ -265,17 +265,27 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         ⚠️ REGLA DE VERSIONES BÍBLICAS (CRÍTICO):
         NUNCA USES EL NOMBRE "JEHOVÁ". ES PROHIBIDO EN ESTA LITURGIA.
         Usa siempre "EL SEÑOR" o "DIOS" (Tradición Católica/Anglicana).
-        Usa versiones como Biblia de Jerusalén, Nácar-Colunga o BCP.
+        Usa versiones aceptadas (Biblia de Jerusalén, Nácar-Colunga) PERO SI DETECTAS RIESGO DE COPYRIGHT, cambia a versiones CATÓLICAS antiguas (Torres Amat, Vulgata) para asegurar que el texto salga COMPLETO. NUNCA USES REINA VALERA.
+        
+        ⚠️ ESTRATEGIA ANTI-BLOQUEO (COPYRIGHT/RECITATION):
+        TU PRIORIDAD ES DAR EL TEXTO COMPLETO. NO LO RECORTES.
+        Si una oración moderna es problemática, usa una antigua.
+        Si es imposible, tradúcela tú mismo fielmente. Pero NO DEJES SOLO EL TÍTULO.
         
         ⚠️ REGLA DE FORMATO "VOX SECRETA":
         Para las oraciones que el sacerdote dice en secreto (Secreto, Ofertorio, Canon bajo), usa el formato de CITA (Blockquote con >).
         Ejemplo: 
         > Suscipe, Sancte Pater, omnipotens aeterne Deus...
 
-        ⚠️ REGLA DE ETIQUETADO LITÚRGICO (STRICT):
-        1. Usa "V." y "R." para todos los diálogos (V. El Señor esté con ustedes. R. Y con tu espíritu).
-        2. Marca el "Incipit" (inicio entonado) separándolo si aplica (Ej: Gloria, Credo).
-        3. Etiqueta claramente: "Antífona", "Embolismo", "Doxología" donde corresponda.
+        ⚠️ REGLA DE ROLES Y MINISTERIOS (CRÍTICO):
+        NO ASIGNES TODO AL SACERDOTE. DISTRIBUYE LOS ROLES CORRECTAMENTE:
+        - LECTOR: Lee 1ª Lectura, Salmo (si no hay Salmista), 2ª Lectura (Epístola) y Oración de los Fieles.
+        - SALMISTA: Canta el Salmo.
+        - DIÁCONO (o Sacerdote): Lee el Evangelio, dice las invitaciones ("Demos gracias...", "Podéis ir en paz").
+        - SACERDOTE (Celebrante): Ritos Iniciales, Colecta, Homilía, Plegaria Eucarística (Canon), Bendición.
+        - PUEBLO/ASAMBLEA: Respuestas ("Y con tu espíritu", "Te alabamos Señor", "Amén").
+        
+        ETIQUETA CLARAMENTE QUIÉN HABLA (Ej: "Lector:", "Sacerdote:", "Pueblo:").
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
@@ -331,10 +341,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             
             II. INSTRUCCIÓN (MISA DE LOS CATECÚMENOS)
             5. Colecta (Propia del día). 
-            6. Epístola (Lectura completa - Rúbrica: LEÍDA POR EL SUBDIÁCONO O LECTOR, de espaldas al pueblo).
-            7. Gradual y Aleluya (o Tracto en Cuaresma).
+            6. Epístola [SUBDIÁCONO/LECTOR]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO LATINO/ESPAÑOL COMPLETO).
+            7. Gradual y Aleluya [CORO/SCHOLA]: (o Tracto en Cuaresma).
                ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo ("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
-            8. Evangelio (Lectura completa - Rúbrica: CANTADO POR EL DIÁCONO O SACERDOTE hacia el norte).
+            8. Evangelio [DIÁCONO/SACERDOTE]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO COMPLETO - Rúbrica: CANTADO hacia el norte).
             9. Credo (Texto latino completo, si aplica).
             
             III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
@@ -392,19 +402,23 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
             
             ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - CON TÍTULOS CLAROS):
-            0. PROCESIÓN DE ENTRADA (Himno y Rúbrica).
+            0. PROCESIÓN DE ENTRADA (Himno, Rúbrica de ingreso y Veneración del Altar).
             1. RITOS INICIALES:
                - Aclamación Inicial ("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
                - Colecta de Pureza ("Omnipotente Dios, para quien todos los corazones...").
             2. EL DECÁLOGO o EL SUMARIO DE LA LEY (Leído completo).
             3. KYRIE ELEISON (Señor, ten piedad) y GLORIA (si corresponde).
             4. COLECTA DEL DÍA (Propia).
+               ⚠️ OBLIGATORIO: Incluir el SALUDO ("El Señor esté con ustedes...") antes del Oremos y la Colecta.
             5. LITURGIA DE LA PALABRA:
-               - Primera Lectura (Antiguo Testamento).
-               - SALMO RESPONSORIAL (Indica la Antífona y las Estrofas).
-               - Segunda Lectura (Epístola).
-               - ALELUYA (Incluye el VERSO propio antes del Evangelio).
-               - Evangelio (Leído por Diácono/Sacerdote).
+               - Primera Lectura (Antiguo Testamento) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
+               - SALMO RESPONSORIAL [SALMISTA o LECTOR]: (Indica la Antífona y las Estrofas COMPLETAS).
+               - Segunda Lectura (Epístola) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
+               - ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).
+               - Evangelio [DIÁCONO o SACERDOTE]:
+                 ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio.
+                 ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO PALABRA POR PALABRA.
+                 ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio antes de la lectura.
             6. HOMILÍA y CREDO NICENO (Texto completo "Creemos en un solo Dios...").
             7. ORACIÓN DE LOS FIELES:
                ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio/Lecturas de hoy.
@@ -447,22 +461,22 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             
             ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
             0. PROCESIÓN DE ENTRADA.
-            1. Introit y Ritos Iniciales (Colecta de Pureza obligatoria).
+            1. Introito y Ritos Iniciales (Colecta de Pureza obligatoria).
             2. Palabra: 
-               - Profecía (Lector).
-               - Gradual o Tracto (Canto interleccional).
-               - Epístola (Subdiácono/Lector).
-               - ALELUYA (Incluye el texto del VERSO propio).
-               - Evangelio (Diácono/Sacerdote).
+               - Profecía [LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
+               - Gradual o Tracto [CORO/SALMISTA]: (Canto interleccional).
+               - Epístola [SUBDIÁCONO o LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
+               - ALELUYA [CORO]: (Incluye el texto del VERSO propio).
+               - Evangelio [DIÁCONO]: ⚠️ TEXTO COMPLETO.
             3. Sermón y Credo.
             4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
                - Confesión y Absolución.
             5. Ofertorio (Antífona) y Orate Fratres.
-            6. CANON DE LA MISA (VERSIÓN PATRIMONIAL):
+            6. CANON DE LA MISA (VERSIÓN PATRIMONIAL EN ESPAÑOL):
                - PREFACIO PROPIO y Sanctus.
-               - CANON ROMANO COMPLETO (Texto: "Te igitur" versión DW).
-               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim).
+               - CANON ROMANO COMPLETO (Oración Eucarística I).
+               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
                > Rúbricas de genuflexión y elevación claras.
             7. Rito de Comunión:
                - Padre Nuestro.
@@ -487,11 +501,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         0. PROCESIÓN DE ENTRADA (Rúbrica e Himno).
         1. Ritos Iniciales: Antífona, Saludo, Acto Penitencial (Confieso completo), Kyrie, Gloria, Colecta.
         2. Liturgia de la Palabra: 
-           - 1ª Lectura (Lector).
-           - Salmo Responsorial (Salmista - Indica respuesta).
-           - 2ª Lectura (Lector).
-           - ALELUYA (Incluye el VERSO propio antes del Evangelio).
-           - Evangelio (Diácono/Sacerdote).
+           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim).
+           - Salmo Responsorial [SALMISTA]: (Indica respuesta y estrofas COMPLETAS).
+           - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim).
+           - ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).
+           - Evangelio [DIÁCONO o SACERDOTE]: ⚠️ TEXTO DEL EVANGELIO COMPLETO.
         3. Homilía y Credo. 
         4. ORACIÓN UNIVERSAL (ADAPTADA A LAS LECTURAS DE HOY).
         5. Liturgia Eucarística:
