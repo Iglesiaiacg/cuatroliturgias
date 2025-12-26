@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { collection, onSnapshot, deleteDoc, doc, writeBatch } from 'firebase/firestore'; // Added writeBatch
 import { db } from '../../services/firebase';
@@ -114,12 +114,17 @@ export default function UserManagement() {
         setMessage('');
     };
 
+    const formRef = useRef(null);
+
     const handleEdit = (user) => {
         setUid(user.id);
         setName(user.displayName || '');
         setRole(user.role || 'guest');
         setIsEditing(true);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // Scroll the form into view (essential for mobile where list is long)
+        setTimeout(() => {
+            formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
     };
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -142,8 +147,6 @@ export default function UserManagement() {
         }
         setLoading(false);
     };
-
-
 
 
     const handleDelete = async (userId) => {
@@ -209,18 +212,18 @@ export default function UserManagement() {
     }
 
     return (
-        <div className="max-w-4xl mx-auto space-y-6">
+        <div className="max-w-4xl mx-auto space-y-6 pb-20">
             {/* Tabs */}
-            <div className="flex space-x-4 border-b border-gray-200 dark:border-white/5 pb-2">
+            <div className="flex space-x-4 border-b border-gray-200 dark:border-white/5 pb-2 overflow-x-auto">
                 <button
                     onClick={() => setActiveTab('users')}
-                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors ${activeTab === 'users' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
+                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'users' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
                 >
                     Usuarios
                 </button>
                 <button
                     onClick={() => setActiveTab('roles')}
-                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors ${activeTab === 'roles' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
+                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'roles' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
                 >
                     Configuración de Roles
                 </button>
@@ -230,7 +233,7 @@ export default function UserManagement() {
             {activeTab === 'users' && (
                 <>
                     {/* Form Section */}
-                    <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-6">
+                    <div ref={formRef} className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 p-6 scroll-mt-24">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-xl font-display font-bold text-gray-900 dark:text-white">
                                 {isEditing ? 'Editar Usuario' : 'Asignar Nuevo Rol'}
@@ -322,7 +325,7 @@ export default function UserManagement() {
                         </form>
                     </div>
 
-                    {/* Users List */}
+                    {/* Users List - Responsive */}
                     <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
                         <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between md:items-center gap-4">
                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">Usuarios Activos</h3>
@@ -347,8 +350,48 @@ export default function UserManagement() {
                                 {searchTerm ? 'No se encontraron usuarios.' : 'No hay usuarios con roles asignados.'}
                             </div>
                         ) : (
-                            <div className="overflow-x-auto -mx-4 sm:mx-0">
-                                <div className="inline-block min-w-full align-middle">
+                            <>
+                                {/* Mobile Cards View */}
+                                <div className="md:hidden divide-y divide-gray-100 dark:divide-white/5">
+                                    {filteredUsers.map(user => (
+                                        <div key={user.id} className="p-4 space-y-3 bg-white dark:bg-surface-dark">
+                                            <div className="flex justify-between items-start">
+                                                <div>
+                                                    <h4 className="font-bold text-gray-900 dark:text-white">{user.displayName || 'Sin Nombre'}</h4>
+                                                    <p className="text-xs text-gray-500">{user.email}</p>
+                                                    {user.id === currentUser.uid && (
+                                                        <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase font-bold">Tú</span>
+                                                    )}
+                                                </div>
+                                                <span className="px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 rounded text-xs font-bold">
+                                                    {getRoleLabel(user.role)}
+                                                </span>
+                                            </div>
+                                            <div className="text-[10px] font-mono text-gray-400 truncate bg-gray-50 dark:bg-black/20 p-1 rounded">
+                                                UID: {user.id}
+                                            </div>
+                                            <div className="flex gap-2 pt-2">
+                                                <button
+                                                    onClick={() => handleEdit(user)}
+                                                    className="flex-1 bg-gray-900 dark:bg-white/10 text-white py-2 rounded-lg text-xs font-bold uppercase shadow-sm active:scale-95 transition-transform"
+                                                >
+                                                    Editar
+                                                </button>
+                                                {user.id !== currentUser.uid && (
+                                                    <button
+                                                        onClick={() => handleDelete(user.id)}
+                                                        className="px-4 py-2 text-red-600 bg-red-50 dark:bg-red-900/10 rounded-lg text-xs font-bold uppercase active:scale-95 transition-transform"
+                                                    >
+                                                        Eliminar
+                                                    </button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                {/* Desktop Table View */}
+                                <div className="hidden md:block overflow-x-auto">
                                     <table className="min-w-full text-left text-sm">
                                         <thead className="bg-gray-50 dark:bg-white/5 text-gray-500 uppercase font-bold text-xs">
                                             <tr>
@@ -394,7 +437,7 @@ export default function UserManagement() {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
+                            </>
                         )}
                     </div>
                 </>
@@ -402,44 +445,44 @@ export default function UserManagement() {
 
             {/* TAB: ROLES */}
             {activeTab === 'roles' && (
-                <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
-                    <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex justify-between items-center">
+                <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden max-w-[90vw] md:max-w-full mx-auto">
+                    <div className="px-6 py-4 border-b border-gray-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white">Matriz de Permisos</h3>
                         <button
                             onClick={savePermissions}
-                            className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-800 transition-colors"
+                            className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-800 transition-colors w-full md:w-auto"
                         >
                             Guardar Cambios
                         </button>
                     </div>
                     {message && <div className="px-6 py-2 text-sm font-bold text-green-600 bg-green-50">{message}</div>}
 
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm">
+                    <div className="overflow-x-auto w-full">
+                        <table className="w-full text-left text-sm min-w-[600px]">
                             <thead className="bg-gray-50 dark:bg-white/5 text-gray-500 uppercase font-bold text-xs">
                                 <tr>
-                                    <th className="px-4 py-3 border-b dark:border-white/10">Permiso / Rol</th>
+                                    <th className="px-2 md:px-4 py-3 border-b dark:border-white/10 sticky left-0 bg-gray-50 dark:bg-black/20 z-10 w-32">Permiso / Rol</th>
                                     {roles.map(role => (
-                                        <th key={role.id} className="px-4 py-3 text-center border-b dark:border-white/10">{role.label.split(' ')[0]}</th>
+                                        <th key={role.id} className="px-2 md:px-4 py-3 text-center border-b dark:border-white/10 min-w-[80px]">{role.label.split(' ')[0]}</th>
                                     ))}
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                                 {AVAILABLE_PERMISSIONS.map(perm => (
                                     <tr key={perm.id} className="hover:bg-gray-50 dark:hover:bg-white/5">
-                                        <td className="px-4 py-3 font-medium text-gray-700 dark:text-gray-300">
-                                            {perm.label}
-                                            <div className="text-[10px] text-gray-400 font-normal">{perm.id}</div>
+                                        <td className="px-2 md:px-4 py-3 font-medium text-gray-700 dark:text-gray-300 sticky left-0 bg-white dark:bg-surface-dark z-10 border-r border-gray-100 dark:border-white/5">
+                                            <div className="line-clamp-2 md:whitespace-nowrap">{perm.label}</div>
+                                            <div className="text-[8px] md:text-[10px] text-gray-400 font-normal hidden md:block">{perm.id}</div>
                                         </td>
                                         {roles.map(role => {
                                             const isChecked = (permissions[role.id] || []).includes(perm.id);
                                             return (
-                                                <td key={`${role.id}-${perm.id}`} className="px-4 py-3 text-center">
+                                                <td key={`${role.id}-${perm.id}`} className="px-2 md:px-4 py-3 text-center">
                                                     <input
                                                         type="checkbox"
                                                         checked={isChecked}
                                                         onChange={() => togglePermission(role.id, perm.id)}
-                                                        className="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer accent-primary"
+                                                        className="w-5 h-5 text-primary rounded border-gray-300 focus:ring-primary cursor-pointer accent-primary"
                                                     />
                                                 </td>
                                             );

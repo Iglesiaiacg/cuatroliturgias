@@ -387,7 +387,7 @@ function AppContent() {
           {/* --- USERS VIEW (Admin Only) --- */}
           {activeTab === 'users' && (
             (checkPermission && checkPermission('manage_users')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-y-auto p-8">
+              <div className="flex-1 flex flex-col w-full overflow-y-auto p-4 md:p-8">
                 <UserManagement />
               </div>
             ) : (
