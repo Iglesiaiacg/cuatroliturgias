@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, visibleNavItems, activeTab }) {
+export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfile, visibleNavItems, activeTab }) {
     const [animate, setAnimate] = useState(false);
 
     useEffect(() => {
