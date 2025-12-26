@@ -1,30 +1,26 @@
 import { useState } from 'react';
+import { useNoticesSync } from '../../hooks/useNoticesSync';
+import { useAuth } from '../../context/AuthContext';
 
 export default function NoticesCard() {
-    const [notices, setNotices] = useState(() => {
-        const stored = localStorage.getItem('liturgia_notices');
-        return stored ? JSON.parse(stored) : [];
-    });
+    const { notices, addNotice, removeNotice, loading } = useNoticesSync();
+    const { checkPermission, userRole } = useAuth();
     const [inputValue, setInputValue] = useState('');
     const [readMode, setReadMode] = useState(false);
 
-    const saveNotices = (newNotices) => {
-        setNotices(newNotices);
-        localStorage.setItem('liturgia_notices', JSON.stringify(newNotices));
-    };
+    const canManage = userRole === 'admin' || (checkPermission && checkPermission('manage_communication'));
 
     const handleAdd = (e) => {
         e.preventDefault();
         if (!inputValue.trim()) return;
-
-        const newNotices = [...notices, { id: Date.now(), text: inputValue.trim() }];
-        saveNotices(newNotices);
+        addNotice(inputValue.trim());
         setInputValue('');
     };
 
     const handleDelete = (id) => {
-        const newNotices = notices.filter(i => i.id !== id);
-        saveNotices(newNotices);
+        if (confirm('¿Borrar aviso?')) {
+            removeNotice(id);
+        }
     };
 
     if (readMode) {
@@ -74,22 +70,24 @@ export default function NoticesCard() {
                 </button>
             </div>
 
-            <form onSubmit={handleAdd} className="flex gap-2 mb-4">
-                <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Nuevo aviso..."
-                    className="flex-1 neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent text-stone-900 dark:text-stone-100"
-                />
-                <button
-                    type="submit"
-                    className="w-9 h-9 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 flex items-center justify-center transition-colors"
-                    disabled={!inputValue.trim()}
-                >
-                    <span className="material-symbols-outlined text-sm">add</span>
-                </button>
-            </form>
+            {canManage && (
+                <form onSubmit={handleAdd} className="flex gap-2 mb-4">
+                    <input
+                        type="text"
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        placeholder="Nuevo aviso..."
+                        className="flex-1 neumorphic-inset px-4 py-3 text-sm outline-none bg-transparent text-stone-900 dark:text-stone-100"
+                    />
+                    <button
+                        type="submit"
+                        className="w-9 h-9 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 flex items-center justify-center transition-colors"
+                        disabled={!inputValue.trim()}
+                    >
+                        <span className="material-symbols-outlined text-sm">add</span>
+                    </button>
+                </form>
+            )}
 
             <div className="flex-1 overflow-y-auto min-h-[100px] pr-2 space-y-2">
                 {notices.length === 0 ? (
@@ -100,12 +98,14 @@ export default function NoticesCard() {
                     notices.map(item => (
                         <div key={item.id} className="group flex items-center justify-between p-2 rounded-lg hover:bg-stone-50 dark:hover:bg-white/5 transition-colors text-sm">
                             <span className="text-stone-900 dark:text-stone-100 line-clamp-2">{item.text}</span>
-                            <button
-                                onClick={() => handleDelete(item.id)}
-                                className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all shrink-0 ml-2"
-                            >
-                                <span className="material-symbols-outlined text-sm">close</span>
-                            </button>
+                            {canManage && (
+                                <button
+                                    onClick={() => handleDelete(item.id)}
+                                    className="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all shrink-0 ml-2"
+                                >
+                                    <span className="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            )}
                         </div>
                     ))
                 )}

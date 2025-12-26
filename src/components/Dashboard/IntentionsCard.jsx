@@ -56,50 +56,54 @@ export default function IntentionsCard({ date }) {
                                 </span>
                                 <span className="text-sm text-gray-700 dark:text-gray-200">{item.text}</span>
                             </div>
-                            <button
-                                onClick={() => removeIntention(item.id)}
-                                className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                                <span className="material-symbols-outlined text-sm">close</span>
-                            </button>
+                            {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (
+                                <button
+                                    onClick={() => removeIntention(item.id)}
+                                    className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                    <span className="material-symbols-outlined text-sm">close</span>
+                                </button>
+                            )}
                         </div>
                     ))
                 )}
             </div>
 
-            <form onSubmit={handleSubmit} className="mt-auto pt-2 border-t border-gray-100 dark:border-white/5">
-                <div className="flex gap-2 mb-2 overflow-x-auto pb-1 scrollbar-hide">
-                    {['difuntos', 'salud', 'accion_gracias'].map(t => (
+            {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (
+                <form onSubmit={handleSubmit} className="mt-auto pt-2 border-t border-gray-100 dark:border-white/5">
+                    <div className="flex gap-2 mb-2 overflow-x-auto pb-1 scrollbar-hide">
+                        {['difuntos', 'salud', 'accion_gracias'].map(t => (
+                            <button
+                                key={t}
+                                type="button"
+                                onClick={() => setType(t)}
+                                className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${type === t
+                                    ? 'neumorphic-inset text-primary box-shadow-inner'
+                                    : 'neumorphic-btn text-gray-500 hover:text-gray-700'
+                                    }`}
+                            >
+                                {getTypeLabel(t)}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={newItem}
+                            onChange={(e) => setNewItem(e.target.value)}
+                            placeholder="Nombre / Intención..."
+                            className="flex-1 neumorphic-inset px-4 py-2 text-sm outline-none bg-transparent"
+                        />
                         <button
-                            key={t}
-                            type="button"
-                            onClick={() => setType(t)}
-                            className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase whitespace-nowrap transition-all ${type === t
-                                ? 'neumorphic-inset text-primary box-shadow-inner'
-                                : 'neumorphic-btn text-gray-500 hover:text-gray-700'
-                                }`}
+                            type="submit"
+                            disabled={!newItem.trim()}
+                            className="neumorphic-btn w-10 h-10 text-primary disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            {getTypeLabel(t)}
+                            <span className="material-symbols-outlined text-lg">add</span>
                         </button>
-                    ))}
-                </div>
-                <div className="flex gap-2">
-                    <input
-                        type="text"
-                        value={newItem}
-                        onChange={(e) => setNewItem(e.target.value)}
-                        placeholder="Nombre / Intención..."
-                        className="flex-1 neumorphic-inset px-4 py-2 text-sm outline-none bg-transparent"
-                    />
-                    <button
-                        type="submit"
-                        disabled={!newItem.trim()}
-                        className="neumorphic-btn w-10 h-10 text-primary disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <span className="material-symbols-outlined text-lg">add</span>
-                    </button>
-                </div>
-            </form>
+                    </div>
+                </form>
+            )}
         </div>
     );
 }

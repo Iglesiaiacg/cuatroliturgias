@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { PRIVACY_NOTICE } from '../../utils/privacyNotice';
 import { useDirectory } from '../../context/DirectoryContext';
+import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
 
 export default function DirectoryView() {
     const { members, addMember, updateMember, deleteMember } = useDirectory();
+    const { userRole, checkPermission } = useAuth();
     const { startPrivateChat } = useChat();
     const [selectedMember, setSelectedMember] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -39,7 +41,10 @@ export default function DirectoryView() {
             marriageDate: '',
             ministryOrder: 'Laico',
             currentMinistry: '',
+            ministryOrder: 'Laico',
+            currentMinistry: '',
             spiritualGifts: '',
+            regularAttendance: false,
             notes: '',
             isNew: true
         };
@@ -311,13 +316,15 @@ export default function DirectoryView() {
                             Fieles
                             <span className="bg-gray-100 dark:bg-white/10 text-gray-500 text-xs px-2 py-0.5 rounded-full">{members.length}</span>
                         </h2>
-                        <button
-                            onClick={handleCreate}
-                            className="btn-primary p-2"
-                            title="Nuevo Fiel"
-                        >
-                            <span className="material-symbols-outlined text-xl">add_circle</span>
-                        </button>
+                        {(userRole === 'admin' || (checkPermission && checkPermission('manage_directory'))) && (
+                            <button
+                                onClick={handleCreate}
+                                className="btn-primary p-2"
+                                title="Nuevo Fiel"
+                            >
+                                <span className="material-symbols-outlined text-xl">add_circle</span>
+                            </button>
+                        )}
                     </div>
                     <div className="relative">
                         <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
@@ -428,21 +435,23 @@ export default function DirectoryView() {
                                     <span className="hidden md:inline">FORMULARIO</span>
                                 </button>
                                 {!isEditing ? (
-                                    <>
-                                        <button
-                                            onClick={handleDelete}
-                                            className="btn-danger"
-                                        >
-                                            ELIMINAR
-                                        </button>
-                                        <button
-                                            onClick={() => setIsEditing(true)}
-                                            className="btn-primary"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">edit</span>
-                                            EDITAR
-                                        </button>
-                                    </>
+                                    (userRole === 'admin' || (checkPermission && checkPermission('manage_directory'))) && (
+                                        <>
+                                            <button
+                                                onClick={handleDelete}
+                                                className="btn-danger"
+                                            >
+                                                ELIMINAR
+                                            </button>
+                                            <button
+                                                onClick={() => setIsEditing(true)}
+                                                className="btn-primary"
+                                            >
+                                                <span className="material-symbols-outlined text-sm">edit</span>
+                                                EDITAR
+                                            </button>
+                                        </>
+                                    )
                                 ) : (
                                     <>
                                         <button
@@ -564,6 +573,20 @@ export default function DirectoryView() {
                                     </div>
                                     <Field label="Actualmente sirvo en el ministerio de" value={selectedMember.currentMinistry} onChange={v => setSelectedMember({ ...selectedMember, currentMinistry: v })} editing={isEditing} placeholder="Música, Ujieres, Escuela Dominical..." />
                                     <Field label="Dios me ha dado el don de" value={selectedMember.spiritualGifts} onChange={v => setSelectedMember({ ...selectedMember, spiritualGifts: v })} editing={isEditing} placeholder="Enseñanza, Hospitalidad, Exhortación..." />
+
+                                    <div className="flex items-center gap-3 border bg-white dark:bg-black/20 p-3 rounded-lg border-gray-100 dark:border-white/10">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedMember.regularAttendance || false}
+                                            onChange={e => isEditing && setSelectedMember({ ...selectedMember, regularAttendance: e.target.checked })}
+                                            disabled={!isEditing}
+                                            className="w-5 h-5 accent-primary"
+                                        />
+                                        <div>
+                                            <span className="block text-sm font-bold text-gray-700 dark:text-gray-300">Asistencia Regular</span>
+                                            <span className="text-xs text-gray-400">Marca si asiste frecuentemente a los servicios.</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { useAuth } from '../../context/AuthContext';
 import { toPng } from 'html-to-image';
 import { jsPDF } from 'jspdf';
 import StyledCard from '../Common/StyledCard';
@@ -12,6 +13,7 @@ import { useFinanceSync } from '../../hooks/useFinanceSync';
 
 export default function OfferingsView() {
     // Categories imported from utils
+    const { userRole, checkPermission } = useAuth();
 
 
     // State for transactions - Init lazy to prevent overwrite
@@ -67,13 +69,19 @@ export default function OfferingsView() {
     // Save to local storage on change
 
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         // Validation
-        if (!formData.description || !formData.amount) return;
+        if (!formData.description || !formData.amount) {
+            alert("Por favor completa la descripción y el monto.");
+            return;
+        }
 
         const val = parseFloat(formData.amount);
-        if (isNaN(val) || val <= 0) return;
+        if (isNaN(val) || val <= 0) {
+            alert("El monto debe ser un número positivo.");
+            return;
+        }
 
         const newTransaction = {
             date: new Date().toISOString(),
@@ -81,9 +89,14 @@ export default function OfferingsView() {
             amount: val
         };
 
-        addTransaction(newTransaction);
-        setFormData({ ...formData, description: '', amount: '', beneficiary: '' });
-        setShowForm(false);
+        try {
+            await addTransaction(newTransaction);
+            setFormData({ ...formData, description: '', amount: '', beneficiary: '' });
+            setShowForm(false);
+        } catch (error) {
+            console.error("Error saving:", error);
+            alert("Error al guardar. Permiso denegado o error de red.");
+        }
     };
 
     const handleDownloadReceipt = async (transaction) => {
@@ -191,13 +204,15 @@ export default function OfferingsView() {
                                 <span className="hidden sm:inline">Hoja Mensual</span>
                             </button>
 
-                            <button
-                                onClick={() => setShowForm(!showForm)}
-                                className="btn-primary"
-                            >
-                                <span className="material-symbols-outlined text-lg">add_circle</span>
-                                <span className="hidden sm:inline">Nuevo</span>
-                            </button>
+                            {(userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'))) && (
+                                <button
+                                    onClick={() => setShowForm(!showForm)}
+                                    className="btn-primary"
+                                >
+                                    <span className="material-symbols-outlined text-lg">add_circle</span>
+                                    <span className="hidden sm:inline">Nuevo</span>
+                                </button>
+                            )}
                         </div>
                     </div>
 
