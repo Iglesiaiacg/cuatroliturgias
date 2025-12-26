@@ -377,7 +377,7 @@ export default function DirectoryView() {
                 )}
                 {selectedMember ? (
                     <div className="max-w-3xl mx-auto">
-                        <div className="flex justify-between items-start mb-6">
+                        <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
                             <div className="flex items-center gap-4">
                                 <div className="relative group">
                                     <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl font-display font-bold shadow-sm overflow-hidden border-2 border-transparent group-hover:border-primary/50 transition-all">
@@ -409,7 +409,7 @@ export default function DirectoryView() {
                                     </p>
                                 </div>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex flex-wrap gap-2 w-full md:w-auto">
                                 <button
                                     onClick={() => startPrivateChat(selectedMember)}
                                     disabled={!selectedMember.id}
