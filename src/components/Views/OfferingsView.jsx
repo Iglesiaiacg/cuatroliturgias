@@ -245,10 +245,14 @@ export default function OfferingsView() {
                 </div >
 
                 {/* Input Form Overlay (Mobile/Desktop) */}
-                {
-                    showForm && (
-                        <div className="bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10 p-4 animate-slide-down">
-                            <form onSubmit={handleSubmit} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                {/* Form moved inside scrollable area */}
+
+
+                <div className="flex-1 overflow-y-auto px-4 pb-4 max-w-6xl mx-auto w-full">
+                    {/* Input Form Overlay (Mobile/Desktop) - Moved inside scrollable area */}
+                    {showForm && (
+                        <div className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 mb-6 animate-slide-down">
+                            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
                                 {/* Type Selection */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-bold text-gray-500 mb-1">Tipo</label>
@@ -356,11 +360,8 @@ export default function OfferingsView() {
                                 </div>
                             </form>
                         </div>
-                    )
-                }
+                    )}
 
-                {/* Ledger List (Table View) */}
-                <div className="flex-1 overflow-y-auto px-4 pb-4 max-w-6xl mx-auto w-full">
                     <div className="bg-white dark:bg-surface-dark shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
                         {transactions.length === 0 ? (
                             <div className="text-center py-20 opacity-50">
