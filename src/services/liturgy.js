@@ -312,81 +312,109 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             
             ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO):
             
-            I. RITOS INICIALES
+            I. RITOS INICIALES Y ANTEPREPARACIÓN
+            0. PROCESIÓN DE ENTRADA (Rúbrica de revestimiento y procesión al altar).
             1. Asperges Me (o Vidi Aquam). Antífona y Oración completas.
             2. Salmo 42 (Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote/Ministro).
             3. Aufer a nobis y Oramus te (Oraciones de subida al altar - VOX SECRETA >).
             4. Introito (Texto propio completo). Kyrie (Griego). Gloria (Completo).
             
-            II. INSTRUCCIÓN
-            5. Colecta (Propia del día). Epístola (Lectura completa). Gradual/Aleluya.
-            6. Evangelio (Lectura completa). 
-            7. Credo (Si aplica).
+            II. INSTRUCCIÓN (MISA DE LOS CATECÚMENOS)
+            5. Colecta (Propia del día). 
+            6. Epístola (Lectura completa - Rúbrica: LEÍDA POR EL SUBDIÁCONO O LECTOR, de espaldas al pueblo).
+            7. Gradual y Aleluya (o Tracto en Cuaresma). NO es un salmo responsorial, es un canto continuo.
+            8. Evangelio (Lectura completa - Rúbrica: CANTADO POR EL DIÁCONO O SACERDOTE hacia el norte).
+            9. Credo (Texto latino completo).
             
             III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
-            8. Antífona de Ofertorio.
-            9. ORACIONES SECRETAS (Usar >):
+            10. Antífona de Ofertorio.
+            11. ORACIONES SECRETAS (Usar >):
                > Suscipe, Sancte Pater...
                > Offerimus tibi, Domine, calicem...
                > In spiritu humilitatis...
                > Veni, sanctificator...
-            10. Incienso (si aplica) y Lavabo (Salmo 25 completo).
-            11. Suscipe Sancta Trinitas (>). Orate Fratres. Secreta (Propia).
+            12. Incienso (si aplica) y Lavabo (Salmo 25 completo).
+            13. Suscipe Sancta Trinitas (>). Orate Fratres. Secreta (Propia).
             
             IV. CANON MISSAE (LO MÁS IMPORTANTE - TODO TEXTO LATINO COMPLETO)
-            12. Prefacio (Propio o Común) y Sanctus.
-            13. TE IGITUR:
+            14. Prefacio (Propio o Común) y Sanctus.
+            15. TE IGITUR:
                > Te igitur, clementissime Pater... (hasta el final).
-            14. MEMENTO VIVORUM:
+            16. MEMENTO VIVORUM:
                > Memento, Domine, famulorum famularumque...
-            15. COMMUNICANTES:
+            17. COMMUNICANTES:
                > Communicantes, et memoriam venerantes...
-            16. CONSAGRACIÓN (Rúbricas de elevación y campanillas detalladas):
+            18. CONSAGRACIÓN (Rúbricas de elevación y campanillas detalladas):
                > Hanc igitur (Manos sobre las ofrendas).
                > Quam oblationem...
                > Qui pridie... HOC EST ENIM CORPUS MEUM. (Adoración).
                > Simili modo... HIC EST ENIM CALIX SANGUINIS MEI... (Adoración).
-            17. EPÍCLESIS Y MEMENTO DIFUNTOS:
+            19. EPÍCLESIS Y MEMENTO DIFUNTOS:
                > Unde et memores...
                > Supra quae...
                > Supplices te rogamus...
                > Memento etiam, Domine...
                > Nobis quoque peccatoribus...
             
-            V. COMUNIÓN
-            18. Pater Noster (Completo). Libera nos (>).
-            19. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
-            20. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
-            21. Post-Comunión (Propia). Ite Missa est.
-            22. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
+            V. COMUNIÓN Y RITOS FINALES
+            20. Pater Noster (Completo). Libera nos (>).
+            21. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
+            22. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
+            23. Post-Comunión (Propia). 
+            24. AVISOS PARROQUIALES (Rubrica breve).
+            25. Ite Missa est. Bendición Final.
+            26. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
+            27. PROCESIÓN DE SALIDA (Rúbrica).
         `;
     }
 
-    // --- 2. MISA ANGLICANA (BCP STYLE) ---
+    // --- 2. MISA ANGLICANA (BCP 2019) ---
     if (tradition === 'anglicana') {
         return `
             ${basePrompt}
-            FUENTE: Libro de Oración Común (Estilo Clásico 1662/2019).
-            ESTILO: Español Sacro ("Vos", lenguaje elevado).
+            FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
+            ESTILO: Español Solemne (Usted/Tú reverente). NO usar "vos" antiguo.
             
-            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS):
-            1. Preparación: Padre Nuestro y Colecta de Pureza (Completas).
-            2. Decálogo o Sumario de la Ley (Leídos completos). Kyrie.
-            3. Colecta del Día (Propia).
-            4. LA PALABRA: A.T., Salmo, Epístola y Evangelio (TEXTOS BÍBLICOS COMPLETOS).
-            5. Homilía Exegética. Credo Niceno (Texto completo).
-            6. Oración de los Fieles (Extensa y solemne).
-            7. Confesión General ("Omnipotente Dios, Padre de nuestro Señor Jesucristo...") y Absolución.
-            8. Ofertorio (Sentencias) y Doxología.
-            9. PLEGARIA EUCARÍSTICA (GRAN ACCIÓN DE GRACIAS):
-               - Sursum Corda (Diálogo completo).
-               - Prefacio Propio y Sanctus.
-               - ORACIÓN DE CONSAGRACIÓN (Texto completo incluyendo institución).
-               - Padre Nuestro.
-            10. Oración de Humilde Acceso (Prayer of Humble Access):
-               > "No presumimos venir a esta tu Mesa, oh misericordioso Señor..." (Texto completo).
-            11. Agnus Dei y Comunión. Oración de Acción de Gracias ("Omnipotente y sempiterno Dios...").
-            12. Gloria in Excelsis (si corresponde) y Bendición.
+            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - ORDEN BCP 2019):
+            0. PROCESIÓN DE ENTRADA (Himno y Rúbrica).
+            1. RITOS INICIALES:
+               - Aclamación Inicial ("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
+               - Colecta de Pureza ("Omnipotente Dios, para quien todos los corazones...").
+            2. EL DECÁLOGO o EL SUMARIO DE LA LEY (Leído completo).
+            3. KYRIE ELEISON (Señor, ten piedad) y GLORIA (si corresponde por tiempo litúrgico).
+            4. COLECTA DEL DÍA (Propia).
+            5. LITURGIA DE LA PALABRA:
+               - Primera Lectura (Antiguo Testamento - Leído por Lector).
+               - SALMO (Leído o cantado por antifonía, entero o porción seleccionada).
+               - Segunda Lectura (Epístola - Leído por Lector).
+               - Evangelio (Leído por Diácono/Sacerdote).
+            6. HOMILÍA y CREDO NICENO (Texto completo "Creemos en un solo Dios...").
+            7. ORACIÓN DE LOS FIELES (Forma completa BCP).
+            8. CONFESIÓN Y ABSOLUCIÓN:
+               - Exhortación breve.
+               - Confesión General ("Omnipotente y misericordiosísimo Padre...").
+               - Absolución y Palabras de Consuelo.
+            9. LA PAZ (Rúbrica).
+            10. LITURGIA EUCARÍSTICA:
+               - Ofertorio (Versículos y Presentación del Pan y Vino).
+               - Doxología.
+               - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística - Standard Text 2019):
+                 - Sursum Corda ("El Señor esté con ustedes...").
+                 - Prefacio Propio y Sanctus.
+                 - Oración de Consagración (Texto completo con Institución).
+                 - Aclamación Memorial ("Cristo ha muerto...").
+                 - Epíclesis y Doxología Final.
+            11. RITO DE COMUNIÓN:
+               - PADRE NUESTRO ("Y ahora, como nuestro Salvador Cristo nos enseñó...").
+               - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
+               - Agnus Dei (Cordero de Dios).
+               - Ministration of Communion (Comunión de los fieles).
+            12. POST-COMUNIÓN:
+               - Oración de Acción de Gracias ("Omnipotente y sempiterno Dios...").
+            13. RITOS FINALES:
+               - AVISOS DE LA COMUNIDAD.
+               - BENDICIÓN Y DESPEDIDA ("Vayan en paz para amar y servir al Señor...").
+               - PROCESIÓN DE SALIDA.
         `;
     }
 
@@ -395,11 +423,17 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         return `
             ${basePrompt}
             FUENTE: Divine Worship: The Missal.
-            ESTILO: Hybrid Roman/Anglican (Sacral Spanish).
+            ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
             
             ESTRUCTURA OBLIGATORIA:
+            0. PROCESIÓN DE ENTRADA.
             1. Introit y Ritos Iniciales (Colecta de Pureza obligatoria).
-            2. Palabra: Profecía, Salmo, Epístola, Aleluya, Evangelio (TEXTOS COMPLETOS).
+            2. Palabra: 
+               - Profecía (Lector).
+               - Gradual o Tracto (Canto interleccional).
+               - Epístola (Subdiácono/Lector).
+               - Aleluya.
+               - Evangelio (Diácono/Sacerdote).
             3. Sermón y Credo.
             4. Intercesiones Penitenciales (Formato Ordinariato).
             5. Ofertorio (Antífona) y Orate Fratres.
@@ -414,6 +448,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Agnus Dei.
                - Oración de Humilde Acceso ("No presumimos...").
             8. Oración de Acción de Gracias y Último Evangelio.
+            9. AVISOS Y BENDICIÓN.
+            10. PROCESIÓN DE SALIDA.
         `;
     }
 
@@ -425,8 +461,14 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         IDIOMA: Español.
         
         ESTRUCTURA OBLIGATORIA:
+        0. PROCESIÓN DE ENTRADA (Rúbrica e Himno).
         1. Ritos Iniciales: Antífona, Saludo, Acto Penitencial (Confieso completo), Kyrie, Gloria, Colecta.
-        2. Liturgia de la Palabra: 1ª Lectura, Salmo, 2ª Lectura, Aleluya, Evangelio (TEXTOS BÍBLICOS COMPLETOS).
+        2. Liturgia de la Palabra: 
+           - 1ª Lectura (Lector).
+           - Salmo Responsorial (Salmista).
+           - 2ª Lectura (Lector).
+           - Aleluya.
+           - Evangelio (Diácono/Sacerdote).
         3. Homilía y Credo. Oración Universal.
         4. Liturgia Eucarística:
            - Ofertorio (Bendito seas Señor...).
@@ -439,6 +481,9 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
              - Anamnesis ("Así pues, Padre...").
              - Epíclesis de comunión y Doxología.
         5. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
-        6. Rito de Conclusión (Bendición).
+        6. RITO DE CONCLUSIÓN:
+           - AVISOS PARROQUIALES BREVES.
+           - Bendición final y Despedida.
+           - PROCESIÓN DE SALIDA (Canto Final).
     `;
 };
