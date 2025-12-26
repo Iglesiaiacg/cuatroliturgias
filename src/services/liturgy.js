@@ -254,99 +254,191 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
         
-        ⚠️ INSTRUCCIÓN CRÍTICA DE SEGURIDAD (ANTI-PLAGIO):
-        1. NO generes bloques de texto largos verbatim de libros protegidos por derechos de autor (Missale Romanum, BCP 2019, etc.).
-        2. PARA TEXTOS FIJOS (Plegaria Eucarística, Canon Romano, Credo, Gloria): Escribe SOLO el título en mayúsculas y las primeras palabras (Incipit) o una descripción de la acción. NO escribas el texto completo.
-        3. PARA TEXTOS VARIABLES (Lecturas Bíblicas, Homilía, Oración de los Fieles, Moniciones): Escribe el TEXTO COMPLETO original o generado por ti.
+        ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
+        OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
+        
+        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-RESUMEN):
+        NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
+        ESCRIBE EL TEXTO LITÚRGICO COMPLETO VERBATIM (Palabra por palabra).
+        Si es una oración fija (Te Igitur, Pater Noster), ESCRIBELA COMPLETA.
+        
+        ⚠️ REGLA DE FORMATO "VOX SECRETA":
+        Para las oraciones que el sacerdote dice en secreto (Secreto, Ofertorio, Canon bajo), usa el formato de CITA (Blockquote con >).
+        Ejemplo: 
+        > Suscipe, Sancte Pater, omnipotens aeterne Deus...
     `;
 
-    // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO
+    // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
     const season = getSeason(selectedDate);
+
+    // Calcular Septuagésima (solo relevante para Tridentina/Ordinariato)
+    // 3rd Sunday before Lent (approx 63 days before Easter)
+    const easterDate = getEasterDate(selectedDate.getFullYear());
+    const septuagesima = new Date(easterDate);
+    septuagesima.setDate(easterDate.getDate() - 63);
+    const ashWednesday = new Date(easterDate);
+    ashWednesday.setDate(easterDate.getDate() - 46);
+
     let omissionRules = "";
 
-    if (season === 'cuaresma' || season === 'semana_santa') {
-        omissionRules = "⚠️ RÚBRICA: CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA'. Usar aclamación propia del tiempo.";
-    } else if (season === 'adviento') {
-        omissionRules = "⚠️ RÚBRICA: ADVIENTO. OMITIR EL 'GLORIA'. Mantener Aleluya. [INCLUIR RITO DE CORONA DE ADVIENTO].";
+    // LOGICA ESPECÍFICA POR TRADICIÓN
+    if (tradition === 'tridentina' || tradition === 'ordinariato') {
+        const isPreLent = selectedDate >= septuagesima && selectedDate < ashWednesday;
+
+        if (season === 'cuaresma' || season === 'semana_santa' || isPreLent) {
+            omissionRules = "⚠️ RÚBRICA: TIEMPO DE PENITENCIA (Septuagésima/Cuaresma). OMITIR 'GLORIA' Y 'ALELUYA'. Usar TRACTO en lugar de Aleluya.";
+        } else if (season === 'adviento') {
+            omissionRules = "⚠️ RÚBRICA: ADVIENTO. OMITIR 'GLORIA'. MANTENER 'ALELUYA' (excepto ferias).";
+        } else {
+            omissionRules = "RÚBRICA: Incluir Gloria y Aleluya (o Gradual).";
+        }
     } else {
-        omissionRules = "RÚBRICA: Incluir Gloria (Incipit) y Aleluya según corresponda.";
+        // Romana y Anglicana (Calendario Moderno)
+        if (season === 'cuaresma' || season === 'semana_santa') {
+            omissionRules = "⚠️ RÚBRICA: CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA' (y el verso aleluyático).";
+        } else if (season === 'adviento') {
+            omissionRules = "⚠️ RÚBRICA: ADVIENTO. OMITIR EL 'GLORIA'. Mantener Aleluya.";
+        } else {
+            omissionRules = "RÚBRICA: Incluir Gloria y Aleluya.";
+        }
     }
 
+    // --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
     if (tradition === 'tridentina') {
         return `
             ${basePrompt}
-            ROL: Maestro de Ceremonias (Missale Romanum 1962).
-            CICLO: ${cycle.text} (Referencia).
-            REGLA DE ORO: 'Propio del Día' para: ${dateStr}.
-            REGLAS DE OMISIÓN: ${omissionRules}
+            FUENTE: Missale Romanum 1962.
+            IDIOMA: LATÍN (Texto Principal) y ESPAÑOL (Rúbricas).
             
-            ESTRUCTURA (Bilingüe Latín/Español - TEXTOS VARIABLES COMPLETOS, FIJOS SOLO RÚBRICAS):
-            1. Ritos al Pie del Altar (Indicar Salmo 42 y Confiteor como rúbrica).
-            2. Introito (TEXTO COMPLETO LAT/ESP), Kyrie (Solo título), Gloria (Solo título si aplica), Colecta (TEXTO COMPLETO).
-            3. Epístola (TEXTO COMPLETO), Gradual/Aleluya/Tracto (TEXTO COMPLETO), Evangelio (TEXTO COMPLETO).
-            4. Credo (Solo título si aplica).
-            5. Ofertorio (Indicar oraciones 'Suscipe Sancte Pater', etc. como rúbrica). Secreta (TEXTO COMPLETO).
-            6. CANON ROMANO 1962: NO ESCRIBIR EL TEXTO. Solo indicar los títulos de las partes (TE IGITUR, MEMENTO, etc.) y las acciones del sacerdote.
-            7. Agnus Dei, Comunión (Antífona COMPLETA), Post-Comunión (TEXTO COMPLETO).
-            8. Ritos Finales, Último Evangelio (Indicar Juan 1:1-14).
+            ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO):
+            
+            I. RITOS INICIALES
+            1. Asperges Me (o Vidi Aquam). Antífona y Oración completas.
+            2. Salmo 42 (Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote/Ministro).
+            3. Aufer a nobis y Oramus te (Oraciones de subida al altar - VOX SECRETA >).
+            4. Introito (Texto propio completo). Kyrie (Griego). Gloria (Completo).
+            
+            II. INSTRUCCIÓN
+            5. Colecta (Propia del día). Epístola (Lectura completa). Gradual/Aleluya.
+            6. Evangelio (Lectura completa). 
+            7. Credo (Si aplica).
+            
+            III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
+            8. Antífona de Ofertorio.
+            9. ORACIONES SECRETAS (Usar >):
+               > Suscipe, Sancte Pater...
+               > Offerimus tibi, Domine, calicem...
+               > In spiritu humilitatis...
+               > Veni, sanctificator...
+            10. Incienso (si aplica) y Lavabo (Salmo 25 completo).
+            11. Suscipe Sancta Trinitas (>). Orate Fratres. Secreta (Propia).
+            
+            IV. CANON MISSAE (LO MÁS IMPORTANTE - TODO TEXTO LATINO COMPLETO)
+            12. Prefacio (Propio o Común) y Sanctus.
+            13. TE IGITUR:
+               > Te igitur, clementissime Pater... (hasta el final).
+            14. MEMENTO VIVORUM:
+               > Memento, Domine, famulorum famularumque...
+            15. COMMUNICANTES:
+               > Communicantes, et memoriam venerantes...
+            16. CONSAGRACIÓN (Rúbricas de elevación y campanillas detalladas):
+               > Hanc igitur (Manos sobre las ofrendas).
+               > Quam oblationem...
+               > Qui pridie... HOC EST ENIM CORPUS MEUM. (Adoración).
+               > Simili modo... HIC EST ENIM CALIX SANGUINIS MEI... (Adoración).
+            17. EPÍCLESIS Y MEMENTO DIFUNTOS:
+               > Unde et memores...
+               > Supra quae...
+               > Supplices te rogamus...
+               > Memento etiam, Domine...
+               > Nobis quoque peccatoribus...
+            
+            V. COMUNIÓN
+            18. Pater Noster (Completo). Libera nos (>).
+            19. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
+            20. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
+            21. Post-Comunión (Propia). Ite Missa est.
+            22. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
         `;
     }
 
-    let specificInstructions = "";
-    let eucharistDetail = "";
-
+    // --- 2. MISA ANGLICANA (BCP STYLE) ---
     if (tradition === 'anglicana') {
-        specificInstructions = `
-            FUENTE: Libro de Oración Común 2019 (Estilo).
-            [MANDATORIO: ORACIÓN DE LOS FIELES GENERADA (NO COPIADA) BASADA EN LECTURAS].
-            MANDATORIO: PARA LA PLEGARIA DE CONSAGRACIÓN, NO ESCRIBAS EL TEXTO DEL LIBRO. Usa títulos: 'SURSUM CORDA', 'SANCTUS', 'PREFACIO PROPIO DEL DÍA' (Escribe el texto del prefacio), 'PLEGARIA EUCARÍSTICA' (Indicar acciones: Epíclesis, Institución, Oblación, Doxología).
-        `;
-        eucharistDetail = `
-            1. Ofertorio.
-            2. Gran Acción de Gracias (Indicando partes y Prefacio COMPLETO).
-            3. Rito de Comunión (Padre Nuestro, Prayer of Humble Access [Texto generado o Incipit], Agnus Dei).
-        `;
-    } else if (tradition === 'ordinariato') {
-        specificInstructions = `
-            FUENTE: Uso del Ordinariato (Divine Worship).
-            IDIOMA: ESPAÑOL (Estilo Sacro).
-            INSTRUCCIÓN: NO generes el texto del Canon Romano.
-            CÉNTRATE EN GENERAR EL CONTENIDO VARIABLE DEL DÍA:
-            1. Introito y Colecta (COMPLETAS).
-            2. LECTURAS BÍBLICAS (COMPLETAS) y Salmo.
-            3. HOMILÍA (Generar texto completo).
-        `;
-        eucharistDetail = `
-            1. Ofertorio (Rúbricas).
-            2. Orate Fratres.
-            3. Plegaria Eucarística (Solo Títulos y Rúbricas).
-            4. Rito de Comunión.
-        `;
-    } else { // Romana / Novus Ordo
-        specificInstructions = `
-            FUENTE: Misal Romano.
-            [MANDATORIO: ORACIÓN UNIVERSAL (Peticiones) GENERADA BASADA EN LECTURAS].
-            MANDATORIO: NO ESCRIBIR LA PLEGARIA EUCARÍSTICA COMPLETA. Indicar: 'Prefacio (Escribir texto del prefacio propio)', 'Santo', 'Plegaria Eucarística II/III (Rúbrica de consagración)', 'Aclamación Memorial'.
-        `;
-        eucharistDetail = `
-            1. Ofertorio.
-            2. Oración sobre as Ofrendas (COMPLETA).
-            3. Plegaria Eucarística (Esquema con Rúbricas).
-            4. Rito de Comunión.
+        return `
+            ${basePrompt}
+            FUENTE: Libro de Oración Común (Estilo Clásico 1662/2019).
+            ESTILO: Español Sacro ("Vos", lenguaje elevado).
+            
+            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS):
+            1. Preparación: Padre Nuestro y Colecta de Pureza (Completas).
+            2. Decálogo o Sumario de la Ley (Leídos completos). Kyrie.
+            3. Colecta del Día (Propia).
+            4. LA PALABRA: A.T., Salmo, Epístola y Evangelio (TEXTOS BÍBLICOS COMPLETOS).
+            5. Homilía Exegética. Credo Niceno (Texto completo).
+            6. Oración de los Fieles (Extensa y solemne).
+            7. Confesión General ("Omnipotente Dios, Padre de nuestro Señor Jesucristo...") y Absolución.
+            8. Ofertorio (Sentencias) y Doxología.
+            9. PLEGARIA EUCARÍSTICA (GRAN ACCIÓN DE GRACIAS):
+               - Sursum Corda (Diálogo completo).
+               - Prefacio Propio y Sanctus.
+               - ORACIÓN DE CONSAGRACIÓN (Texto completo incluyendo institución).
+               - Padre Nuestro.
+            10. Oración de Humilde Acceso (Prayer of Humble Access):
+               > "No presumimos venir a esta tu Mesa, oh misericordioso Señor..." (Texto completo).
+            11. Agnus Dei y Comunión. Oración de Acción de Gracias ("Omnipotente y sempiterno Dios...").
+            12. Gloria in Excelsis (si corresponde) y Bendición.
         `;
     }
 
+    // --- 3. ORDINARIATO (DIVINE WORSHIP) ---
+    if (tradition === 'ordinariato') {
+        return `
+            ${basePrompt}
+            FUENTE: Divine Worship: The Missal.
+            ESTILO: Hybrid Roman/Anglican (Sacral Spanish).
+            
+            ESTRUCTURA OBLIGATORIA:
+            1. Introit y Ritos Iniciales (Colecta de Pureza obligatoria).
+            2. Palabra: Profecía, Salmo, Epístola, Aleluya, Evangelio (TEXTOS COMPLETOS).
+            3. Sermón y Credo.
+            4. Intercesiones Penitenciales (Formato Ordinariato).
+            5. Ofertorio (Antífona) y Orate Fratres.
+            6. CANON DE LA MISA (VERSIÓN PATRIMONIAL):
+               - Prefacio y Sanctus.
+               - CANON ROMANO COMPLETO (Texto: "Te igitur" versión DW).
+               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim).
+               > Rúbricas de genuflexión y elevación claras.
+            7. Rito de Comunión:
+               - Padre Nuestro.
+               - Rito de la Paz.
+               - Agnus Dei.
+               - Oración de Humilde Acceso ("No presumimos...").
+            8. Oración de Acción de Gracias y Último Evangelio.
+        `;
+    }
+
+    // --- 4. ROMANA (NOVUS ORDO) ---
+    // Fallback
     return `
         ${basePrompt}
-        TITULO: ${celebrationLabel}.
-        CICLO: ${cycle.text}.
-        OMISIONES: ${omissionRules}
-        INSTRUCCIONES: ${specificInstructions}
-        ESTRUCTURA REQUERIDA:
-        1. Ritos Iniciales (Antífona Entrada [COMPLETA], Saludo, Acto Penitencial [Breve], Oración Colecta [COMPLETA]).
-        2. Liturgia de la Palabra (1ª Lectura [TEXTO BIBLICO COMPLETO - NO RESUMIR], Salmo [COMPLETO], 2ª Lectura [COMPLETA], Evangelio [COMPLETO]).
-        3. Homilía (Bosquejo generado), Credo (Solo Título), Oración Universal (Generar peticiones).
-        4. Liturgia Eucarística ${eucharistDetail}.
-        5. Rito de Conclusión.
+        FUENTE: Misal Romano (3ª Edición).
+        IDIOMA: Español.
+        
+        ESTRUCTURA OBLIGATORIA:
+        1. Ritos Iniciales: Antífona, Saludo, Acto Penitencial (Confieso completo), Kyrie, Gloria, Colecta.
+        2. Liturgia de la Palabra: 1ª Lectura, Salmo, 2ª Lectura, Aleluya, Evangelio (TEXTOS BÍBLICOS COMPLETOS).
+        3. Homilía y Credo. Oración Universal.
+        4. Liturgia Eucarística:
+           - Ofertorio (Bendito seas Señor...).
+           - Oración sobre ofrendas.
+           - PLEGARIA EUCARÍSTICA II (Texto COMPLETO obligatotio):
+             - Prefacio y Santo.
+             - "Santo eres en verdad, Señor, fuente de toda santidad..."
+             - Relato de Institución (Verbatim).
+             - "Este es el Sacramento de nuestra fe..." (Aclamación).
+             - Anamnesis ("Así pues, Padre...").
+             - Epíclesis de comunión y Doxología.
+        5. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
+        6. Rito de Conclusión (Bendición).
     `;
 };

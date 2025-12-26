@@ -20,7 +20,7 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     }
 };
 
-export const generateLiturgy = async (prompt) => {
+export const generateLiturgy = async (prompt, isRetry = false) => {
     try {
         const userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
         if (!userKey) {
@@ -55,6 +55,23 @@ export const generateLiturgy = async (prompt) => {
         const candidate = data.candidates?.[0];
         if (!candidate || !candidate.content?.parts?.[0]?.text) {
             console.error("Gemini Incomplete Response:", JSON.stringify(data, null, 2));
+
+            // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
+            if (candidate?.finishReason === 'RECITATION' && !isRetry) {
+                console.warn("⚠️ RECITATION DETECTED. Retrying with Safe Mode Prompt...");
+                const safePrompt = prompt + `
+                
+                ⚠️ ADVERTENCIA DE SEGURIDAD (COPYRIGHT DETECTADO):
+                El sistema ha bloqueado la generación anterior por incluir textos largos con derechos de autor.
+                PARA ESTE INTENTO:
+                1. Mantén las Lecturas, Homilía y Oraciones propias COMPLETAS.
+                2. PARA EL CANON, PLEGARIA EUCARÍSTICA Y PARTES FIJAS LARGAS: NO escribas el texto completo.
+                3. EN SU LUGAR: Escribe el TÍTULO, una RÚBRICA DETALLADA, y solo el INCIPIT (primeras 3 palabras).
+                4. Céntrate en generar una estructura perfecta y legal. NO GENERES BLOQUES DE TEXTO DE LIBROS RECIENTES.
+                `;
+                return generateLiturgy(safePrompt, true);
+            }
+
             throw new Error(`Respuesta incompleta de Google. Razón: ${candidate?.finishReason || 'Desconocida'}. Revisa la consola.`);
         }
 

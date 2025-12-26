@@ -254,6 +254,25 @@ body {
     /* Legacy support */
 }
 
+/* Force wrapping for potentially problematic elements */
+.liturgy-content pre,
+.liturgy-content code {
+    white-space: pre-wrap;
+    /* Wrap long lines in code blocks */
+    word-break: break-all;
+    /* Force break if necessary */
+    overflow-wrap: break-word;
+    max-width: 100%;
+}
+
+.liturgy-content table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    /* Scroll tables if too wide */
+    max-width: 100%;
+}
+
 /* Paragraph spacing */
 .liturgy-content p {
     margin-bottom: 1.5em;
@@ -261,6 +280,22 @@ body {
     /* Formal text alignment */
     hyphens: auto;
     /* Clean justification */
+}
+
+/* Vox Secreta / Prayer of Humble Access (Blockquotes) */
+.liturgy-content blockquote {
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    font-size: 0.95em;
+    color: #4b5563;
+    /* Gray-600 */
+    border-left: 3px solid var(--color-primary);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    background-color: rgba(0, 0, 0, 0.02);
+    /* Very subtle background */
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
 }
 
 /* Headings */
