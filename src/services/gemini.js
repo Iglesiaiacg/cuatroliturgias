@@ -1,3 +1,5 @@
+import { CONFIG } from './config';
+import { getApiKey } from './storage';
 import { getGlobalSettings } from './settings';
 
 const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
