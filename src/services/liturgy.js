@@ -245,9 +245,58 @@ export const getTips = () => {
     return tips[Math.floor(Math.random() * tips.length)];
 };
 
+export const getMarianAntiphon = (date) => {
+    // 1. Alma Redemptoris Mater (Advent - Feb 2)
+    const year = date.getFullYear();
+    const adventStart = getAdventStart(year);
+    const feb2 = new Date(year, 1, 2); // Month is 0-indexed, so 1 = Feb
+
+    // Check if date is in the "end of year" Advent part OR "beginning of year" until Feb 2
+    // If date is Jan/Feb (until Feb 2) -> belongs to previous year's Advent/Christmas cycle technically for antiphon
+    if (date >= adventStart || (date.getMonth() === 0) || (date.getMonth() === 1 && date.getDate() <= 2)) {
+        return { name: "Alma Redemptoris Mater", text: "Alma Redemptoris Mater..." };
+    }
+
+    // 2. Regina Caeli (Easter - Pentecost)
+    const easter = getEasterDate(year);
+    const pentecost = new Date(easter);
+    pentecost.setDate(easter.getDate() + 49);
+
+    // Normalize to handle day comparisons properly
+    const d = normalizeDate(date);
+    const startEaster = normalizeDate(easter);
+    const endPentecost = normalizeDate(pentecost);
+
+    if (d >= startEaster && d <= endPentecost) {
+        return { name: "Regina Caeli", text: "Regina Caeli, laetare, alleluia..." };
+    }
+
+    // 3. Ave Regina Caelorum (Feb 3 - Wednesday of Holy Week)
+    // Spy Wednesday is 3 days before Easter Sunday (Sunday - 4 = Wed) -> Wait, Spy Wed is diff -3 from Easter Sunday?
+    // Easter is Sunday. Holy Week starts Palm Sunday (-7). 
+    // Tradition: Until Compline of Wednesday of Holy Week? Or until Triduum starts (Holy Thursday)?
+    // Keeping simple: From Feb 3 until Holy Thursday exclusive.
+    const holyThursday = new Date(easter);
+    holyThursday.setDate(easter.getDate() - 3);
+
+    // Initial part of year between Feb 2 and Easter
+    if (d > new Date(year, 1, 2) && d < normalizeDate(holyThursday)) {
+        return { name: "Ave Regina Caelorum", text: "Ave, Regina caelorum..." };
+    }
+
+    // 4. Salve Regina (Trinity Sunday/Corpus - Start of Advent)
+    // Basically "the rest of the year" (Post-Pentecost)
+    return { name: "Salve Regina", text: "Salve, Regina, mater misericordiae..." };
+};
+
 export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
     const cycle = getLiturgicalCycle(selectedDate);
     const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    const marianAntiphon = getMarianAntiphon(selectedDate);
+
+    // --- DETECTION OF EXCEPTIONS ---
+    const isGoodFriday = celebrationLabel.toLowerCase().includes("viernes santo");
+    const isAshWednesday = celebrationLabel.toLowerCase().includes("ceniza");
 
     let basePrompt = `
         FECHA: ${dateStr}.
@@ -348,12 +397,59 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         }
     }
 
+    // 🔥🔥 CRITICAL GOOD FRIDAY OVERRIDE 🔥🔥
+    if (isGoodFriday) {
+        return `
+            ${basePrompt}
+            ⚠️⚠️⚠️ **CELEBRACIÓN ESPECIAL DETECTADA: VIERNES SANTO** ⚠️⚠️⚠️
+            
+            ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR (NO ES UNA MISA).
+            COLOR: ROJO.
+            NO HAY RITOS INICIALES (Entrada en silencio y postración). NO HAY CONSAGRACIÓN.
+            
+            ESTRUCTURA OBLIGATORIA:
+            1. RITOS INICIALES:
+               - Entrada en silencio absoluto.
+               - Rúbrica: Sacerdote se postra en tierra. Fieles de rodillas.
+               - Oración Colecta (Sin "Oremos" ni saludo).
+            
+            2. LITURGIA DE LA PALABRA:
+               - 1ª Lectura: Isaías 52, 13 – 53, 12 (El siervo sufriente).
+               - Salmo 30: "Padre, a tus manos encomiendo mi espíritu".
+               - 2ª Lectura: Hebreos 4, 14-16; 5, 7-9.
+               - TRACTO (Cristo se humilló a sí mismo...).
+               - PASIÓN DE NUESTRO SEÑOR JESUCRISTO SEGÚN SAN JUAN (Jn 18, 1 – 19, 42). 
+                 (Indica rúbrica para que la LEAN 3 PERSONAS: CRONISTA, SINAGOGA, JESÚS).
+               - HOMILÍA BREVE.
+               - ORACIÓN UNIVERSAL SOLEMNE (10 intenciones: Por la Iglesia, el Papa, los ministros, catecúmenos, unidad de los cristianos, judíos, no creyentes, gobernantes, tribulados).
+                 (Escribe SOLO los títulos de las 10 intenciones, no todo el texto largo).
+
+            3. ADORACIÓN DE LA SANTA CRUZ:
+               - Rúbrica de presentación ("Mirad el árbol de la Cruz...").
+               - Respuesta: "Venid y adoremos".
+               - Cantos de adoración (Improperios).
+            
+            4. SAGRADA COMUNIÓN:
+               - Rúbrica: Altar cubierto con mantel, corporal y misal.
+               - Padre Nuestro.
+               - Comunión de los fieles (con Pan consagrado el Jueves).
+               - Oración después de la comunión.
+               - ORACIÓN SOBRE EL PUEBLO (Sin bendición formal).
+               - SALIDA EN SILENCIO.
+
+             **NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
+        `;
+    }
+
     // --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
     if (tradition === 'tridentina') {
+        const marianAntiphonText = `Antífona Mariana Final: ${marianAntiphon.name} (${marianAntiphon.text})`;
+
         return `
             ${basePrompt}
             FUENTE: Missale Romanum 1962.
             IDIOMA: LATÍN (Texto Principal) y ESPAÑOL (Rúbricas).
+            ${omissionRules}
             
             ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO CON SU TÍTULO):
             
@@ -370,6 +466,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             7. Gradual y Aleluya [CORO/SCHOLA]: (o Tracto en Cuaresma).
                ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo ("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
             8. Evangelio [DIÁCONO/SACERDOTE]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO COMPLETO - Rúbrica: CANTADO hacia el norte).
+               ${isAshWednesday ? `
+               ⚠ **MIÉRCOLES DE CENIZA - BENDICIÓN E IMPOSICIÓN DE CENIZAS**
+               (Insertar aquí el rito completo de bendición e imposición de cenizas ANTES del Ofertorio).
+               - Antífona: Exaudi nos, Domine...
+               - 4 Oraciones de bendición.
+               - Rúbrica: Imposición con la fórmula "Memento, homo, quia pulvis es...".
+               ` : ''}
             9. Credo (Texto latino completo, si aplica).
             
             III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
@@ -414,18 +517,22 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                > Placeat tibi, sancta Trinitas, obsequium servitutis meae...
             28. BENDICIÓN FINAL (Benedicat vos omnipotens Deus...).
             29. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
-            30. PROCESIÓN DE SALIDA (Rúbrica).
+            30. ${marianAntiphonText}
+            31. PROCESIÓN DE SALIDA (Rúbrica).
         `;
     }
 
     // --- 2. MISA ANGLICANA (BCP 2019) ---
     if (tradition === 'anglicana') {
+        const marianAntiphonText = `(Opcional) Antífona Mariana: ${marianAntiphon.name}.`;
+
         return `
             ${basePrompt}
             FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
             ESTILO: Español Moderno Solemne ("Tú/Usted"). 
             ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
-            
+            ${omissionRules}
+
             ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
             NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
             EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
@@ -455,7 +562,16 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                  ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio.
                  ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO PALABRA POR PALABRA.
             6. HOMILÍA y CREDO NICENO.
-               - Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
+               ${isAshWednesday ? `
+               ⚠ **MIÉRCOLES DE CENIZA**
+               **INVITACIÓN A UNA CUARESMA SANTA** (Texto BCP: "Hermanos y hermanas en Cristo...").
+               **IMPOSICIÓN DE LA CENIZA**
+               - Antes de orar: Rúbrica del silencio.
+               - Oración sobre la ceniza (Texto BCP).
+               - Imposición: "Acuérdate de que eres povo y al polvo volverás".
+               - Salmo 51 (Miserere mei, Deus) recitado durante la imposición.
+               (Omitir Credo si así lo indica la rúbrica BCP, o ponerlo después).
+               ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
             7. ORACIÓN DE LOS FIELES:
                ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio/Lecturas de hoy.
                (Formato BCP completo).
@@ -485,16 +601,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             13. RITOS FINALES:
                - AVISOS DE LA COMUNIDAD.
                - BENDICIÓN Y DESPEDIDA.
+               - ${marianAntiphonText}
                - PROCESIÓN DE SALIDA.
         `;
     }
 
     // --- 3. ORDINARIATO (DIVINE WORSHIP) ---
     if (tradition === 'ordinariato') {
+        const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
+
         return `
             ${basePrompt}
             FUENTE: Divine Worship: The Missal.
             ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
+            ${omissionRules}
 
             ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
             NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
@@ -516,6 +636,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                ${(season === 'cuaresma') ? '- TRACTO [CORO]: (NO PONGAS ALELUYA. Usa el Tracto propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
                - Evangelio [DIÁCONO]: ⚠️ TEXTO COMPLETO.
             3. Sermón y Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
+            ${isAshWednesday ? `
+            ⚠ **MIÉRCOLES DE CENIZA**
+            (Inmediatamente después del Evangelio/Sermón):
+            - BENDICIÓN E IMPOSICIÓN DE CENIZA.
+            - Antífonas y Salmo 50 (Miserere mei, Deus).
+            - Oración Final de las Cenizas.
+            ` : ''}
             4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
                - Confesión y Absolución.
@@ -534,16 +661,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Oración de Humilde Acceso ("No presumimos...").
             8. Oración de Acción de Gracias y Último Evangelio.
             9. AVISOS Y BENDICIÓN.
-            10. PROCESIÓN DE SALIDA.
+            10. ${marianAntiphonText}
+            11. PROCESIÓN DE SALIDA.
         `;
     }
 
     // --- 4. ROMANA (NOVUS ORDO) ---
     // Fallback
+    const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
+
     return `
         ${basePrompt}
         FUENTE: Misal Romano (3ª Edición).
         IDIOMA: Español.
+        ${omissionRules}
         
         ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
         NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
@@ -572,7 +703,18 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
-           - Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
+           ${isAshWednesday ? `
+           ⚠ **MIÉRCOLES DE CENIZA**
+           **BENDICIÓN E IMPOSICIÓN DE LA CENIZA**
+           - Rúbrica: Después de la homilía, el sacerdote de pie dice la oración de bendición.
+           - Oración: "Oh Dios, que te dejas vencer..."
+           - Rúbrica: Imposición con la fórmula "Conviértete y cree en el Evangelio" o "Acuérdate de que eres polvo...".
+           - Mientras se impone la ceniza se canta: (Sugerir canto o salmo penitencial).
+           - Terminada la imposición, el sacerdote se lava las manos.
+           
+           (OMITIR ACTO PENITENCIAL DE RITOS INICIALES CUANDO HAY CENIZA).
+           (NO HAY CREDO).
+           ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
 
         4. ORACIÓN UNIVERSAL:
            - Redacta peticiones adaptadas a las lecturas de hoy.
@@ -593,5 +735,6 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
         7. RITO DE CONCLUSIÓN:
            - Avisos y Bendición final.
+           - ${marianAntiphonText}
     `;
 };
