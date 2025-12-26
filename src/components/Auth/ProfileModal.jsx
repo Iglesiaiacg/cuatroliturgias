@@ -36,7 +36,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
             // CLOUD SYNC: Save to Firestore
             try {
                 await saveGlobalSettings({ googleApiKey: apiKey.trim() });
-                console.log("API Key synced to Cloud.");
+
             } catch (e) {
                 console.error("Cloud sync failed:", e);
                 // Don't block UI on this, local save worked.

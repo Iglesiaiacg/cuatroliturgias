@@ -144,32 +144,7 @@ export default function UserManagement() {
     };
 
 
-    const handleSeedUsers = async () => {
-        if (!window.confirm("¿Generar usuarios de prueba? Esto creará perfiles ficticios para Tesorero, Sacristán, etc.")) return;
-        setLoading(true);
-        try {
-            const batch = writeBatch(db);
-            const demoUsers = [
-                { id: 'demo-treasurer', displayName: 'Hno. Tesorero', role: 'treasurer', email: 'tesoreria@iglesia.com' },
-                { id: 'demo-sacristan', displayName: 'Hno. Sacristán', role: 'sacristan', email: 'sacristia@iglesia.com' },
-                { id: 'demo-secretary', displayName: 'Hna. Secretaria', role: 'secretary', email: 'oficina@iglesia.com' },
-                { id: 'demo-musician', displayName: 'Dir. Música', role: 'musician', email: 'coro@iglesia.com' },
-                { id: 'demo-acolyte', displayName: 'Joven Acólito', role: 'acolyte', email: 'acolitos@iglesia.com' },
-            ];
 
-            demoUsers.forEach(u => {
-                const ref = doc(db, 'users', u.id);
-                batch.set(ref, { ...u, createdAt: new Date(), isDemo: true });
-            });
-
-            await batch.commit();
-            setMessage("Usuarios de prueba generados correctamente. Ahora aparecen en la lista.");
-        } catch (error) {
-            console.error(error);
-            setMessage("Error al generar: " + error.message);
-        }
-        setLoading(false);
-    };
 
     const handleDelete = async (userId) => {
         if (!window.confirm("¿Estás seguro de eliminar este perfil? El usuario perderá su rol y acceso. (Nota: Para borrar el login definitivamente, hazlo en Firebase Console).")) {
@@ -261,12 +236,6 @@ export default function UserManagement() {
                                 {isEditing ? 'Editar Usuario' : 'Asignar Nuevo Rol'}
                             </h2>
                             <div className="flex gap-4 mb-2">
-                                <button
-                                    onClick={handleSeedUsers}
-                                    className="text-xs bg-gray-200 dark:bg-white/10 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-white/20 transition-colors"
-                                >
-                                    + Generar Equipo Demo
-                                </button>
                                 {isEditing && (
                                     <button
                                         onClick={resetForm}

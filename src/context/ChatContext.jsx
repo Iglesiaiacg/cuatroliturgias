@@ -42,7 +42,7 @@ export function ChatProvider({ children }) {
 
     // Subscribe to messages based on current view
     useEffect(() => {
-        if (!currentUser || userRole === 'guest') {
+        if (!currentUser) {
             setMessages([]);
             return;
         }

@@ -4,7 +4,7 @@ export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfi
     const [animate, setAnimate] = useState(false);
 
     // Debug Access
-    console.log("MobileMenuOverlay Render:", { isOpen, realRole, userRole });
+
 
     const isRealAdmin = realRole === 'admin';
 

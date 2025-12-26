@@ -35,7 +35,7 @@ export const saveGlobalSettings = async (newSettings) => {
         const docRef = doc(db, COLLECTION_NAME, SETTINGS_DOC_ID);
         // Merge true so we don't overwrite other future settings
         await setDoc(docRef, newSettings, { merge: true });
-        console.log("Global settings saved to Firestore.");
+
         return true;
     } catch (error) {
         console.error("Error saving global settings:", error);
