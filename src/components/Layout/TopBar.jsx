@@ -38,7 +38,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
     return (
         <>
-            <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-4 pb-2 transition-colors duration-300 shadow-sm">
+            <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-8 md:pt-4 pb-2 transition-colors duration-300 shadow-sm">
                 <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
 
                     {/* MOBILE DYNAMIC HEADER */}
