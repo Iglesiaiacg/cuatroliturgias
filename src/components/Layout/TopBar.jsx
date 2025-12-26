@@ -90,8 +90,46 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             ))}
                         </nav>
 
-                        <div className="flex items-center gap-2">
-                            <button onClick={onProfile} className="w-10 h-10 neumorphic-btn">
+                        <div className="flex items-center gap-3">
+                            {/* DESKTOP ADMIN SWITCHER */}
+                            {realRole === 'admin' && (
+                                <div className="relative group">
+                                    <div className={`flex items-center gap-2 px-3 py-2 rounded-full cursor-pointer transition-all ${userRole ? 'bg-red-50 text-red-800' : 'neumorphic-btn'}`}>
+                                        <span className={`material-symbols-outlined text-lg ${userRole ? 'text-red-500' : 'text-gray-400'}`}>
+                                            {userRole ? 'admin_panel_settings' : 'visibility'}
+                                        </span>
+                                        <span className="text-xs font-bold uppercase hidden xl:block">
+                                            {userRole ? 'Supervisando' : 'Vista Real'}
+                                        </span>
+                                        {/* Invisible Select overlay for simplicity */}
+                                        <select
+                                            value={userRole || 'admin'}
+                                            onChange={(e) => {
+                                                const newRole = e.target.value === 'admin' ? null : e.target.value;
+                                                setPreviewRole(newRole);
+                                            }}
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                        >
+                                            <option value="admin">Ver como Director (Admin)</option>
+                                            <option disabled>--- VISTAS DE EQUIPO ---</option>
+                                            <option value="sacristan">Vista: Sacristán</option>
+                                            <option value="treasurer">Vista: Tesorero</option>
+                                            <option value="secretary">Vista: Secretario</option>
+                                            <option value="musician">Vista: Músico</option>
+                                            <option value="acolyte">Vista: Acólito</option>
+                                            <option disabled>--- VISTAS PÚBLICAS ---</option>
+                                            <option value="reader">Vista: Lector</option>
+                                            <option value="guest">Vista: Feligrés</option>
+                                        </select>
+                                    </div>
+                                    {/* Tooltip */}
+                                    <div className="absolute top-full right-0 mt-2 px-2 py-1 bg-gray-800 text-white text-[10px] rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
+                                        Cambiar Rol
+                                    </div>
+                                </div>
+                            )}
+
+                            <button onClick={onProfile} className="w-10 h-10 neumorphic-btn" title="Mi Perfil">
                                 <span className="material-symbols-outlined">account_circle</span>
                             </button>
                         </div>
