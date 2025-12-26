@@ -373,7 +373,7 @@ export default function UserManagement() {
                                             <div className="flex gap-2 pt-2">
                                                 <button
                                                     onClick={() => handleEdit(user)}
-                                                    className="flex-1 btn-primary text-xs !bg-gray-900 dark:!bg-white/10"
+                                                    className="flex-1 btn-primary text-xs"
                                                 >
                                                     Editar
                                                 </button>

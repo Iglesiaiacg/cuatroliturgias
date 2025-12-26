@@ -413,7 +413,7 @@ export default function DirectoryView() {
                                 <button
                                     onClick={() => startPrivateChat(selectedMember)}
                                     disabled={!selectedMember.id}
-                                    className="btn-secondary !text-purple-700 !bg-purple-100 dark:!bg-purple-900/30 dark:!text-purple-300"
+                                    className="btn-secondary"
                                     title="Enviar Mensaje Privado"
                                 >
                                     <span className="material-symbols-outlined text-sm">chat</span>
@@ -437,7 +437,7 @@ export default function DirectoryView() {
                                         </button>
                                         <button
                                             onClick={() => setIsEditing(true)}
-                                            className="btn-primary bg-gray-900 dark:bg-white text-white dark:text-gray-900 !shadow-md"
+                                            className="btn-primary"
                                         >
                                             <span className="material-symbols-outlined text-sm">edit</span>
                                             EDITAR
