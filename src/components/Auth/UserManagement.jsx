@@ -217,13 +217,13 @@ export default function UserManagement() {
             <div className="flex space-x-4 border-b border-gray-200 dark:border-white/5 pb-2 overflow-x-auto">
                 <button
                     onClick={() => setActiveTab('users')}
-                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'users' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
+                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'users' ? 'btn-primary' : 'btn-ghost'}`}
                 >
                     Usuarios
                 </button>
                 <button
                     onClick={() => setActiveTab('roles')}
-                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'roles' ? 'bg-primary text-white' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/5'}`}
+                    className={`px-4 py-2 font-bold text-sm rounded-lg transition-colors whitespace-nowrap ${activeTab === 'roles' ? 'btn-primary' : 'btn-ghost'}`}
                 >
                     Configuración de Roles
                 </button>
@@ -318,7 +318,7 @@ export default function UserManagement() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-primary text-white font-bold py-2 rounded-lg shadow-sm hover:opacity-90 transition-opacity"
+                                className="btn-primary w-full"
                             >
                                 {loading ? 'Guardando...' : (isEditing ? 'Actualizar Usuario' : 'Asignar Rol')}
                             </button>
@@ -373,14 +373,14 @@ export default function UserManagement() {
                                             <div className="flex gap-2 pt-2">
                                                 <button
                                                     onClick={() => handleEdit(user)}
-                                                    className="flex-1 bg-gray-900 dark:bg-white/10 text-white py-2 rounded-lg text-xs font-bold uppercase shadow-sm active:scale-95 transition-transform"
+                                                    className="flex-1 btn-primary text-xs !bg-gray-900 dark:!bg-white/10"
                                                 >
                                                     Editar
                                                 </button>
                                                 {user.id !== currentUser.uid && (
                                                     <button
                                                         onClick={() => handleDelete(user.id)}
-                                                        className="px-4 py-2 text-red-600 bg-red-50 dark:bg-red-900/10 rounded-lg text-xs font-bold uppercase active:scale-95 transition-transform"
+                                                        className="px-4 py-2 btn-danger text-xs uppercase"
                                                     >
                                                         Eliminar
                                                     </button>

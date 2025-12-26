@@ -313,7 +313,7 @@ export default function DirectoryView() {
                         </h2>
                         <button
                             onClick={handleCreate}
-                            className="bg-primary hover:bg-red-700 text-white p-2 rounded-lg transition-colors shadow-sm"
+                            className="btn-primary p-2"
                             title="Nuevo Fiel"
                         >
                             <span className="material-symbols-outlined text-xl">add_circle</span>
@@ -413,7 +413,7 @@ export default function DirectoryView() {
                                 <button
                                     onClick={() => startPrivateChat(selectedMember)}
                                     disabled={!selectedMember.id}
-                                    className="px-4 py-2 bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 disabled:opacity-50"
+                                    className="btn-secondary !text-purple-700 !bg-purple-100 dark:!bg-purple-900/30 dark:!text-purple-300"
                                     title="Enviar Mensaje Privado"
                                 >
                                     <span className="material-symbols-outlined text-sm">chat</span>
@@ -421,7 +421,7 @@ export default function DirectoryView() {
                                 </button>
                                 <button
                                     onClick={handleDownloadForm}
-                                    className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-white/10 dark:text-gray-300 rounded-lg text-sm font-bold transition-colors flex items-center gap-2"
+                                    className="btn-secondary"
                                     title="Descargar Formulario en Blanco"
                                 >
                                     <span className="material-symbols-outlined text-sm">description</span>
@@ -431,13 +431,13 @@ export default function DirectoryView() {
                                     <>
                                         <button
                                             onClick={handleDelete}
-                                            className="px-4 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-sm font-bold transition-colors"
+                                            className="btn-danger"
                                         >
                                             ELIMINAR
                                         </button>
                                         <button
                                             onClick={() => setIsEditing(true)}
-                                            className="px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 hover:opacity-90 rounded-lg text-sm font-bold shadow-md transition-all active:scale-95 flex items-center gap-2"
+                                            className="btn-primary bg-gray-900 dark:bg-white text-white dark:text-gray-900 !shadow-md"
                                         >
                                             <span className="material-symbols-outlined text-sm">edit</span>
                                             EDITAR
@@ -447,14 +447,14 @@ export default function DirectoryView() {
                                     <>
                                         <button
                                             onClick={() => selectedMember.isNew ? setSelectedMember(null) : setIsEditing(false)}
-                                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-white/5 rounded-lg text-sm font-bold transition-colors"
+                                            className="btn-ghost"
                                         >
                                             CANCELAR
                                         </button>
                                         <button
                                             onClick={handleSave}
                                             disabled={!selectedMember.fullName}
-                                            className="px-6 py-2 bg-primary text-white hover:bg-red-700 rounded-lg text-sm font-bold shadow-md transition-all active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="btn-primary"
                                         >
                                             <span className="material-symbols-outlined text-sm">save</span>
                                             GUARDAR
