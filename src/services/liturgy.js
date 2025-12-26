@@ -317,14 +317,14 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             1. Asperges Me (o Vidi Aquam). Antífona y Oración completas.
             2. Salmo 42 (Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote/Ministro).
             3. Aufer a nobis y Oramus te (Oraciones de subida al altar - VOX SECRETA >).
-            4. Introito (Texto propio completo). Kyrie (Griego). Gloria (Completo).
+            4. Introito (Texto propio completo). Kyrie (Griego). Gloria (Completo, si aplica).
             
             II. INSTRUCCIÓN (MISA DE LOS CATECÚMENOS)
             5. Colecta (Propia del día). 
             6. Epístola (Lectura completa - Rúbrica: LEÍDA POR EL SUBDIÁCONO O LECTOR, de espaldas al pueblo).
             7. Gradual y Aleluya (o Tracto en Cuaresma). NO es un salmo responsorial, es un canto continuo.
             8. Evangelio (Lectura completa - Rúbrica: CANTADO POR EL DIÁCONO O SACERDOTE hacia el norte).
-            9. Credo (Texto latino completo).
+            9. Credo (Texto latino completo, si aplica).
             
             III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
             10. Antífona de Ofertorio.
@@ -362,9 +362,12 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             22. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
             23. Post-Comunión (Propia). 
             24. AVISOS PARROQUIALES (Rubrica breve).
-            25. Ite Missa est. Bendición Final.
-            26. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
-            27. PROCESIÓN DE SALIDA (Rúbrica).
+            25. Ite Missa est.
+            26. PLACEAT TIBI (Oración final secreta ante el altar >):
+               > Placeat tibi, sancta Trinitas, obsequium servitutis meae...
+            27. BENDICIÓN FINAL (Benedicat vos omnipotens Deus...).
+            28. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
+            29. PROCESIÓN DE SALIDA (Rúbrica).
         `;
     }
 
@@ -435,7 +438,9 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Aleluya.
                - Evangelio (Diácono/Sacerdote).
             3. Sermón y Credo.
-            4. Intercesiones Penitenciales (Formato Ordinariato).
+            4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
+               - Intercesiones (Forma Ordinariato).
+               - Confesión y Absolución (Si no se hizo al inicio).
             5. Ofertorio (Antífona) y Orate Fratres.
             6. CANON DE LA MISA (VERSIÓN PATRIMONIAL):
                - Prefacio y Sanctus.
@@ -483,7 +488,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         5. Rito de Comunión (Padre Nuestro, Paz, Cordero, Comunión, Oración Post-comunión).
         6. RITO DE CONCLUSIÓN:
            - AVISOS PARROQUIALES BREVES.
-           - Bendición final y Despedida.
+           - Bendición final.
+           - DESPEDIDA: "Podéis ir en paz" - "Demos gracias a Dios".
            - PROCESIÓN DE SALIDA (Canto Final).
     `;
 };
