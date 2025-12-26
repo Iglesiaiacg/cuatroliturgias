@@ -173,7 +173,7 @@ export default function OfferingsView() {
             {/* Main Content (Hidden on Print) */}
             <div className="flex flex-col w-full h-full print:hidden">
                 {/* Header / Summary Section */}
-                <div className="p-6 shrink-0 z-10">
+                <div className="p-4 md:p-6 shrink-0 z-10">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h2 className="text-2xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
@@ -217,7 +217,7 @@ export default function OfferingsView() {
                     </div>
 
                     {/* Financial Cards */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                         {/* Income Card */}
                         <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
                             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Entradas</span>
@@ -235,7 +235,7 @@ export default function OfferingsView() {
                         </div>
 
                         {/* Balance Card */}
-                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                        <div className="col-span-2 md:col-span-1 bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
                             <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Balance Actual</span>
                             <div className={`text-3xl font-mono font-bold ${balance >= 0 ? 'text-primary' : 'text-red-600'}`}>
                                 ${balance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
