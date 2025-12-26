@@ -36,7 +36,7 @@ export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfi
                             <span className="material-symbols-outlined text-red-500 text-xl">admin_panel_settings</span>
                             <div className="flex flex-col">
                                 <span className="text-xs font-bold text-red-800 dark:text-red-200">MODO RECTOR</span>
-                                <span className="text-[10px] text-red-600 dark:text-red-300">Vista simulada</span>
+                                <span className="text-[10px] text-red-600 dark:text-red-300">Supervisión</span>
                             </div>
                         </div>
                         <select
