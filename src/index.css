@@ -2,7 +2,8 @@
 
 @theme {
     /* Base Variables */
-    --color-primary: #78181b;
+    --color-primary: #78350f;
+    /* Amber-900 (Solemn Brown/Red Mix) */
     --font-display: "Newsreader", serif;
 }
 
@@ -14,29 +15,35 @@
 }
 
 :root {
-    /* Modern Card Theme Variables (Stone/Paper Inspiration) */
+    /* Solemn Theme Variables (Based on DutiesModal) */
     /* Light Mode */
     --bg-main: #f5f5f4;
-    /* Stone-100 - Cleaner, warm gray */
+    /* Stone-100 */
     --bg-card: #ffffff;
-    --text-main: #1c1917;
-    /* Stone-900 */
+    --text-main: #292524;
+    /* Stone-800 - Softer than pure black */
 
-    /* Modern Shadows (Not Neumorphic) */
-    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-    /* shadow-md */
+    /* Typography Colors */
+    --text-display: #78350f;
+    /* Amber-900 for Headers */
+    --text-secondary: #57534e;
+    /* Stone-600 */
+
+    /* Modern Shadows */
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
     --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    /* shadow-2xl */
 
     /* Borders */
     --border-subtle: 1px solid #e7e5e4;
     /* Stone-200 */
 
-    /* Accents - Retaining Brand Red */
-    --color-primary: #78181b;
-    --color-primary-dim: #991b1b;
-    --icon-color: #57534e;
-    /* Stone-600 */
+    /* Accents - The "Solemn" Palette */
+    --color-primary: #78350f;
+    /* Amber-900 */
+    --color-primary-light: #b45309;
+    /* Amber-700 */
+    --icon-color: #78350f;
+    /* Amber-900 */
 
     --drop-cap-size: 3.5em;
     --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
@@ -45,19 +52,27 @@
 /* Dark Mode Overrides */
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg-main: #0c0a09;
-        /* Stone-950 */
-        --bg-card: #1c1917;
+        --bg-main: #1c1917;
         /* Stone-900 */
-        --text-main: #f5f5f4;
+        --bg-card: #292524;
+        /* Stone-950 */
+        --text-main: #ebebeb;
         /* Stone-100 */
 
-        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-        --border-subtle: 1px solid #292524;
-        /* Stone-800 */
+        --text-display: #fcd34d;
+        /* Amber-300 - Readable on dark */
+        --text-secondary: #a8a29e;
+        /* Stone-400 */
 
-        --color-primary-dim: #e11d48;
-        /* Rose-600 */
+        --shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        --border-subtle: 1px solid #44403c;
+        /* Stone-700 */
+
+        --color-primary: #d97706;
+        /* Amber-600 */
+        --color-primary-light: #fbbf24;
+        /* Amber-400 */
+        --icon-color: #d97706;
     }
 }
 
@@ -68,15 +83,16 @@ body {
     overflow-x: hidden;
     width: 100%;
     font-family: system-ui, -apple-system, sans-serif;
+    /* Body Text - Clean Sans */
 }
 
 /* Global Text Selection Override */
 ::selection {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-light);
     color: #ffffff;
 }
 
-/* Explicit Utility Overrides for Safety */
+/* Explicit Utility Overrides */
 @layer utilities {
     .bg-primary {
         background-color: var(--color-primary) !important;
@@ -90,74 +106,73 @@ body {
         border-color: var(--color-primary) !important;
     }
 
-    /* REPLACING NEUMORPHIC CLASSES WITH MODERN CARD STYLES */
-    /* Keeping class NAMES to avoid breaking JSX, but changing APPEARANCE */
+    /* Font Display Utility */
+    .font-display {
+        font-family: "Newsreader", serif;
+    }
+}
 
-    /* The Main Container Card */
+/* REPLACED NEUMORPHIC ENGINE -> SOLEMN CARD ENGINE */
+@layer utilities {
+
+    /* The Main Card - Now Solemn/Clean */
     .neumorphic-card {
         background: var(--bg-card);
         box-shadow: var(--shadow-card);
         border: var(--border-subtle);
         border-radius: 1rem;
-        /* rounded-2xl look */
-        /* overflow: hidden; Removed generally to allow dropdowns/modals if needed, specific cases handle overflow */
+        /* Position relative usually helps with absolute decorative elements */
+        position: relative;
     }
 
-    /* Inputs/Form Fields - Now Flat with border */
+    /* Inputs - Flat & Clean */
     .neumorphic-inset {
         background: var(--bg-main);
-        /* Slightly darker/lighter than card */
         border: 1px solid transparent;
-        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
-        /* Subtle inner shadow */
+        box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         border-radius: 0.5rem;
-        /* rounded-lg */
         color: var(--text-main);
     }
 
-    /* Dark Mode Utility Overrides */
+    /* Dark Mode Handling for Insets */
     @media (prefers-color-scheme: dark) {
         .neumorphic-inset {
             background: rgba(0, 0, 0, 0.2);
             border-color: #44403c;
         }
-
-        .neumorphic-btn:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .glass-nav {
-            background: rgba(28, 25, 23, 0.9);
-            /* Stone-900 alpha */
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
     }
 
     .neumorphic-inset:focus {
         background: var(--bg-card);
-        border-color: var(--color-primary);
-        box-shadow: 0 0 0 2px rgba(120, 24, 27, 0.1);
-        /* Focus ring */
+        border-color: var(--color-primary-light);
+        box-shadow: 0 0 0 2px rgba(120, 53, 15, 0.1);
+        /* Amber Tint */
         outline: none;
     }
 
-    /* Buttons - Now Solid/Flat/Ghost but NOT extruded */
+    /* Buttons - Solemn/Elegant */
     .neumorphic-btn {
-        background: var(--bg-card);
-        box-shadow: var(--shadow-card);
+        background: transparent;
         border-radius: 9999px;
-        /* full circle */
-        border: var(--border-subtle);
+        border: 1px solid transparent;
         transition: all 0.2s ease;
-        color: var(--text-main);
+        color: var(--text-secondary);
+        /* Less harsh than pure black */
         display: flex;
         align-items: center;
         justify-content: center;
     }
 
     .neumorphic-btn:hover {
-        background: var(--bg-main);
+        background: rgba(120, 53, 15, 0.05);
+        /* Amber tint hover */
+        color: var(--color-primary);
         transform: translateY(-1px);
+    }
+
+    .dark .neumorphic-btn:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: var(--text-main);
     }
 
     .neumorphic-btn:active,
@@ -171,28 +186,28 @@ body {
 
     .neumorphic-text {
         text-shadow: none;
-        /* Clean text */
     }
 
     .glass-nav {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.95);
+        /* Opaque look */
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
     }
 
-    .dark .glass-nav {
-        background: rgba(28, 25, 23, 0.9);
-        /* Stone-900 alpha */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    @media (prefers-color-scheme: dark) {
+        .glass-nav {
+            background: rgba(28, 25, 23, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
     }
 
-    /* Text Shadow Utility */
     .text-shadow {
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        text-shadow: none;
+        /* Removed for clean look */
     }
 }
+
 
 @layer components {
 
@@ -201,7 +216,6 @@ body {
         font-weight: normal;
         font-style: normal;
         font-size: 24px;
-        /* Preferred icon size */
         display: inline-block;
         line-height: 1;
         text-transform: none;
@@ -243,14 +257,8 @@ body {
     /* Paper Texture for Document */
     .preview-paper-texture {
         background-color: #faf9f6;
-        /* Off-white */
         background-image: var(--paper-texture);
-        box-shadow:
-            inset 0 0 60px rgba(0, 0, 0, 0.02),
-            /* Inner shadow */
-            0 20px 50px rgba(0, 0, 0, 0.1);
-        /* Drop shadow */
-        /* Drop shadow */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
     .animate-scale-in {
@@ -274,29 +282,21 @@ body {
     }
 }
 
-/* Document Preview Styles */
 /* Document Preview Styles - SENIOR EDITORIAL DESIGN */
 .liturgy-content {
-    /* Base typography */
-    color: #1f2937;
+    color: #292524;
+    /* Stone-800 */
     font-family: 'Merriweather', 'Georgia', serif;
-    /* Use Serif for main text */
     font-size: 1.05rem;
     line-height: 1.8;
-    /* Generous spacing */
     overflow-wrap: break-word;
-    /* Prevent horizontal scroll */
     word-wrap: break-word;
-    /* Legacy support */
 }
 
-/* Force wrapping for potentially problematic elements */
 .liturgy-content pre,
 .liturgy-content code {
     white-space: pre-wrap;
-    /* Wrap long lines in code blocks */
     word-break: break-all;
-    /* Force break if necessary */
     overflow-wrap: break-word;
     max-width: 100%;
 }
@@ -305,46 +305,40 @@ body {
     display: block;
     width: 100%;
     overflow-x: auto;
-    /* Scroll tables if too wide */
     max-width: 100%;
 }
 
-/* Paragraph spacing */
 .liturgy-content p {
     margin-bottom: 1.5em;
     text-align: justify;
-    /* Formal text alignment */
     hyphens: auto;
-    /* Clean justification */
 }
 
-/* Vox Secreta / Prayer of Humble Access (Blockquotes) */
+/* Blockquotes - Solemn Style */
 .liturgy-content blockquote {
     font-family: 'Newsreader', serif;
     font-style: italic;
     font-size: 0.95em;
-    color: #4b5563;
-    /* Gray-600 */
+    color: #57534e;
     border-left: 3px solid var(--color-primary);
     padding-left: 1rem;
     margin: 1.5rem 0;
-    background-color: rgba(0, 0, 0, 0.02);
-    /* Very subtle background */
+    background-color: rgba(120, 53, 15, 0.02);
+    /* Amber tint */
     padding: 1rem;
     border-radius: 0 8px 8px 0;
 }
 
-/* Headings */
+/* Headings - Solemn */
 .liturgy-content h1,
 .liturgy-content h2,
 .liturgy-content h3 {
-    font-family: 'Newsreader', 'Times New Roman', serif;
+    font-family: 'Newsreader', serif;
     color: var(--color-primary);
     margin-top: 1.5em;
     margin-bottom: 0.5em;
     font-weight: 700;
     text-align: center;
-    /* Centered headers for liturgical style */
     line-height: 1.2;
 }
 
@@ -352,7 +346,7 @@ body {
     font-size: 2em;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(120, 53, 15, 0.1);
     padding-bottom: 0.5em;
 }
 
@@ -364,12 +358,11 @@ body {
 .liturgy-content h3 {
     font-size: 1.25em;
     font-style: italic;
-    color: #4b5563;
+    color: var(--text-secondary);
 }
 
-/* Lists (Bulleted/Ordered) - Add padding */
 .liturgy-content ul,
-.liturgy-content o {
+.liturgy-content ol {
     margin-bottom: 1.5em;
     padding-left: 1.5em;
     list-style-position: outside;
@@ -379,26 +372,23 @@ body {
     margin-bottom: 0.5em;
 }
 
-/* Rubrics (Red instructions) */
+/* Rubrics */
 .rubric {
     color: #b91c1c;
-    /* Deep Red */
+    /* Keep Red for Rubrics */
     font-family: 'Helvetica', 'Arial', sans-serif;
-    /* Sans-serif for contrast */
     font-style: italic;
     font-weight: 600;
     font-size: 0.9em;
     display: block;
     margin: 1em 0;
     text-align: center;
-    /* Rubrics often centered */
 }
 
-/* Bold text for people's responses (Pueblo) */
+/* Bold text */
 .liturgy-content strong {
     font-weight: 800;
     color: #111827;
-    /* Near black */
 }
 
 /* Responsive adjustments */
@@ -411,19 +401,16 @@ body {
 
     .liturgy-content p {
         text-align: left;
-        /* Justify can be weird on mobile */
     }
 }
 
-/* --- CUSTOM CLOCK STYLES (Uiverse) --- */
+/* --- CLOCK STYLES (MATCHING THEME) --- */
 .clock-container {
-    /* Scaled down to fit header */
     transform: scale(0.25);
     transform-origin: center;
     width: 333px;
     height: 333px;
     display: flex;
-    /* Ensure it doesn't affect flow layout width significantly */
     max-width: 100%;
     justify-content: center;
     align-items: center;
@@ -432,20 +419,18 @@ body {
 .clock-face {
     width: 300px;
     height: 300px;
-    background-color: var(--bg-main);
-    /* Match new bg */
+    background-color: #f5f5f4;
+    /* Stone-100 */
     border-radius: 50%;
     box-shadow: var(--shadow-floating);
-    /* Modern shadow */
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 4px solid white;
-    /* Adding white rim for contrast on stone bg */
+    border: 4px solid #d6d3d1;
+    /* Stone-300 rim */
 }
 
-/* Clock inner details */
 .clock-face::before {
     content: "";
     position: absolute;
@@ -454,7 +439,6 @@ body {
     background-color: transparent;
     border-radius: 50%;
     box-shadow: inset 2px 2px 10px rgba(0, 0, 0, 0.05);
-    /* Lighter inset */
 }
 
 .marker {
@@ -472,11 +456,11 @@ body {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #a8a29e;
-    /* Stone-400 */
+    background-color: #78350f;
+    /* Amber-900 markers */
 }
 
-/* .. (Markers Rotation - Standard) .. */
+/* ... Rotations ... */
 .marker-1 {
     transform: rotate(30deg);
 }
@@ -552,13 +536,13 @@ body {
     text-align: center;
     font-size: 24px;
     font-weight: 600;
-    color: #78716c;
-    /* Stone-500 */
+    color: #78350f;
+    /* Amber-900 numbers */
     text-shadow: none;
     z-index: 2;
 }
 
-/* .. (Number Rotation) .. */
+/* ... Number Rotations ... */
 .number-1 {
     transform: rotate(30deg);
 }
@@ -680,23 +664,25 @@ body {
 .hour-hand {
     width: 8px;
     height: 70px;
-    background: #44403c;
+    background: #292524;
     z-index: 5;
 }
 
 .minute-hand {
     width: 6px;
     height: 100px;
-    background: #78716c;
+    background: #57534e;
     z-index: 6;
 }
 
 .second-hand {
     width: 3px;
     height: 120px;
-    background: #ef4444;
+    background: #b45309;
     z-index: 7;
 }
+
+/* Amber-700 */
 
 .center-pin {
     width: 20px;
@@ -749,7 +735,7 @@ body {
     @apply text-[10px] align-top ml-0.5 opacity-50;
 }
 
-/* PRINT EXPORT STYLES (Clean PDF) */
+/* PRINT EXPORT STYLES */
 @media print {
     body * {
         visibility: hidden;

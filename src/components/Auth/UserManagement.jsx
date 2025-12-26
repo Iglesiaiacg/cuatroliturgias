@@ -318,7 +318,7 @@ export default function UserManagement() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="w-full bg-primary text-white font-bold py-2 rounded-lg shadow-sm hover:bg-red-800 transition-colors"
+                                className="w-full bg-primary text-white font-bold py-2 rounded-lg shadow-sm hover:opacity-90 transition-opacity"
                             >
                                 {loading ? 'Guardando...' : (isEditing ? 'Actualizar Usuario' : 'Asignar Rol')}
                             </button>
@@ -418,7 +418,7 @@ export default function UserManagement() {
                                                     <td className="px-6 py-3 text-right space-x-2">
                                                         <button
                                                             onClick={() => handleEdit(user)}
-                                                            className="text-primary hover:text-red-800 font-bold text-xs uppercase"
+                                                            className="text-primary hover:opacity-80 font-bold text-xs uppercase transition-opacity"
                                                         >
                                                             Editar
                                                         </button>
@@ -450,7 +450,7 @@ export default function UserManagement() {
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white">Matriz de Permisos</h3>
                         <button
                             onClick={savePermissions}
-                            className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:bg-red-800 transition-colors w-full md:w-auto"
+                            className="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 transition-opacity w-full md:w-auto"
                         >
                             Guardar Cambios
                         </button>
