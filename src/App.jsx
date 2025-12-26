@@ -57,7 +57,26 @@ function AppContent() {
   const rubricLevel = settings.rubricLevel;
 
   // UI State
-  const [activeTab, setActiveTab] = useState('dashboard') // 'dashboard', 'generator', 'calendar', 'favorites'
+  const [activeTab, setActiveTabState] = useState('dashboard')
+  const [navHistory, setNavHistory] = useState(['dashboard']) // Navigation Stack
+
+  // Enhanced Navigation
+  const navigateTo = (tab) => {
+    setActiveTabState(tab);
+    setNavHistory(prev => [...prev, tab]);
+  };
+
+  const goBack = () => {
+    if (navHistory.length <= 1) return;
+    const newHistory = [...navHistory];
+    newHistory.pop(); // Remove current
+    const prevTab = newHistory[newHistory.length - 1]; // Get previous
+    setNavHistory(newHistory);
+    setActiveTabState(prevTab);
+  };
+
+  // Backward compatibility wrapper (for props looking for setActiveTab)
+  const setActiveTab = navigateTo;
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)

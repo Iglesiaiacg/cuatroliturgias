@@ -1,18 +1,18 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useTheme } from '../../context/ThemeContext'; // Restoring hook
-
+import { useTheme } from '../../context/ThemeContext';
 import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import MobileMenuOverlay from './MobileMenuOverlay';
 
-export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole: propRole, checkPermission }) {
+export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole: propRole, checkPermission, canGoBack, onBack }) {
     const { theme, setTheme } = useTheme();
-    const { setPreviewRole, realRole } = useAuth(); // Hook access
-
-    // Use propRole (which comes from App -> AuthContext value) or local context? 
-    // App.jsx passes userRole={userRole}. Since we updated AuthContext to return effectiveRole as userRole, propRole IS the effective role.
+    const { setPreviewRole, realRole } = useAuth();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const dateStr = format(date, "EEEE, d MMM", { locale: es });
 
+    // Full List for Desktop & Grid
     const navItems = [
         { id: 'dashboard', icon: 'home', label: 'Inicio', permission: null },
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario', permission: 'view_calendar' },
@@ -24,102 +24,141 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
         { id: 'users', icon: 'manage_accounts', label: 'Usuarios', permission: 'manage_users' },
     ];
 
-    // Filter items based on permission
     const visibleNavItems = navItems.filter(item => {
         if (!item.permission) return true;
         return checkPermission && checkPermission(item.permission);
     });
 
+    // Mobile Priority Items (Bottom Bar)
+    const priorityItems = visibleNavItems.slice(0, 4); // First 4 items directly visible
+
+    // Header Title Logic
+    const activeItem = navItems.find(i => i.id === activeTab);
+    const title = activeItem ? activeItem.label : 'App';
+
     return (
-        <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-4 pb-2 transition-colors duration-300 shadow-sm">
-            <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
-                {/* 1. Logo & Date */}
-                <div className="flex flex-col shrink-0">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
-                    <div className="flex items-center gap-3">
-                        <span className="material-symbols-outlined text-primary text-3xl">church</span>
-                        <h1 className="hidden md:block text-xl md:text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
-                            LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
-                        </h1>
+        <>
+            <header className="sticky top-0 z-50 bg-[var(--bg-main)]/95 backdrop-blur-md px-4 pt-4 pb-2 transition-colors duration-300 shadow-sm">
+                <div className="flex items-center justify-between max-w-7xl mx-auto w-full">
+
+                    {/* MOBILE DYNAMIC HEADER */}
+                    <div className="flex md:hidden items-center w-full">
+                        {canGoBack ? (
+                            // MODE 1: Back Button & Title
+                            <div className="flex items-center w-full animate-fade-in gap-3">
+                                <button onClick={onBack} className="p-2 -ml-2 rounded-full active:bg-gray-100 dark:active:bg-white/10">
+                                    <span className="material-symbols-outlined text-2xl text-stone-800 dark:text-white">arrow_back</span>
+                                </button>
+                                <h1 className="text-lg font-bold text-stone-900 dark:text-white">{title}</h1>
+                            </div>
+                        ) : (
+                            // MODE 2: Standard Logo & Profile
+                            <div className="flex items-center justify-between w-full animate-fade-in">
+                                <div className="flex items-center gap-3">
+                                    <span className="material-symbols-outlined text-primary text-3xl">church</span>
+                                    {/* Only Icon on Mobile Home to save space */}
+                                </div>
+
+                                {/* Right Side: Admin & Profile */}
+                                <div className="flex items-center gap-2">
+                                    {realRole === 'admin' && (
+                                        <div className="flex shrink-0 items-center bg-red-50 dark:bg-red-900/20 rounded-lg px-2 py-1 border border-red-100 dark:border-red-800/30">
+                                            <select
+                                                value={propRole || 'admin'}
+                                                onChange={(e) => {
+                                                    const newRole = e.target.value === 'admin' ? null : e.target.value;
+                                                    setPreviewRole(newRole);
+                                                    if (onNavigate) onNavigate('dashboard');
+                                                }}
+                                                className="bg-transparent text-[10px] font-bold text-red-800 dark:text-red-200 outline-none cursor-pointer border-none focus:ring-0 w-20"
+                                            >
+                                                <option value="admin">Rector</option>
+                                                <option value="sacristan">Sacristán</option>
+                                                <option value="guest">Fiel</option>
+                                            </select>
+                                        </div>
+                                    )}
+                                    <button onClick={onProfile} className="w-9 h-9 neumorphic-btn rounded-full flex items-center justify-center">
+                                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200">account_circle</span>
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* DESKTOP HEADER (Original) */}
+                    <div className="hidden md:flex items-center justify-between w-full">
+                        <div className="flex flex-col shrink-0">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
+                            <div className="flex items-center gap-3">
+                                <span className="material-symbols-outlined text-primary text-3xl">church</span>
+                                <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
+                                    LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
+                                </h1>
+                            </div>
+                        </div>
+
+                        <nav className="flex items-center gap-4">
+                            {visibleNavItems.map((item) => (
+                                <button
+                                    key={item.id}
+                                    onClick={() => onNavigate(item.id)}
+                                    className={`h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-300 ${activeTab === item.id
+                                        ? 'neumorphic-inset font-bold text-primary shadow-inner'
+                                        : 'neumorphic-btn text-gray-500 hover:text-primary'}`}
+                                >
+                                    <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
+                                        {item.icon}
+                                    </span>
+                                    <span className="text-xs">{item.label}</span>
+                                </button>
+                            ))}
+                        </nav>
+
+                        <div className="flex items-center gap-2">
+                            <button onClick={onProfile} className="w-10 h-10 neumorphic-btn">
+                                <span className="material-symbols-outlined">account_circle</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                {/* 2. Navigation (Center) - Desktop & Tablet */}
-                <nav className="hidden md:flex items-center gap-4">
-                    {visibleNavItems.map((item) => (
+                {/* MOBILE BOTTOM NAVIGATION (Redesigned) */}
+                <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 pb-safe-area pt-1 px-4 flex justify-between items-center z-40 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.1)]">
+                    {priorityItems.map((item) => (
                         <button
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
-                            className={`h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-300 ${activeTab === item.id
-                                ? 'neumorphic-inset font-bold text-primary shadow-inner'
-                                : 'neumorphic-btn text-gray-500 hover:text-primary'}`}
+                            className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-all active:scale-90 ${activeTab === item.id ? 'text-primary' : 'text-stone-400'}`}
                         >
-                            <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
+                            <span className={`material-symbols-outlined text-[26px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''} transition-all duration-300`}>
                                 {item.icon}
                             </span>
-                            <span className="text-xs">{item.label}</span>
+                            <span className={`text-[10px] font-medium transition-all duration-300 ${activeTab === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-0 h-0'}`}>
+                                {item.label}
+                            </span>
                         </button>
                     ))}
+
+                    {/* MENU TAB (FAB-like) */}
+                    <button
+                        onClick={() => setIsMenuOpen(true)}
+                        className="flex flex-col items-center justify-center gap-1 w-16 py-2 text-stone-400 active:text-primary active:scale-90 transition-all"
+                    >
+                        <span className="material-symbols-outlined text-[26px]">apps</span>
+                        <span className="text-[10px] font-medium">Menú</span>
+                    </button>
                 </nav>
+            </header>
 
-                {/* 3. Settings & Profile */}
-                <div className="flex items-center gap-2">
-
-                    {/* ADMIN VIEW SWITCHER - Only visible to Real Admins */}
-                    {realRole === 'admin' && (
-                        <div className="flex shrink-0 items-center bg-red-50 dark:bg-red-900/20 rounded-lg px-1 md:px-2 py-1 mr-1 md:mr-2 border border-red-100 dark:border-red-800/30">
-                            <span className="material-symbols-outlined text-red-400 text-sm mr-1 hidden md:inline">visibility</span>
-                            <select
-                                value={propRole || 'admin'}
-                                onChange={(e) => {
-                                    const newRole = e.target.value === 'admin' ? null : e.target.value; // null resets to real role
-                                    setPreviewRole(newRole);
-                                    if (onNavigate) onNavigate('dashboard'); // Reset view to home
-                                }}
-                                className="bg-transparent text-[10px] md:text-xs font-bold text-red-800 dark:text-red-200 outline-none cursor-pointer border-none focus:ring-0 w-24 md:w-32 active:bg-red-100"
-                            >
-                                <option value="admin">Rector</option>
-                                <option value="treasurer">Tesorero</option>
-                                <option value="sacristan">Sacristán</option>
-                                <option value="secretary">Secretaría</option>
-                                <option value="musician">Músico</option>
-                                <option value="acolyte">Acólito</option>
-                                <option value="guest">Fiel</option>
-                            </select>
-                        </div>
-                    )}
-
-
-
-
-
-
-
-                    <button
-                        onClick={onProfile}
-                        aria-label="Mi Perfil"
-                        className="w-10 h-10 neumorphic-btn"
-                    >
-                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200" style={{ fontSize: '24px' }}>account_circle</span>
-                    </button>
-                </div>
-            </div>
-
-            {/* Mobile Navigation (Fixed Bottom Bar) */}
-            <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-[var(--bg-main)]/95 backdrop-blur-md border-t border-stone-200 dark:border-stone-800 pb-safe-area pt-2 px-2 flex justify-around items-center z-50 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-                {visibleNavItems.map((item) => (
-                    <button
-                        key={item.id}
-                        onClick={() => onNavigate(item.id)}
-                        className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-all active:scale-95 ${activeTab === item.id ? 'text-primary' : 'text-stone-500 dark:text-stone-400'}`}
-                    >
-                        <span className={`material-symbols-outlined text-[24px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
-                            {item.icon}
-                        </span>
-                        <span className="text-[9px] font-medium truncate w-full text-center">{item.label}</span>
-                    </button>
-                ))}
-            </nav>
-        </header>
+            {/* FULL GRID MENU OVERLAY */}
+            <MobileMenuOverlay
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
+                onNavigate={onNavigate}
+                visibleNavItems={visibleNavItems}
+                activeTab={activeTab}
+            />
+        </>
     );
 }
