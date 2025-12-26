@@ -242,120 +242,122 @@ export default function OfferingsView() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div >
 
                 {/* Input Form Overlay (Mobile/Desktop) */}
-                {showForm && (
-                    <div className="bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10 p-4 animate-slide-down">
-                        <form onSubmit={handleSubmit} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
-                            {/* Type Selection */}
-                            <div className="md:col-span-2">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Tipo</label>
-                                <select
-                                    value={formData.type}
-                                    onChange={(e) => setFormData({ ...formData, type: e.target.value, category: categories[e.target.value][0].id })}
-                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
-                                >
-                                    <option value="income">Entrada (+)</option>
-                                    <option value="expense">Salida (-)</option>
-                                </select>
-                            </div>
-                            {/* Amount */}
-                            <div className="md:col-span-2">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Monto</label>
-                                <div className="relative">
-                                    <span className="absolute left-3 top-2 text-gray-400">$</span>
+                {
+                    showForm && (
+                        <div className="bg-gray-100 dark:bg-white/5 border-b border-gray-200 dark:border-white/10 p-4 animate-slide-down">
+                            <form onSubmit={handleSubmit} className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                                {/* Type Selection */}
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Tipo</label>
+                                    <select
+                                        value={formData.type}
+                                        onChange={(e) => setFormData({ ...formData, type: e.target.value, category: categories[e.target.value][0].id })}
+                                        className="w-full neumorphic-inset p-2 text-sm bg-transparent"
+                                    >
+                                        <option value="income">Entrada (+)</option>
+                                        <option value="expense">Salida (-)</option>
+                                    </select>
+                                </div>
+                                {/* Amount */}
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Monto</label>
+                                    <div className="relative">
+                                        <span className="absolute left-3 top-2 text-gray-400">$</span>
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            required
+                                            value={formData.amount}
+                                            onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                                            className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 pl-7 text-sm bg-white dark:bg-black/20"
+                                            placeholder="0.00"
+                                        />
+                                    </div>
+                                </div>
+                                {/* Category */}
+                                <div className="md:col-span-3">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Categoría</label>
+                                    <select
+                                        value={formData.category}
+                                        onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                                        className="w-full neumorphic-inset p-2 text-sm bg-transparent"
+                                    >
+                                        {categories[formData.type].map(cat => (
+                                            <option key={cat.id} value={cat.id}>{cat.label}</option>
+                                        ))}
+                                    </select>
+                                </div>
+
+                                {/* Link Event */}
+                                <div className="md:col-span-4">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Vincular Evento (Opcional)</label>
+                                    <select
+                                        value={formData.uniqueId || ''}
+                                        onChange={(e) => {
+                                            const selected = recentEvents.find(ev => ev.uniqueId === e.target.value);
+                                            if (selected) {
+                                                setFormData({
+                                                    ...formData,
+                                                    eventId: selected.id,
+                                                    eventTitle: selected.title,
+                                                    uniqueId: selected.uniqueId,
+                                                    description: formData.description || selected.title // Auto-fill desc if empty
+                                                });
+                                            } else {
+                                                setFormData({ ...formData, eventId: '', eventTitle: '', uniqueId: '' });
+                                            }
+                                        }}
+                                        className="w-full neumorphic-inset p-2 text-sm bg-transparent"
+                                    >
+                                        <option value="">-- Ninguno --</option>
+                                        {recentEvents.map(ev => (
+                                            <option key={ev.uniqueId} value={ev.uniqueId}>
+                                                {format(new Date(ev.displayDate), 'dd/MM')} - {ev.title}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                {/* Description */}
+                                <div className="md:col-span-3">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">Descripción</label>
                                     <input
-                                        type="number"
-                                        step="0.01"
+                                        type="text"
                                         required
-                                        value={formData.amount}
-                                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                                        className="w-full rounded-lg border-gray-300 dark:border-gray-600 p-2 pl-7 text-sm bg-white dark:bg-black/20"
-                                        placeholder="0.00"
+                                        value={formData.description}
+                                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                                        className="w-full neumorphic-inset p-2 text-sm bg-transparent"
+                                        placeholder="Ej: Colecta Misa 10am"
                                     />
                                 </div>
-                            </div>
-                            {/* Category */}
-                            <div className="md:col-span-3">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Categoría</label>
-                                <select
-                                    value={formData.category}
-                                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
-                                >
-                                    {categories[formData.type].map(cat => (
-                                        <option key={cat.id} value={cat.id}>{cat.label}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            {/* Link Event */}
-                            <div className="md:col-span-4">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Vincular Evento (Opcional)</label>
-                                <select
-                                    value={formData.uniqueId || ''}
-                                    onChange={(e) => {
-                                        const selected = recentEvents.find(ev => ev.uniqueId === e.target.value);
-                                        if (selected) {
-                                            setFormData({
-                                                ...formData,
-                                                eventId: selected.id,
-                                                eventTitle: selected.title,
-                                                uniqueId: selected.uniqueId,
-                                                description: formData.description || selected.title // Auto-fill desc if empty
-                                            });
-                                        } else {
-                                            setFormData({ ...formData, eventId: '', eventTitle: '', uniqueId: '' });
-                                        }
-                                    }}
-                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
-                                >
-                                    <option value="">-- Ninguno --</option>
-                                    {recentEvents.map(ev => (
-                                        <option key={ev.uniqueId} value={ev.uniqueId}>
-                                            {format(new Date(ev.displayDate), 'dd/MM')} - {ev.title}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            {/* Description */}
-                            <div className="md:col-span-3">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">Descripción</label>
-                                <input
-                                    type="text"
-                                    required
-                                    value={formData.description}
-                                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
-                                    placeholder="Ej: Colecta Misa 10am"
-                                />
-                            </div>
-                            {/* Beneficiary (Optional) */}
-                            <div className="md:col-span-3">
-                                <label className="block text-xs font-bold text-gray-500 mb-1">
-                                    {formData.type === 'income' ? 'Recibido de' : 'Pagado a'}
-                                </label>
-                                <input
-                                    type="text"
-                                    value={formData.beneficiary}
-                                    onChange={(e) => setFormData({ ...formData, beneficiary: e.target.value })}
-                                    className="w-full neumorphic-inset p-2 text-sm bg-transparent"
-                                    placeholder={formData.type === 'income' ? 'Ej: Familia Pérez' : 'Ej: CFE'}
-                                />
-                            </div>
-                            {/* Submit */}
-                            <div className="md:col-span-2 flex gap-2">
-                                <button type="submit" className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-lg py-2 font-bold text-sm shadow-md transition-colors">
-                                    Guardar
-                                </button>
-                                <button type="button" onClick={() => setShowForm(false)} className="px-3 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-lg font-bold text-sm transition-colors">
-                                    <span className="material-symbols-outlined text-lg pt-1">close</span>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                )}
+                                {/* Beneficiary (Optional) */}
+                                <div className="md:col-span-3">
+                                    <label className="block text-xs font-bold text-gray-500 mb-1">
+                                        {formData.type === 'income' ? 'Recibido de' : 'Pagado a'}
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={formData.beneficiary}
+                                        onChange={(e) => setFormData({ ...formData, beneficiary: e.target.value })}
+                                        className="w-full neumorphic-inset p-2 text-sm bg-transparent"
+                                        placeholder={formData.type === 'income' ? 'Ej: Familia Pérez' : 'Ej: CFE'}
+                                    />
+                                </div>
+                                {/* Submit */}
+                                <div className="md:col-span-2 flex gap-2">
+                                    <button type="submit" className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-lg py-2 font-bold text-sm shadow-md transition-colors">
+                                        Guardar
+                                    </button>
+                                    <button type="button" onClick={() => setShowForm(false)} className="px-3 bg-gray-200 hover:bg-gray-300 text-gray-600 rounded-lg font-bold text-sm transition-colors">
+                                        <span className="material-symbols-outlined text-lg pt-1">close</span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    )
+                }
 
                 {/* Ledger List (Table View) */}
                 <div className="flex-1 overflow-y-auto px-4 pb-4 max-w-6xl mx-auto w-full">
@@ -481,21 +483,22 @@ export default function OfferingsView() {
                         )}
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Hidden Receipt Container (For PDF generation) */}
-            <div style={{ position: 'absolute', top: -9999, left: -9999 }}>
+            < div style={{ position: 'absolute', top: -9999, left: -9999 }
+            }>
                 {receiptData && <Receipt ref={receiptRef} data={receiptData} />}
-            </div>
+            </div >
 
             {/* Account Sheet (For Printing Only) */}
-            <div className="hidden print:block">
+            < div className="hidden print:block" >
                 <AccountSheet
                     transactions={transactions}
                     currentMonth={currentDate.getMonth()}
                     currentYear={currentDate.getFullYear()}
                 />
-            </div>
-        </main>
+            </div >
+        </main >
     );
 }
