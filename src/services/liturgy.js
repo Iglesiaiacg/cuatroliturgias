@@ -426,25 +426,36 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             ESTILO: Español Moderno Solemne ("Tú/Usted"). 
             ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
             
+            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
+            NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
+            EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
+            - [[INSERTAR_GLORIA]]
+            - [[INSERTAR_CREDO]]
+            - [[INSERTAR_SANTO]]
+            - [[INSERTAR_PADRE_NUESTRO]]
+            - [[INSERTAR_CORDERO]]
+            (Nota: Para el "Kyrie" o "Decálogo" usa texto propio si varía del romano, pero para lo demás usa marcadores).
+
             ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - CON TÍTULOS CLAROS):
             0. PROCESIÓN DE ENTRADA (Himno, Rúbrica de ingreso y Veneración del Altar).
             1. RITOS INICIALES:
                - Aclamación Inicial ("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
                - Colecta de Pureza ("Omnipotente Dios, para quien todos los corazones...").
             2. EL DECÁLOGO o EL SUMARIO DE LA LEY (Leído completo).
-            3. KYRIE ELEISON (Señor, ten piedad) y GLORIA (si corresponde).
+            3. KYRIE ELEISON (Señor, ten piedad).
+               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
             4. COLECTA DEL DÍA (Propia).
                ⚠️ OBLIGATORIO: Incluir el SALUDO ("El Señor esté con ustedes...") antes del Oremos y la Colecta.
             5. LITURGIA DE LA PALABRA:
                - Primera Lectura (Antiguo Testamento) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
                - SALMO RESPONSORIAL [SALMISTA o LECTOR]: (Indica la Antífona y las Estrofas COMPLETAS).
                - Segunda Lectura (Epístola) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
-               - ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).
+               ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).'}
                - Evangelio [DIÁCONO o SACERDOTE]:
                  ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio.
                  ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO PALABRA POR PALABRA.
-                 ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio antes de la lectura.
-            6. HOMILÍA y CREDO NICENO (Texto completo "Creemos en un solo Dios...").
+            6. HOMILÍA y CREDO NICENO.
+               - Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             7. ORACIÓN DE LOS FIELES:
                ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio/Lecturas de hoy.
                (Formato BCP completo).
@@ -453,20 +464,21 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Confesión General ("Omnipotente y misericordiosísimo Padre...").
                - Absolución y Palabras de Consuelo.
             9. LA PAZ.
+               ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
             10. LITURGIA EUCARÍSTICA:
                - Ofertorio.
                - Doxología.
                - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística):
                  - Sursum Corda ("El Señor esté con ustedes...").
-                 - PREFACIO PROPIO (Estacional o de Fiesta) y Sanctus.
-                 - Oración de Consagración (Texto completo).
+                 - PREFACIO PROPIO (Estacional o de Fiesta) y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+                 - Oración de Consagración (Texto completo BCP 2019 Estándar).
                  - Aclamación Memorial.
                  - Epíclesis y Doxología Final.
             11. RITO DE COMUNIÓN:
-               - PADRE NUESTRO ("Y ahora, como nuestro Salvador Cristo nos enseñó...").
-               - DOXOLOGÍA O EMBOLISMO (Según uso BCP: "Porque tuyo es el reino...").
+               - PADRE NUESTRO: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
+               - DOXOLOGÍA O EMBOLISMO (Según uso BCP).
                - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
-               - Agnus Dei (Cordero de Dios).
+               - Agnus Dei: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
                - Comunión de los fieles.
             12. POST-COMUNIÓN:
                - Oración de Acción de Gracias.
@@ -483,31 +495,42 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             ${basePrompt}
             FUENTE: Divine Worship: The Missal.
             ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
-            
+
+            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
+            NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
+            EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
+            - [[INSERTAR_GLORIA]]
+            - [[INSERTAR_CREDO]]
+            - [[INSERTAR_SANTO]]
+            - [[INSERTAR_PADRE_NUESTRO]]
+            - [[INSERTAR_CORDERO]]
+
             ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
             0. PROCESIÓN DE ENTRADA.
             1. Introito y Ritos Iniciales (Colecta de Pureza obligatoria).
+               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. Palabra: 
                - Profecía [LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
                - Gradual o Tracto [CORO/SALMISTA]: (Canto interleccional).
                - Epístola [SUBDIÁCONO o LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
-               - ALELUYA [CORO]: (Incluye el texto del VERSO propio).
+               ${(season === 'cuaresma') ? '- TRACTO [CORO]: (NO PONGAS ALELUYA. Usa el Tracto propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
                - Evangelio [DIÁCONO]: ⚠️ TEXTO COMPLETO.
-            3. Sermón y Credo.
+            3. Sermón y Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
                - Confesión y Absolución.
             5. Ofertorio (Antífona) y Orate Fratres.
             6. CANON DE LA MISA (VERSIÓN PATRIMONIAL EN ESPAÑOL):
-               - PREFACIO PROPIO y Sanctus.
+               - PREFACIO PROPIO y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
                - CANON ROMANO COMPLETO (Oración Eucarística I).
                > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
                > Rúbricas de genuflexión y elevación claras.
             7. Rito de Comunión:
-               - Padre Nuestro.
+               - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
                - EMBOLISMO ("Líbranos Señor..." - Divine Worship text).
                - Rito de la Paz.
-               - Agnus Dei.
+               ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
+               - Agnus Dei: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
                - Oración de Humilde Acceso ("No presumimos...").
             8. Oración de Acción de Gracias y Último Evangelio.
             9. AVISOS Y BENDICIÓN.
@@ -537,19 +560,19 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - Rúbrica de entrada y Saludo.
            - Acto Penitencial: USA EL MARCADOR \`[[INSERTAR_YO_CONFIESO]]\`.
            - Kyrie (Señor ten piedad).
-           - Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo o Fiesta).
+           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
            - Oración Colecta (Propia del día).
 
         2. LITURGIA DE LA PALABRA:
            - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim - Usa Torres Amat).
            - Salmo Responsorial [SALMISTA]: (Respuesta y estrofas completas).
            - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Verbatim).
-           - ALELUYA [CORO]: Verso propio.
+           ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: Verso propio.'}
            - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ TEXTO COMPLETO (Verbatim).
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
-           - Credo: USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.
+           - Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
 
         4. ORACIÓN UNIVERSAL:
            - Redacta peticiones adaptadas a las lecturas de hoy.
@@ -563,7 +586,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
         6. RITO DE COMUNIÓN:
            - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-           - Embolismo y Rito de la Paz.
+           - Embolismo.
+           ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '- (RITO DE LA PAZ OMITIDO por Jueves Santo).' : '- Rito de la Paz.'}
            - Cordero: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
            - Comunión y Oración Post-comunión.
 
