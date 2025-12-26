@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfile, visibleNavItems, activeTab }) {
+export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfile, visibleNavItems, activeTab, realRole, userRole, setPreviewRole }) {
     const [animate, setAnimate] = useState(false);
 
     useEffect(() => {
@@ -28,6 +28,35 @@ export default function MobileMenuOverlay({ isOpen, onClose, onNavigate, onProfi
 
                 {/* Drag Handle */}
                 <div className="w-12 h-1.5 bg-gray-300 dark:bg-stone-700 rounded-full mx-auto mb-6" />
+
+                {/* ADMIN ROLE SWITCHER (If Real Admin) */}
+                {realRole === 'admin' && (
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 rounded-2xl border border-red-100 dark:border-red-800/30 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <span className="material-symbols-outlined text-red-500 text-xl">admin_panel_settings</span>
+                            <div className="flex flex-col">
+                                <span className="text-xs font-bold text-red-800 dark:text-red-200">MODO RECTOR</span>
+                                <span className="text-[10px] text-red-600 dark:text-red-300">Vista simulada</span>
+                            </div>
+                        </div>
+                        <select
+                            value={userRole || 'admin'}
+                            onChange={(e) => {
+                                const newRole = e.target.value === 'admin' ? null : e.target.value;
+                                setPreviewRole(newRole);
+                                if (onNavigate) onNavigate('dashboard');
+                                onClose();
+                            }}
+                            className="bg-white dark:bg-black/20 text-xs font-bold text-red-800 dark:text-red-200 rounded-lg border-none focus:ring-1 focus:ring-red-500 py-2 pl-3 pr-8"
+                        >
+                            <option value="admin">Rector (Total)</option>
+                            <option value="sacristan">Sacristán</option>
+                            <option value="treasurer">Tesorero</option>
+                            <option value="musician">Músico</option>
+                            <option value="guest">Fiel (Vista pública)</option>
+                        </select>
+                    </div>
+                )}
 
                 <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-6 px-2">Menú Principal</h3>
 

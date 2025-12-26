@@ -52,36 +52,11 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 <h1 className="text-lg font-bold text-stone-900 dark:text-white">{title}</h1>
                             </div>
                         ) : (
-                            // MODE 2: Standard Logo & Profile
-                            <div className="flex items-center justify-between w-full animate-fade-in">
-                                <div className="flex items-center gap-3">
-                                    <span className="material-symbols-outlined text-primary text-3xl">church</span>
-                                    {/* Only Icon on Mobile Home to save space */}
-                                </div>
-
-                                {/* Right Side: Admin & Profile */}
-                                <div className="flex items-center gap-2">
-                                    {realRole === 'admin' && (
-                                        <div className="flex shrink-0 items-center bg-red-50 dark:bg-red-900/20 rounded-lg px-2 py-1 border border-red-100 dark:border-red-800/30">
-                                            <select
-                                                value={propRole || 'admin'}
-                                                onChange={(e) => {
-                                                    const newRole = e.target.value === 'admin' ? null : e.target.value;
-                                                    setPreviewRole(newRole);
-                                                    if (onNavigate) onNavigate('dashboard');
-                                                }}
-                                                className="bg-transparent text-[10px] font-bold text-red-800 dark:text-red-200 outline-none cursor-pointer border-none focus:ring-0 w-20"
-                                            >
-                                                <option value="admin">Rector</option>
-                                                <option value="sacristan">Sacristán</option>
-                                                <option value="guest">Fiel</option>
-                                            </select>
-                                        </div>
-                                    )}
-                                    <button onClick={onProfile} className="w-9 h-9 neumorphic-btn rounded-full flex items-center justify-center">
-                                        <span className="material-symbols-outlined text-gray-700 dark:text-gray-200">account_circle</span>
-                                    </button>
-                                </div>
+                            // MODE 2: Standard Logo Only (Clean Header)
+                            <div className="flex items-center justify-center w-full animate-fade-in relative">
+                                <span className="material-symbols-outlined text-primary text-3xl absolute left-0">church</span>
+                                {/* Title hidden for extreme cleanliness or kept? User said "Remove Icons". Let's keep title hidden as per previous step for space, but maybe center the logo? */}
+                                {/* Actually, just keeping the Left Align Logo is fine and standard. */}
                             </div>
                         )}
                     </div>
@@ -156,8 +131,14 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}
                 onNavigate={onNavigate}
+                onProfile={onProfile}
                 visibleNavItems={visibleNavItems}
                 activeTab={activeTab}
+
+                // Pass Role Props for Admin Switcher in Menu
+                realRole={realRole}
+                userRole={propRole}
+                setPreviewRole={setPreviewRole}
             />
         </>
     );
