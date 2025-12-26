@@ -52,11 +52,16 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 <h1 className="text-lg font-bold text-stone-900 dark:text-white">{title}</h1>
                             </div>
                         ) : (
-                            // MODE 2: Standard Logo Only (Clean Header)
-                            <div className="flex items-center justify-center w-full animate-fade-in relative">
-                                <span className="material-symbols-outlined text-primary text-3xl absolute left-0">church</span>
-                                {/* Title hidden for extreme cleanliness or kept? User said "Remove Icons". Let's keep title hidden as per previous step for space, but maybe center the logo? */}
-                                {/* Actually, just keeping the Left Align Logo is fine and standard. */}
+                            // MODE 2: Standard Logo & Brand (Centered & Clean)
+                            <div className="flex items-center justify-center w-full py-2 animate-fade-in">
+                                <div className="flex items-center gap-3">
+                                    <div className="p-2 bg-primary/10 rounded-full">
+                                        <span className="material-symbols-outlined text-primary text-3xl">church</span>
+                                    </div>
+                                    <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
+                                        LITÚRG-<span style={{ color: '#991b1b' }}>IA</span>
+                                    </h1>
+                                </div>
                             </div>
                         )}
                     </div>

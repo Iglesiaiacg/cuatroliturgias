@@ -81,13 +81,13 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
     };
 
     return createPortal(
-        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={onClose} />
 
             <div className="bg-[var(--bg-main)] rounded-2xl shadow-2xl w-full max-w-md relative z-10 overflow-hidden animate-slide-up max-h-[90vh] flex flex-col border-none">
 
                 {/* Header */}
-                <div className="p-6 flex justify-between items-center bg-[var(--bg-main)]">
+                <div className="p-6 flex justify-between items-center bg-[var(--bg-main)] border-b border-gray-100 dark:border-white/5">
                     <h2 className="text-xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
                         <span className="material-symbols-outlined text-primary">account_circle</span>
                         Mi Perfil
@@ -97,7 +97,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                     </button>
                 </div>
 
-                {/* Content */}
+                {/* Scrollable Content */}
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
                     <div className="neumorphic-card p-4 rounded-xl flex items-center gap-3 mb-4">
@@ -108,7 +108,6 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                             <p className="text-sm font-bold text-gray-900 dark:text-white">{currentUser?.email}</p>
                             <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">Rol: {userRole}</p>
                         </div>
-                        {/* Debug Button Removed for Production */}
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -185,16 +184,17 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                             </button>
                         </div>
                     </form>
+                </div>
 
-                    <div className="border-t border-gray-100 dark:border-white/5 pt-4">
-                        <button
-                            onClick={handleLogout}
-                            className="w-full flex items-center justify-center gap-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 py-2 rounded-xl text-sm font-bold transition-colors"
-                        >
-                            <span className="material-symbols-outlined text-lg">logout</span>
-                            Cerrar Sesión
-                        </button>
-                    </div>
+                {/* Fixed Footer: Logout */}
+                <div className="p-4 bg-[var(--bg-main)] border-t border-gray-100 dark:border-white/5">
+                    <button
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center gap-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 py-3 rounded-xl text-sm font-bold transition-colors"
+                    >
+                        <span className="material-symbols-outlined text-lg">logout</span>
+                        Cerrar Sesión
+                    </button>
                 </div>
             </div>
         </div>,
