@@ -132,18 +132,20 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                     </button>
                                 </div>
 
-                                {/* API Key */}
-                                <div>
-                                    <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
-                                    <input
-                                        type="password"
-                                        value={apiKey}
-                                        onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
-                                        placeholder="Clave API (Opcional si usa .env)"
-                                        className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
-                                    />
-                                    <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
-                                </div>
+                                {/* API Key - ADMIN ONLY */}
+                                {userRole === 'admin' && (
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
+                                        <input
+                                            type="password"
+                                            value={apiKey}
+                                            onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
+                                            placeholder="Clave API (Opcional si usa .env)"
+                                            className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
+                                        />
+                                        <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                    </div>
+                                )}
                             </div>
                         )}
 
