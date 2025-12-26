@@ -74,7 +74,7 @@ export default function HomeView({ onNavigate, date, docContent }) {
     // We kept the existing layout for Admins.
 
     return (
-        <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-7xl mx-auto animate-fade-in">
+        <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 w-full max-w-7xl mx-auto animate-fade-in pb-32">
 
             {/* Greeting Header */}
             <div className="mb-6">
@@ -97,7 +97,9 @@ export default function HomeView({ onNavigate, date, docContent }) {
             {/* PINNED LITURGY SECTION (Takes Priority) */}
             {pinnedLiturgy && !isReadingPinned && (
                 <div className="bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group">
-                    <div className="active-ring absolute top-0 right-0 m-4"></div>
+                    {/* Visual Pulse Effect (Optional, using standard Tailwind if needed) */}
+                    <div className="absolute top-0 right-0 m-4 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>
+
                     <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
