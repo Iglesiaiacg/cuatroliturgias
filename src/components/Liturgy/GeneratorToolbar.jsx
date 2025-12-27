@@ -58,9 +58,9 @@ export default function GeneratorToolbar({
 
                 {/* Feast Label */}
                 {calculatedFeast && (
-                    <div className="hidden md:flex flex-col items-start leading-none border-l border-gray-200 dark:border-white/10 pl-4">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider">Liturgia del Día</span>
-                        <span className="text-xs font-bold text-primary truncate max-w-[200px]">{calculatedFeast}</span>
+                    <div className="flex flex-col items-start leading-none border-l border-gray-200 dark:border-white/10 pl-4 w-32 md:w-auto overflow-hidden">
+                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap">Liturgia del Día</span>
+                        <span className="text-xs font-bold text-primary truncate w-full" title={calculatedFeast}>{calculatedFeast}</span>
                     </div>
                 )}
             </div>

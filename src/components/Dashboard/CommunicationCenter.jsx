@@ -112,15 +112,15 @@ export default function CommunicationCenter({ onClose }) {
                             </div>
                         </div>
 
-                        <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 overflow-hidden">
+                        <div className="flex-1 overflow-y-auto md:overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-6 pb-20 md:pb-0">
                             {/* Write Broadcast */}
-                            <form onSubmit={handlePostNotice} className="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm flex flex-col h-full">
+                            <form onSubmit={handlePostNotice} className="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm flex flex-col h-auto md:h-full shrink-0">
                                 <label className="font-bold text-gray-700 dark:text-gray-300 mb-2">Escribir Nuevo Aviso</label>
                                 <textarea
                                     value={noticeText}
                                     onChange={(e) => setNoticeText(e.target.value)}
                                     placeholder="Ej: El próximo domingo la misa iniciará a las 10:30 AM..."
-                                    className="flex-1 w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl resize-none outline-none focus:ring-2 focus:ring-primary/20 mb-4"
+                                    className="flex-1 w-full p-4 bg-gray-50 dark:bg-black/20 rounded-xl resize-none outline-none focus:ring-2 focus:ring-primary/20 mb-4 min-h-[150px]"
                                 />
                                 <button disabled={!noticeText.trim()} className="btn-primary py-3 flex items-center justify-center gap-2">
                                     <span className="material-symbols-outlined">send</span>
@@ -129,7 +129,7 @@ export default function CommunicationCenter({ onClose }) {
                             </form>
 
                             {/* Active Notices List */}
-                            <div className="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm flex flex-col h-full overflow-hidden">
+                            <div className="bg-white dark:bg-surface-dark p-6 rounded-xl shadow-sm flex flex-col h-full overflow-hidden min-h-[200px]">
                                 <h4 className="font-bold text-gray-700 dark:text-gray-300 mb-4">Avisos Activos</h4>
                                 <div className="flex-1 overflow-y-auto space-y-3 pr-2">
                                     {notices.length === 0 ? (
@@ -216,8 +216,8 @@ export default function CommunicationCenter({ onClose }) {
                                     return (
                                         <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                                             <div className={`max-w-[80%] md:max-w-[60%] rounded-2xl px-4 py-3 shadow-sm ${isMe
-                                                    ? 'bg-primary text-white rounded-br-none'
-                                                    : 'bg-white dark:bg-surface-dark text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-100 dark:border-white/5'
+                                                ? 'bg-primary text-white rounded-br-none'
+                                                : 'bg-white dark:bg-surface-dark text-gray-800 dark:text-gray-200 rounded-bl-none border border-gray-100 dark:border-white/5'
                                                 }`}>
                                                 {!isMe && <p className="text-[10px] font-bold opacity-70 mb-1">{msg.displayName}</p>}
                                                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.text}</p>

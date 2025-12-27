@@ -298,8 +298,9 @@ function AppContent() {
               )}
 
               {/* VIEW SWITCHER: Back to Module Button for Servers */}
+              {/* VIEW SWITCHER: Back to Module Button for Servers */}
               {['treasurer', 'secretary', 'musician', 'sacristan'].includes(userRole) && (
-                <div className="fixed bottom-24 right-4 z-50 md:top-24 md:bottom-auto">
+                <div className="fixed bottom-6 right-4 z-40 md:top-24 md:bottom-auto">
                   <button
                     onClick={() => navigateTo(
                       userRole === 'treasurer' ? 'offerings'
@@ -308,11 +309,13 @@ function AppContent() {
                             : userRole === 'secretary' ? 'directory' // or dashboard
                               : 'dashboard'
                     )}
-                    className="flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-all text-sm font-bold"
+                    className="flex items-center justify-center gap-2 bg-primary text-white shadow-lg shadow-primary/30 active:scale-95 transition-all
+                    md:px-4 md:py-3 md:rounded-full md:w-auto
+                    w-12 h-12 rounded-full"
+                    title="Volver a mi Módulo"
                   >
                     <span className="material-symbols-outlined">arrow_back</span>
-                    <span className="hidden sm:inline">Volver a mi Módulo</span>
-                    <span className="sm:hidden">Volver</span>
+                    <span className="hidden md:inline font-bold text-sm">Volver a mi Módulo</span>
                   </button>
                 </div>
               )}
