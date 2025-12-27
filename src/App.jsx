@@ -3,7 +3,7 @@ import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
 import { useSettings } from './hooks/useSettings'
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './services/firebase';
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ChatProvider } from './context/ChatContext';
@@ -105,6 +105,31 @@ function AppContent() {
       }
     }
   }
+
+  // AUTO-LOAD PINNED LITURGY (Observer Mode)
+  useEffect(() => {
+    // If user exists but CANNOT generate (Observer/Server), sync with Pinned Liturgy
+    if (currentUser && checkPermission && !checkPermission('generate_liturgy')) {
+      const unsub = onSnapshot(doc(db, 'config', 'pinned_liturgy'), (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.content) {
+            setDocContent(data.content);
+
+            if (data.date) {
+              const d = data.date.seconds ? new Date(data.date.seconds * 1000) : new Date(data.date);
+              setSelectedDate(d);
+            }
+
+            if (data.title) {
+              setServiceTitle(data.title);
+            }
+          }
+        }
+      });
+      return () => unsub();
+    }
+  }, [currentUser, checkPermission, setDocContent, setSelectedDate]);
 
   const handlePinLiturgy = async () => {
     if (!docContent) return;
@@ -275,20 +300,20 @@ function AppContent() {
               {/* VIEW SWITCHER: Back to Module Button for Servers */}
               {['treasurer', 'secretary', 'musician', 'sacristan'].includes(userRole) && (
                 <div className="fixed bottom-24 right-4 z-50 md:top-24 md:bottom-auto">
-                    <button
-                        onClick={() => navigateTo(
-                            userRole === 'treasurer' ? 'offerings'
-                            : userRole === 'musician' ? 'music'
-                            : userRole === 'sacristan' ? 'sacristy'
+                  <button
+                    onClick={() => navigateTo(
+                      userRole === 'treasurer' ? 'offerings'
+                        : userRole === 'musician' ? 'music'
+                          : userRole === 'sacristan' ? 'sacristy'
                             : userRole === 'secretary' ? 'directory' // or dashboard
-                            : 'dashboard'
-                        )}
-                        className="flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-all text-sm font-bold"
-                    >
-                        <span className="material-symbols-outlined">arrow_back</span>
-                        <span className="hidden sm:inline">Volver a mi Módulo</span>
-                        <span className="sm:hidden">Volver</span>
-                    </button>
+                              : 'dashboard'
+                    )}
+                    className="flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-all text-sm font-bold"
+                  >
+                    <span className="material-symbols-outlined">arrow_back</span>
+                    <span className="hidden sm:inline">Volver a mi Módulo</span>
+                    <span className="sm:hidden">Volver</span>
+                  </button>
                 </div>
               )}
 
