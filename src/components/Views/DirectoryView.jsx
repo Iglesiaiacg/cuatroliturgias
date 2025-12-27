@@ -606,7 +606,7 @@ export default function DirectoryView() {
 
 function Field({ label, value, onChange, editing, type = "text", placeholder, options, colSpan = 1, focus }) {
     return (
-        <div className={colSpan > 1 ? `col-span-${colSpan} md:col-span-${colSpan}` : ''}>
+        <div className={colSpan === 2 ? 'col-span-1 md:col-span-2' : colSpan === 3 ? 'col-span-1 md:col-span-3' : 'col-span-1'}>
             <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">{label}</label>
             {editing ? (
                 type === 'select' ? (
