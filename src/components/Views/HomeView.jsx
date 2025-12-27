@@ -20,7 +20,7 @@ import { TreasurerDashboard, SacristanDashboard, SecretaryDashboard, MusicianDas
 import GuestDashboard from '../Dashboard/GuestDashboard';
 import CommunicationCenter from '../Dashboard/CommunicationCenter';
 
-export default function HomeView({ onNavigate, date, docContent }) {
+export default function HomeView({ onNavigate, date, docContent, season, calculatedFeast }) {
     const { userRole, checkPermission } = useAuth(); // Get current role
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
@@ -43,27 +43,28 @@ export default function HomeView({ onNavigate, date, docContent }) {
 
     // 1. ACOLYTE (Simplified View)
     if (userRole === 'acolyte') {
-        return <AcolyteDashboard pinnedLiturgy={pinnedLiturgy} />;
+        const displayLiturgy = pinnedLiturgy || { title: calculatedFeast, content: docContent };
+        return <AcolyteDashboard pinnedLiturgy={displayLiturgy} />;
     }
 
     // 2. TREASURER
     if (userRole === 'treasurer') {
-        return <TreasurerDashboard onNavigate={onNavigate} />;
+        return <TreasurerDashboard onNavigate={onNavigate} docContent={docContent} />;
     }
 
     // 3. SACRISTAN
     if (userRole === 'sacristan') {
-        return <SacristanDashboard onNavigate={onNavigate} date={date} />;
+        return <SacristanDashboard onNavigate={onNavigate} date={date} docContent={docContent} season={season} />;
     }
 
     // 4. SECRETARY
     if (userRole === 'secretary') {
-        return <SecretaryDashboard onNavigate={onNavigate} date={date} />;
+        return <SecretaryDashboard onNavigate={onNavigate} date={date} docContent={docContent} />;
     }
 
     // 5. MUSICIAN
     if (userRole === 'musician') {
-        return <MusicianDashboard onNavigate={onNavigate} />;
+        return <MusicianDashboard onNavigate={onNavigate} docContent={docContent} calculatedFeast={calculatedFeast} />;
     }
 
     // 6. GUEST / FAITHFUL (Devotional View)

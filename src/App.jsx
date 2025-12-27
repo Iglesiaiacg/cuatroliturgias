@@ -288,6 +288,8 @@ function AppContent() {
                 key="home-refresh-v3"
                 date={selectedDate}
                 docContent={docContent}
+                season={season}
+                calculatedFeast={calculatedFeast || serviceTitle}
                 onNavigate={setActiveTab}
               />
             </div>

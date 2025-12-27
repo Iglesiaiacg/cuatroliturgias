@@ -22,7 +22,7 @@ const markDutiesSeen = (role) => {
 };
 
 // --- 1. TREASURER DASHBOARD ---
-export function TreasurerDashboard({ onNavigate }) {
+export function TreasurerDashboard({ onNavigate, docContent }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('treasurer'));
 
     const handleCloseDuties = () => {
@@ -73,7 +73,7 @@ export function TreasurerDashboard({ onNavigate }) {
 }
 
 // --- 2. SACRISTAN DASHBOARD ---
-export function SacristanDashboard({ onNavigate, date }) {
+export function SacristanDashboard({ onNavigate, date, docContent, season }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('sacristan'));
 
     const handleCloseDuties = () => {
@@ -86,7 +86,18 @@ export function SacristanDashboard({ onNavigate, date }) {
             <DutiesModal role="sacristan" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Sacristía Virtual</h2>
-                <p className="text-gray-500">Todo listo para el altar</p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                    <p className="text-gray-500">Todo listo para el altar</p>
+                    {/* UNIFICATION: Show Liturgical Color if known */}
+                    {season && (
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${season.color === 'morado' ? 'bg-purple-100 text-purple-800 border-purple-200' :
+                            season.color === 'rojo' ? 'bg-red-100 text-red-800 border-red-200' :
+                                season.color === 'verde' ? 'bg-green-100 text-green-800 border-green-200' :
+                                    'bg-yellow-100 text-yellow-800 border-yellow-200'}`}>
+                            {season.color || 'Color del Día'}
+                        </span>
+                    )}
+                </div>
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -145,7 +156,7 @@ export function SacristanDashboard({ onNavigate, date }) {
 }
 
 // --- 3. SECRETARY DASHBOARD ---
-export function SecretaryDashboard({ onNavigate, date }) {
+export function SecretaryDashboard({ onNavigate, date, docContent }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('secretary'));
 
     const handleCloseDuties = () => {
@@ -210,7 +221,7 @@ export function SecretaryDashboard({ onNavigate, date }) {
 }
 
 // --- 4. MUSICIAN DASHBOARD ---
-export function MusicianDashboard({ onNavigate }) {
+export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('musician'));
 
     const handleCloseDuties = () => {
@@ -227,8 +238,29 @@ export function MusicianDashboard({ onNavigate }) {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Liturgy Info */}
-                <NextLiturgyCard />
+                {/* Liturgy Info - UNIFIED */}
+                <div className="space-y-6">
+                    <NextLiturgyCard />
+
+                    {/* EXTRACTED HYMNS CARD */}
+                    {docContent && (
+                        <div className="neumorphic-card p-6 border-l-4 border-pink-500 animate-slide-in">
+                            <h3 className="font-bold text-pink-700 dark:text-pink-400 mb-3 flex items-center gap-2">
+                                <span className="material-symbols-outlined">queue_music</span>
+                                Sugerencias del Guion
+                            </h3>
+                            <div className="text-sm text-gray-600 dark:text-gray-300 space-y-2 max-h-60 overflow-y-auto custom-scrollbar">
+                                {extractSection(docContent, 'cantos') ? (
+                                    <div className="whitespace-pre-wrap font-serif leading-relaxed">
+                                        {extractSection(docContent, 'cantos')}
+                                    </div>
+                                ) : (
+                                    <p className="italic opacity-70">No se detectaron sugerencias específicas en el guion generado. (Revisa la sección 'Cantos' o 'Música').</p>
+                                )}
+                            </div>
+                        </div>
+                    )}
+                </div>
 
                 {/* Music Tools */}
                 <div className="space-y-4">
@@ -241,6 +273,20 @@ export function MusicianDashboard({ onNavigate }) {
                         </div>
                         <h3 className="text-xl font-bold text-gray-800 dark:text-white">Cantoral Digital</h3>
                         <p className="text-sm text-gray-500">Ver acordes y gestionar banco de canciones</p>
+                    </button>
+
+                    {/* Quick Access to Generator for Full Context */}
+                    <button
+                        onClick={() => onNavigate('generator')}
+                        className="w-full neumorphic-card p-4 flex items-center gap-4 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-colors"
+                    >
+                        <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+                            <span className="material-symbols-outlined">description</span>
+                        </div>
+                        <div className="text-left">
+                            <h4 className="font-bold text-sm">Ver Guion Completo</h4>
+                            <p className="text-xs text-gray-500">Leer lecturas para inspirar cantos</p>
+                        </div>
                     </button>
                 </div>
             </div>
