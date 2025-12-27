@@ -18,7 +18,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
         { id: 'dashboard', icon: 'home', label: 'Inicio', permission: null },
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario', permission: 'view_calendar' },
         { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía', permission: 'view_sacristy' },
-        { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'generate_liturgy' },
+        { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'view_liturgy' },
         { id: 'music', icon: 'music_note', label: 'Cantoral', permission: 'view_music' },
         { id: 'directory', icon: 'diversity_3', label: 'Fieles', permission: 'view_directory' },
         { id: 'offerings', icon: 'savings', label: 'Ofrendas', permission: 'view_offerings' },

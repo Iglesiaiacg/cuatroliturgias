@@ -260,14 +260,37 @@ function AppContent() {
           {/* --- GENERATOR VIEW (Classic Workspace) --- */}
           {activeTab === 'generator' && (
             <div className="flex-1 flex flex-col w-full overflow-y-auto">
-              <GeneratorToolbar
-                tradition={tradition} setTradition={setTradition}
-                selectedDate={selectedDate} setSelectedDate={setSelectedDate}
-                calculatedFeast={calculatedFeast}
-                onGenerate={handleGenerate}
-                onHistory={() => setIsHistoryOpen(true)}
-                onPin={handlePinLiturgy}
-              />
+              {/* ROLE GUARD: Only Admins can Generate */}
+              {(checkPermission && checkPermission('generate_liturgy')) && (
+                <GeneratorToolbar
+                  tradition={tradition} setTradition={setTradition}
+                  selectedDate={selectedDate} setSelectedDate={setSelectedDate}
+                  calculatedFeast={calculatedFeast}
+                  onGenerate={handleGenerate}
+                  onHistory={() => setIsHistoryOpen(true)}
+                  onPin={handlePinLiturgy}
+                />
+              )}
+
+              {/* VIEW SWITCHER: Back to Module Button for Servers */}
+              {['treasurer', 'secretary', 'musician', 'sacristan'].includes(userRole) && (
+                <div className="fixed bottom-24 right-4 z-50 md:top-24 md:bottom-auto">
+                    <button
+                        onClick={() => navigateTo(
+                            userRole === 'treasurer' ? 'offerings'
+                            : userRole === 'musician' ? 'music'
+                            : userRole === 'sacristan' ? 'sacristy'
+                            : userRole === 'secretary' ? 'directory' // or dashboard
+                            : 'dashboard'
+                        )}
+                        className="flex items-center gap-2 px-4 py-3 bg-primary text-white rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-all text-sm font-bold"
+                    >
+                        <span className="material-symbols-outlined">arrow_back</span>
+                        <span className="hidden sm:inline">Volver a mi Módulo</span>
+                        <span className="sm:hidden">Volver</span>
+                    </button>
+                </div>
+              )}
 
               <main className="flex-1 py-8 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center w-full">
                 {loading ? (

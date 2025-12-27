@@ -23,6 +23,18 @@ export function TreasurerDashboard({ onNavigate }) {
             </header>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Action: View Liturgy */}
+                <button
+                    onClick={() => onNavigate('generator')}
+                    className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] transition-transform group"
+                >
+                    <div className="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                        <span className="material-symbols-outlined text-4xl">menu_book</span>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">Ver Liturgia</h3>
+                    <p className="text-sm text-gray-500">Consultar guion de la misa</p>
+                </button>
+
                 {/* Main Action: Register Offering */}
                 <button
                     onClick={() => onNavigate('offerings')}
@@ -58,7 +70,23 @@ export function SacristanDashboard({ onNavigate, date }) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Inventory Status */}
-                <SacristyStatusCard />
+                <div className="flex flex-col gap-6">
+                    <SacristyStatusCard />
+
+                    <button
+                        onClick={() => onNavigate('generator')}
+                        className="w-full neumorphic-card p-6 flex items-center gap-4 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
+                    >
+                        <span className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                            <span className="material-symbols-outlined text-2xl">menu_book</span>
+                        </span>
+                        <div className="text-left">
+                            <h3 className="font-bold text-gray-800 dark:text-white">Ver Liturgia</h3>
+                            <p className="text-xs text-gray-500">Consultar el guion para el altar</p>
+                        </div>
+                        <span className="material-symbols-outlined ml-auto text-gray-300">arrow_forward_ios</span>
+                    </button>
+                </div>
 
                 {/* Quick Actions */}
                 <div className="space-y-4">
@@ -113,6 +141,23 @@ export function SecretaryDashboard({ onNavigate, date }) {
                     <IntentionsCard />
                     <div className="mt-6">
                         <NextLiturgyCard />
+                    </div>
+                    <div className="mt-6">
+                         <button
+                            onClick={() => onNavigate('generator')}
+                            className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] transition-transform"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                                    <span className="material-symbols-outlined text-2xl">menu_book</span>
+                                </div>
+                                <div>
+                                    <h3 className="font-bold text-gray-800 dark:text-white">Ver Liturgia Completa</h3>
+                                    <p className="text-xs text-gray-500">Consultar guiones pasados o futuros</p>
+                                </div>
+                            </div>
+                            <span className="material-symbols-outlined text-gray-400">arrow_forward</span>
+                        </button>
                     </div>
                 </div>
 
