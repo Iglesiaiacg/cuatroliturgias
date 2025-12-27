@@ -79,11 +79,33 @@
 body {
     background-color: var(--bg-main);
     color: var(--text-main);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.1s ease;
     overflow-x: hidden;
     width: 100%;
     font-family: system-ui, -apple-system, sans-serif;
-    /* Body Text - Clean Sans */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* HIGH CONTRAST ENFORCEMENT FOR PWA */
+input,
+select,
+textarea,
+button {
+    color: var(--text-main);
+}
+
+/* Force dark mode inputs to have contrast */
+.dark input,
+.dark select,
+.dark textarea {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dark input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* Global Text Selection Override */

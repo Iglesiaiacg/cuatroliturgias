@@ -224,7 +224,7 @@ export default function OfferingsView() {
                     {/* Financial Cards */}
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
                         {/* Income Card */}
-                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                        <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Entradas</span>
                             <div className="text-3xl font-mono font-bold text-green-700 dark:text-green-400">
                                 ${totalIncome.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
@@ -232,7 +232,7 @@ export default function OfferingsView() {
                         </div>
 
                         {/* Expense Card */}
-                        <div className="bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                        <div className="bg-[var(--bg-card)] p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Salidas</span>
                             <div className="text-3xl font-mono font-bold text-red-700 dark:text-red-400">
                                 ${totalExpense.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
@@ -240,7 +240,7 @@ export default function OfferingsView() {
                         </div>
 
                         {/* Balance Card */}
-                        <div className="col-span-2 md:col-span-1 bg-white dark:bg-surface-dark p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
+                        <div className="col-span-2 md:col-span-1 bg-[var(--bg-card)] p-6 rounded-xl border border-gray-200 dark:border-white/10 shadow-sm">
                             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Balance Actual</span>
                             <div className={`text-3xl font-mono font-bold ${balance >= 0 ? 'text-primary' : 'text-red-600'}`}>
                                 ${balance.toLocaleString('es-MX', { minimumFractionDigits: 2 })}
@@ -265,7 +265,7 @@ export default function OfferingsView() {
                             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:items-end pb-20 md:pb-0">
                                 {/* Type Selection */}
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs font-bold text-gray-600 mb-1">Tipo</label>
+                                    <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Tipo</label>
                                     <select
                                         value={formData.type}
                                         onChange={(e) => setFormData({ ...formData, type: e.target.value, category: categories[e.target.value][0].id })}
@@ -277,7 +277,7 @@ export default function OfferingsView() {
                                 </div>
                                 {/* Amount */}
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs font-bold text-gray-600 mb-1">Monto</label>
+                                    <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Monto</label>
                                     <div className="relative">
                                         <span className="absolute left-3 top-2 text-gray-500">$</span>
                                         <input
@@ -293,7 +293,7 @@ export default function OfferingsView() {
                                 </div>
                                 {/* Category */}
                                 <div className="md:col-span-3">
-                                    <label className="block text-xs font-bold text-gray-600 mb-1">Categoría</label>
+                                    <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Categoría</label>
                                     <select
                                         value={formData.category}
                                         onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -307,7 +307,7 @@ export default function OfferingsView() {
 
                                 {/* Link Event */}
                                 <div className="md:col-span-4">
-                                    <label className="block text-xs font-bold text-gray-600 mb-1">Vincular Evento (Opcional)</label>
+                                    <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Vincular Evento (Opcional)</label>
                                     <select
                                         value={formData.uniqueId || ''}
                                         onChange={(e) => {
@@ -336,7 +336,7 @@ export default function OfferingsView() {
                                 </div>
                                 {/* Description */}
                                 <div className="md:col-span-3">
-                                    <label className="block text-xs font-bold text-gray-600 mb-1">Descripción</label>
+                                    <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">Descripción</label>
                                     <input
                                         type="text"
                                         required
@@ -372,7 +372,7 @@ export default function OfferingsView() {
                         </div>
                     )}
 
-                    <div className="bg-white dark:bg-surface-dark shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
+                    <div className="bg-[var(--bg-card)] shadow-sm rounded-xl overflow-hidden border border-gray-200 dark:border-white/10">
                         {transactions.length === 0 ? (
                             <div className="text-center py-20 opacity-50">
                                 <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">account_balance_wallet</span>
@@ -396,13 +396,13 @@ export default function OfferingsView() {
                                     <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                                         {transactions.map((t) => (
                                             <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600">
+                                                <td className="px-6 py-4 whitespace-nowrap text-gray-600 dark:text-gray-400">
                                                     {format(new Date(t.date), 'dd/MM/yyyy', { locale: es })}
                                                 </td>
                                                 <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
                                                     {t.description}
                                                 </td>
-                                                <td className="px-6 py-4 text-gray-600">
+                                                <td className="px-6 py-4 text-gray-600 dark:text-gray-400">
                                                     {t.beneficiary || '-'}
                                                 </td>
                                                 <td className="px-6 py-4">
@@ -443,7 +443,7 @@ export default function OfferingsView() {
                                 {/* Mobile Card List */}
                                 <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-white/5">
                                     {transactions.map((t) => (
-                                        <div key={t.id} className="p-4 space-y-3 bg-white dark:bg-surface-dark">
+                                        <div key={t.id} className="p-4 space-y-3 bg-[var(--bg-card)]">
                                             <div className="flex justify-between items-start">
                                                 <div>
                                                     <div className="text-xs text-gray-500 mb-1">
