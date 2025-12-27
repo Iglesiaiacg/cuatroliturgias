@@ -2,9 +2,11 @@ import { useState } from 'react';
 import Preview from '../Liturgy/Preview';
 import NoticesCard from './NoticesCard';
 import NextLiturgyCard from './NextLiturgyCard';
+import { useChat } from '../../context/ChatContext';
 
 export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
     const [isReadingPinned, setIsReadingPinned] = useState(false);
+    const { toggleChat } = useChat();
 
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 overflow-y-auto w-full max-w-4xl mx-auto animate-fade-in">
@@ -102,12 +104,12 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                         <h3 className="font-bold text-gray-900 dark:text-white text-lg">¿Necesitas ayuda?</h3>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Estamos aquí para ti. Escribe al equipo pastoral.</p>
                     </div>
-                    {/* Logic to open chat handled by ChatContext usually, here just a prompt */}
+                    {/* Logic to open chat handled by ChatContext */}
                     <button
-                        onClick={() => onNavigate('chat')}
+                        onClick={toggleChat}
                         className="px-6 py-2 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 transition-colors w-full md:w-auto"
                     >
-                        Ir al Chat
+                        Abrir Chat
                     </button>
                 </div>
 

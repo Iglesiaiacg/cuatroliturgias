@@ -9,6 +9,7 @@ import NextLiturgyCard from './NextLiturgyCard';
 import Preview from '../Liturgy/Preview';
 import QuickCertCard from './QuickCertCard';
 import DutiesModal from './DutiesModal';
+import CommunicationCenter from './CommunicationCenter';
 
 // Helper for persistent modal state
 const shouldShowDuties = (role) => {
@@ -24,6 +25,7 @@ const markDutiesSeen = (role) => {
 // --- 1. TREASURER DASHBOARD ---
 export function TreasurerDashboard({ onNavigate, docContent }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('treasurer'));
+    const [isCommOpen, setIsCommOpen] = useState(false);
 
     const handleCloseDuties = () => {
         setShowDuties(false);
@@ -31,12 +33,29 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
+        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="treasurer" isOpen={showDuties} onClose={handleCloseDuties} />
+            {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
+
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Tesorería Parroquial</h2>
                 <p className="text-gray-500">Gestión de recursos y ofrendas</p>
             </header>
+
+            {/* Comm Button */}
+            <button
+                onClick={() => setIsCommOpen(true)}
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+            >
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined">forum</span>
+                </div>
+                <div className="text-left">
+                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                </div>
+                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+            </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Action: View Liturgy */}
@@ -75,6 +94,7 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
 // --- 2. SACRISTAN DASHBOARD ---
 export function SacristanDashboard({ onNavigate, date, docContent, season }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('sacristan'));
+    const [isCommOpen, setIsCommOpen] = useState(false);
 
     const handleCloseDuties = () => {
         setShowDuties(false);
@@ -82,8 +102,10 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
+        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="sacristan" isOpen={showDuties} onClose={handleCloseDuties} />
+            {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
+
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Sacristía Virtual</h2>
                 <div className="flex items-center justify-center gap-2 mt-2">
@@ -99,6 +121,21 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                     )}
                 </div>
             </header>
+
+            {/* Comm Button */}
+            <button
+                onClick={() => setIsCommOpen(true)}
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+            >
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined">forum</span>
+                </div>
+                <div className="text-left">
+                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                </div>
+                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+            </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Inventory Status */}
@@ -158,6 +195,7 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
 // --- 3. SECRETARY DASHBOARD ---
 export function SecretaryDashboard({ onNavigate, date, docContent }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('secretary'));
+    const [isCommOpen, setIsCommOpen] = useState(false);
 
     const handleCloseDuties = () => {
         setShowDuties(false);
@@ -165,12 +203,29 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
+        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="secretary" isOpen={showDuties} onClose={handleCloseDuties} />
+            {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
+
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Secretaría</h2>
                 <p className="text-gray-500">Agenda, Certificados y Feligresía</p>
             </header>
+
+            {/* Comm Button */}
+            <button
+                onClick={() => setIsCommOpen(true)}
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+            >
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined">forum</span>
+                </div>
+                <div className="text-left">
+                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                </div>
+                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+            </button>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Col 1: Intentions (Priority for Secretary) */}
@@ -223,6 +278,7 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
 // --- 4. MUSICIAN DASHBOARD ---
 export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('musician'));
+    const [isCommOpen, setIsCommOpen] = useState(false);
 
     const handleCloseDuties = () => {
         setShowDuties(false);
@@ -230,12 +286,29 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
     };
 
     return (
-        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
+        <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="musician" isOpen={showDuties} onClose={handleCloseDuties} />
+            {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
+
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Ministerio de Canto</h2>
                 <p className="text-gray-500">Preparación musical para la liturgia</p>
             </header>
+
+            {/* Comm Button */}
+            <button
+                onClick={() => setIsCommOpen(true)}
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+            >
+                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined">forum</span>
+                </div>
+                <div className="text-left">
+                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                </div>
+                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+            </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Liturgy Info - UNIFIED */}
