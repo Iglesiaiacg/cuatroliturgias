@@ -2,8 +2,8 @@
 
 @theme {
     /* Base Variables */
-    --color-primary: #991b1b;
-    /* Red-800 */
+    --color-primary: #cfa355;
+    /* Liturgical Gold */
     --font-display: "Newsreader", serif;
 }
 
@@ -24,8 +24,8 @@
     /* Stone-800 - Softer than pure black */
 
     /* Typography Colors */
-    --text-display: #78350f;
-    /* Amber-900 for Headers */
+    --text-display: #991b1b;
+    /* Red-800 for Headers */
     --text-secondary: #57534e;
     /* Stone-600 */
 
@@ -37,12 +37,12 @@
     --border-subtle: 1px solid #e7e5e4;
     /* Stone-200 */
 
-    /* Accents - The "Cardinal" Palette */
-    --color-primary: #991b1b;
-    /* Red-800 */
-    --color-primary-light: #dc2626;
-    /* Red-600 */
-    --icon-color: #991b1b;
+    /* Accents - The "Gold/Cream" Palette */
+    --color-primary: #cfa355;
+    /* Liturgical Gold */
+    --color-primary-light: #e3c080;
+    /* Light Gold */
+    --icon-color: #cfa355;
     /* Amber-900 */
 
     --drop-cap-size: 3.5em;
@@ -68,11 +68,11 @@
         --border-subtle: 1px solid #44403c;
         /* Stone-700 */
 
-        --color-primary: #ef4444;
-        /* Red-500 */
-        --color-primary-light: #f87171;
-        /* Red-400 */
-        --icon-color: #ef4444;
+        --color-primary: #fbbf24;
+        /* Amber-400 */
+        --color-primary-light: #fcd34d;
+        /* Amber-300 */
+        --icon-color: #fbbf24;
     }
 }
 
@@ -201,7 +201,7 @@ button {
     .neumorphic-btn:active,
     .neumorphic-btn.active {
         background: var(--color-primary);
-        color: white;
+        color: #292524 !important;
         border-color: var(--color-primary);
         transform: scale(0.95) translateY(0);
         box-shadow: none;
@@ -243,7 +243,7 @@ button {
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 gap-2 bg-primary text-white hover:bg-[var(--color-primary-light)] hover:shadow-md;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 gap-2 bg-primary text-stone-900 hover:bg-[var(--color-primary-light)] hover:shadow-md hover:text-stone-900 active:text-stone-900;
     }
 
     .btn-secondary {
@@ -371,8 +371,8 @@ button {
     border-left: 3px solid var(--color-primary);
     padding-left: 1rem;
     margin: 1.5rem 0;
-    background-color: rgba(120, 53, 15, 0.02);
-    /* Amber tint */
+    background-color: rgba(153, 27, 27, 0.03);
+    /* Red tint */
     padding: 1rem;
     border-radius: 0 8px 8px 0;
 }
@@ -504,8 +504,8 @@ button {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background-color: #78350f;
-    /* Amber-900 markers */
+    background-color: #991b1b;
+    /* Red-800 markers */
 }
 
 /* ... Rotations ... */
@@ -584,8 +584,8 @@ button {
     text-align: center;
     font-size: 24px;
     font-weight: 600;
-    color: #78350f;
-    /* Amber-900 numbers */
+    color: #991b1b;
+    /* Red-800 numbers */
     text-shadow: none;
     z-index: 2;
 }
@@ -726,7 +726,7 @@ button {
 .second-hand {
     width: 3px;
     height: 120px;
-    background: #b45309;
+    background: #dc2626;
     z-index: 7;
 }
 

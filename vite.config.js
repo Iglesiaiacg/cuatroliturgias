@@ -20,7 +20,7 @@ export default defineConfig({
         name: 'Liturgia IACG',
         short_name: 'Liturgia',
         description: 'Generador Litúrgico - Iglesia Anglicana Carismática',
-        theme_color: '#991b1b',
+        theme_color: '#cfa355',
         background_color: '#f5f5f4',
         display: 'standalone',
         orientation: 'portrait',
