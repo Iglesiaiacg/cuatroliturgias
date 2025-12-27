@@ -187,12 +187,12 @@ export default function OfferingsView() {
                             </h2>
                             <p className="text-sm text-gray-600 dark:text-gray-500">Gestión de ofrendas y necesidades del altar</p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-wrap items-center gap-2 md:gap-3 justify-end">
                             <div className="flex items-center bg-gray-100 dark:bg-black/20 rounded-lg p-1">
                                 <button onClick={() => changeMonth(-1)} className="p-1 hover:bg-gray-200 dark:hover:bg-white/10 rounded-md">
                                     <span className="material-symbols-outlined">chevron_left</span>
                                 </button>
-                                <span className="px-3 font-bold text-sm min-w-[120px] text-center capitalize">
+                                <span className="px-2 md:px-3 font-bold text-sm min-w-[100px] md:min-w-[120px] text-center capitalize">
                                     {format(currentDate, 'MMMM yyyy', { locale: es })}
                                 </span>
                                 <button onClick={() => changeMonth(1)} className="p-1 hover:bg-gray-200 dark:hover:bg-white/10 rounded-md">
