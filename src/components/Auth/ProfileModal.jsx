@@ -8,6 +8,8 @@ import { saveGlobalSettings } from '../../services/settings';
 
 import { createPortal } from 'react-dom';
 
+import MinistryOrbit from '../UI/MinistryOrbit';
+
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout } = useAuth();
 
@@ -20,6 +22,35 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+
+    // Generate Dynamic Ministries based on Role (Simulation for Visuals)
+    const getMinistries = (role) => {
+        const common = [
+            { id: 'bible', icon: 'menu_book', label: 'Lectura', color: 'text-blue-600' },
+            { id: 'service', icon: 'volunteer_activism', label: 'Servicio', color: 'text-green-600' }
+        ];
+
+        if (role === 'admin' || role === 'presbyter') {
+            return [
+                { id: 'sacraments', icon: 'church', label: 'Sacramentos', color: 'text-primary' },
+                { id: 'preaching', icon: 'mic', label: 'Predicación', color: 'text-purple-600' },
+                { id: 'pastoral', icon: 'diversity_1', label: 'Pastoral', color: 'text-orange-600' },
+                ...common
+            ];
+        }
+        if (role === 'musician') {
+            return [
+                { id: 'music', icon: 'music_note', label: 'Música', color: 'text-pink-600' },
+                { id: 'choir', icon: 'groups', label: 'Coro', color: 'text-indigo-600' },
+                ...common
+            ];
+        }
+        // Default
+        return [
+            { id: 'prayer', icon: 'spa', label: 'Oración', color: 'text-teal-600' },
+            ...common
+        ];
+    };
 
     if (!isOpen) return null;
 
@@ -111,14 +142,17 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                 {/* Scrollable Content */}
                 <div className="p-6 space-y-6 overflow-y-auto flex-1">
 
-                    <div className="neumorphic-card p-4 rounded-xl flex items-center gap-3 mb-4">
-                        <div className="w-10 h-10 rounded-full neumorphic-inset flex items-center justify-center text-primary font-bold text-lg">
-                            {displayName ? displayName.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                        <div className="flex-1">
-                            <p className="text-sm font-bold text-gray-900 dark:text-white">{currentUser?.email}</p>
-                            <p className="text-xs text-gray-600 uppercase tracking-wider font-bold">Rol: {userRole}</p>
-                        </div>
+                    {/* ORBITAL USER CARD */}
+                    <MinistryOrbit
+                        photo={currentUser?.photoURL}
+                        initial={displayName ? displayName.charAt(0).toUpperCase() : 'U'}
+                        role={userRole}
+                        ministries={getMinistries(userRole)}
+                    />
+
+                    <div className="text-center -mt-2 mb-6">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{displayName || currentUser?.email}</h3>
+                        <p className="text-xs text-gray-500">{currentUser?.email}</p>
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">

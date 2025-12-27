@@ -4,6 +4,7 @@ import { PRIVACY_NOTICE } from '../../utils/privacyNotice';
 import { useDirectory } from '../../context/DirectoryContext';
 import { useAuth } from '../../context/AuthContext';
 import { useChat } from '../../context/ChatContext';
+import MinistryOrbit from '../UI/MinistryOrbit';
 
 export default function DirectoryView() {
     const { members, addMember, updateMember, deleteMember } = useDirectory();
@@ -385,23 +386,29 @@ export default function DirectoryView() {
                 {selectedMember ? (
                     <div className="max-w-3xl mx-auto">
                         <div className="flex flex-col md:flex-row justify-between items-start mb-6 gap-4">
-                            <div className="flex items-center gap-4">
-                                <div className="relative group">
-                                    <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center text-3xl font-display font-bold shadow-sm overflow-hidden border-2 border-transparent group-hover:border-primary/50 transition-all">
-                                        {selectedMember.photo ? (
-                                            <img src={selectedMember.photo} alt="Profile" className="w-full h-full object-cover" />
-                                        ) : (
-                                            selectedMember.fullName ? selectedMember.fullName.charAt(0).toUpperCase() : '?'
-                                        )}
+                            <div className="flex items-center gap-4 w-full md:w-auto">
+                                <div className="relative group shrink-0">
+                                    {/* ORBITAL USER CARD (Mini Version) */}
+                                    <div className="scale-75 origin-top-left -m-4">
+                                        <MinistryOrbit
+                                            photo={selectedMember.photo}
+                                            initial={selectedMember.fullName ? selectedMember.fullName.charAt(0).toUpperCase() : '?'}
+                                            role={selectedMember.ministryOrder || 'Laico'}
+                                            ministries={[
+                                                { id: 'min1', icon: 'volunteer_activism', label: selectedMember.currentMinistry || 'Servicio', color: 'text-primary' },
+                                                { id: 'min2', icon: 'spa', label: selectedMember.spiritualGifts || 'Dones', color: 'text-blue-600' }
+                                            ]}
+                                        />
                                     </div>
+
                                     {isEditing && (
-                                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer rounded-full transition-opacity">
+                                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer rounded-full transition-opacity z-20" style={{ top: '20px', left: '20px', width: '80px', height: '80px' }}>
                                             <span className="material-symbols-outlined text-sm">upload</span>
                                             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                                         </label>
                                     )}
                                 </div>
-                                <div>
+                                <div className="mt-4 md:mt-0">
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                         {selectedMember.fullName || 'Nuevo Registro'}
                                     </h2>
