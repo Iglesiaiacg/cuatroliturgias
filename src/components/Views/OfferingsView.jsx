@@ -171,9 +171,9 @@ export default function OfferingsView() {
         <main className="flex-1 flex flex-col w-full h-full animate-fade-in overflow-hidden">
 
             {/* Main Content (Hidden on Print) */}
-            <div className="flex flex-col w-full h-full print:hidden">
+            <div className="flex flex-col w-full h-full print:hidden overflow-y-auto pb-32">
                 {/* Header / Summary Section */}
-                <div className="p-4 md:p-6 shrink-0 z-10">
+                <div className="p-4 md:p-6 pb-2">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                         <div>
                             <h2 className="text-2xl font-bold font-display text-gray-900 dark:text-white flex items-center gap-2">
@@ -244,11 +244,7 @@ export default function OfferingsView() {
                     </div>
                 </div >
 
-                {/* Input Form Overlay (Mobile/Desktop) */}
-                {/* Form moved inside scrollable area */}
-
-
-                <div className="flex-1 overflow-y-auto px-4 pb-32 max-w-6xl mx-auto w-full">
+                <div className="px-4 max-w-6xl mx-auto w-full">
                     {/* Input Form Overlay (Mobile/Desktop) - Moved inside scrollable area */}
                     {showForm && (
                         <div className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 mb-6 animate-slide-down">
@@ -482,11 +478,10 @@ export default function OfferingsView() {
                                 </div>
                             </div>
                         )}
-                    </div>
-                </div>
-            </div >
+                    </div >
 
-            {/* Hidden Receipt Container (For PDF generation) */}
+                </div >
+            </div >
             < div style={{ position: 'absolute', top: -9999, left: -9999 }
             }>
                 {receiptData && <Receipt ref={receiptRef} data={receiptData} />}
