@@ -59,8 +59,8 @@
         --text-main: #ebebeb;
         /* Stone-100 */
 
-        --text-display: #fcd34d;
-        /* Amber-300 - Readable on dark */
+        --text-display: #fca5a5;
+        /* Red-300 - Readable on dark */
         --text-secondary: #a8a29e;
         /* Stone-400 */
 
@@ -68,11 +68,11 @@
         --border-subtle: 1px solid #44403c;
         /* Stone-700 */
 
-        --color-primary: #d97706;
-        /* Amber-600 */
-        --color-primary-light: #fbbf24;
-        /* Amber-400 */
-        --icon-color: #d97706;
+        --color-primary: #ef4444;
+        /* Red-500 */
+        --color-primary-light: #f87171;
+        /* Red-400 */
+        --icon-color: #ef4444;
     }
 }
 
