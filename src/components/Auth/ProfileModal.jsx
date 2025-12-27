@@ -9,9 +9,11 @@ import { saveGlobalSettings } from '../../services/settings';
 import { createPortal } from 'react-dom';
 
 import MinistryOrbit from '../UI/MinistryOrbit';
+import MinistryReportModal from '../Views/MinistryReportModal';
 
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout } = useAuth();
+    const [showReportModal, setShowReportModal] = useState(false);
 
     // API Key State
     const [apiKey, setApiKey] = useState(() => import.meta.env.VITE_GOOGLE_API_KEY || getApiKey());
@@ -152,7 +154,15 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
 
                     <div className="text-center -mt-2 mb-6">
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white">{displayName || currentUser?.email}</h3>
-                        <p className="text-xs text-gray-500">{currentUser?.email}</p>
+                        <p className="text-xs text-gray-500 mb-3">{currentUser?.email}</p>
+
+                        <button
+                            onClick={() => setShowReportModal(true)}
+                            className="btn-secondary text-xs py-1.5 px-3"
+                        >
+                            <span className="material-symbols-outlined text-sm">assignment</span>
+                            Crear Informe Ministerial
+                        </button>
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -244,6 +254,8 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                     </button>
                 </div>
             </div>
+
+            <MinistryReportModal isOpen={showReportModal} onClose={() => setShowReportModal(false)} />
         </div>,
         document.body
     );
