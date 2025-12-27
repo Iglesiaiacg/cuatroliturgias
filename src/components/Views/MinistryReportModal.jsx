@@ -1,7 +1,10 @@
+
 import { useState } from 'react';
 import { jsPDF } from 'jspdf';
 import { createPortal } from 'react-dom';
 import { useAuth } from '../../context/AuthContext';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '../../services/firebase';
 
 export default function MinistryReportModal({ isOpen, onClose }) {
     const { currentUser, userRole } = useAuth();
@@ -15,6 +18,25 @@ export default function MinistryReportModal({ isOpen, onClose }) {
     if (!isOpen) return null;
 
     const handleGeneratePDF = async () => {
+        // --- 1. SAVE TO FIRESTORE ---
+        try {
+            await addDoc(collection(db, 'ministry_reports'), {
+                userId: currentUser.uid,
+                userName: currentUser.displayName || currentUser.email,
+                userRole: userRole,
+                period: reportData.period || 'General',
+                workDone: reportData.workDone,
+                observations: reportData.observations,
+                suggestions: reportData.suggestions,
+                createdAt: serverTimestamp()
+            });
+            console.log("Reporte guardado en la nube.");
+        } catch (error) {
+            console.error("Error al guardar reporte:", error);
+            // Non-blocking error, user still gets their PDF
+        }
+
+        // --- 2. GENERATE PDF ---
         const doc = new jsPDF();
 
         // --- LOGO & HEADER ---
@@ -44,7 +66,7 @@ export default function MinistryReportModal({ isOpen, onClose }) {
         doc.setFontSize(10);
         doc.setTextColor(0); // Reset black
         doc.setFont("times", "italic");
-        doc.text(`Periodo: ${reportData.period}`, 105, 52, { align: "center" });
+        doc.text(`Periodo: ${reportData.period} `, 105, 52, { align: "center" });
 
         // --- USER INFO ---
         doc.setLineWidth(0.5);
@@ -60,7 +82,7 @@ export default function MinistryReportModal({ isOpen, onClose }) {
         doc.setFont("times", "normal");
         doc.text(userRole.toUpperCase(), 60, 75);
 
-        doc.text(`Fecha de Emisión: ${new Date().toLocaleDateString('es-MX')}`, 140, 68);
+        doc.text(`Fecha de Emisión: ${new Date().toLocaleDateString('es-MX')} `, 140, 68);
 
         let y = 90;
 

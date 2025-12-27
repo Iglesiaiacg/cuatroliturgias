@@ -10,10 +10,12 @@ import { createPortal } from 'react-dom';
 
 import MinistryOrbit from '../UI/MinistryOrbit';
 import MinistryReportModal from '../Views/MinistryReportModal';
+import RectorReportModal from '../Views/RectorReportModal';
 
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout } = useAuth();
     const [showReportModal, setShowReportModal] = useState(false);
+    const [showRectorModal, setShowRectorModal] = useState(false);
 
     // API Key State
     const [apiKey, setApiKey] = useState(() => import.meta.env.VITE_GOOGLE_API_KEY || getApiKey());
@@ -156,13 +158,25 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         <h3 className="text-xl font-bold text-gray-900 dark:text-white">{displayName || currentUser?.email}</h3>
                         <p className="text-xs text-gray-500 mb-3">{currentUser?.email}</p>
 
-                        <button
-                            onClick={() => setShowReportModal(true)}
-                            className="btn-secondary text-xs py-1.5 px-3"
-                        >
-                            <span className="material-symbols-outlined text-sm">assignment</span>
-                            Crear Informe Ministerial
-                        </button>
+                        <div className="flex justify-center gap-2 mt-2">
+                            <button
+                                onClick={() => setShowReportModal(true)}
+                                className="btn-secondary text-xs py-1.5 px-3"
+                            >
+                                <span className="material-symbols-outlined text-sm">assignment</span>
+                                Informe Personal
+                            </button>
+
+                            {userRole === 'admin' && (
+                                <button
+                                    onClick={() => setShowRectorModal(true)}
+                                    className="btn-primary text-xs py-1.5 px-3"
+                                >
+                                    <span className="material-symbols-outlined text-sm">history_edu</span>
+                                    Informe General
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
@@ -256,6 +270,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
             </div>
 
             <MinistryReportModal isOpen={showReportModal} onClose={() => setShowReportModal(false)} />
+            <RectorReportModal isOpen={showRectorModal} onClose={() => setShowRectorModal(false)} />
         </div>,
         document.body
     );
