@@ -2,8 +2,8 @@
 
 @theme {
     /* Base Variables */
-    --color-primary: #78350f;
-    /* Amber-900 (Solemn Brown/Red Mix) */
+    --color-primary: #991b1b;
+    /* Red-800 */
     --font-display: "Newsreader", serif;
 }
 
@@ -37,12 +37,12 @@
     --border-subtle: 1px solid #e7e5e4;
     /* Stone-200 */
 
-    /* Accents - The "Solemn" Palette */
-    --color-primary: #78350f;
-    /* Amber-900 */
-    --color-primary-light: #b45309;
-    /* Amber-700 */
-    --icon-color: #78350f;
+    /* Accents - The "Cardinal" Palette */
+    --color-primary: #991b1b;
+    /* Red-800 */
+    --color-primary-light: #dc2626;
+    /* Red-600 */
+    --icon-color: #991b1b;
     /* Amber-900 */
 
     --drop-cap-size: 3.5em;
