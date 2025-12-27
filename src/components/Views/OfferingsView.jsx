@@ -248,7 +248,7 @@ export default function OfferingsView() {
                 {/* Form moved inside scrollable area */}
 
 
-                <div className="flex-1 overflow-y-auto px-4 pb-4 max-w-6xl mx-auto w-full">
+                <div className="flex-1 overflow-y-auto px-4 pb-32 max-w-6xl mx-auto w-full">
                     {/* Input Form Overlay (Mobile/Desktop) - Moved inside scrollable area */}
                     {showForm && (
                         <div className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 mb-6 animate-slide-down">
