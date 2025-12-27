@@ -168,10 +168,10 @@ export default function OfferingsView() {
     const balance = totalIncome - totalExpense;
 
     return (
-        <main className="flex-1 flex flex-col w-full h-full animate-fade-in overflow-hidden">
+        <main className="flex-1 flex flex-col w-full min-h-0 animate-fade-in">
 
             {/* Main Content (Hidden on Print) */}
-            <div className="flex flex-col w-full h-full print:hidden overflow-y-auto pb-32">
+            <div className="flex-1 w-full print:hidden overflow-y-auto pb-24">
                 {/* Header / Summary Section */}
                 <div className="p-4 md:p-6 pb-2">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
