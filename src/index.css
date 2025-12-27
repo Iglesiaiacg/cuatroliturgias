@@ -137,8 +137,9 @@ body {
     /* Dark Mode Handling for Insets */
     @media (prefers-color-scheme: dark) {
         .neumorphic-inset {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.25);
             border-color: #44403c;
+            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3), 0 1px 0 rgba(255, 255, 255, 0.05);
         }
     }
 
@@ -193,6 +194,8 @@ body {
         /* Opaque look */
         border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
     }
 
     @media (prefers-color-scheme: dark) {

@@ -56,23 +56,34 @@ function AppContent() {
   const { settings, updateSetting } = useSettings();
   const rubricLevel = settings.rubricLevel;
 
-  // UI State
-  const [activeTab, setActiveTabState] = useState('dashboard')
-  const [navHistory, setNavHistory] = useState(['dashboard']) // Navigation Stack
+  // UI State - Initialize from Hash
+  const getTabFromHash = () => {
+    const hash = window.location.hash.replace('#', '');
+    return hash || 'dashboard';
+  };
 
-  // Enhanced Navigation
+  const [activeTab, setActiveTabState] = useState(getTabFromHash());
+
+  // Hash Navigation Sync
+  useEffect(() => {
+    const handleHashChange = () => {
+      setActiveTabState(getTabFromHash());
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  // Enhanced Navigation - Pushes to Browser History
   const navigateTo = (tab) => {
-    setActiveTabState(tab);
-    setNavHistory(prev => [...prev, tab]);
+    window.location.hash = tab;
+    // State updates automatically via the effect
   };
 
   const goBack = () => {
-    if (navHistory.length <= 1) return;
-    const newHistory = [...navHistory];
-    newHistory.pop(); // Remove current
-    const prevTab = newHistory[newHistory.length - 1]; // Get previous
-    setNavHistory(newHistory);
-    setActiveTabState(prevTab);
+    const hash = window.location.hash.replace('#', '');
+    if (!hash || hash === 'dashboard') return;
+    window.history.back();
   };
 
   // Backward compatibility wrapper (for props looking for setActiveTab)

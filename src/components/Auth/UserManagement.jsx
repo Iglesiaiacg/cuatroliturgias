@@ -252,10 +252,12 @@ export default function UserManagement() {
 
                         {!isEditing && (
                             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-6 text-sm text-blue-800 dark:text-blue-200">
-                                <strong>Para nuevos usuarios:</strong>
+                                <strong>Para agregar un nuevo miembro:</strong>
                                 <ol className="list-decimal ml-4 mt-2 space-y-1 text-xs">
-                                    <li>Ve a la consola de Firebase y crea el usuario en "Authentication".</li>
-                                    <li>Copia el <strong>UID</strong> y pégalo abajo.</li>
+                                    <li>Pídale al usuario que se registre o inicie sesión en la aplicación.</li>
+                                    <li>Una vez registrado, aparecerá automáticamente en la lista de abajo.</li>
+                                    <li>Seleccione "Editar" en su nombre para asignarle el rol correspondiente.</li>
+                                    <li>(Solo use el formulario de arriba con UID si necesita pre-crear un usuario manualmente desde Firebase Console).</li>
                                 </ol>
                             </div>
                         )}

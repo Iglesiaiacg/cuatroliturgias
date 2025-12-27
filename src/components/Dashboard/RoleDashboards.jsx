@@ -10,13 +10,29 @@ import Preview from '../Liturgy/Preview';
 import QuickCertCard from './QuickCertCard';
 import DutiesModal from './DutiesModal';
 
+// Helper for persistent modal state
+const shouldShowDuties = (role) => {
+    const lastSeen = localStorage.getItem(`duties_seen_${role}`);
+    const today = new Date().toDateString();
+    return lastSeen !== today;
+};
+
+const markDutiesSeen = (role) => {
+    localStorage.setItem(`duties_seen_${role}`, new Date().toDateString());
+};
+
 // --- 1. TREASURER DASHBOARD ---
 export function TreasurerDashboard({ onNavigate }) {
-    const [showDuties, setShowDuties] = useState(true);
+    const [showDuties, setShowDuties] = useState(() => shouldShowDuties('treasurer'));
+
+    const handleCloseDuties = () => {
+        setShowDuties(false);
+        markDutiesSeen('treasurer');
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
-            <DutiesModal role="treasurer" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+            <DutiesModal role="treasurer" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Tesorería Parroquial</h2>
                 <p className="text-gray-500">Gestión de recursos y ofrendas</p>
@@ -58,11 +74,16 @@ export function TreasurerDashboard({ onNavigate }) {
 
 // --- 2. SACRISTAN DASHBOARD ---
 export function SacristanDashboard({ onNavigate, date }) {
-    const [showDuties, setShowDuties] = useState(true);
+    const [showDuties, setShowDuties] = useState(() => shouldShowDuties('sacristan'));
+
+    const handleCloseDuties = () => {
+        setShowDuties(false);
+        markDutiesSeen('sacristan');
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
-            <DutiesModal role="sacristan" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+            <DutiesModal role="sacristan" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Sacristía Virtual</h2>
                 <p className="text-gray-500">Todo listo para el altar</p>
@@ -125,11 +146,16 @@ export function SacristanDashboard({ onNavigate, date }) {
 
 // --- 3. SECRETARY DASHBOARD ---
 export function SecretaryDashboard({ onNavigate, date }) {
-    const [showDuties, setShowDuties] = useState(true);
+    const [showDuties, setShowDuties] = useState(() => shouldShowDuties('secretary'));
+
+    const handleCloseDuties = () => {
+        setShowDuties(false);
+        markDutiesSeen('secretary');
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
-            <DutiesModal role="secretary" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+            <DutiesModal role="secretary" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Secretaría</h2>
                 <p className="text-gray-500">Agenda, Certificados y Feligresía</p>
@@ -143,7 +169,7 @@ export function SecretaryDashboard({ onNavigate, date }) {
                         <NextLiturgyCard />
                     </div>
                     <div className="mt-6">
-                         <button
+                        <button
                             onClick={() => onNavigate('generator')}
                             className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] transition-transform"
                         >
@@ -185,10 +211,16 @@ export function SecretaryDashboard({ onNavigate, date }) {
 
 // --- 4. MUSICIAN DASHBOARD ---
 export function MusicianDashboard({ onNavigate }) {
-    const [showDuties, setShowDuties] = useState(true);
+    const [showDuties, setShowDuties] = useState(() => shouldShowDuties('musician'));
+
+    const handleCloseDuties = () => {
+        setShowDuties(false);
+        markDutiesSeen('musician');
+    };
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in">
-            <DutiesModal role="musician" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+            <DutiesModal role="musician" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Ministerio de Canto</h2>
                 <p className="text-gray-500">Preparación musical para la liturgia</p>
@@ -218,11 +250,17 @@ export function MusicianDashboard({ onNavigate }) {
 
 // --- 5. ACOLYTE DASHBOARD ---
 export function AcolyteDashboard({ pinnedLiturgy }) {
-    const [showDuties, setShowDuties] = useState(true);
+    const [showDuties, setShowDuties] = useState(() => shouldShowDuties('acolyte'));
+
+    const handleCloseDuties = () => {
+        setShowDuties(false);
+        markDutiesSeen('acolyte');
+    };
+
     if (!pinnedLiturgy) {
         return (
             <div className="flex flex-col items-center justify-center h-[50vh] text-center p-8">
-                <DutiesModal role="acolyte" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+                <DutiesModal role="acolyte" isOpen={showDuties} onClose={handleCloseDuties} />
                 <span className="material-symbols-outlined text-6xl text-gray-300 mb-4">church</span>
                 <h3 className="text-xl font-bold text-gray-500">No hay liturgia activa</h3>
                 <p className="text-gray-400">Espera a que el sacerdote publique el guion.</p>
@@ -232,7 +270,7 @@ export function AcolyteDashboard({ pinnedLiturgy }) {
 
     return (
         <div className="max-w-3xl mx-auto p-4 animate-fade-in">
-            <DutiesModal role="acolyte" isOpen={showDuties} onClose={() => setShowDuties(false)} />
+            <DutiesModal role="acolyte" isOpen={showDuties} onClose={handleCloseDuties} />
             <header className="mb-6 text-center">
                 <span className="bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">Vista de Servidor</span>
                 <h2 className="text-2xl font-display font-bold text-gray-800 dark:text-gray-100">{pinnedLiturgy.title}</h2>
