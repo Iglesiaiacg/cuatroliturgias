@@ -31,7 +31,10 @@ export function useNoticesSync() {
             }
             setLoading(false);
         }, (error) => {
-            console.error("Notices Sync Error:", error);
+        }, (error) => {
+            // Gracefully handle permission errors (e.g., for Guests if rules deny access)
+            console.warn("Notices Sync skipped (permissions or offline).");
+            setNotices([]); // Safe fallback
             setLoading(false);
         });
 

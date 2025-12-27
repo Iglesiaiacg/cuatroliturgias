@@ -61,6 +61,7 @@ export function ChatProvider({ children }) {
             // General Chat Query
             q = query(
                 collection(db, 'messages'),
+                where('chatId', '==', 'general'), // Explicitly filter for general messages to satisfy security rules
                 orderBy('createdAt', 'desc'),
                 limit(100)
             );
