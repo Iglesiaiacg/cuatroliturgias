@@ -86,7 +86,7 @@ export default function SongDetail({ song, onClose }) {
                     {/* Chords Toggle */}
                     <button
                         onClick={() => setShowChords(!showChords)}
-                        className={`p-2 rounded-lg border font-bold text-sm ${showChords ? 'bg-primary text-white border-primary' : 'bg-transparent text-gray-500 border-gray-300'}`}
+                        className={`p-2 rounded-lg border font-bold text-sm ${showChords ? 'bg-primary text-white border-primary' : 'bg-transparent text-gray-600 border-gray-300'}`}
                     >
                         {showChords ? '# Acordes' : 'T Texto'}
                     </button>
@@ -94,7 +94,7 @@ export default function SongDetail({ song, onClose }) {
                     {/* Print Button */}
                     <button
                         onClick={() => window.print()}
-                        className="p-2 text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                        className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white"
                         title="Imprimir"
                     >
                         <span className="material-symbols-outlined">print</span>
@@ -105,9 +105,9 @@ export default function SongDetail({ song, onClose }) {
             {/* Song Content */}
             <div className="flex-1 overflow-y-auto bg-paper-pattern p-8 sm:p-12 text-center" style={{ fontSize: `${fontSize}px` }}>
                 <h1 className="text-3xl font-display font-bold mb-2">{song.title}</h1>
-                <p className="text-sm text-gray-400 mb-8 italic print:hidden">Tono Original: {song.key} {transpose !== 0 && `(Transportado: ${transpose})`}</p>
+                <p className="text-sm text-gray-500 mb-8 italic print:hidden">Tono Original: {song.key} {transpose !== 0 && `(Transportado: ${transpose})`}</p>
                 {/* Print only info */}
-                <p className="hidden print:block text-xs text-gray-500 mb-8">Cuatro Liturgias - Cantoral</p>
+                <p className="hidden print:block text-xs text-gray-600 mb-8">Cuatro Liturgias - Cantoral</p>
 
                 <div className="font-serif text-gray-800 dark:text-gray-200 whitespace-pre-wrap max-w-3xl mx-auto pb-40 print:pb-0 text-left md:text-center inline-block">
                     {content}

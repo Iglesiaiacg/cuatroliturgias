@@ -123,13 +123,13 @@ export default function PulpitView({ content, onClose, title, date }) {
                     {/* Timer & Clock Display (New) */}
                     <div className="flex flex-col items-center px-2 mr-2 border-r border-white/20">
                         {/* Real-time Clock */}
-                        <div className="text-xs font-bold text-gray-400 font-mono mb-1">
+                        <div className="text-xs font-bold text-gray-500 font-mono mb-1">
                             {new Date().toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
                         </div>
                         {/* User Timer */}
                         <div onClick={() => setIsTimerActive(!isTimerActive)} className="cursor-pointer flex items-center gap-1 group">
                             <span className={`w-2 h-2 rounded-full ${isTimerActive ? 'bg-red-500 animate-pulse' : 'bg-gray-600'}`} />
-                            <span className={`text-xl font-mono font-bold ${isTimerActive ? 'text-white' : 'text-gray-500'}`}>
+                            <span className={`text-xl font-mono font-bold ${isTimerActive ? 'text-white' : 'text-gray-600'}`}>
                                 {new Date(timerSeconds * 1000).toISOString().substr(14, 5)}
                             </span>
                         </div>
@@ -147,11 +147,11 @@ export default function PulpitView({ content, onClose, title, date }) {
 
                     {/* Speed Control */}
                     <div className="flex flex-col items-center px-1 md:px-2">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Velocidad</span>
+                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">Velocidad</span>
                         <div className="flex items-center gap-1">
-                            <button onClick={() => setSpeed(s => Math.max(1, s - 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">remove</span></button>
+                            <button onClick={() => setSpeed(s => Math.max(1, s - 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-500 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">remove</span></button>
                             <span className="text-sm font-bold w-4 text-center text-white">{speed}</span>
-                            <button onClick={() => setSpeed(s => Math.min(10, s + 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">add</span></button>
+                            <button onClick={() => setSpeed(s => Math.min(10, s + 0.5))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-500 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">add</span></button>
                         </div>
                     </div>
 
@@ -160,7 +160,7 @@ export default function PulpitView({ content, onClose, title, date }) {
                     {/* Briefing Toggle */}
                     <button
                         onClick={() => setShowBriefing(!showBriefing)}
-                        className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${showBriefing ? 'bg-amber-500 text-white' : 'bg-white/10 text-gray-400 hover:text-white hover:bg-white/20'}`}
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${showBriefing ? 'bg-amber-500 text-white' : 'bg-white/10 text-gray-500 hover:text-white hover:bg-white/20'}`}
                         title="Notas del Celebrante"
                     >
                         <span className="material-symbols-outlined text-2xl">assignment</span>
@@ -174,11 +174,11 @@ export default function PulpitView({ content, onClose, title, date }) {
 
                     {/* Font Size */}
                     <div className="flex flex-col items-center px-1 md:px-2">
-                        <span className="text-[9px] font-bold text-gray-400 uppercase tracking-wider mb-1">Tamaño</span>
+                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-wider mb-1">Tamaño</span>
                         <div className="flex items-center gap-1">
-                            <button onClick={() => setFontSize(s => Math.max(20, s - 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_decrease</span></button>
+                            <button onClick={() => setFontSize(s => Math.max(20, s - 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-500 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_decrease</span></button>
                             <span className="text-sm font-bold w-8 text-center text-white">{fontSize}</span>
-                            <button onClick={() => setFontSize(s => Math.min(100, s + 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_increase</span></button>
+                            <button onClick={() => setFontSize(s => Math.min(100, s + 4))} className="w-8 h-8 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 text-gray-500 hover:text-white transition-colors"><span className="material-symbols-outlined text-sm">text_increase</span></button>
                         </div>
                     </div>
 
@@ -194,7 +194,7 @@ export default function PulpitView({ content, onClose, title, date }) {
                     <div className="w-px h-8 bg-white/20 mx-1"></div>
 
                     {/* Close */}
-                    <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white transition-colors">
+                    <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-xl bg-white/10 text-gray-500 hover:bg-white/20 hover:text-white transition-colors">
                         <span className="material-symbols-outlined text-xl">close</span>
                     </button>
                 </div>
@@ -244,21 +244,21 @@ export default function PulpitView({ content, onClose, title, date }) {
                             <span className="material-symbols-outlined">assignment</span>
                             Mesa del Celebrante
                         </h2>
-                        <button onClick={() => setShowBriefing(false)} className="text-gray-400 hover:text-white">
+                        <button onClick={() => setShowBriefing(false)} className="text-gray-500 hover:text-white">
                             <span className="material-symbols-outlined">close</span>
                         </button>
                     </div>
 
                     {/* Intentions Section */}
                     <div className="mb-8">
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Intenciones</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Intenciones</h3>
                         {intentions.length === 0 ? (
                             <p className="text-gray-600 italic text-sm">No hay intenciones.</p>
                         ) : (
                             <ul className="space-y-3">
                                 {intentions.map(i => (
                                     <li key={i.id} className="bg-white/5 rounded-lg p-3 border border-white/5">
-                                        <span className={`text-[10px] font-bold uppercase block mb-1 ${i.type === 'difuntos' ? 'text-gray-400' : 'text-amber-400'}`}>
+                                        <span className={`text-[10px] font-bold uppercase block mb-1 ${i.type === 'difuntos' ? 'text-gray-500' : 'text-amber-400'}`}>
                                             {i.type === 'difuntos' ? '✞ Difunto' : i.type === 'salud' ? 'Salud' : 'Acción de Gracias'}
                                         </span>
                                         <span className="text-gray-200 font-medium text-lg">{i.text}</span>
@@ -270,7 +270,7 @@ export default function PulpitView({ content, onClose, title, date }) {
 
                     {/* Notices Section */}
                     <div>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Avisos Parroquiales</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-widest mb-4 border-b border-gray-700 pb-2">Avisos Parroquiales</h3>
                         {notices.length === 0 ? (
                             <p className="text-gray-600 italic text-sm">No hay avisos.</p>
                         ) : (

@@ -314,7 +314,7 @@ export default function DirectoryView() {
                         <h2 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary">groups</span>
                             Fieles
-                            <span className="bg-gray-100 dark:bg-white/10 text-gray-500 text-xs px-2 py-0.5 rounded-full">{members.length}</span>
+                            <span className="bg-gray-100 dark:bg-white/10 text-gray-600 text-xs px-2 py-0.5 rounded-full">{members.length}</span>
                         </h2>
                         {(userRole === 'admin' || (checkPermission && checkPermission('manage_directory'))) && (
                             <button
@@ -327,7 +327,7 @@ export default function DirectoryView() {
                         )}
                     </div>
                     <div className="relative">
-                        <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-400 text-sm">search</span>
+                        <span className="material-symbols-outlined absolute left-3 top-2.5 text-gray-500 text-sm">search</span>
                         <input
                             type="text"
                             placeholder="Buscar por nombre..."
@@ -340,7 +340,7 @@ export default function DirectoryView() {
 
                 <div className="flex-1 overflow-y-auto">
                     {filteredMembers.length === 0 ? (
-                        <div className="p-8 text-center text-gray-400">
+                        <div className="p-8 text-center text-gray-500">
                             <span className="material-symbols-outlined text-4xl mb-2 opacity-50">person_off</span>
                             <p className="text-sm">No se encontraron fieles</p>
                         </div>
@@ -352,14 +352,14 @@ export default function DirectoryView() {
                                     onClick={() => { setSelectedMember(member); setIsEditing(false); }}
                                     className={`w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex items-center gap-3 ${selectedMember?.id === member.id ? 'bg-red-50 dark:bg-red-900/10 border-l-4 border-primary' : 'border-l-4 border-transparent'}`}
                                 >
-                                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 font-bold text-lg shrink-0">
+                                    <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-600 font-bold text-lg shrink-0">
                                         {member.fullName.charAt(0).toUpperCase()}
                                     </div>
                                     <div className="overflow-hidden">
                                         <h3 className={`font-bold truncate ${selectedMember?.id === member.id ? 'text-primary' : 'text-gray-800 dark:text-gray-200'}`}>
                                             {member.fullName}
                                         </h3>
-                                        <p className="text-xs text-gray-500 truncate icon-text">
+                                        <p className="text-xs text-gray-600 truncate icon-text">
                                             {member.phone || 'Sin teléfono'}
                                         </p>
                                     </div>
@@ -376,7 +376,7 @@ export default function DirectoryView() {
                 {selectedMember && (
                     <button
                         onClick={() => setSelectedMember(null)}
-                        className="md:hidden mb-4 flex items-center text-gray-500 hover:text-primary transition-colors font-bold text-sm"
+                        className="md:hidden mb-4 flex items-center text-gray-600 hover:text-primary transition-colors font-bold text-sm"
                     >
                         <span className="material-symbols-outlined mr-1">arrow_back</span>
                         Volver a la lista
@@ -405,13 +405,13 @@ export default function DirectoryView() {
                                     <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                                         {selectedMember.fullName || 'Nuevo Registro'}
                                     </h2>
-                                    <p className="text-sm text-gray-500 mt-1">
+                                    <p className="text-sm text-gray-600 mt-1">
                                         {selectedMember.memberId ? (
                                             <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-purple-100 text-purple-800 border border-purple-200 shadow-sm">
                                                 {selectedMember.memberId}
                                             </span>
                                         ) : (
-                                            <span className="text-xs italic text-gray-400">ID Pendiente</span>
+                                            <span className="text-xs italic text-gray-500">ID Pendiente</span>
                                         )}
                                     </p>
                                 </div>
@@ -477,7 +477,7 @@ export default function DirectoryView() {
                         <div className="bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-gray-100 dark:border-white/5 overflow-hidden">
                             {/* Section 1: Personal */}
                             <div className="p-6 border-b border-gray-100 dark:border-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">person</span> Datos Personales
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -490,7 +490,7 @@ export default function DirectoryView() {
 
                             {/* Section 2: Contact */}
                             <div className="p-6 border-b border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">contact_phone</span> Contacto
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -502,7 +502,7 @@ export default function DirectoryView() {
 
                             {/* Section 3: Medical (Vital) */}
                             <div className="p-6 border-b border-gray-100 dark:border-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">medical_services</span> Salud (Vital)
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -514,13 +514,13 @@ export default function DirectoryView() {
 
                             {/* Section 4: Family */}
                             <div className="p-6 bg-gray-50/30 dark:bg-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">diversity_3</span> Familia
                                 </h3>
                                 <div className="grid grid-cols-1 gap-6">
                                     <Field label="Cónyuge" value={selectedMember.spouse} onChange={v => setSelectedMember({ ...selectedMember, spouse: v })} editing={isEditing} placeholder="Nombre del esposo/a" />
                                     <div className="col-span-1">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Hijos</label>
+                                        <label className="block text-xs font-bold text-gray-600 uppercase mb-1">Hijos</label>
                                         {isEditing ? (
                                             <textarea
                                                 value={selectedMember.children}
@@ -536,7 +536,7 @@ export default function DirectoryView() {
                             </div>
                             {/* Section 5: Sacraments */}
                             <div className="p-6 border-t border-gray-100 dark:border-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">church</span> Vida Sacramental
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -548,12 +548,12 @@ export default function DirectoryView() {
 
                             {/* Section 6: Ministry */}
                             <div className="p-6 border-t border-gray-100 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">
-                                <h3 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center gap-2">
                                     <span className="material-symbols-outlined">volunteer_activism</span> Vida Ministerial
                                 </h3>
                                 <div className="grid grid-cols-1 gap-6">
                                     <div>
-                                        <label className="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-wider">Orden Eclesiástico</label>
+                                        <label className="block text-[10px] font-bold text-gray-500 uppercase mb-2 tracking-wider">Orden Eclesiástico</label>
                                         <div className="flex flex-wrap gap-4">
                                             {['Laico', 'Presbítero', 'Diácono', 'Ministro Laico'].map(role => (
                                                 <label key={role} className="flex items-center gap-2 cursor-pointer">
@@ -584,7 +584,7 @@ export default function DirectoryView() {
                                         />
                                         <div>
                                             <span className="block text-sm font-bold text-gray-700 dark:text-gray-300">Asistencia Regular</span>
-                                            <span className="text-xs text-gray-400">Marca si asiste frecuentemente a los servicios.</span>
+                                            <span className="text-xs text-gray-500">Marca si asiste frecuentemente a los servicios.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -593,7 +593,7 @@ export default function DirectoryView() {
 
                     </div>
                 ) : (
-                    <div className="h-full flex flex-col items-center justify-center text-gray-400 opacity-60">
+                    <div className="h-full flex flex-col items-center justify-center text-gray-500 opacity-60">
                         <span className="material-symbols-outlined text-6xl mb-4">badge</span>
                         <p className="text-xl font-medium">Selecciona un fiel para ver detalles</p>
                         <p className="text-sm">O crea uno nuevo con el botón +</p>
@@ -607,7 +607,7 @@ export default function DirectoryView() {
 function Field({ label, value, onChange, editing, type = "text", placeholder, options, colSpan = 1, focus }) {
     return (
         <div className={colSpan > 1 ? `col-span-${colSpan} md:col-span-${colSpan}` : ''}>
-            <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1 tracking-wider">{label}</label>
+            <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1 tracking-wider">{label}</label>
             {editing ? (
                 type === 'select' ? (
                     <select

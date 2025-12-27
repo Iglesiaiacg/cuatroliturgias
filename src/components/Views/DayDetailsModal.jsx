@@ -64,7 +64,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
 
                 {/* Content */}
                 <div className="pt-8 px-6 pb-6 flex-1 overflow-y-auto">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{formattedDate}</span>
+                    <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">{formattedDate}</span>
                     <h2 className="text-2xl font-bold font-display text-gray-900 dark:text-white mt-1 mb-4 leading-tight">
                         {feastName}
                     </h2>
@@ -73,20 +73,20 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                     <div className="flex gap-4 border-b border-gray-100 dark:border-white/10 mb-6">
                         <button
                             onClick={() => setActiveTab('liturgia')}
-                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'liturgia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'liturgia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-500 hover:text-gray-600'}`}
                         >
                             Liturgia
                         </button>
                         <button
                             onClick={() => setActiveTab('parroquia')}
-                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'parroquia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-400 hover:text-gray-600'}`}
+                            className={`px-3 py-2 rounded-lg text-xs font-bold uppercase transition-all ${activeTab === 'parroquia' ? 'neumorphic-inset text-primary box-shadow-inner' : 'text-gray-500 hover:text-gray-600'}`}
                         >
                             Parroquia {events.length > 0 && <span className="ml-1 bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full text-[10px]">{events.length}</span>}
                         </button>
                         {isSunday && (
                             <button
                                 onClick={() => setActiveTab('roster')}
-                                className={`pb-2 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'roster' ? 'text-primary border-b-2 border-primary' : 'text-gray-400 hover:text-gray-600'}`}
+                                className={`pb-2 text-sm font-bold uppercase tracking-wider transition-colors ${activeTab === 'roster' ? 'text-primary border-b-2 border-primary' : 'text-gray-500 hover:text-gray-600'}`}
                             >
                                 Roles
                             </button>
@@ -98,21 +98,21 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                         <div className="space-y-6 animate-fade-in">
                             <div className="grid grid-cols-2 gap-3">
                                 <div className="p-3 neumorphic-card">
-                                    <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Color Litúrgico</span>
+                                    <span className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Color Litúrgico</span>
                                     <div className="flex items-center gap-2">
                                         <span className={`w-3 h-3 rounded-full ${color.classes.replace('bg-', 'bg-').split(' ')[0].replace('100', '500')}`}></span>
                                         <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{color.name}</span>
                                     </div>
                                 </div>
                                 <div className="p-3 neumorphic-card">
-                                    <span className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Ciclo Leccionario</span>
+                                    <span className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Ciclo Leccionario</span>
                                     <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{cycle.text}</span>
                                 </div>
                             </div>
 
                             {/* Daily Reminder Section */}
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1 flex items-center gap-2">
+                                <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1 flex items-center gap-2">
                                     <span className="material-symbols-outlined text-[14px]">notifications_active</span>
                                     Recordatorio del Día
                                 </label>
@@ -169,7 +169,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
 
                             {/* Events List */}
                             <div className="space-y-2">
-                                {events.length === 0 && <p className="text-center text-sm text-gray-400 py-4 italic">No hay eventos programados</p>}
+                                {events.length === 0 && <p className="text-center text-sm text-gray-500 py-4 italic">No hay eventos programados</p>}
                                 {events.map((evt) => (
                                     <div key={evt.id} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-lg shadow-sm group">
                                         <div className="flex items-center gap-3">
@@ -183,7 +183,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                                             </span>
                                             <div>
                                                 <p className="text-sm font-medium text-gray-800">{evt.title}</p>
-                                                {evt.isAuto && <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 rounded">Automático</span>}
+                                                {evt.isAuto && <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 rounded">Automático</span>}
                                             </div>
                                         </div>
                                         {!evt.isAuto && evt.type !== 'birthday' && evt.type !== 'roster' && (
@@ -203,10 +203,10 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                     {/* Tab: Roster (Roles) - Sunday Only */}
                     {activeTab === 'roster' && (
                         <div className="space-y-4 animate-fade-in">
-                            <p className="text-xs text-gray-500 mb-2">Asigna los roles para este servicio dominical.</p>
+                            <p className="text-xs text-gray-600 mb-2">Asigna los roles para este servicio dominical.</p>
 
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Predicador / Celebrante</label>
+                                <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Predicador / Celebrante</label>
                                 <input
                                     type="text"
                                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm"
@@ -217,7 +217,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Lector (AT/Epístola)</label>
+                                <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Lector (AT/Epístola)</label>
                                 <input
                                     type="text"
                                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm"
@@ -228,7 +228,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                             </div>
 
                             <div>
-                                <label className="block text-[10px] font-bold text-gray-400 uppercase mb-1">Música / Salmista</label>
+                                <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Música / Salmista</label>
                                 <input
                                     type="text"
                                     className="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm"

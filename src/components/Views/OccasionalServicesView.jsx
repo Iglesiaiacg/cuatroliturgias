@@ -125,7 +125,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                 </button>
                 <div className="flex flex-col">
                     <h2 className="text-xl font-bold text-gray-900 dark:text-white font-display leading-none">Servicios Ocasionales</h2>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">Libro de Servicios Ocasionales 2003</span>
+                    <span className="text-xs text-gray-600 dark:text-gray-500 mt-1">Libro de Servicios Ocasionales 2003</span>
                 </div>
             </div>
 
@@ -166,7 +166,7 @@ export default function OccasionalServicesView({ onNavigate, setDocContent, setS
                         }
 
                         <div className="px-4 py-8 text-center bg-[var(--color-primary)]/5 dark:bg-white/5 rounded-xl mx-auto max-w-2xl mt-8 border border-[var(--color-primary)]/10">
-                            <p className="text-xs text-gray-500 italic">
+                            <p className="text-xs text-gray-600 italic">
                                 Basado en "The Book of Occasional Services 2003".<br />
                                 Los textos completos estarán disponibles próximamente.
                             </p>

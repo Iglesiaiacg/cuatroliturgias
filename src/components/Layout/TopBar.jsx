@@ -144,7 +144,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         <button
                             key={item.id}
                             onClick={() => onNavigate(item.id)}
-                            className={`flex flex-col items-center justify-center gap-1 w-16 py-2 rounded-xl transition-all active:scale-90 ${activeTab === item.id ? 'text-primary' : 'text-stone-400'}`}
+                            className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 rounded-xl transition-all active:scale-90 ${activeTab === item.id ? 'text-primary' : 'text-stone-400'}`}
                         >
                             <span className={`material-symbols-outlined text-[26px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''} transition-all duration-300`}>
                                 {item.icon}
@@ -158,7 +158,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     {/* MENU TAB (FAB-like) */}
                     <button
                         onClick={() => setIsMenuOpen(true)}
-                        className="flex flex-col items-center justify-center gap-1 w-16 py-2 text-stone-400 active:text-primary active:scale-90 transition-all"
+                        className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-stone-400 active:text-primary active:scale-90 transition-all"
                     >
                         <span className="material-symbols-outlined text-[26px]">apps</span>
                         <span className="text-[10px] font-medium">Menú</span>

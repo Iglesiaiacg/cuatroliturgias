@@ -98,7 +98,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
                                         {evt.type === 'roster' && '📋'}
                                     </span>
                                 ))}
-                                {events.length > 5 && <span className="text-[8px] text-gray-500 font-bold">+</span>}
+                                {events.length > 5 && <span className="text-[8px] text-gray-600 font-bold">+</span>}
                             </div>
 
                             {isSelected && (

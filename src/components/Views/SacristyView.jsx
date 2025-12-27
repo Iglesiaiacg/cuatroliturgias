@@ -13,7 +13,7 @@ export default function SacristyView({ date }) {
                     <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-2">
                         Sacristía
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-gray-600 dark:text-gray-500">
                         Gestión de insumos y preparación para: <span className="font-bold text-primary">{format(date, "EEEE, d 'de' MMMM", { locale: es })}</span>
                     </p>
                 </div>
@@ -22,7 +22,7 @@ export default function SacristyView({ date }) {
                     {/* Checklist Section - Takes up 2 columns on large screens */}
                     <div className="lg:col-span-2 space-y-6">
                         <section>
-                            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4 ml-1">Preparación Litúrgica</h2>
+                            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-600 mb-4 ml-1">Preparación Litúrgica</h2>
                             <SacristyChecklist date={date} />
                         </section>
                     </div>
@@ -30,7 +30,7 @@ export default function SacristyView({ date }) {
                     {/* Inventory Section - Takes up 1 column */}
                     <div className="space-y-6">
                         <section className="h-full">
-                            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-500 mb-4 ml-1">Inventario</h2>
+                            <h2 className="text-sm font-bold uppercase tracking-wider text-gray-600 mb-4 ml-1">Inventario</h2>
                             <InventoryCard />
                         </section>
                     </div>

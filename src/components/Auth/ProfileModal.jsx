@@ -103,7 +103,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         <span className="material-symbols-outlined text-primary">account_circle</span>
                         Mi Perfil
                     </h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:hover:text-white transition-colors">
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-600 dark:hover:text-white transition-colors">
                         <span className="material-symbols-outlined">close</span>
                     </button>
                 </div>
@@ -117,7 +117,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         </div>
                         <div className="flex-1">
                             <p className="text-sm font-bold text-gray-900 dark:text-white">{currentUser?.email}</p>
-                            <p className="text-xs text-gray-500 uppercase tracking-wider font-bold">Rol: {userRole}</p>
+                            <p className="text-xs text-gray-600 uppercase tracking-wider font-bold">Rol: {userRole}</p>
                         </div>
                     </div>
 
@@ -126,13 +126,13 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         {/* Global Settings Section - HIDDEN FOR GUESTS */}
                         {userRole !== 'guest' && (
                             <div className="neumorphic-card p-4 space-y-4">
-                                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ajustes Globales</h3>
+                                <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Ajustes Globales</h3>
 
                                 {/* Rubric Toggle */}
                                 <div className="flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-bold text-gray-900 dark:text-white">Modo Director de Culto</p>
-                                        <p className="text-[10px] text-gray-500">Muestra todas las instrucciones ceremoniales.</p>
+                                        <p className="text-[10px] text-gray-600">Muestra todas las instrucciones ceremoniales.</p>
                                     </div>
                                     <button
                                         type="button"
@@ -146,7 +146,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                 {/* API Key - ADMIN ONLY */}
                                 {userRole === 'admin' && (
                                     <div>
-                                        <label className="block text-xs font-bold text-gray-500 mb-1">Google API Key</label>
+                                        <label className="block text-xs font-bold text-gray-600 mb-1">Google API Key</label>
                                         <input
                                             type="password"
                                             value={apiKey}
@@ -154,16 +154,16 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                             placeholder="Clave API (Opcional si usa .env)"
                                             className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
                                         />
-                                        <p className="text-[9px] text-gray-400 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                        <p className="text-[9px] text-gray-500 mt-1">Dejar vacío para usar configuración del servidor.</p>
                                     </div>
                                 )}
                             </div>
                         )}
 
                         {/* Profile Fields */}
-                        <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Datos Personales</h3>
+                        <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Datos Personales</h3>
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Nombre para Mostrar</label>
+                            <label className="block text-xs font-bold text-gray-600 mb-1">Nombre para Mostrar</label>
                             <input
                                 type="text"
                                 value={displayName}
@@ -174,7 +174,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 mb-1">Nueva Contraseña (Opcional)</label>
+                            <label className="block text-xs font-bold text-gray-600 mb-1">Nueva Contraseña (Opcional)</label>
                             <input
                                 type="password"
                                 value={newPassword}

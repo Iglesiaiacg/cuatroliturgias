@@ -93,7 +93,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     })()},
                 </h1>
                 <div className="flex items-center gap-2">
-                    <p className="text-gray-500 dark:text-gray-400">
+                    <p className="text-gray-600 dark:text-gray-500">
                         {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
                     </p>
                     {userRole === 'admin' && <span className="bg-red-100 text-red-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Modo Director</span>}
@@ -155,7 +155,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                 <div className="fixed inset-0 z-[60] bg-white dark:bg-gray-900 flex flex-col animate-slide-in">
                     <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-white/10 shrink-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm">
                         <div className="flex flex-col">
-                            <span className="text-[10px] uppercase font-bold text-gray-400">Leyendo</span>
+                            <span className="text-[10px] uppercase font-bold text-gray-500">Leyendo</span>
                             <span className="font-bold text-gray-900 dark:text-white truncate max-w-[200px]">{pinnedLiturgy.title}</span>
                         </div>
                         <button
@@ -181,7 +181,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     {!pinnedLiturgy && (
                         <section>
                             <section>
-                                <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
+                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
                                 <NextLiturgyCard onClick={() => onNavigate('generator')} />
                             </section>
                         </section>
@@ -192,7 +192,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     </section>
 
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <StyledCard
                                 title="Liturgia"
@@ -217,7 +217,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                 {/* Column 2: Management */}
                 <div className="space-y-6">
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
 
                         {/* COMMUNICATION CENTER BUTTON (ADMIN ONLY) */}
                         {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
@@ -249,12 +249,12 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                 {/* Column 3: Finance & Checklist */}
                 <div className="space-y-6">
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
                         <SacristyStatusCard date={date} />
                     </section>
 
                     <section>
-                        <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Administración</h3>
+                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>
                         <FinanceCard />
                     </section>
 

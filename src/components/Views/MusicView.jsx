@@ -82,7 +82,7 @@ export default function MusicView() {
             <div className="flex items-center justify-between mb-6">
                 <div>
                     <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Cantoral</h1>
-                    <p className="text-sm text-gray-500">Repertorio musical</p>
+                    <p className="text-sm text-gray-600">Repertorio musical</p>
                 </div>
                 {(checkPermission && checkPermission('manage_music') || userRole === 'admin') && (
                     <button
@@ -113,7 +113,7 @@ export default function MusicView() {
                                 />
                                 {suggestions.length > 0 && (
                                     <div className="absolute top-full left-0 w-full bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 rounded-lg shadow-xl z-20 mt-1 max-h-40 overflow-y-auto">
-                                        <div className="p-2 text-xs text-gray-500 font-bold uppercase bg-gray-50 dark:bg-white/5">Sugerencias del Himnario</div>
+                                        <div className="p-2 text-xs text-gray-600 font-bold uppercase bg-gray-50 dark:bg-white/5">Sugerencias del Himnario</div>
                                         {suggestions.map((s, i) => (
                                             <button
                                                 key={i}
@@ -122,7 +122,7 @@ export default function MusicView() {
                                                 className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-white/10 text-sm flex justify-between"
                                             >
                                                 <span>{s.title}</span>
-                                                <span className="text-gray-400 font-mono text-xs">{s.key}</span>
+                                                <span className="text-gray-500 font-mono text-xs">{s.key}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -174,7 +174,7 @@ export default function MusicView() {
             {/* Search */}
             <div className="relative mb-6 flex gap-2">
                 <div className="relative flex-1">
-                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
+                    <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</span>
                     <input
                         type="text"
                         placeholder="Buscar canción..."
@@ -207,9 +207,9 @@ export default function MusicView() {
                     >
                         <div className="flex justify-between items-start">
                             <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-primary transition-colors">{song.title}</h3>
-                            <span className="text-xs font-mono bg-gray-100 dark:bg-white/10 px-2 py-1 rounded text-gray-500">{song.key}</span>
+                            <span className="text-xs font-mono bg-gray-100 dark:bg-white/10 px-2 py-1 rounded text-gray-600">{song.key}</span>
                         </div>
-                        <p className="text-sm text-gray-400 mt-2 line-clamp-2 font-serif italic">
+                        <p className="text-sm text-gray-500 mt-2 line-clamp-2 font-serif italic">
                             {song.lyrics.replace(/\[.*?\]/g, '')}
                         </p>
                     </div>
