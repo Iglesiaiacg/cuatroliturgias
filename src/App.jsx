@@ -343,15 +343,18 @@ function AppContent() {
                       </div>
                     )}
 
-                    <Toolbar
-                      onPrint={handlePrint}
-                      onDownloadFull={() => handleDownload('full')}
-                      onDownloadBulletin={() => handleDownload('bulletin')}
-                      onPulpitMode={() => setIsPulpitOpen(true)}
-                      onMinistries={() => setIsAssignmentOpen(true)}
-                      rubricLevel={rubricLevel}
-                      onToggleRubric={() => updateSetting('rubricLevel', rubricLevel === 'solemn' ? 'simple' : 'solemn')}
-                    />
+                    {/* Restriction: Only Priest/Admin sees the Toolbar */}
+                    {(checkPermission && checkPermission('generate_liturgy')) && (
+                      <Toolbar
+                        onPrint={handlePrint}
+                        onDownloadFull={() => handleDownload('full')}
+                        onDownloadBulletin={() => handleDownload('bulletin')}
+                        onPulpitMode={() => setIsPulpitOpen(true)}
+                        onMinistries={() => setIsAssignmentOpen(true)}
+                        rubricLevel={rubricLevel}
+                        onToggleRubric={() => updateSetting('rubricLevel', rubricLevel === 'solemn' ? 'simple' : 'solemn')}
+                      />
+                    )}
                     <Preview ref={previewRef} content={docContent} season={season} rubricLevel={rubricLevel} />
                   </div>
                 ) : (
