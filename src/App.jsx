@@ -468,6 +468,7 @@ function AppContent() {
 
         {/* Footer removed as per request (icons moved to header) */}
       </div>
+      <div className="fixed bottom-0.5 right-0.5 text-[8px] text-gray-400 opacity-50 pointer-events-none z-[99999]">v4.0.2-fix-pwa</div>
     </BackgroundWrapper >
   )
 }
