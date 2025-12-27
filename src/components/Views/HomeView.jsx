@@ -18,11 +18,13 @@ import SacristyStatusCard from '../Dashboard/SacristyStatusCard';
 // Role Dashboards
 import { TreasurerDashboard, SacristanDashboard, SecretaryDashboard, MusicianDashboard, AcolyteDashboard } from '../Dashboard/RoleDashboards';
 import GuestDashboard from '../Dashboard/GuestDashboard';
+import CommunicationCenter from '../Dashboard/CommunicationCenter';
 
 export default function HomeView({ onNavigate, date, docContent }) {
-    const { userRole } = useAuth(); // Get current role
+    const { userRole, checkPermission } = useAuth(); // Get current role
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
+    const [isCommOpen, setIsCommOpen] = useState(false);
 
     useEffect(() => {
         const unsub = onSnapshot(doc(db, 'config', 'pinned_liturgy'), (doc) => {
@@ -75,6 +77,9 @@ export default function HomeView({ onNavigate, date, docContent }) {
 
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 w-full max-w-7xl mx-auto animate-fade-in pb-32">
+
+            {/* Communication Center Modal */}
+            {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
 
             {/* Greeting Header */}
             <div className="mb-6">
@@ -212,6 +217,24 @@ export default function HomeView({ onNavigate, date, docContent }) {
                 <div className="space-y-6">
                     <section>
                         <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
+
+                        {/* COMMUNICATION CENTER BUTTON (ADMIN ONLY) */}
+                        {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
+                            <button
+                                onClick={() => setIsCommOpen(true)}
+                                className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 hover:scale-[1.02] transition-transform"
+                            >
+                                <div className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
+                                    <span className="material-symbols-outlined text-2xl">forum</span>
+                                </div>
+                                <div className="text-left">
+                                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Avisos, Mensajes y Chat</p>
+                                </div>
+                                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                            </button>
+                        )}
+
                         <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
                     </section>
                     <section>
