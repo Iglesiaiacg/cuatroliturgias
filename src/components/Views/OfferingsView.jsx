@@ -12,6 +12,7 @@ import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { useFinanceSync } from '../../hooks/useFinanceSync';
 
 export default function OfferingsView() {
+    const formRef = useRef(null);
     // Categories imported from utils
     const { userRole, checkPermission } = useAuth();
 
@@ -41,25 +42,29 @@ export default function OfferingsView() {
     // Load recent/upcoming events for dropdown (last 7 days + next 7 days)
     useEffect(() => {
         if (showForm) {
+            // Calendar logic
             const today = new Date();
             const candidates = [];
-            // Check range from -7 days to +7 days
             for (let i = -7; i <= 7; i++) {
                 const d = new Date(today);
                 d.setDate(today.getDate() + i);
                 const dayEvents = getEventsForDate(d);
                 dayEvents.forEach(e => {
-                    // Filter out auto-generated finance tasks to avoid recursion, keep liturgies
                     if (e.type !== 'finance' && !e.isAuto) {
                         candidates.push({
                             ...e,
-                            uniqueId: e.id + d.toISOString(), // Ensure unique key for dropdown
+                            uniqueId: e.id + d.toISOString(),
                             displayDate: d
                         });
                     }
                 });
             }
             setRecentEvents(candidates);
+
+            // Auto-scroll to form on mobile
+            setTimeout(() => {
+                formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
         }
     }, [showForm, getEventsForDate]);
 
@@ -247,8 +252,17 @@ export default function OfferingsView() {
                 <div className="px-4 max-w-6xl mx-auto w-full">
                     {/* Input Form Overlay (Mobile/Desktop) - Moved inside scrollable area */}
                     {showForm && (
-                        <div className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl p-4 mb-6 animate-slide-down">
-                            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                        <div ref={formRef} className="fixed inset-0 z-[100] bg-white dark:bg-gray-900 p-6 overflow-y-auto md:static md:z-auto md:bg-gray-100 md:dark:bg-white/5 md:p-4 md:mb-6 md:rounded-xl md:border md:border-gray-200 md:dark:border-white/10 animate-fade-in">
+                            <div className="flex items-center justify-between mb-6 md:hidden">
+                                <h3 className="text-xl font-bold flex items-center gap-2">
+                                    <span className="material-symbols-outlined text-primary">add_circle</span>
+                                    Nueva Transacción
+                                </h3>
+                                <button type="button" onClick={() => setShowForm(false)} className="p-2 bg-gray-100 dark:bg-white/10 rounded-full">
+                                    <span className="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+                            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-12 gap-4 md:items-end pb-20 md:pb-0">
                                 {/* Type Selection */}
                                 <div className="md:col-span-2">
                                     <label className="block text-xs font-bold text-gray-600 mb-1">Tipo</label>

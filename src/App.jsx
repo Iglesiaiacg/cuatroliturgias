@@ -421,7 +421,7 @@ function AppContent() {
           {activeTab === 'offerings' && (
             /* ROLE GUARD: Permission check */
             (checkPermission && checkPermission('view_offerings')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-hidden">
+              <div className="flex-1 flex flex-col w-full overflow-hidden min-h-0">
                 <OfferingsView />
               </div>
             ) : (
