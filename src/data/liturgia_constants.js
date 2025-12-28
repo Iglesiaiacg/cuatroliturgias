@@ -10,7 +10,15 @@ Por mi culpa, por mi culpa, por mi gran culpa.
 Por eso ruego a santa María, siempre Virgen,
 a los ángeles, a los santos
 y a ustedes, hermanos,
-que intercedan por mí ante Dios, nuestro Señor.`,
+que intercedan por mí ante Dios, nuestro Señor.
+
+**SACERDOTE:**
+Dios todopoderoso tenga misericordia de nosotros,
+perdone nuestros pecados
+y nos lleve a la vida eterna.
+
+**TODOS:**
+Amén.`,
 
     "[[INSERTAR_GLORIA]]": `**TODOS:**
 Gloria a Dios en el cielo,
