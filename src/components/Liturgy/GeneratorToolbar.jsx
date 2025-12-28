@@ -11,7 +11,9 @@ export default function GeneratorToolbar({
     calculatedFeast,
     onGenerate,
     onHistory,
-    onPin
+    onPin,
+    onClear,
+    hasContent
 }) {
 
     const traditions = [
@@ -67,6 +69,16 @@ export default function GeneratorToolbar({
 
             {/* Right: Actions */}
             <div className="flex items-center gap-2 shrink-0 w-full md:w-auto justify-end">
+                {hasContent && (
+                    <button
+                        onClick={onClear}
+                        className="h-9 px-3 rounded-lg flex items-center justify-center hover:bg-red-50 text-red-500 hover:text-red-700 transition-colors border border-red-100 dark:border-red-900/30 gap-2"
+                        title="Limpiar Editor"
+                    >
+                        <span className="material-symbols-outlined text-lg">delete</span>
+                        <span className="text-xs font-bold hidden sm:inline">Limpiar</span>
+                    </button>
+                )}
                 <button
                     onClick={onHistory}
                     className="h-9 px-3 rounded-lg flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors border border-gray-200 dark:border-white/10 gap-2"

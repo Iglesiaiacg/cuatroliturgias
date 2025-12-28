@@ -412,6 +412,11 @@ function AppContent() {
                   onGenerate={handleGenerate}
                   onHistory={() => setIsHistoryOpen(true)}
                   onPin={handlePinLiturgy}
+                  onClear={() => {
+                    setDocContent(null)
+                    setServiceTitle(null)
+                  }}
+                  hasContent={!!docContent}
                 />
               )}
 
