@@ -178,42 +178,99 @@ function AppContent() {
       contentToSave = previewRef.current.innerHTML
     }
 
+    // --- 1. PREPARE THE CONTENT ---
+    const tempDiv = document.createElement('div')
+    tempDiv.innerHTML = contentToSave
+
+    // Cleanup: Remove unwanted elements
+    const watermark = tempDiv.querySelector('.text-\\[300px\\]');
+    if (watermark) {
+      if (watermark.parentElement) watermark.parentElement.remove();
+      else watermark.remove();
+    }
+
+    // Remove Material Icons
+    const icons = tempDiv.querySelectorAll('.material-symbols-outlined');
+    icons.forEach(icon => icon.remove());
+
+    // Remove Edit Hints
+    const hints = tempDiv.querySelectorAll('.animate-pulse');
+    hints.forEach(h => h.remove());
+
     if (type === 'bulletin') {
-      const tempDiv = document.createElement('div')
-      tempDiv.innerHTML = contentToSave
       tempDiv.querySelectorAll('p').forEach(p => {
         if (p.textContent.toLowerCase().includes('(en secreto)')) p.remove()
       })
-      contentToSave = tempDiv.innerHTML
     }
 
-    const css = `
-      <style>
-          body { font-family: 'Times New Roman', serif; font-size: 11pt; }
-          h1 { text-align: center; font-size: 16pt; border-bottom: 1px solid #ccc; font-weight: bold; margin-bottom: 12pt; }
-          h2 { color: #9f1239; font-size: 13pt; margin-top: 15pt; }
-          .rubric { color: red; font-style: italic; font-size: 10pt; }
-          strong { font-weight: bold; }
-          table { border-collapse: collapse; width: 100%; margin-bottom: 10pt; }
-          td, th { border: 1px solid #000; padding: 5pt; }
-          @page { size: letter; margin: 2.54cm; }
-      </style>
-    `
+    // --- 2. EXTRACT GOSPEL VERSE ---
+    let gospelVerse = "Palabra del Señor."
+    const plainText = tempDiv.innerText;
+    // Try to find the Gospel section and grab a sentence
+    const gospelMatch = plainText.match(/EVANGELIO[\s\S]{0,500}?(En aquel tiempo|Jesús dijo|Dijo Jesús)[\s\S]{0,200}?(\.|\n)/i);
+    if (gospelMatch) {
+      // Clean up the match to look like a verse quote
+      gospelVerse = "«" + gospelMatch[0].replace(/EVANGELIO/i, '').trim() + "»";
+    }
 
-    const htmlContent = `
-      <!DOCTYPE html>
-      <html>
-          <head>
-              <meta charset='utf-8'>
-              ${css}
-          </head>
-          <body>${contentToSave}</body>
-      </html>
-    `
+    // --- 3. CONSTRUCT COVER PAGE ---
+    const coverPage = `
+            <div style="text-align: center; page-break-after: always; display: flex; flex-direction: column; justify-content: center; height: 90vh;">
+                <br /><br /><br />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png" 
+                     width="120" height="120" style="display: block; margin: 0 auto;" />
+                <br /><br />
+                <h1 style="font-size: 24pt; font-weight: bold; text-transform: uppercase; margin-bottom: 10pt; border: none;">
+                    IGLESIA ANGLOCATÓLICA<br/>COMUNIDAD DE GRACIA
+                </h1>
+                <br />
+                <h2 style="font-size: 18pt; font-weight: normal; color: #000; margin-bottom: 20pt; border: none;">
+                    ${calculatedFeast || serviceTitle || "Santa Liturgia"}
+                </h2>
+                <p style="font-size: 14pt; font-style: italic;">
+                    ${selectedDate.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                </p>
+                <br /><br /><br />
+                <p style="font-size: 12pt; font-style: italic; max-width: 80%; margin: 0 auto; color: #555;">
+                    ${gospelVerse}
+                </p>
+                <br /><br />
+            </div>
+        `;
 
-    asBlob(htmlContent).then(blob => {
+    // --- 4. COMBINE & STYLE ---
+    const finalHtml = `
+          <!DOCTYPE html>
+          <html>
+              <head>
+                  <meta charset='utf-8'>
+                  <style>
+                      @page {
+                          size: letter;
+                          margin: 2.54cm;
+                          mso-page-orientation: portrait;
+                          mso-title-page: yes; /* Attempt to tell Word first page is title */
+                      }
+                      body { font-family: 'Times New Roman', serif; font-size: 12pt; }
+                      h1 { text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 12pt; color: #000; }
+                      h2 { text-align: center; font-size: 14pt; margin-top: 15pt; color: #991b1b; }
+                      h3, h4 { color: #991b1b; font-size: 12pt; margin-top: 10pt; }
+                      .rubric { color: #dc2626; font-style: italic; font-size: 11pt; }
+                      p { line-height: 1.5; margin-bottom: 10pt; }
+                  </style>
+              </head>
+              <body>
+                  ${coverPage}
+                  <div class="content">
+                    ${tempDiv.innerHTML}
+                  </div>
+              </body>
+          </html>
+        `
+
+    asBlob(finalHtml).then(blob => {
       saveAs(blob, `Liturgia_${selectedDate.toISOString().split('T')[0]}.docx`)
-      handleToast("Documento descargado")
+      handleToast("Documento exportado con portada")
     })
   }
 
