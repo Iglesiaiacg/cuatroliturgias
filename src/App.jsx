@@ -228,12 +228,27 @@ function AppContent() {
 
     tempDiv.innerHTML = html;
 
-    // --- 2. GOSPEL EXTRACTION ---
-    let gospelVerse = "Palabra del Señor."
+    // --- 2. PATRISTIC QUOTE (User Request) ---
+    // Instead of Gospel verse, find or generate a Church Father quote.
+    const patristicQuotes = [
+      { text: "Nos hiciste, Señor, para ti, y nuestro corazón está inquieto hasta que descanse en ti.", author: "San Agustín" },
+      { text: "La medida del amor es amar sin medida.", author: "San Agustín" },
+      { text: "Quien ignora las Escrituras, ignora a Cristo.", author: "San Jerónimo" },
+      { text: "Nadie puede tener a Dios por Padre si no tiene a la Iglesia por Madre.", author: "San Cipriano" },
+      { text: "La Eucaristía es el pan de cada día que se toma como remedio para nuestra debilidad.", author: "San Ambrosio" },
+      { text: "Donde está Cristo, allí está la Iglesia.", author: "San Ignacio de Antioquía" },
+      { text: "El ayuno del cuerpo es alimento para el alma.", author: "San Juan Crisóstomo" },
+      { text: "Ama y haz lo que quieras.", author: "San Agustín" }
+    ];
+
+    let coverQuote = patristicQuotes[Math.floor(Math.random() * patristicQuotes.length)];
     const plainText = tempDiv.innerText;
-    const gospelMatch = plainText.match(/EVANGELIO[\s\S]{0,500}?(En aquel tiempo|Jesús dijo|Dijo Jesús)[\s\S]{0,200}?(\.|\n)/i);
-    if (gospelMatch) {
-      gospelVerse = "«" + gospelMatch[0].replace(/EVANGELIO/i, '').trim() + "»";
+
+    // Future-proof: If the prompt generates a specific quote, use it.
+    // Format expected in doc: "CITA_PATRISTICA: "Quote" - Author"
+    const quoteMatch = plainText.match(/CITA_PATRISTICA:\s*["“](.*?)["”]\s*-\s*(.*)/i);
+    if (quoteMatch) {
+      coverQuote = { text: quoteMatch[1], author: quoteMatch[2] };
     }
 
     // --- 3. FETCH IMAGE & CONVERT TO BASE64 ---
@@ -283,8 +298,11 @@ function AppContent() {
                 </tr>
                 <tr>
                     <td align="center" style="border: none;">
-                        <p style="font-size: 12pt; font-style: italic; color: #555; width: 80%;">
-                            ${gospelVerse}
+                        <p style="font-size: 14pt; margin: 0; padding-left: 40pt; padding-right: 40pt; color: #444;">
+                            <i>“${coverQuote.text}”</i>
+                        </p>
+                        <p style="font-size: 12pt; font-weight: bold; margin-top: 10pt; color: #000;">
+                            — ${coverQuote.author}
                         </p>
                     </td>
                 </tr>

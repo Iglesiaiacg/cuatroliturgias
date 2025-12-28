@@ -393,6 +393,12 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - EJEMPLO: Si es Domingo de Ramos, pide "Para que podamos acompañar al Señor en su Pasión...".
            - Menciona personajes, parábolas o acciones específicas del texto bíblico del día dentro de las peticiones.
            - Esto es vital para conectar la homilía con la oración.
+
+        7. CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
+           - AL FINAL DEL DOCUMENTO (después de la procesión de salida), OBLIGATORIAMENTE incluye una línea con una frase MEMORABLE de un Padre de la Iglesia.
+           - Formato EXACTO:
+             > CITA_PATRISTICA: "La medida del amor es amar sin medida." - San Agustín
+           - Elige una frase que tenga que ver con la liturgia de hoy o el tiempo litúrgico.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
