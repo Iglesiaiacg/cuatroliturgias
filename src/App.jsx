@@ -212,9 +212,8 @@ function AppContent() {
     // --- 3. FETCH IMAGE & CONVERT TO BASE64 ---
     let base64Img = '';
     try {
-      // "Croix de l'Ordre du Saint-Sepulcre" (Red Jerusalem Cross)
-      // Using Wikimedia thumb for reliable PNG
-      const response = await fetch("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Croix_de_l%27Ordre_du_Saint-Sepulcre.svg/600px-Croix_de_l%27Ordre_du_Saint-Sepulcre.svg.png");
+      // Local Image uploaded by User
+      const response = await fetch("/jerusalem_cross.png");
       const blob = await response.blob();
       base64Img = await new Promise((resolve) => {
         const reader = new FileReader();
@@ -223,7 +222,6 @@ function AppContent() {
       });
     } catch (e) {
       console.error("Image fetch failed", e);
-      // Fallback to empty or text if fails
     }
 
     // --- 4. TABLE-BASED LAYOUT FOR WORD ---
