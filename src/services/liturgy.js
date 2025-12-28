@@ -300,6 +300,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
     let basePrompt = `
         FECHA: ${dateStr}.
+        CICLO LITÚRGICO: ${cycle.text}.
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
         
