@@ -212,11 +212,9 @@ function AppContent() {
     // --- 3. FETCH IMAGE & CONVERT TO BASE64 ---
     let base64Img = '';
     try {
-      // Using the known repo image or the wiki one. Let's use the repo one for consistency? 
-      // The user asked for Jerusalem Cross. Let's try to fetch a reliable one or fallback.
-      // Using a CORS-friendly proxy or just the direct link if possible.
-      // Wiki: https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png
-      const response = await fetch("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png");
+      // "Croix de l'Ordre du Saint-Sepulcre" (Red Jerusalem Cross)
+      // Using Wikimedia thumb for reliable PNG
+      const response = await fetch("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Croix_de_l%27Ordre_du_Saint-Sepulcre.svg/600px-Croix_de_l%27Ordre_du_Saint-Sepulcre.svg.png");
       const blob = await response.blob();
       base64Img = await new Promise((resolve) => {
         const reader = new FileReader();
