@@ -201,6 +201,33 @@ function AppContent() {
       })
     }
 
+    // --- INJECT MISSING RESPONSES (User Request) ---
+    // Ensure "Lector: Palabra de Dios" appears before Psalm and Alleluia if not present.
+    // We operate on innerHTML to use Regex across tags.
+    let html = tempDiv.innerHTML;
+
+    const responseBlock = `
+        <p style="margin-top: 10pt; margin-bottom: 15pt;">
+            <b>Lector:</b> Palabra de Dios.<br/>
+            <b>Pueblo:</b> Te alabamos, Señor.
+        </p>
+    `;
+
+    // 1. Before Psalm (header)
+    // Check if "Palabra de Dios" is already near the Psalm (within 300 chars before).
+    // This is a heuristic.
+    if (!html.match(/Palabra de Dios[\s\S]{0,300}?<h[1-6][^>]*>\s*Salmo/i)) {
+      html = html.replace(/(<h[1-6][^>]*>\s*Salmo)/i, `${responseBlock}$1`);
+    }
+
+    // 2. Before Alleluia or Gradual (header)
+    if (!html.match(/Palabra de Dios[\s\S]{0,300}?<h[1-6][^>]*>\s*(Aleluya|Gradual)/i)) {
+      // Also check we aren't at the very start of the doc (unlikely for Aleluya)
+      html = html.replace(/(<\/p>)\s*(<h[1-6][^>]*>\s*(Aleluya|Gradual))/i, `$1${responseBlock}$2`);
+    }
+
+    tempDiv.innerHTML = html;
+
     // --- 2. GOSPEL EXTRACTION ---
     let gospelVerse = "Palabra del Señor."
     const plainText = tempDiv.innerText;
