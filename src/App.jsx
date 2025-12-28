@@ -170,7 +170,7 @@ function AppContent() {
   // Document Actions
   const handlePrint = () => window.print()
 
-  const handleDownload = (type) => {
+  const handleDownload = async (type) => {
     if (!docContent) return
 
     let contentToSave = docContent
@@ -178,22 +178,20 @@ function AppContent() {
       contentToSave = previewRef.current.innerHTML
     }
 
-    // --- 1. PREPARE THE CONTENT ---
+    // --- 1. PREPARE CONTENT ---
     const tempDiv = document.createElement('div')
     tempDiv.innerHTML = contentToSave
 
-    // Cleanup: Remove unwanted elements
+    // Cleanup
     const watermark = tempDiv.querySelector('.text-\\[300px\\]');
     if (watermark) {
       if (watermark.parentElement) watermark.parentElement.remove();
       else watermark.remove();
     }
 
-    // Remove Material Icons
     const icons = tempDiv.querySelectorAll('.material-symbols-outlined');
     icons.forEach(icon => icon.remove());
 
-    // Remove Edit Hints
     const hints = tempDiv.querySelectorAll('.animate-pulse');
     hints.forEach(h => h.remove());
 
@@ -203,42 +201,74 @@ function AppContent() {
       })
     }
 
-    // --- 2. EXTRACT GOSPEL VERSE ---
+    // --- 2. GOSPEL EXTRACTION ---
     let gospelVerse = "Palabra del Señor."
     const plainText = tempDiv.innerText;
-    // Try to find the Gospel section and grab a sentence
     const gospelMatch = plainText.match(/EVANGELIO[\s\S]{0,500}?(En aquel tiempo|Jesús dijo|Dijo Jesús)[\s\S]{0,200}?(\.|\n)/i);
     if (gospelMatch) {
-      // Clean up the match to look like a verse quote
       gospelVerse = "«" + gospelMatch[0].replace(/EVANGELIO/i, '').trim() + "»";
     }
 
-    // --- 3. CONSTRUCT COVER PAGE ---
+    // --- 3. FETCH IMAGE & CONVERT TO BASE64 ---
+    let base64Img = '';
+    try {
+      // Using the known repo image or the wiki one. Let's use the repo one for consistency? 
+      // The user asked for Jerusalem Cross. Let's try to fetch a reliable one or fallback.
+      // Using a CORS-friendly proxy or just the direct link if possible.
+      // Wiki: https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png
+      const response = await fetch("https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png");
+      const blob = await response.blob();
+      base64Img = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (e) {
+      console.error("Image fetch failed", e);
+      // Fallback to empty or text if fails
+    }
+
+    // --- 4. TABLE-BASED LAYOUT FOR WORD ---
+    // Word handles tables much better than div/flex for vertical alignment
     const coverPage = `
-            <div style="text-align: center; page-break-after: always; display: flex; flex-direction: column; justify-content: center; height: 90vh;">
-                <br /><br /><br />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Jerusalem_Cross.svg/800px-Jerusalem_Cross.svg.png" 
-                     width="120" height="120" style="display: block; margin: 0 auto;" />
-                <br /><br />
-                <h1 style="font-size: 24pt; font-weight: bold; text-transform: uppercase; margin-bottom: 10pt; border: none;">
-                    IGLESIA ANGLOCATÓLICA<br/>COMUNIDAD DE GRACIA
-                </h1>
-                <br />
-                <h2 style="font-size: 18pt; font-weight: normal; color: #000; margin-bottom: 20pt; border: none;">
-                    ${calculatedFeast || serviceTitle || "Santa Liturgia"}
-                </h2>
-                <p style="font-size: 14pt; font-style: italic;">
-                    ${selectedDate.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
-                </p>
-                <br /><br /><br />
-                <p style="font-size: 12pt; font-style: italic; max-width: 80%; margin: 0 auto; color: #555;">
-                    ${gospelVerse}
-                </p>
-                <br /><br />
-            </div>
+            <table width="100%" style="width: 100%; border: none; margin-top: 100pt; margin-bottom: 50pt;">
+                <tr>
+                    <td align="center" style="border: none; padding-bottom: 30pt;">
+                         ${base64Img ? `<img src="${base64Img}" width="120" height="120" />` : '<b>[CRUZ]</b>'}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="border: none;">
+                        <h1 style="font-size: 24pt; font-weight: bold; text-transform: uppercase; margin: 0; color: #000;">
+                            IGLESIA ANGLOCATÓLICA<br/>COMUNIDAD DE GRACIA
+                        </h1>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="border: none; padding-top: 20pt; padding-bottom: 20pt;">
+                        <h2 style="font-size: 18pt; font-weight: normal; color: #000; margin: 0;">
+                            ${calculatedFeast || serviceTitle || "Santa Liturgia"}
+                        </h2>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="border: none; padding-bottom: 50pt;">
+                        <p style="font-size: 14pt; font-style: italic; margin: 0;">
+                            ${selectedDate.toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="border: none;">
+                        <p style="font-size: 12pt; font-style: italic; color: #555; width: 80%;">
+                            ${gospelVerse}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <br clear="all" style="page-break-before: always" />
         `;
 
-    // --- 4. COMBINE & STYLE ---
     const finalHtml = `
           <!DOCTYPE html>
           <html>
@@ -248,29 +278,24 @@ function AppContent() {
                       @page {
                           size: letter;
                           margin: 2.54cm;
-                          mso-page-orientation: portrait;
-                          mso-title-page: yes; /* Attempt to tell Word first page is title */
                       }
                       body { font-family: 'Times New Roman', serif; font-size: 12pt; }
-                      h1 { text-align: center; font-size: 16pt; font-weight: bold; margin-bottom: 12pt; color: #000; }
-                      h2 { text-align: center; font-size: 14pt; margin-top: 15pt; color: #991b1b; }
-                      h3, h4 { color: #991b1b; font-size: 12pt; margin-top: 10pt; }
-                      .rubric { color: #dc2626; font-style: italic; font-size: 11pt; }
-                      p { line-height: 1.5; margin-bottom: 10pt; }
+                      h1, h2, h3, h4 { color: #000; }
+                      .rubric { color: #dc2626; font-style: italic; }
+                      table { border-collapse: collapse; }
+                      td { padding: 5px; }
                   </style>
               </head>
               <body>
                   ${coverPage}
-                  <div class="content">
-                    ${tempDiv.innerHTML}
-                  </div>
+                  ${tempDiv.innerHTML}
               </body>
           </html>
         `
 
     asBlob(finalHtml).then(blob => {
       saveAs(blob, `Liturgia_${selectedDate.toISOString().split('T')[0]}.docx`)
-      handleToast("Documento exportado con portada")
+      handleToast("Documento exportado")
     })
   }
 
