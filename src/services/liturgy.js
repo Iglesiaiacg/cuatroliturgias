@@ -300,53 +300,62 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
     let basePrompt = `
         FECHA: ${dateStr}.
-        CICLO LITÚRGICO: ${cycle.text}.
+        CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
+        CICLO FERIAL: Año ${cycle.cicloFerial}.
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
-        
-        ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
+
+    ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
         
-        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-RESUMEN):
-        NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
-        ESCRIBE EL TEXTO LITÚRGICO COMPLETO VERBATIM (Palabra por palabra).
-        Si es una oración fija (Te Igitur, Pater Noster), ESCRIBELA COMPLETA.
+        ⚠️ REGLA DE ORO DE LECTURAS(NO ALUCINAR):
+- DEBES USAR LAS LECTURAS EXACTAS DEL CICLO INDICADO ARRIBA.
+        - Si dice "CICLO A", el Evangelio casi siempre será MATEO(salvo fiestas de Juan).
+        - Si dice "CICLO C", el Evangelio será LUCAS.
+        - Si dice "AÑO PAIR (II)", usa las lecturas feriales del Año II.
+        - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
+        - Si es una FIESTA(San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
+        
+        ⚠️ REGLA DE ORO DE CONTENIDO(ANTI - RESUMEN):
+        NO escribas "Aquí va el Canon".NO escribas "Recitación en secreto".
+        ESCRIBE EL TEXTO LITÚRGICO COMPLETO VERBATIM(Palabra por palabra).
+        Si es una oración fija(Te Igitur, Pater Noster), ESCRIBELA COMPLETA.
 
-        ⚠️ REGLA DE VERSIONES BÍBLICAS (CRÍTICO - ANTI COPYRIGTH):
-        NUNCA USES EL NOMBRE "JEHOVÁ". ES PROHIBIDO EN ESTA LITURGIA.
+        ⚠️ REGLA DE VERSIONES BÍBLICAS(CRÍTICO - ANTI COPYRIGTH):
+        NUNCA USES EL NOMBRE "JEHOVÁ".ES PROHIBIDO EN ESTA LITURGIA.
         Usa siempre "EL SEÑOR" o "DIOS".
         PARA EVITAR BLOQUEOS DE COPYRIGHT Y GARANTIZAR TEXTO COMPLETO:
         USA ÚNICAMENTE VERSIONES DE DOMINIO PÚBLICO:
-        - "Torres Amat" (Católica Antigua).
+- "Torres Amat"(Católica Antigua).
         - "Vulgata Traducida".
-        NO USES "Biblia de Jerusalén" ni "Latinoamericana" (Tienen Copyright estricto).
-        NUNCA USES REINA VALERA (Protestante).
+        NO USES "Biblia de Jerusalén" ni "Latinoamericana"(Tienen Copyright estricto).
+        NUNCA USES REINA VALERA(Protestante).
         
-        ⚠️ ESTRATEGIA ANTI-BLOQUEO (COPYRIGHT/RECITATION):
-        TU PRIORIDAD ES DAR EL TEXTO COMPLETO. NO LO RECORTES.
+        ⚠️ ESTRATEGIA ANTI - BLOQUEO(COPYRIGHT / RECITATION):
+        TU PRIORIDAD ES DAR EL TEXTO COMPLETO.NO LO RECORTES.
         Si una oración moderna es problemática, usa una antigua.
-        Si es imposible, tradúcela tú mismo fielmente. Pero NO DEJES SOLO EL TÍTULO.
+        Si es imposible, tradúcela tú mismo fielmente.Pero NO DEJES SOLO EL TÍTULO.
         
         ⚠️ REGLA DE FORMATO "VOX SECRETA":
-        Para las oraciones que el sacerdote dice en secreto (Secreto, Ofertorio, Canon bajo), usa el formato de CITA (Blockquote con >).
-        Ejemplo: 
+        Para las oraciones que el sacerdote dice en secreto(Secreto, Ofertorio, Canon bajo), usa el formato de CITA(Blockquote con >).
+    Ejemplo: 
         > Suscipe, Sancte Pater, omnipotens aeterne Deus...
 
-        ⚠️ REGLA DE ROLES Y MINISTERIOS (CRÍTICO):
-        NO ASIGNES TODO AL SACERDOTE. DISTRIBUYE LOS ROLES CORRECTAMENTE:
-        - LECTOR: Lee 1ª Lectura, Salmo (si no hay Salmista), 2ª Lectura (Epístola) y Oración de los Fieles.
+        ⚠️ REGLA DE ROLES Y MINISTERIOS(CRÍTICO):
+        NO ASIGNES TODO AL SACERDOTE.DISTRIBUYE LOS ROLES CORRECTAMENTE:
+- LECTOR: Lee 1ª Lectura, Salmo(si no hay Salmista), 2ª Lectura(Epístola) y Oración de los Fieles.
         - SALMISTA: Canta el Salmo.
-        - DIÁCONO (o Sacerdote): Lee el Evangelio, dice las invitaciones ("Demos gracias...", "Podéis ir en paz").
-        - SACERDOTE (Celebrante): Ritos Iniciales, Colecta, Homilía, Plegaria Eucarística (Canon), Bendición.
-        - PUEBLO/ASAMBLEA: Respuestas ("Y con tu espíritu", "Te alabamos Señor", "Amén").
+        - DIÁCONO(o Sacerdote): Lee el Evangelio, dice las invitaciones("Demos gracias...", "Podéis ir en paz").
+        - SACERDOTE(Celebrante): Ritos Iniciales, Colecta, Homilía, Plegaria Eucarística(Canon), Bendición.
+        - PUEBLO / ASAMBLEA: Respuestas("Y con tu espíritu", "Te alabamos Señor", "Amén").
         
         ETIQUETA CLARAMENTE QUIÉN HABLA.
 
-        ⚠️ REGLA DE ESTILO Y FORMATO (ELEGANCIA VISUAL - IMPORTANTÍSIMO):
+        ⚠️ REGLA DE ESTILO Y FORMATO(ELEGANCIA VISUAL - IMPORTANTÍSIMO):
         El usuario exige un documento "LUCIDO", "ELEGANTE" y "CUIDADO".
         
         1. ESTRUCTURA VISUAL DE LUJO:
-           - Usa Markdown \`# TÍTULO DE LA FIESTA\` al inicio (Se renderizará centrado y grande).
+- Usa Markdown \`# TÍTULO DE LA FIESTA\` al inicio (Se renderizará centrado y grande).
            - Usa Markdown \`## GRANDES PARTES\` para secciones (RITOS INICIALES, LITURGIA DE LA PALABRA...).
            - Usa separadores \`---\` para dividir momentos clave.
 
