@@ -747,7 +747,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         ESTRUCTURA OBLIGATORIA:
         1. RITOS INICIALES:
            - Rúbrica de entrada y Saludo.
-           - Acto Penitencial: USA EL MARCADOR \`[[INSERTAR_YO_CONFIESO]]\`.
+           - Acto Penitencial: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`. ¡NO escribas la oración manualmente!
            - Kyrie (Señor ten piedad).
            ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
            - Oración Colecta (Propia del día).
