@@ -360,6 +360,30 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         4. CALIDAD DEL TEXTO:
            - Evita textos "burdos" o telegráficos. Usa un lenguaje solemne.
            - Deja líneas en blanco entre rúbricas y oraciones para que respire el texto.
+
+        5. TÍTULOS BILINGÜES (LATÍN/ESPAÑOL) OBLIGATORIOS PARA TODO:
+           - El usuario exige ver el nombre tradicional en latín junto al español en TODAS las secciones mayores y menores.
+           - USA ESTOS TÍTULOS (o equivalentes) SIEMPRE:
+             * "INTROITUS (Canto de Entrada)"
+             * "KYRIE ELEISON (Señor, ten piedad)"
+             * "GLORIA IN EXCELSIS (Gloria a Dios)"
+             * "COLLECTA (Oración Colecta)"
+             * "LECTIO / EPISTOLA (Primera Lectura / Epístola)"
+             * "GRADUALE / TRACTUS (Gradual / Salmo / Tracto)"
+             * "EVANGELIUM (Santo Evangelio)"
+             * "CREDO IN UNUM DEUM (Credo)"
+             * "OFFERTORIUM (Ofertorio)"
+             * "ORATIO SUPER OBLATA / SECRETA (Oración sobre las Ofrendas)"
+             * "PRAEFATIO (Prefacio)"
+             * "SANCTUS (Santo, Santo, Santo)"
+             * "CANON MISSAE / PREX EUCHARISTICA (Plegaria Eucarística)"
+             * "PATER NOSTER (Padre Nuestro)"
+             * "AGNUS DEI (Cordero de Dios)"
+             * "COMMUNIO (Antífona de Comunión)"
+             * "POSTCOMMUNIO (Oración Post-comunión)"
+             * "BENEDICTIO (Bendición Final)"
+             * "ITE, MISSA EST (Despedida)"
+           - Aplica esto rigurosamente en TODO el misal.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
