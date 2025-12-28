@@ -315,6 +315,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         - CASO CRÍTICO 28 DIC 2025: Es Domingo de la Sagrada Familia (CICLO A). El Evangelio OBLIGATORIO es MATEO 2, 13-15. 19-23 (Huida a Egipto).
         - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
         - Si es una FIESTA (San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
+
+        🛡️ PROTOCOLO DE VERACIDAD FINAL:
+        1. Tu prioridad #1 es la EXACTITUD BÍBLICA.
+        2. Si el usuario te da una FECHA del futuro (ej. 2025), NO uses el ciclo de este año actual (2024). USA EL CICLO QUE TE HE CALCULADO ARRIBA (Ciclo ${cycle.cicloDom}).
+        3. Si hay contradicción, EL CICLO CALCULADO GANA.
         
         ⚠️ REGLA DE ORO DE CONTENIDO(ANTI - RESUMEN):
         NO escribas "Aquí va el Canon".NO escribas "Recitación en secreto".
