@@ -308,13 +308,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
     ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
         
-        ⚠️ REGLA DE ORO DE LECTURAS(NO ALUCINAR):
-- DEBES USAR LAS LECTURAS EXACTAS DEL CICLO INDICADO ARRIBA.
-        - Si dice "CICLO A", el Evangelio casi siempre será MATEO(salvo fiestas de Juan).
+        ⚠️ REGLA DE ORO DE LECTURAS (NO ALUCINAR):
+        - DEBES USAR LAS LECTURAS EXACTAS DEL CICLO INDICADO ARRIBA.
+        - Si dice "CICLO A", el Evangelio casi siempre será MATEO.
         - Si dice "CICLO C", el Evangelio será LUCAS.
-        - Si dice "AÑO PAIR (II)", usa las lecturas feriales del Año II.
+        - CASO CRÍTICO 28 DIC 2025: Es Domingo de la Sagrada Familia (CICLO A). El Evangelio OBLIGATORIO es MATEO 2, 13-15. 19-23 (Huida a Egipto).
         - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
-        - Si es una FIESTA(San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
+        - Si es una FIESTA (San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
         
         ⚠️ REGLA DE ORO DE CONTENIDO(ANTI - RESUMEN):
         NO escribas "Aquí va el Canon".NO escribas "Recitación en secreto".
