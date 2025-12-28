@@ -399,6 +399,12 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - Formato EXACTO:
              > CITA_PATRISTICA: "La medida del amor es amar sin medida." - San Agustín
            - Elige una frase que tenga que ver con la liturgia de hoy o el tiempo litúrgico.
+
+        8. REGLA DEL SALMO (CRÍTICA - NO GRADUAL):
+           - Para Misa ROMANA, ANGLICANA y ORDINARIATO:
+           - EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
+           - ¡PROHIBIDO USAR "GRADUAL" O "TRACTO" en estas tradiciones! (Eso es solo para Tridentina).
+           - Debes escribir explícitamente la RESPUESTA ("R.") y las ESTROFAS.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
@@ -651,57 +657,56 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
         return `
             ${basePrompt}
-            FUENTE: Divine Worship: The Missal.
+            FUENTE MISAL: Divine Worship: The Missal.
+            Fuente LECTURAS: Leccionario Romano (RSV-2CE) - Coincide con el Ciclo Romano EXACTO (mismas lecturas que la Misa Romana).
             ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
             ${omissionRules}
 
-            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
-            NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
-            EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
+            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS:
             - [[INSERTAR_GLORIA]]
             - [[INSERTAR_CREDO]]
             - [[INSERTAR_SANTO]]
             - [[INSERTAR_PADRE_NUESTRO]]
             - [[INSERTAR_CORDERO]]
 
-            ESTRUCTURA OBLIGATORIA (CON TÍTULOS):
+            ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
             0. PROCESIÓN DE ENTRADA.
-            1. Introito y Ritos Iniciales (Colecta de Pureza obligatoria).
-               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
-            2. Palabra: 
-               - Profecía [LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
-               - Gradual o Tracto [CORO/SALMISTA]: (Canto interleccional).
-               - Epístola [SUBDIÁCONO o LECTOR]: ⚠️ TEXTO COMPLETO (Verbatim).
-               ${(season === 'cuaresma') ? '- TRACTO [CORO]: (NO PONGAS ALELUYA. Usa el Tracto propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
-               - Evangelio [DIÁCONO]: ⚠️ TEXTO COMPLETO.
-            3. Sermón y Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
+            1. INTROITUS (Canto de Entrada) y Ritos Iniciales (Colecta de Pureza obligatoria).
+               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
+            2. COLLECTA (Oración Colecta).
+            3. LITURGIA DE LA PALABRA:
+               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Sigue el Leccionario Romano de hoy).
+               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: (¡OBLIGATORIO RESPONSORIAL! NO GRADUAL).
+                 * Escribe la RESPUESTA (R.) y las ESTROFAS claramente. 
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO.
+               ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
+               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO.
+            4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
-            (Inmediatamente después del Evangelio/Sermón):
             - BENDICIÓN E IMPOSICIÓN DE CENIZA.
-            - Antífonas y Salmo 50 (Miserere mei, Deus).
+            - Salmo 50 (Miserere mei, Deus).
             - Oración Final de las Cenizas.
             ` : ''}
-            4. ORACIÓN DE LOS FIELES Y PENITENCIAL:
+            5. ORATIO FIDELIUM (Oración Universal):
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
-               - Confesión y Absolución.
-            5. Ofertorio (Antífona) y Orate Fratres.
-            6. CANON DE LA MISA (VERSIÓN PATRIMONIAL EN ESPAÑOL):
-               - PREFACIO PROPIO y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+               - Confesión y Absolución (Penitential Rite).
+            6. OFFERTORIUM (Antífona) y Orate Fratres.
+            7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
+               - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
                - CANON ROMANO COMPLETO (Oración Eucarística I).
                > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
-               > Rúbricas de genuflexión y elevación claras.
-            7. Rito de Comunión:
-               - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-               - EMBOLISMO ("Líbranos Señor..." - Divine Worship text).
+            8. Rito de Comunión:
+               - PATER NOSTER: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
+               - EMBOLISMO ("Líbranos Señor...").
                - Rito de la Paz.
                ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
-               - Agnus Dei: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-               - Oración de Humilde Acceso ("No presumimos...").
-            8. Oración de Acción de Gracias y Último Evangelio.
-            9. AVISOS Y BENDICIÓN.
-            10. ${marianAntiphonText}
-            11. PROCESIÓN DE SALIDA.
+               - AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
+               - Oración de Humilde Acceso (Prayer of Humble Access).
+            9. COMMUNIO y Oración de Acción de Gracias.
+            10. AVISOS, BENEDICTIO y Despedida.
+            11. ${marianAntiphonText}
+            12. PROCESIÓN DE SALIDA.
         `;
     }
 
