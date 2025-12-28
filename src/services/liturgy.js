@@ -378,6 +378,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
         5. TÍTULOS BILINGÜES (LATÍN/ESPAÑOL) OBLIGATORIOS PARA TODO:
            - El usuario exige ver el nombre tradicional en latín junto al español en TODAS las secciones mayores y menores.
+           - ⚠️ CRÍTICO: ¡SOLO LOS TÍTULOS VAN EN LATÍN!
+           - EL TEXTO DE LAS ORACIONES Y LECTURAS DEBE SER EN ESPAÑOL (Salvo Misa Tridentina que es todo latín).
+           - EJEMPLO CORRECTO: "PATER NOSTER (Padre Nuestro): Padre nuestro que estás en el cielo..."
+           - EJEMPLO INCORRECTO: "PATER NOSTER: Pater noster, qui es in caelis..." (Esto está PROHIBIDO en Misa Romana/Anglicana).
            - USA ESTOS TÍTULOS (o equivalentes) SIEMPRE:
              * "INTROITUS (Canto de Entrada)"
              * "KYRIE ELEISON (Señor, ten piedad)"
