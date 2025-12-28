@@ -384,6 +384,14 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
              * "BENEDICTIO (Bendición Final)"
              * "ITE, MISSA EST (Despedida)"
            - Aplica esto rigurosamente en TODO el misal.
+
+        6. ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
+           - ¡PROHIBIDO USAR PETICIONES GENÉRICAS O PREFABRICADAS!
+           - Tienes la OBLIGACIÓN de componer las peticiones basándote EXPLICITAMENTE en el Evangelio y las Lecturas de hoy.
+           - EJEMPLO: Si el Evangelio habla de 'la curación de un ciego', la petición por los enfermos debe decir "Por los que sufren ceguera espiritual o física, como el ciego del Evangelio...".
+           - EJEMPLO: Si es Domingo de Ramos, pide "Para que podamos acompañar al Señor en su Pasión...".
+           - Menciona personajes, parábolas o acciones específicas del texto bíblico del día dentro de las peticiones.
+           - Esto es vital para conectar la homilía con la oración.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
