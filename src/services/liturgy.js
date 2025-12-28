@@ -423,6 +423,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
            - ¡PROHIBIDO USAR "GRADUAL" O "TRACTO" en estas tradiciones! (Eso es solo para Tridentina).
            - Debes escribir explícitamente la RESPUESTA ("R.") y las ESTROFAS.
+
+        9. REGLA ANTI-BLOQUEO (CRÍTICA):
+           - ¡NO escribas letras de canciones o himnos modernos (ej. 'Pescador de hombres', 'Vienen con Alegría')! Google bloqueará tu respuesta por Copyright.
+           - USA EXCLUSIVAMENTE LAS ANTÍFONAS BÍBLICAS DEL MISAL (Introito, Ofertorio, Comunión).
+           - Si no tienes la antífona exacta, genera una frase bíblica genérica basada en el Salmo del día.
     `;
 
     // DETECTAR REGLAS DE OMISIÓN POR TIEMPO LITÚRGICO Y TRADICIÓN
