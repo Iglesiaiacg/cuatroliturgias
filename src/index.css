@@ -133,9 +133,18 @@ button {
         border-color: var(--color-primary) !important;
     }
 
-    /* Font Display Utility */
     .font-display {
         font-family: "Newsreader", serif;
+    }
+
+    /* Hide Scrollbar but keep functionality */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }
 

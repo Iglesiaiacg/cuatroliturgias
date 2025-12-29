@@ -76,19 +76,20 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         </div>
 
-                        <nav className="flex items-center gap-4">
+                        <nav className="flex items-center gap-1 xl:gap-2 flex-1 mx-4 overflow-x-auto no-scrollbar mask-linear-fade">
                             {visibleNavItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => onNavigate(item.id)}
-                                    className={`h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-300 ${activeTab === item.id
+                                    className={`h-10 px-3 xl:px-4 rounded-full flex items-center gap-2 transition-all duration-300 whitespace-nowrap shrink-0 ${activeTab === item.id
                                         ? 'neumorphic-inset font-bold text-primary shadow-inner'
                                         : 'neumorphic-btn text-gray-500 hover:text-primary'}`}
                                 >
                                     <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                                         {item.icon}
                                     </span>
-                                    <span className="text-xs hidden lg:block">{item.label}</span>
+                                    {/* Show label on larger screens, hide on tablet/small laptop to save space */}
+                                    <span className="text-xs hidden xl:block">{item.label}</span>
                                 </button>
                             ))}
                         </nav>
