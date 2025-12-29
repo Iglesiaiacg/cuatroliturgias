@@ -24,31 +24,49 @@ export function SetlistProvider({ children }) {
             return;
         }
 
+        // Avoid infinite loops if permission is denied permanently
+        if (error && error.includes('permission')) {
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
-        // Order by date descending (newest first)
         const q = query(collection(db, 'setlists'), orderBy('date', 'desc'));
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const list = snapshot.docs.map(doc => {
-                const data = doc.data();
-                return {
-                    id: doc.id,
-                    ...data,
-                    // Convert Timestamp to Date if needed, or keep as is. 
-                    // Let's standardise on ISO string for easy comparison or Date object.
-                    dateObj: data.date && data.date.toDate ? data.date.toDate() : new Date(data.date)
-                };
+        let unsubscribe = () => { };
+
+        try {
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                const list = snapshot.docs.map(doc => {
+                    const data = doc.data();
+                    return {
+                        id: doc.id,
+                        ...data,
+                        dateObj: data.date && data.date.toDate ? data.date.toDate() : new Date(data.date)
+                    };
+                });
+                setSetlists(list);
+                setLoading(false);
+                setError(null); // Clear error on success
+            }, (err) => {
+                console.error("Setlist Sync Error:", err);
+                // If it's a permission error, set explicit error and STOP trying
+                if (err.code === 'permission-denied') {
+                    setError("Permisos insuficientes para ver los cantorales. (permission-denied)");
+                } else {
+                    setError(err.message);
+                }
+                setLoading(false);
             });
-            setSetlists(list);
+        } catch (e) {
+            console.error("Setup Error:", e);
+            setError(e.message);
             setLoading(false);
-        }, (err) => {
-            console.error("Setlist Sync Error:", err);
-            setError(err.message);
-            setLoading(false);
-        });
+        }
 
         return () => unsubscribe();
-    }, [currentUser]);
+    }, [currentUser]); // Removed 'error' from dependency to avoid loop, but if we want to retry we need a manual trigger
+
 
     const createSetlist = async (date, title = "Misa Dominical") => {
         try {
