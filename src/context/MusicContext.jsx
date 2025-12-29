@@ -15,6 +15,17 @@ export function MusicProvider({ children }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // Preferencias de UI persistentes
+    const [notationSystem, setNotationSystem] = useState(() => localStorage.getItem('music_notation_system') || 'american');
+
+    useEffect(() => {
+        localStorage.setItem('music_notation_system', notationSystem);
+    }, [notationSystem]);
+
+    const toggleNotation = () => {
+        setNotationSystem(prev => prev === 'american' ? 'latin' : 'american');
+    };
+
     // Initial load from Firestore
     useEffect(() => {
         if (!currentUser) {
@@ -46,9 +57,6 @@ export function MusicProvider({ children }) {
                     } catch (e) {
                         console.error("Migration parse error", e);
                     }
-                } else {
-                    // Seed if absolutely nothing exists
-                    seedData();
                 }
             } else {
                 setSongs(list);
@@ -68,12 +76,9 @@ export function MusicProvider({ children }) {
 
     // Helper: Migrate local to cloud
     const migrateSongs = async (localList) => {
-        // Prevent infinite loop by setting loading true, but logic above handles it via snapshot
         for (const song of localList) {
             try {
-                const { id, ...data } = song; // Remove local ID, let Firestore generate new one or use it?
-                // Let's use addDoc for fresh IDs to avoid collision issues, or setDoc if we trust UUIDs.
-                // Using addDoc is safer for migration.
+                const { id, ...data } = song;
                 await addDoc(collection(db, 'songs'), {
                     ...data,
                     migratedAt: serverTimestamp(),
@@ -83,20 +88,12 @@ export function MusicProvider({ children }) {
                 console.error("Error migrating song:", song.title, e);
             }
         }
-        // Clear local after successful migration trigger?
-        // Maybe keep as backup for now.
-        // localStorage.removeItem('liturgia_songs'); 
-    };
-
-    const seedData = async () => {
-        // Only seed if user is admin? Or just let it be empty.
-        // Let's skip auto-seeding to keep it clean, user can add manually.
     };
 
     const addSong = async (song) => {
         try {
             await addDoc(collection(db, 'songs'), {
-                ...song,
+                ...song, // Should include title, key, lyrics, category
                 createdBy: auth.currentUser?.email || 'anonymous',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()
@@ -128,13 +125,21 @@ export function MusicProvider({ children }) {
         }
     };
 
+    const getSongsByCategory = (category) => {
+        return songs.filter(s => s.category === category);
+    };
+
     const value = {
         songs,
         addSong,
         updateSong,
         deleteSong,
         loading,
-        error
+        error,
+        notationSystem,
+        setNotationSystem,
+        toggleNotation,
+        getSongsByCategory
     };
 
     return (

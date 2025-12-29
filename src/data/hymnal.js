@@ -2,6 +2,7 @@ export const HYMNAL = [
     {
         title: "Pescador de Hombres",
         key: "C",
+        category: "entrada",
         lyrics: `[C] Tú has venido a la [G] orilla
 [F] no has buscado ni a [G] sabios ni a ricos,
 [C] tan solo [G] quieres que yo te [C] siga.
@@ -32,6 +33,7 @@ export const HYMNAL = [
     {
         title: "Cordero de Dios",
         key: "G",
+        category: "cordero",
         lyrics: `[G] Cordero de Dios que [C] quitas
 el pe[D]cado del [G] mundo,
 [C] ten pie[D]dad de no[G]sotros.
@@ -47,6 +49,7 @@ el pe[D]cado del [G] mundo,
     {
         title: "Santo (Giombini)",
         key: "Em",
+        category: "santo",
         lyrics: `[Em] Santo, Santo, [D] Santo es el [Em] Señor,
 [G] Dios del uni[D]verso.
 [Em] Llenos están el [D] cielo y la [Em] tierra
@@ -64,6 +67,7 @@ el pe[D]cado del [G] mundo,
     {
         title: "Entre tus manos",
         key: "D",
+        category: "ofertorio",
         lyrics: `[D] Entre tus manos [Em] está mi vida,
 [A] Señor, entre tus [D] manos
 [D] pongo mi existir. [D7]
@@ -78,6 +82,7 @@ el pe[D]cado del [G] mundo,
     {
         title: "Juntos como hermanos",
         key: "G",
+        category: "entrada",
         lyrics: `[G] Juntos como her[C]manos,
 [G] miembros de una Igle[D]sia,
 [G] vamos cami[C]nando
@@ -96,6 +101,7 @@ con la a[G]yuda [D] del Se[G]ñor.`
     {
         title: "Vienen con Alegria",
         key: "D",
+        category: "entrada",
         lyrics: `[D] Vienen con ale[A]gría, Señor,
 cantando vienen con ale[D]gría, Señor,
 [D] los que caminan [G] por la vida, Señor,
@@ -111,6 +117,7 @@ caminos de amor y de amis[D]tad.
     {
         title: "Más cerca, oh Dios, de Ti",
         key: "F",
+        category: "comunion",
         lyrics: `[F] Más cerca, oh Dios, de Ti, [Bb] más cerca, [F] sí,
 [F] aunque sea una [C] cruz [F] que me lleve a [C] Ti;
 [F] si tiende al sol la flor, [Bb] si el agua busca el [F] mar,

@@ -13,15 +13,11 @@ export function parseChordsFromText(input) {
         const nextLine = lines[i + 1] || '';
 
         // Heuristic: Check if current line looks like a "chord line"
-        // 1. Mostly short words (chords)
-        // 2. Contains musical notes (A-G, #, b, m, 7, etc.)
-        // 3. Lots of spaces
         if (isChordLine(currentLine) && !isChordLine(nextLine) && nextLine.trim().length > 0) {
             // Merge this line into the next line
             result.push(mergeChordsIntoLyrics(currentLine, nextLine));
             i++; // Skip next line as we consumed it
         } else {
-            // Just a normal line (or lyrics without chords above, or just chords)
             // If it's just chords but no lyrics below, wrap them in brackets anyway
             if (isChordLine(currentLine)) {
                 result.push(formatInlineChords(currentLine));
@@ -38,20 +34,17 @@ function isChordLine(line) {
     const trimmed = line.trim();
     if (trimmed.length === 0) return false;
 
-    // Regex for common chords: A-G, optional #/b, optional m/min/maj/dim/sus/add/7/9
-    // This is loose to allow false positives rather than false negatives, relies on context
-    const chordRegex = /^[A-G][b#]?(m|min|maj|dim|aug|sus|add|[0-9])*(\/[A-G][b#]?)?$/;
+    // Regex for common chords: A-G, Do-Si, optional #/b, optional m/min/maj/dim/sus/add/7/9
+    const chordRegex = /^([A-G]|Do|Re|Mi|Fa|Sol|La|Si)[b#]?(m|min|maj|dim|aug|sus|add|[0-9])*(\/[A-G]|\/[D-S][a-z]*)?[b#]?$/i;
 
     const parts = trimmed.split(/\s+/);
-    // If > 80% of parts look like chords, it's a chord line
+    // If > 70% of parts look like chords, it's a chord line
     const chordCount = parts.filter(p => chordRegex.test(p)).length;
-    return (chordCount / parts.length) > 0.6;
+    return (chordCount / parts.length) > 0.7;
 }
 
 function mergeChordsIntoLyrics(chordLine, lyricLine) {
     // This is tricky because we need to preserve position.
-    // We'll iterate through chordLine finding chords and inserting them into lyricLine at the same index
-
     let merged = lyricLine;
     let offset = 0; // Because inserting brackets shifts the string indices
 
@@ -63,9 +56,8 @@ function mergeChordsIntoLyrics(chordLine, lyricLine) {
         chords.push({ text: match[0], index: match.index });
     }
 
-    // Sort backwards so insertion doesn't mess up indices? 
-    // Actually typically we read L->R. If we insert `[C]` at index 5, index 10 moves to 13.
-    // So we need to track offset.
+    // Sort by index just in case, though regex gives them in order
+    chords.sort((a, b) => a.index - b.index);
 
     for (const chord of chords) {
         const insertAt = chord.index + offset;
@@ -76,16 +68,8 @@ function mergeChordsIntoLyrics(chordLine, lyricLine) {
             merged = merged.padEnd(insertAt, ' ');
         }
 
-        // Insert
-        // However, we want to respect word boundaries if possible? 
-        // Usually chords are above the syllable.
-        // Pure index insertion is the most standard approach for fixed-width to variable-width conversion.
-
         const before = merged.slice(0, insertAt);
         const after = merged.slice(insertAt);
-
-        // Optimization: If `after` starts with a specific vowel/space, maybe check? 
-        // For now, strict position preservation is best.
 
         merged = before + chordStr + after;
         offset += chordStr.length;
@@ -99,43 +83,104 @@ function formatInlineChords(line) {
     return line.replace(/(\S+)/g, '[$1]');
 }
 
-// --- TRANSPOSITION UTILS ---
+// --- TRANSPOSITION & NOTATION UTILS ---
 
-const NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-const FLATS = { 'Bb': 'A#', 'Eb': 'D#', 'Ab': 'G#', 'Db': 'C#', 'Gb': 'F#' };
+const NOTES_AMERICAN = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const NOTES_LATIN = ['Do', 'Do#', 'Re', 'Re#', 'Mi', 'Fa', 'Fa#', 'Sol', 'Sol#', 'La', 'La#', 'Si'];
+const FLATS = { 'Bb': 'A#', 'Eb': 'D#', 'Ab': 'G#', 'Db': 'C#', 'Gb': 'F#', 'Cb': 'B' };
 
-export function transposeChords(text, semitones) {
+// Map Latin inputs to American for internal processing if needed
+const LATIN_TO_AMERICAN = {
+    'Do': 'C', 'Re': 'D', 'Mi': 'E', 'Fa': 'F', 'Sol': 'G', 'La': 'A', 'Si': 'B'
+};
+
+/**
+ * Transposes chords in a text block AND formats them according to the selected notation system.
+ * @param {string} text - The lyrics text with [Chords]
+ * @param {number} semitones - Number of semitones to transpose
+ * @param {string} system - 'american' | 'latin'
+ */
+export function transposeAndFormat(text, semitones, system = 'american') {
     if (!text) return '';
-    if (semitones === 0) return text;
 
     return text.replace(/\[(.*?)\]/g, (match, chord) => {
-        // Handle complex chords like C/G or Asus4
-        if (chord.includes('/')) {
-            const parts = chord.split('/');
-            return `[${transposeNote(parts[0], semitones)}/${transposeNote(parts[1], semitones)}]`;
+        // Remove brackets for processing
+        const inner = chord;
+
+        // Handle slash chords like C/G
+        if (inner.includes('/')) {
+            const parts = inner.split('/');
+            const root = transposeNote(parts[0], semitones, system);
+            const bass = transposeNote(parts[1], semitones, system);
+            return `[${root}/${bass}]`;
         } else {
-            return `[${transposeNote(chord, semitones)}]`;
+            return `[${transposeNote(inner, semitones, system)}]`;
         }
     });
 }
 
-function transposeNote(note, semitones) {
-    // Extract root note (e.g., "C" from "Cmaj7")
-    const match = note.match(/^([A-G][b#]?)(.*)$/);
-    if (!match) return note;
+/**
+ * Helper to transpose a single note
+ */
+function transposeNote(chordStr, semitones, system) {
+    // 1. Parse Root + Suffix
+    // Regex matches Root (A-G or Do-Si) + Accidental (#/b) + The rest
+    const match = chordStr.match(/^([A-G][b#]?|Do[b#]?|Re[b#]?|Mi[b#]?|Fa[b#]?|Sol[b#]?|La[b#]?|Si[b#]?)(.*)$/i);
+    if (!match) return chordStr;
 
     let root = match[1];
     const suffix = match[2];
 
-    // Normalize flats to sharps
-    if (FLATS[root]) root = FLATS[root];
+    // 2. Normalize to American Index (0-11)
+    let index = -1;
 
-    let index = NOTES.indexOf(root);
-    if (index === -1) return note; // Unknown note
+    // Check if it's Latin
+    const latinRoot = root.replace(/[b#]/, ''); // Just the name without accidental
+    if (LATIN_TO_AMERICAN[latinRoot] || LATIN_TO_AMERICAN[latinRoot.charAt(0).toUpperCase() + latinRoot.slice(1)]) {
+        // Convert Latin input to American for calculation
+        // e.g. "Sol#" -> "G#"
+        const normalizedLatin = latinRoot.charAt(0).toUpperCase() + latinRoot.slice(1);
+        let americanBase = LATIN_TO_AMERICAN[normalizedLatin];
 
-    // Shift
+        // Add accidental back
+        if (root.includes('#')) americanBase += '#';
+        if (root.includes('b')) {
+            // Convert flat to sharp for internal index
+            if (americanBase === 'B') americanBase = 'A#'; // Simple hack, better to use map
+            // Actually let's just find index in NOTES_AMERICAN
+        }
+
+        // A simpler way: Map all Latin variations to indices directly?
+        // Let's reuse american logic by converting first.
+
+        // Manual Map for this quick implementation:
+        if (root.toLowerCase().startsWith('do')) index = 0;
+        if (root.toLowerCase().startsWith('re')) index = 2;
+        if (root.toLowerCase().startsWith('mi')) index = 4;
+        if (root.toLowerCase().startsWith('fa')) index = 5;
+        if (root.toLowerCase().startsWith('sol')) index = 7;
+        if (root.toLowerCase().startsWith('la')) index = 9;
+        if (root.toLowerCase().startsWith('si')) index = 11;
+
+        if (root.includes('#')) index += 1;
+        if (root.includes('b')) index -= 1;
+
+    } else {
+        // American Input
+        // Normalize flats
+        if (FLATS[root]) root = FLATS[root];
+        index = NOTES_AMERICAN.indexOf(root);
+    }
+
+    if (index === -1) return chordStr; // Unknown
+
+    // 3. Apply Transposition
     let newIndex = (index + semitones) % 12;
     if (newIndex < 0) newIndex += 12;
 
-    return NOTES[newIndex] + suffix;
+    // 4. Output Note Name based on System
+    let newRoot = (system === 'latin') ? NOTES_LATIN[newIndex] : NOTES_AMERICAN[newIndex];
+
+    return newRoot + suffix;
 }
+
