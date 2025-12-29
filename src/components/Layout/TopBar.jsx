@@ -21,6 +21,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
         { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'view_liturgy' },
         { id: 'music', icon: 'music_note', label: 'Cantoral', permission: 'view_music' },
         { id: 'directory', icon: 'diversity_3', label: 'Fieles', permission: 'view_directory' },
+        { id: 'roster', icon: 'assignment_ind', label: 'Roles', permission: 'manage_roster' },
         { id: 'offerings', icon: 'savings', label: 'Ofrendas', permission: 'view_offerings' },
         { id: 'users', icon: 'manage_accounts', label: 'Usuarios', permission: 'manage_users' },
     ];

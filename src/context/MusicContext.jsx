@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { db, auth } from '../services/firebase';
-import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
 const MusicContext = createContext();
@@ -129,6 +129,33 @@ export function MusicProvider({ children }) {
         return songs.filter(s => s.category === category);
     };
 
+    // --- ANNOTATIONS (User Specific) ---
+    // Saved in users/{uid}/annotations/{songId}
+    const saveAnnotation = async (songId, content) => {
+        if (!auth.currentUser) return;
+        try {
+            const ref = doc(db, `users/${auth.currentUser.uid}/annotations/${songId}`);
+            await setDoc(ref, {
+                content,
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+        } catch (e) {
+            console.error("Error saving annotation:", e);
+        }
+    };
+
+    const getAnnotation = async (songId) => {
+        if (!auth.currentUser) return '';
+        try {
+            const ref = doc(db, `users/${auth.currentUser.uid}/annotations/${songId}`);
+            const snap = await getDoc(ref);
+            return snap.exists() ? snap.data().content : '';
+        } catch (e) {
+            console.error("Error fetching annotation:", e);
+            return '';
+        }
+    };
+
     const value = {
         songs,
         addSong,
@@ -139,7 +166,9 @@ export function MusicProvider({ children }) {
         notationSystem,
         setNotationSystem,
         toggleNotation,
-        getSongsByCategory
+        getSongsByCategory,
+        saveAnnotation,
+        getAnnotation
     };
 
     return (
