@@ -88,7 +88,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                     <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                                         {item.icon}
                                     </span>
-                                    <span className="text-xs">{item.label}</span>
+                                    <span className="text-xs hidden lg:block">{item.label}</span>
                                 </button>
                             ))}
                         </nav>

@@ -163,41 +163,43 @@ export default function RosterView() {
     const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
     return (
-        <div className="p-6 max-w-7xl mx-auto pb-32">
-            <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="p-4 md:p-6 max-w-7xl mx-auto pb-32">
+            <div className="flex flex-col gap-6 mb-8">
                 <div>
-                    <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
+                    <h1 className="text-2xl md:text-3xl font-display font-bold text-gray-900 dark:text-white">
                         Gestión de Roles
                     </h1>
                     <p className="text-gray-500 text-sm">Asigna ministros para los servicios dominicales.</p>
                 </div>
 
-                <div className="flex items-center gap-4 bg-white dark:bg-black/20 p-2 rounded-xl shadow-sm">
-                    <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
-                        <span className="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <span className="font-bold w-32 text-center text-lg">{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
-                    <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
-                        <span className="material-symbols-outlined">chevron_right</span>
-                    </button>
-                </div>
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-4 bg-white dark:bg-black/20 p-2 rounded-xl shadow-sm w-full md:w-auto justify-between md:justify-start">
+                        <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
+                            <span className="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <span className="font-bold w-32 text-center text-lg capitalize">{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
+                        <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
+                            <span className="material-symbols-outlined">chevron_right</span>
+                        </button>
+                    </div>
 
-                <div className="flex gap-2">
-                    <button
-                        onClick={handleAutoGenerate}
-                        disabled={loading}
-                        className="btn-secondary flex items-center gap-2"
-                    >
-                        <span className="material-symbols-outlined star-icon">auto_awesome</span>
-                        {loading ? 'Generando...' : 'Auto-Completar'}
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        className="btn-primary flex items-center gap-2"
-                    >
-                        <span className="material-symbols-outlined">save</span>
-                        Guardar Cambios
-                    </button>
+                    <div className="flex gap-2 w-full md:w-auto">
+                        <button
+                            onClick={handleAutoGenerate}
+                            disabled={loading}
+                            className="btn-secondary flex-1 md:flex-none flex items-center justify-center gap-2"
+                        >
+                            <span className="material-symbols-outlined star-icon">auto_awesome</span>
+                            {loading ? '...' : 'Auto-Completar'}
+                        </button>
+                        <button
+                            onClick={handleSave}
+                            className="btn-primary flex-1 md:flex-none flex items-center justify-center gap-2"
+                        >
+                            <span className="material-symbols-outlined">save</span>
+                            Guardar
+                        </button>
+                    </div>
                 </div>
             </div>
 

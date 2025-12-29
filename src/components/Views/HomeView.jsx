@@ -102,7 +102,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
             {/* PINNED LITURGY SECTION (Takes Priority) */}
             {pinnedLiturgy && !isReadingPinned && (
-                <div className="bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden group">
+                <div className="bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-4 md:p-6 text-white shadow-xl relative overflow-hidden group">
                     {/* Visual Pulse Effect (Optional, using standard Tailwind if needed) */}
                     <div className="absolute top-0 right-0 m-4 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>
 
@@ -117,34 +117,36 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                     Fijado por el Sacerdote
                                 </span>
                             </div>
-                            <h2 className="text-2xl font-display font-bold mb-1">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
+                            <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
                             <p className="text-red-100 text-sm opacity-90">
                                 {pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy'}
                             </p>
                         </div>
-                        <button
-                            onClick={() => setIsReadingPinned(true)}
-                            className="w-full md:w-auto px-6 py-3 bg-white text-red-900 font-bold rounded-xl shadow-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
-                        >
-                            <span className="material-symbols-outlined">menu_book</span>
-                            SEGUIR LITURGIA
-                        </button>
-                        <div className="flex items-center gap-2">
-                            <button
-                                onClick={() => window.print()}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 transition-colors"
-                                title="Imprimir para el Altar"
-                            >
-                                <span className="material-symbols-outlined text-sm">print</span>
-                                <span className="hidden sm:inline">Imprimir</span>
-                            </button>
+                        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
                             <button
                                 onClick={() => setIsReadingPinned(true)}
-                                className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors"
+                                className="w-full md:w-auto px-6 py-3 bg-white text-red-900 font-bold rounded-xl shadow-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
                             >
-                                <span className="material-symbols-outlined text-sm">open_in_full</span>
-                                <span className="hidden sm:inline">Leer</span>
+                                <span className="material-symbols-outlined">menu_book</span>
+                                SEGUIR LITURGIA
                             </button>
+                            <div className="flex items-center justify-center gap-2">
+                                <button
+                                    onClick={() => window.print()}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 transition-colors"
+                                    title="Imprimir para el Altar"
+                                >
+                                    <span className="material-symbols-outlined text-sm">print</span>
+                                    <span className="hidden sm:inline">Imprimir</span>
+                                </button>
+                                <button
+                                    onClick={() => setIsReadingPinned(true)}
+                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors"
+                                >
+                                    <span className="material-symbols-outlined text-sm">open_in_full</span>
+                                    <span className="hidden sm:inline">Leer</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
