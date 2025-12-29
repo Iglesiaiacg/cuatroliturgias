@@ -39,8 +39,17 @@ import MusicView from './components/Views/MusicView';
 import UserManagement from './components/Auth/UserManagement'
 import ProfileModal from './components/Auth/ProfileModal'
 
+import PublicSetlistView from './components/Views/PublicSetlistView'; // Public Route
+
 function AppContent() {
   const { currentUser, userRole, logout, checkPermission } = useAuth()
+
+  // --- PUBLIC ROUTES (Bypass Auth Guard) ---
+  const hash = window.location.hash;
+  if (hash.startsWith('#public/setlist/')) {
+    const setlistId = hash.replace('#public/setlist/', '');
+    return <PublicSetlistView setlistId={setlistId} />;
+  }
 
   const {
     tradition, setTradition,

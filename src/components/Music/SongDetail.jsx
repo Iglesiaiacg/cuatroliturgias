@@ -4,7 +4,7 @@ import { useMusic } from '../../context/MusicContext';
 import { useAuth } from '../../context/AuthContext';
 import { createPortal } from 'react-dom';
 
-export default function SongDetail({ song, onClose }) {
+export default function SongDetail({ song, onClose, onAddToSetlist, activeListName }) {
     const { notationSystem, deleteSong } = useMusic();
     const { userRole, checkPermission } = useAuth();
 
@@ -68,6 +68,18 @@ export default function SongDetail({ song, onClose }) {
                 </button>
 
                 <div className="flex items-center gap-4 sm:gap-6">
+                    {/* Add to Setlist Button */}
+                    {onAddToSetlist && activeListName && (
+                        <button
+                            onClick={onAddToSetlist}
+                            className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+                            title={`Añadir a lista: ${activeListName}`}
+                        >
+                            <span className="material-symbols-outlined text-lg">playlist_add</span>
+                            <span className="hidden sm:inline">Añadir a Lista</span>
+                        </button>
+                    )}
+
                     {/* Transpose */}
                     <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
                         <button
