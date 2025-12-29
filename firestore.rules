@@ -55,6 +55,30 @@ service cloud.firestore {
     match /active_duties/{dutyId} { allow read: if isAuthenticated(); allow write: if isAdmin(); }
     match /messages/{msgId} { allow read, write: if isAuthenticated(); }
     
+    // --- NUEVOS MODULOS ---
+    
+    // Setlists (Cantoral)
+    match /setlists/{setlistId} {
+      allow read: if true; // Público para QR
+      allow write: if isMusician();
+    }
+    
+    // Rosters (Roles)
+    match /rosters/{rosterId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin() || isSacristan();
+    }
+    
+    // User Subcollections
+    match /users/{userId}/availability/{docId} {
+      allow read: if isAuthenticated(); // Roster builder needs to read all
+      allow write: if request.auth.uid == userId || isAdmin();
+    }
+    
+    match /users/{userId}/annotations/{docId} {
+      allow read, write: if request.auth.uid == userId;
+    }
+    
     match /{document=**} { allow read, write: if false; }
   }
 }
