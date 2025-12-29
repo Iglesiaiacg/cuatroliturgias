@@ -1,37 +1,33 @@
 import { useState, useMemo } from 'react';
-import { transposeChords } from '../../utils/chordParser';
-
+import { transposeAndFormat } from '../../utils/chordParser';
+import { useMusic } from '../../context/MusicContext';
+import { useAuth } from '../../context/AuthContext';
 import { createPortal } from 'react-dom';
 
 export default function SongDetail({ song, onClose }) {
+    const { notationSystem, deleteSong } = useMusic();
+    const { userRole, checkPermission } = useAuth();
+
     const [transpose, setTranspose] = useState(0);
     const [fontSize, setFontSize] = useState(18); // Default 18px
     const [showChords, setShowChords] = useState(true);
-    const [autoScroll, setAutoScroll] = useState(false);
 
     // Process Lyrics
     const content = useMemo(() => {
-        // First, apply transposition to the whole block if needed (cleaner than line by line regex in render)
-        // Actually, we need to respect the bracket structure for styling.
-
-        // Let's iterate lines
         const lines = song.lyrics.split('\n');
 
         return lines.map((line, i) => {
             // Split by chords
-            const parts = line.split(/(\[.*?\])/g);
+            const components = line.split(/(\[.*?\])/g);
             return (
                 <div key={i} className="min-h-[1.5em] my-1 leading-relaxed">
-                    {parts.map((part, j) => {
+                    {components.map((part, j) => {
                         if (part.startsWith('[') && part.endsWith(']')) {
                             // It's a chord
                             if (!showChords) return null; // Hide if toggled off
 
-                            // Transpose using utility
-                            // Utility expects "[C]", gives back "[D]"
-                            const transposed = transposeChords(part, transpose);
-                            // Strip brackets for display
-                            const displayChord = transposed.slice(1, -1);
+                            // Transpose using utility with Notation System
+                            const displayChord = transposeAndFormat(part, transpose, notationSystem).replace(/[\[\]]/g, '');
 
                             return (
                                 <span key={j} className="text-red-600 font-bold mx-1 select-none" style={{ fontSize: '0.9em' }}>
@@ -46,18 +42,21 @@ export default function SongDetail({ song, onClose }) {
                 </div>
             );
         });
-    }, [song.lyrics, transpose, showChords]);
+    }, [song.lyrics, transpose, showChords, notationSystem]);
 
-    // Auto-scroll Effect
-    // useEffect(() => {
-    //     let interval;
-    //     if (autoScroll) {
-    //         interval = setInterval(() => {
-    //             window.scrollBy(0, 1);
-    //         }, 50); // Speed control could be added
-    //     }
-    //     return () => clearInterval(interval);
-    // }, [autoScroll]);
+    const handleDelete = async () => {
+        if (window.confirm(`¿Estás seguro de que quieres eliminar "${song.title}"? Esta acción no se puede deshacer.`)) {
+            try {
+                await deleteSong(song.id);
+                onClose();
+            } catch (error) {
+                console.error("Error deleting song:", error);
+                alert("Error al eliminar el canto: " + error.message);
+            }
+        }
+    };
+
+    const canDelete = (checkPermission && checkPermission('manage_music')) || userRole === 'admin';
 
     return createPortal(
         <div className="fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col animate-fade-in">
@@ -68,33 +67,53 @@ export default function SongDetail({ song, onClose }) {
                     <span className="hidden sm:inline">Volver</span>
                 </button>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-4 sm:gap-6">
                     {/* Transpose */}
-                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10">
-                        <button onClick={() => setTranspose(t => t - 1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded">-</button>
-                        <span className="w-8 text-center font-mono font-bold">{transpose > 0 ? `+${transpose}` : transpose}</span>
-                        <button onClick={() => setTranspose(t => t + 1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded">+</button>
+                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
+                        <button
+                            onClick={() => setTranspose(t => t - 1)}
+                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded font-bold text-lg"
+                        >-</button>
+                        <span className="w-10 text-center font-mono font-bold text-primary">
+                            {transpose > 0 ? `+${transpose}` : transpose}
+                        </span>
+                        <button
+                            onClick={() => setTranspose(t => t + 1)}
+                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded font-bold text-lg"
+                        >+</button>
                     </div>
 
                     {/* Font Size */}
-                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10">
-                        <button onClick={() => setFontSize(s => Math.max(12, s - 2))} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded text-xs">A-</button>
+                    <div className="hidden sm:flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
+                        <button onClick={() => setFontSize(s => Math.max(12, s - 2))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded text-xs px-1">A-</button>
                         <span className="w-8 text-center font-mono font-bold text-xs">{fontSize}</span>
-                        <button onClick={() => setFontSize(s => Math.min(60, s + 2))} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded text-lg">A+</button>
+                        <button onClick={() => setFontSize(s => Math.min(60, s + 2))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded text-lg px-1">A+</button>
                     </div>
 
                     {/* Chords Toggle */}
                     <button
                         onClick={() => setShowChords(!showChords)}
-                        className={`p-2 rounded-lg border font-bold text-sm ${showChords ? 'bg-primary text-white border-primary' : 'bg-transparent text-gray-600 border-gray-300'}`}
+                        className={`w-10 h-10 flex items-center justify-center rounded-lg border font-bold ${showChords ? 'bg-primary text-white border-primary shadow-sm' : 'bg-transparent text-gray-400 border-gray-200 dark:border-white/10'}`}
+                        title={showChords ? "Ocultar Acordes" : "Mostrar Acordes"}
                     >
-                        {showChords ? '# Acordes' : 'T Texto'}
+                        <span className="material-symbols-outlined">music_note</span>
                     </button>
+
+                    {/* Delete Button */}
+                    {canDelete && (
+                        <button
+                            onClick={handleDelete}
+                            className="w-10 h-10 flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 active:bg-red-100 transition-colors"
+                            title="Eliminar Canto"
+                        >
+                            <span className="material-symbols-outlined">delete</span>
+                        </button>
+                    )}
 
                     {/* Print Button */}
                     <button
                         onClick={() => window.print()}
-                        className="p-2 text-gray-500 hover:text-gray-900 dark:hover:text-white"
+                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 dark:hover:text-white"
                         title="Imprimir"
                     >
                         <span className="material-symbols-outlined">print</span>
@@ -103,9 +122,15 @@ export default function SongDetail({ song, onClose }) {
             </div>
 
             {/* Song Content */}
-            <div className="flex-1 overflow-y-auto bg-paper-pattern p-8 sm:p-12 text-center" style={{ fontSize: `${fontSize}px` }}>
-                <h1 className="text-3xl font-display font-bold mb-2">{song.title}</h1>
-                <p className="text-sm text-gray-500 mb-8 italic print:hidden">Tono Original: {song.key} {transpose !== 0 && `(Transportado: ${transpose})`}</p>
+            <div className="flex-1 overflow-y-auto bg-paper-pattern p-4 sm:p-12 text-center" style={{ fontSize: `${fontSize}px` }}>
+                <h1 className="text-3xl sm:text-4xl font-display font-bold mb-4">{song.title}</h1>
+                <p className="text-base text-gray-500 mb-8 italic print:hidden">
+                    Clave: <span className="font-bold text-primary">{song.key}</span>
+                    {transpose !== 0 && ` (Transportado)`}
+                    <span className="ml-4 text-xs bg-gray-100 dark:bg-white/10 px-2 py-1 rounded">
+                        {notationSystem === 'latin' ? 'Do Re Mi' : 'C D E'}
+                    </span>
+                </p>
                 {/* Print only info */}
                 <p className="hidden print:block text-xs text-gray-600 mb-8">Cuatro Liturgias - Cantoral</p>
 
@@ -119,11 +144,7 @@ export default function SongDetail({ song, onClose }) {
                 @media print {
                     .fixed { position: static !important; overflow: visible !important; }
                     button, .material-symbols-outlined { display: none !important; }
-                    /* Hide everything else via global css or specific scopes if needed, but since this is a modal overlay: */
                     body > *:not(#root) { display: none; }
-                    /* We rely on the fact effectively everything is hidden by this component's z-index and background,
-                       but for print we need to be careful. Ideally we hide siblings. */
-                     /* Quick fix for print visibility of just this content */
                      @page { margin: 2cm; }
                      body { background: white; color: black; }
                      .bg-paper-pattern { background: none; }
