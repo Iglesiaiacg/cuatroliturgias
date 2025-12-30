@@ -13,7 +13,7 @@ import MinistryReportModal from '../Views/MinistryReportModal';
 import RectorReportModal from '../Views/RectorReportModal';
 
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
-    const { currentUser, userRole, logout } = useAuth();
+    const { currentUser, userRole, logout, setPreviewRole, realRole } = useAuth();
     const [showReportModal, setShowReportModal] = useState(false);
     const [showRectorModal, setShowRectorModal] = useState(false);
 
@@ -202,17 +202,47 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                 </div>
 
                                 {/* API Key - ADMIN ONLY */}
-                                {userRole === 'admin' && (
-                                    <div>
-                                        <label className="block text-xs font-bold text-gray-600 mb-1">Google API Key</label>
-                                        <input
-                                            type="password"
-                                            value={apiKey}
-                                            onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
-                                            placeholder="Clave API (Opcional si usa .env)"
-                                            className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
-                                        />
-                                        <p className="text-[9px] text-gray-500 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                {realRole === 'admin' && (
+                                    <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-white/5">
+                                        {/* Role Switcher */}
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-1">Simular Rol (Supervisión)</label>
+                                            <select
+                                                value={userRole || 'admin'}
+                                                onChange={(e) => {
+                                                    const newRole = e.target.value === 'admin' ? null : e.target.value;
+                                                    setPreviewRole(newRole);
+                                                    onClose(); // Close modal on switch for immediate effect
+                                                }}
+                                                className="w-full neumorphic-inset p-2 text-xs outline-none bg-transparent cursor-pointer"
+                                            >
+                                                <option value="admin">Director (Vista Real)</option>
+                                                <option disabled>--- PREDICACIÓN ---</option>
+                                                <option value="presbyter">Presbítero</option>
+                                                <option disabled>--- VISTAS DE EQUIPO ---</option>
+                                                <option value="sacristan">Sacristán</option>
+                                                <option value="treasurer">Tesorero</option>
+                                                <option value="secretary">Secretario</option>
+                                                <option value="musician">Músico</option>
+                                                <option value="acolyte">Acólito</option>
+                                                <option disabled>--- VISTAS PÚBLICAS ---</option>
+                                                <option value="reader">Lector</option>
+                                                <option value="guest">Feligrés</option>
+                                            </select>
+                                        </div>
+
+                                        {/* API Key */}
+                                        <div>
+                                            <label className="block text-xs font-bold text-gray-600 mb-1">Google API Key</label>
+                                            <input
+                                                type="password"
+                                                value={apiKey}
+                                                onChange={(e) => { setApiKey(e.target.value); setKeySaved(false); }}
+                                                placeholder="Clave API (Opcional si usa .env)"
+                                                className="w-full neumorphic-inset p-2 text-xs font-mono outline-none bg-transparent"
+                                            />
+                                            <p className="text-[9px] text-gray-500 mt-1">Dejar vacío para usar configuración del servidor.</p>
+                                        </div>
                                     </div>
                                 )}
                             </div>
