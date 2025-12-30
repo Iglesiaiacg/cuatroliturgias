@@ -134,9 +134,36 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                             Fijado por el Sacerdote
                                         </span>
                                     </div>
-                                    <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
+                                    <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight capitalize">
+                                        {(() => {
+                                            if (!pinnedLiturgy.date) return pinnedLiturgy.title || "Santa Eucaristía";
+                                            const lDate = new Date(pinnedLiturgy.date.seconds * 1000);
+                                            // If it's a Sunday, show formatted date. Else, show title (e.g., Jueves Santo).
+                                            if (lDate.getDay() === 0) {
+                                                const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                                                const dateStr = lDate.toLocaleDateString('es-MX', options);
+                                                // Ensure capitalization
+                                                return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+                                            }
+                                            return pinnedLiturgy.title;
+                                        })()}
+                                    </h2>
                                     <p className={`text-sm opacity-90 ${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'}`}>
-                                        {pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy'}
+                                        {/* Date or original title as subtitle depending on what was shown above? 
+                                            If we showed date above, maybe show "Tiempo Ordinario" here if possible? 
+                                            But we don't store plain season name easily. 
+                                            Let's just show the year or time. Or just "Comunidad de Gracia" generic text?
+                                            Actually, user said "no debe decir Tiempo de Navidad".
+                                            If we showed Date above, we don't need Date here.
+                                            Let's show pinnedLiturgy.title (Season) here as secondary info?
+                                            Or simply the Time if available?
+                                            Let's just show the original title here as "Context", e.g. "Tiempo de Navidad".
+                                            User said "no debe decir tiempo de navidad SINO la fecha...".
+                                            So swapping them makes sense.
+                                         */}
+                                        {pinnedLiturgy.date && new Date(pinnedLiturgy.date.seconds * 1000).getDay() === 0
+                                            ? (pinnedLiturgy.title || "Santa Misa")
+                                            : (pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy')}
                                     </p>
                                 </div>
                                 <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">

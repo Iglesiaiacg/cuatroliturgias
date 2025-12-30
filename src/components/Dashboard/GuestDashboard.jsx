@@ -44,11 +44,23 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                                     </span>
                                 </div>
 
-                                <h2 className="text-4xl font-display font-bold mb-1">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
+                                <h2 className="text-4xl font-display font-bold mb-1 capitalize">
+                                    {(() => {
+                                        if (!pinnedLiturgy.date) return pinnedLiturgy.title || "Santa Eucaristía";
+                                        const lDate = new Date(pinnedLiturgy.date.seconds * 1000);
+                                        if (lDate.getDay() === 0) {
+                                            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                                            return lDate.toLocaleDateString('es-MX', options);
+                                        }
+                                        return pinnedLiturgy.title;
+                                    })()}
+                                </h2>
                                 <p className={`${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'} text-lg opacity-90 max-w-lg mx-auto`}>
-                                    {isLive
-                                        ? "Únete a la celebración desde tu dispositivo. Sigue las lecturas y cantos en tiempo real."
-                                        : "Prepárate para la Santa Misa. Puedes revisar las lecturas y cantos con anticipación."}
+                                    {pinnedLiturgy.date && new Date(pinnedLiturgy.date.seconds * 1000).getDay() === 0
+                                        ? (pinnedLiturgy.title || "Santa Misa")
+                                        : (isLive
+                                            ? "Únete a la celebración desde tu dispositivo."
+                                            : "Prepárate para la Santa Misa.")}
                                 </p>
 
                                 {/* Buttons only visible on Weekend (Sat/Sun) */}
