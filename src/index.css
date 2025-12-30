@@ -41,10 +41,12 @@
     --radius-btn: 9999px;
     /* Pills */
 
-    /* Accents - Retaining Liturgical Gold but cleaner application */
-    --color-primary: #cfa355;
-    --color-primary-light: #e3c080;
-    --icon-color: #cfa355;
+    /* Accents - Electric Blue (Bike Shop Style) */
+    --color-primary: #2563eb;
+    /* Blue-600 - The Electric Blue */
+    --color-primary-light: #60a5fa;
+    /* Blue-400 */
+    --icon-color: #2563eb;
 
     --drop-cap-size: 3.5em;
     --paper-texture: none;
