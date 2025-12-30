@@ -116,8 +116,8 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                 )}
 
                 {/* Donation / Offering Call to Action */}
-                <div className="bg-green-50 dark:bg-green-900/20 rounded-xl p-6 border border-green-100 dark:border-green-800/30 flex flex-col items-center text-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-green-100 dark:bg-green-800/40 flex items-center justify-center text-green-600 dark:text-green-400">
+                <div className="bg-stone-50 dark:bg-stone-900/40 rounded-xl p-6 border border-stone-100 dark:border-stone-800/30 flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-800 dark:text-red-400 shadow-sm">
                         <span className="material-symbols-outlined text-3xl">volunteer_activism</span>
                     </div>
                     <div>
@@ -126,15 +126,15 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                     </div>
                     <button
                         onClick={() => onNavigate('offerings')}
-                        className="px-6 py-2 bg-orange-500 text-[#3E2723] font-bold rounded-lg hover:bg-orange-600 transition-colors w-full md:w-auto shadow-sm"
+                        className="px-6 py-2 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold rounded-lg transition-all w-full md:w-auto shadow-md active:scale-95"
                     >
                         Ofrenda de amor
                     </button>
                 </div>
 
                 {/* Contact Priority */}
-                <div className="bg-amber-50 dark:bg-amber-900/20 rounded-xl p-6 border border-amber-100 dark:border-amber-800/30 flex flex-col items-center text-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-800/40 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                <div className="bg-stone-50 dark:bg-stone-900/40 rounded-xl p-6 border border-stone-100 dark:border-stone-800/30 flex flex-col items-center text-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-800 dark:text-red-400 shadow-sm">
                         <span className="material-symbols-outlined text-3xl">chat</span>
                     </div>
                     <div>
@@ -144,7 +144,7 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                     {/* Logic to open chat handled by ChatContext */}
                     <button
                         onClick={toggleChat}
-                        className="px-6 py-2 bg-amber-600 text-white font-bold rounded-lg hover:bg-amber-700 transition-colors w-full md:w-auto"
+                        className="px-6 py-2 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white font-bold rounded-lg transition-all w-full md:w-auto shadow-md active:scale-95"
                     >
                         Abrir Chat
                     </button>

@@ -47,8 +47,8 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
                 onClick={() => setIsCommOpen(true)}
                 className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
             >
-                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined">forum</span>
+                <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
@@ -63,7 +63,7 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
                     onClick={() => onNavigate('generator')}
                     className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] transition-transform group"
                 >
-                    <div className="w-20 h-20 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600 dark:text-red-400 group-hover:bg-red-600 group-hover:text-white transition-colors">
+                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
                         <span className="material-symbols-outlined text-4xl">menu_book</span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 dark:text-white">Ver Liturgia</h3>
@@ -75,7 +75,7 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
                     onClick={() => onNavigate('offerings')}
                     className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] transition-transform group"
                 >
-                    <div className="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 group-hover:bg-green-600 group-hover:text-white transition-colors">
+                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
                         <span className="material-symbols-outlined text-4xl">savings</span>
                     </div>
                     <h3 className="text-xl font-bold text-gray-800 dark:text-white">Registrar Ofrenda</h3>
@@ -127,8 +127,8 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                 onClick={() => setIsCommOpen(true)}
                 className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
             >
-                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined">forum</span>
+                <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
@@ -146,7 +146,7 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                         onClick={() => onNavigate('generator')}
                         className="w-full neumorphic-card p-6 flex items-center gap-4 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
                     >
-                        <span className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                        <span className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
                             <span className="material-symbols-outlined text-2xl">menu_book</span>
                         </span>
                         <div className="text-left">
@@ -163,7 +163,7 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                         onClick={() => onNavigate('sacristy')}
                         className="w-full neumorphic-card p-6 flex items-center gap-4 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
                     >
-                        <span className="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center text-amber-600">
+                        <span className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
                             <span className="material-symbols-outlined text-2xl">checklist</span>
                         </span>
                         <div className="text-left">
@@ -177,7 +177,7 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                         onClick={() => onNavigate('sacristy')}
                         className="w-full neumorphic-card p-6 flex items-center gap-4 hover:bg-stone-50 dark:hover:bg-white/5 transition-colors"
                     >
-                        <span className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                        <span className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
                             <span className="material-symbols-outlined text-2xl">inventory_2</span>
                         </span>
                         <div className="text-left">
@@ -217,8 +217,8 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
                 onClick={() => setIsCommOpen(true)}
                 className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
             >
-                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined">forum</span>
+                <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
@@ -240,7 +240,7 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
                             className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] transition-transform"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                                <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
                                     <span className="material-symbols-outlined text-2xl">menu_book</span>
                                 </div>
                                 <div>
@@ -259,7 +259,7 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
                         onClick={() => onNavigate('directory')}
                         className="w-full neumorphic-card p-6 flex flex-col items-center text-center gap-3 hover:scale-[1.02] transition-transform"
                     >
-                        <div className="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600">
+                        <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
                             <span className="material-symbols-outlined text-3xl">search</span>
                         </div>
                         <h3 className="font-bold text-gray-800 dark:text-white">Buscar Fiel</h3>
@@ -300,8 +300,8 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
                 onClick={() => setIsCommOpen(true)}
                 className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
             >
-                <div className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg">
-                    <span className="material-symbols-outlined">forum</span>
+                <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
+                    <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
@@ -341,7 +341,7 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
                         onClick={() => onNavigate('music')}
                         className="w-full neumorphic-card p-8 flex flex-col items-center text-center gap-4 hover:scale-[1.02] transition-transform"
                     >
-                        <div className="w-20 h-20 rounded-full bg-pink-100 dark:bg-pink-900/30 flex items-center justify-center text-pink-600">
+                        <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
                             <span className="material-symbols-outlined text-4xl">music_note</span>
                         </div>
                         <h3 className="text-xl font-bold text-gray-800 dark:text-white">Cantoral Digital</h3>
@@ -353,7 +353,7 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
                         onClick={() => onNavigate('generator')}
                         className="w-full neumorphic-card p-4 flex items-center gap-4 hover:bg-pink-50 dark:hover:bg-pink-900/10 transition-colors"
                     >
-                        <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600">
+                        <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center text-red-800">
                             <span className="material-symbols-outlined">description</span>
                         </div>
                         <div className="text-left">

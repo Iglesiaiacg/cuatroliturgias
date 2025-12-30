@@ -251,7 +251,7 @@ export default function OfferingsView() {
                             {/* TOGGLE TO GUEST VIEW */}
                             <button
                                 onClick={() => setViewMode('guest')}
-                                className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-[#3E2723] rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm"
+                                className="px-3 py-2 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95"
                                 title="Información de donación"
                             >
                                 <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
