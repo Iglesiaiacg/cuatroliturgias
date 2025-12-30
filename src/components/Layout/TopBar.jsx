@@ -88,8 +88,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     </div>
                 </div>
 
-                {/* MOBILE SQUIRCLE DOCK NAVIGATION */}
-                <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+                {/* RESPONSIVE SQUIRCLE DOCK NAVIGATION */}
+                <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]">
                     {/* SVG Definitions for Squircle Shape */}
                     <svg width={0} height={0} style={{ position: 'absolute' }}>
                         <defs>
@@ -103,8 +103,9 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         {/* Glass Background Container */}
                         <div className="absolute inset-0 bg-white/80 dark:bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/20 dark:border-white/10 shadow-2xl scale-105" />
 
-                        <div className="relative flex items-end gap-x-2 p-2.5">
-                            {priorityItems.map((item, index) => {
+                        <div className="relative flex items-end gap-x-2 p-2.5 overflow-x-auto no-scrollbar touch-pan-x">
+                            {/* Desktop: Show All | Mobile: Show Priority Only */}
+                            {(typeof window !== 'undefined' && window.innerWidth >= 768 ? visibleNavItems : priorityItems).map((item, index) => {
                                 const isActive = activeTab === item.id;
                                 // Gradients for active state vs inactive
                                 const activeGradient = "bg-gradient-to-br from-red-600 to-red-800";
@@ -139,10 +140,10 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 );
                             })}
 
-                            {/* MENU BUTTON (As Squircle) */}
+                            {/* MENU BUTTON (Mobile Only or Overflow) */}
                             <button
                                 onClick={() => setIsMenuOpen(true)}
-                                className="relative group transition-all duration-300 ease-out active:scale-95"
+                                className="relative group transition-all duration-300 ease-out active:scale-95 shrink-0 md:hidden"
                             >
                                 <div
                                     style={{ clipPath: 'url(#squircleClip)' }}
