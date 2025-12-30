@@ -76,25 +76,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         </div>
 
-                        <nav className="flex items-center gap-2 flex-1 mx-2 overflow-x-auto no-scrollbar">
-                            {visibleNavItems.map((item) => (
-                                <button
-                                    key={item.id}
-                                    onClick={() => onNavigate(item.id)}
-                                    className={`relative flex-none h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-200 ${activeTab === item.id
-                                        ? 'bg-white shadow-sm ring-1 ring-gray-200 text-primary font-bold z-10'
-                                        : 'text-gray-500 hover:text-primary hover:bg-white/60'}`}
-                                >
-                                    <span className="material-symbols-outlined text-[20px] shrink-0">
-                                        {item.icon}
-                                    </span>
-                                    {/* Force Text Display */}
-                                    <span className="text-xs font-bold leading-none whitespace-nowrap">
-                                        {item.label}
-                                    </span>
-                                </button>
-                            ))}
-                        </nav>
+
 
                         <div className="flex items-center gap-3">
                             {/* Role Switcher Removed - Moved to Profile Settings */}
