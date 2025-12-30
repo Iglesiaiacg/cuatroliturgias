@@ -42,8 +42,7 @@ export default function DirectoryView() {
             marriageDate: '',
             ministryOrder: 'Laico',
             currentMinistry: '',
-            ministryOrder: 'Laico',
-            currentMinistry: '',
+
             spiritualGifts: '',
             regularAttendance: false,
             notes: '',
