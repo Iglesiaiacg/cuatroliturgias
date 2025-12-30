@@ -172,11 +172,92 @@ export default function OfferingsView() {
 
     const balance = totalIncome - totalExpense;
 
+    // ROLE CHECK: If not manager, show GUEST DONATION VIEW
+    const canManage = userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'));
+
+    if (!canManage) {
+        return (
+            <main className="flex-1 flex flex-col items-center justify-center p-6 animate-fade-in w-full max-w-md mx-auto pb-40">
+                <div className="w-full bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800 overflow-hidden relative">
+                    {/* Decorative Header */}
+                    <div className="h-32 bg-gradient-to-br from-amber-500 to-amber-700 relative flex items-center justify-center overflow-hidden">
+                        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+                        <span className="material-symbols-outlined text-white text-6xl drop-shadow-lg animate-pulse-slow">volunteer_activism</span>
+                    </div>
+
+                    <div className="p-8 text-center relative">
+                        {/* Avatar/Logo overlapping */}
+                        <div className="w-16 h-16 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center shadow-lg absolute -top-8 left-1/2 -translate-x-1/2 border-4 border-white dark:border-stone-800">
+                            <span className="material-symbols-outlined text-amber-600 text-3xl">church</span>
+                        </div>
+
+                        <h2 className="mt-8 text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">Ofrenda Digital</h2>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
+                            "Dios ama al dador alegre."<br /><span className="text-xs italic">- 2 Corintios 9:7</span>
+                        </p>
+
+                        <div className="space-y-4 text-left">
+                            {/* Bank Details */}
+                            <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5">
+                                <div className="flex items-center gap-3 mb-2">
+                                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                                        <span className="material-symbols-outlined">account_balance</span>
+                                    </div>
+                                    <div>
+                                        <p className="text-xs font-bold text-gray-500 uppercase">Transferencia / Depósito</p>
+                                        <p className="font-bold text-gray-900 dark:text-white">BBVA Bancomer</p>
+                                    </div>
+                                </div>
+                                <div className="space-y-1 ml-11">
+                                    <p className="text-sm flex justify-between">
+                                        <span className="text-gray-600 dark:text-gray-400">Cuenta:</span>
+                                        <CopyableText text="0123456789" />
+                                    </p>
+                                    <p className="text-sm flex justify-between">
+                                        <span className="text-gray-600 dark:text-gray-400">CLABE:</span>
+                                        <CopyableText text="012345678901234567" />
+                                    </p>
+                                    <p className="text-sm flex justify-between">
+                                        <span className="text-gray-600 dark:text-gray-400">Beneficiario:</span>
+                                        <span className="font-medium text-right">Iglesia Anglocatólica</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* QR Instructions */}
+                            <div className="flex items-center gap-4 bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/20">
+                                <div className="qr-placeholder w-16 h-16 bg-white p-1 rounded-lg shrink-0">
+                                    <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=012345678901234567`} alt="QR Bancario" className="w-full h-full object-contain" />
+                                </div>
+                                <p className="text-xs text-amber-800 dark:text-amber-200 leading-tight">
+                                    Escanea este código desde tu App Bancaria para donar rápidamente.
+                                </p>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="grid grid-cols-2 gap-3 pt-2">
+                                <button className="btn-secondary w-full justify-center text-xs py-3">
+                                    <span className="material-symbols-outlined text-sm">share</span>
+                                    Compartir
+                                </button>
+                                <button className="btn-primary w-full justify-center text-xs py-3 bg-green-600 hover:bg-green-700 text-white border-none shadow-green-200 dark:shadow-none">
+                                    <span className="material-symbols-outlined text-sm">chat</span>
+                                    Reportar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
+    // --- MANAGER VIEW (Existing Dashboard) ---
     return (
         <main className="flex-1 flex flex-col w-full min-h-0 animate-fade-in">
 
             {/* Main Content (Hidden on Print) */}
-            <div className="flex-1 w-full print:hidden overflow-y-auto pb-24">
+            <div className="flex-1 w-full print:hidden overflow-y-auto pb-40">
                 {/* Header / Summary Section */}
                 <div className="p-4 md:p-6 pb-2">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -510,5 +591,19 @@ export default function OfferingsView() {
                 />
             </div >
         </main >
+    );
+}
+
+// Simple Copy Component
+function CopyableText({ text }) {
+    const handleCopy = () => {
+        navigator.clipboard.writeText(text);
+        alert("Copiado al portapapeles");
+    };
+    return (
+        <button onClick={handleCopy} className="flex items-center gap-2 font-mono text-gray-900 dark:text-white hover:text-primary transition-colors">
+            {text}
+            <span className="material-symbols-outlined text-[10px] opacity-50">content_copy</span>
+        </button>
     );
 }
