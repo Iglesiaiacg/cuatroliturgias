@@ -172,6 +172,12 @@ export default function OfferingsView() {
 
     const balance = totalIncome - totalExpense;
 
+    const summary = {
+        income: totalIncome,
+        expense: totalExpense,
+        balance: balance
+    };
+
     // ROLE CHECK: If not manager, show GUEST DONATION VIEW
     const canManage = userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'));
 
