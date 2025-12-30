@@ -141,6 +141,41 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
         });
     }, [song.lyrics, transpose, showChords, notationSystem]);
 
+    // Audio File State
+    const [audioUrl, setAudioUrl] = useState(null);
+    const audioRef = useRef(null);
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Revoke previous URL if exists
+            if (audioUrl) URL.revokeObjectURL(audioUrl);
+            const url = URL.createObjectURL(file);
+            setAudioUrl(url);
+            setIsPlaying(true); // Start playing immediately
+            if (audioRef.current) {
+                audioRef.current.load(); // Load the new audio
+                audioRef.current.play();
+            }
+        }
+    };
+
+    // Cleanup audio url
+    useEffect(() => {
+        return () => {
+            if (audioUrl) URL.revokeObjectURL(audioUrl);
+        }
+    }, [audioUrl]);
+
+    const handleBpmChange = (value) => {
+        const val = Math.max(40, Math.min(240, Number(value)));
+        setBpm(val);
+        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+        saveTimeoutRef.current = setTimeout(() => {
+            updateSong(song.id, { bpm: val });
+        }, 1000);
+    };
+
     const handleDelete = async () => {
         if (window.confirm(`¿Estás seguro de que quieres eliminar "${song.title}"? Esta acción no se puede deshacer.`)) {
             try {
@@ -157,138 +192,126 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
 
     return createPortal(
         <div className="fixed inset-0 z-[100] bg-white dark:bg-black flex flex-col animate-fade-in">
-            {/* Toolbar (Atril Controls) */}
-            <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-white/10 p-2 sm:p-4 flex flex-wrap items-center justify-between gap-2 sm:gap-4 shadow-lg shrink-0 overflow-x-auto no-scrollbar">
-                <button onClick={onClose} className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-black dark:hover:text-white shrink-0">
-                    <span className="material-symbols-outlined">arrow_back</span>
-                    <span className="hidden sm:inline">Volver</span>
-                </button>
-
-                <div className="flex items-center gap-2 sm:gap-4 shrink-0">
-                    {/* Add to Setlist Button */}
-                    {onAddToSetlist && activeListName && (
-                        <button
-                            onClick={onAddToSetlist}
-                            className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-2 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
-                            title={`Añadir a lista: ${activeListName}`}
-                        >
-                            <span className="material-symbols-outlined text-lg">playlist_add</span>
-                            <span className="hidden sm:inline">Añadir a Lista</span>
-                        </button>
-                    )}
-
-                    {/* REHEARSAL TOGGLE */}
-                    {videoId && (
-                        <button
-                            onClick={() => setIsRehearsal(!isRehearsal)}
-                            className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold transition-all ${isRehearsal ? 'bg-red-100 text-red-600 ring-2 ring-red-500' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-                        >
-                            <span className="material-symbols-outlined text-lg">videocam</span>
-                            <span className="hidden sm:inline">Ensayo</span>
-                        </button>
-                    )}
-
-                    {/* AUTO SCROLL TOGGLE */}
-                    <button
-                        onClick={() => setIsAutoScroll(!isAutoScroll)}
-                        className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold transition-all ${isAutoScroll ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-500' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
-                    >
-                        <span className="material-symbols-outlined text-lg">swipe_up</span>
-                        <span className="hidden sm:inline">Scroll</span>
+            {/* Toolbar (Simplified) */}
+            <div className="bg-gray-100 dark:bg-gray-900 border-b border-gray-200 dark:border-white/10 p-2 sm:p-4 flex flex-wrap items-center justify-between gap-2 shadow-lg shrink-0">
+                <div className="flex items-center gap-2">
+                    <button onClick={onClose} className="btn-ghost !p-2">
+                        <span className="material-symbols-outlined">arrow_back</span>
                     </button>
+                    {/* Add to Setlist - Compact */}
+                    {onAddToSetlist && activeListName && (
+                        <button onClick={onAddToSetlist} className="btn-secondary !py-1 !px-2 flex gap-1 items-center bg-green-50 text-green-700" title={`Añadir a ${activeListName}`}>
+                            <span className="material-symbols-outlined text-lg">playlist_add</span>
+                        </button>
+                    )}
+                </div>
 
-                    {/* METRONOME */}
-                    <div className="flex items-center gap-1 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
+                {/* Center Controls (Playback & Tools) */}
+                <div className="flex items-center gap-4">
+                    {/* Audio/Metronome Control */}
+                    <div className="flex items-center bg-white dark:bg-white/5 rounded-full p-1 shadow-sm border border-gray-200 dark:border-white/10">
                         <button
-                            onClick={() => setIsPlaying(!isPlaying)}
-                            className={`w-8 h-8 flex items-center justify-center rounded-lg transition-all ${isPlaying ? 'bg-primary text-white shadow-inner animate-pulse' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}
-                            title={isPlaying ? "Detener" : "Iniciar Metrónomo"}
+                            onClick={() => {
+                                setIsPlaying(!isPlaying);
+                                if (audioRef.current) {
+                                    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+                                }
+                            }}
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${isPlaying ? 'bg-primary text-white shadow-lg scale-105' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10'}`}
                         >
-                            <span className="material-symbols-outlined">{isPlaying ? 'stop' : 'metronome'}</span>
+                            <span className="material-symbols-outlined text-2xl">{isPlaying ? 'pause' : 'play_arrow'}</span>
                         </button>
 
-                        {/* BPM Control */}
-                        <div className="flex flex-col items-center w-12">
-                            <input
-                                type="number"
-                                value={bpm}
-                                onChange={(e) => {
-                                    const val = Math.max(40, Math.min(240, Number(e.target.value)));
-                                    setBpm(val);
-                                    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-                                    saveTimeoutRef.current = setTimeout(() => {
-                                        updateSong(song.id, { bpm: val });
-                                    }, 1000);
-                                }}
-                                className="w-full text-center bg-transparent font-mono font-bold text-xs outline-none appearance-none"
-                                min="40" max="240"
-                            />
-                            <span className="text-[9px] text-gray-400 uppercase">BPM</span>
-                        </div>
+                        {(isPlaying || isRehearsal) && (
+                            <div className="flex items-center gap-2 px-2 animate-fade-in">
+                                {/* BPM */}
+                                <div className="flex flex-col items-center w-8">
+                                    <input
+                                        type="number"
+                                        value={bpm}
+                                        onChange={(e) => handleBpmChange(e.target.value)}
+                                        className="w-full text-center bg-transparent font-mono font-bold text-xs outline-none"
+                                    />
+                                    <span className="text-[8px] text-gray-400">BPM</span>
+                                </div>
 
-                        {/* Visual Beat Indicator */}
-                        <div className="flex gap-0.5 px-1">
+                                {/* Auto Scroll */}
+                                <button
+                                    onClick={() => setIsAutoScroll(!isAutoScroll)}
+                                    className={`p-1 rounded-full ${isAutoScroll ? 'text-blue-500 bg-blue-50' : 'text-gray-400'}`}
+                                    title="Auto Scroll"
+                                >
+                                    <span className="material-symbols-outlined text-lg">swipe_up</span>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Visual Indicators (Beat) */}
+                    {isPlaying && !audioUrl && (
+                        <div className="flex gap-1">
                             {[0, 1, 2, 3].map(i => (
-                                <div
-                                    key={i}
-                                    className={`w-1.5 h-1.5 rounded-full transition-colors duration-75 ${isPlaying && beat === i ? 'bg-primary scale-125' : 'bg-gray-200 dark:bg-white/10'}`}
-                                />
+                                <div key={i} className={`w-2 h-2 rounded-full transition-colors ${beat === i ? 'bg-primary' : 'bg-gray-200 dark:bg-gray-700'}`} />
                             ))}
                         </div>
+                    )}
+                </div>
+
+                {/* Right Controls (Appearance & File) */}
+                <div className="flex items-center gap-2">
+                    {/* Rehearsal Toggle (YouTube/MP3) */}
+                    <div className="relative group">
+                        <button className="btn-ghost !p-2 text-gray-500">
+                            <span className="material-symbols-outlined">settings_suggest</span>
+                        </button>
+                        {/* Dropdown for Rehearsal Setup */}
+                        <div className="absolute top-full right-0 mt-2 bg-white dark:bg-surface-dark border border-gray-200 dark:border-white/10 shadow-xl rounded-xl p-3 w-48 hidden group-hover:block z-50">
+                            <h4 className="text-xs font-bold uppercase text-gray-400 mb-2">Ensayo</h4>
+
+                            {/* YouTube Toggle */}
+                            {videoId ? (
+                                <button
+                                    onClick={() => setIsRehearsal(!isRehearsal)}
+                                    className={`w-full text-left px-2 py-1.5 rounded flex items-center gap-2 text-sm ${isRehearsal ? 'bg-red-50 text-red-600' : 'hover:bg-gray-50 dark:hover:bg-white/5'}`}
+                                >
+                                    <span className="material-symbols-outlined text-lg">youtube_activity</span>
+                                    {isRehearsal ? 'Ocultar Video' : 'Mostrar Video'}
+                                </button>
+                            ) : (
+                                <span className="text-xs text-gray-400 px-2 block mb-1">Sin video (editar para añadir)</span>
+                            )}
+
+                            {/* Local Audio Input */}
+                            <label className={`w-full text-left px-2 py-1.5 rounded flex items-center gap-2 text-sm cursor-pointer hover:bg-gray-50 dark:hover:bg-white/5 ${audioUrl ? 'text-green-600' : ''}`}>
+                                <span className="material-symbols-outlined text-lg">audio_file</span>
+                                {audioUrl ? 'Cambiar MP3' : 'Cargar MP3'}
+                                <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
+                            </label>
+                        </div>
                     </div>
 
-                    {/* Transpose */}
-                    <div className="flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
-                        <button
-                            onClick={() => setTranspose(t => t - 1)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded font-bold text-lg"
-                        >-</button>
-                        <span className="w-10 text-center font-mono font-bold text-primary">
-                            {transpose > 0 ? `+${transpose}` : transpose}
-                        </span>
-                        <button
-                            onClick={() => setTranspose(t => t + 1)}
-                            className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded font-bold text-lg"
-                        >+</button>
+                    {/* Transpose & Chords */}
+                    <div className="flex items-center bg-gray-100 dark:bg-white/5 rounded-lg p-1">
+                        <button onClick={() => setTranspose(t => t - 1)} className="hover:bg-white dark:hover:bg-white/10 rounded px-2 font-bold">-</button>
+                        <span className={`w-6 text-center text-sm font-bold ${transpose !== 0 ? 'text-primary' : ''}`}>{transpose}</span>
+                        <button onClick={() => setTranspose(t => t + 1)} className="hover:bg-white dark:hover:bg-white/10 rounded px-2 font-bold">+</button>
+                        <div className="w-px h-4 bg-gray-300 mx-1"></div>
+                        <button onClick={() => setShowChords(!showChords)} className={`px-2 rounded ${showChords ? 'text-primary font-bold' : 'text-gray-400'}`}>
+                            <span className="material-symbols-outlined text-lg">music_note</span>
+                        </button>
                     </div>
 
-                    {/* Font Size */}
-                    <div className="hidden sm:flex items-center gap-2 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
-                        <button onClick={() => setFontSize(s => Math.max(12, s - 2))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded text-xs px-1">A-</button>
-                        <span className="w-8 text-center font-mono font-bold text-xs">{fontSize}</span>
-                        <button onClick={() => setFontSize(s => Math.min(60, s + 2))} className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-white/10 rounded text-lg px-1">A+</button>
-                    </div>
-
-                    {/* Chords Toggle */}
-                    <button
-                        onClick={() => setShowChords(!showChords)}
-                        className={`w-10 h-10 flex items-center justify-center rounded-lg border font-bold ${showChords ? 'bg-primary text-white border-primary shadow-sm' : 'bg-transparent text-gray-400 border-gray-200 dark:border-white/10'}`}
-                        title={showChords ? "Ocultar Acordes" : "Mostrar Acordes"}
-                    >
-                        <span className="material-symbols-outlined">music_note</span>
-                    </button>
-
-                    {/* Delete Button */}
+                    {/* Actions */}
                     {canDelete && (
-                        <button
-                            onClick={handleDelete}
-                            className="w-10 h-10 flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 active:bg-red-100 transition-colors"
-                            title="Eliminar Canto"
-                        >
+                        <button onClick={handleDelete} className="btn-ghost !p-2 text-red-400 hover:text-red-500">
                             <span className="material-symbols-outlined">delete</span>
                         </button>
                     )}
-
-                    {/* Print Button */}
-                    <button
-                        onClick={() => window.print()}
-                        className="w-10 h-10 flex items-center justify-center text-gray-500 hover:text-gray-900 dark:hover:text-white"
-                        title="Imprimir"
-                    >
-                        <span className="material-symbols-outlined">print</span>
-                    </button>
                 </div>
             </div>
+
+            {/* Audio Element Hidden */}
+            {audioUrl && <audio ref={audioRef} src={audioUrl} onEnded={() => setIsPlaying(false)} />}
 
             {/* Song Content Container with Side Panel for Video */}
             <div className="flex flex-1 overflow-hidden">
