@@ -83,7 +83,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
             {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
 
             {/* Greeting Header */}
-            <div className="mb-6">
+            <div className="mb-6 md:text-center">
                 <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
                     {(() => {
                         const hour = new Date().getHours();
@@ -92,7 +92,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                         return "Buenas noches";
                     })()},
                 </h1>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 md:justify-center">
                     <p className="text-gray-600 dark:text-gray-500">
                         {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
                     </p>

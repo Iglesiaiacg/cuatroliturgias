@@ -65,8 +65,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     </div>
 
                     {/* DESKTOP HEADER (Original) */}
-                    <div className="hidden md:flex items-center justify-between w-full">
-                        <div className="flex flex-col shrink-0">
+                    <div className="hidden md:flex items-center justify-center text-center w-full">
+                        <div className="flex flex-col shrink-0 items-center">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
                             <div className="flex items-center gap-3">
                                 <JerusalemCross className="w-8 h-8 text-[#991b1b]" />
@@ -75,10 +75,6 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 </h1>
                             </div>
                         </div>
-
-
-
-
                     </div>
                 </div>
             </header>
