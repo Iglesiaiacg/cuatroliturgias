@@ -83,8 +83,10 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </div>
             </header>
 
-            {/* RESPONSIVE SQUIRCLE DOCK NAVIGATION */}
-            <div className="fixed bottom-[calc(2.5rem+env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]">
+            {/* --- NAVIGATION: DESKTOP BOTTOM DOCK & MOBILE EDGE PANEL --- */}
+
+            {/* DESKTOP: BOTTOM SQUIRCLE DOCK (Unchanged) */}
+            <div className="hidden md:block fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
                 {/* SVG Definitions for Squircle Shape */}
                 <svg width={0} height={0} style={{ position: 'absolute' }}>
                     <defs>
@@ -95,47 +97,14 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </svg>
 
                 <div className="relative">
-                    {/* Glass Background Container */}
+                    {/* Glass Background */}
                     <div className="absolute inset-0 bg-white/80 dark:bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/20 dark:border-white/10 shadow-2xl scale-105" />
 
-                    <div className="relative flex items-end gap-x-2 p-2.5 overflow-x-auto no-scrollbar touch-pan-x">
-                        {/* Desktop: Show All | Mobile: Show Priority Only */}
-                        {(typeof window !== 'undefined' && window.innerWidth >= 768 ? visibleNavItems : priorityItems).map((item, index) => {
-                            const isActive = activeTab === item.id;
-                            // Gradients for active state vs inactive
-                            const activeGradient = "bg-gradient-to-br from-red-600 to-red-800";
-                            const inactiveGradient = "bg-white dark:bg-gray-800/80";
-
-                            return (
-                                <button
-                                    key={item.id}
-                                    onClick={() => onNavigate(item.id)}
-                                    className="relative group transition-all duration-300 ease-out active:scale-95"
-                                    title={item.label}
-                                >
-                                    <div
-                                        style={{ clipPath: 'url(#squircleClip)' }}
-                                        className={`w-12 h-12 flex items-center justify-center shadow-lg border transition-all duration-300
-                                                ${isActive
-                                                ? `${activeGradient} border-red-500/50 text-white scale-110 -translate-y-1`
-                                                : `${inactiveGradient} border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-400 hover:scale-105`
-                                            }`}
-                                    >
-                                        <span className={`material-symbols-outlined text-2xl ${isActive ? 'font-variation-settings-fill' : ''}`}>
-                                            {item.icon}
-                                        </span>
-                                    </div>
-                                    {/* Tooltip Label (Optional) */}
-                                    {isActive && (
-                                        <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                                            {item.label}
-                                        </span>
-                                    )}
-                                </button>
-                            );
-                        })}
-
-                        {/* PROFILE BUTTON (Distinct Style) */}
+                    <div className="relative flex items-end gap-x-2 p-2.5">
+                        {visibleNavItems.map((item) => (
+                            <NavItem key={item.id} item={item} activeTab={activeTab} onNavigate={onNavigate} />
+                        ))}
+                        {/* Profile Button */}
                         <button
                             onClick={onProfile}
                             className="relative group transition-all duration-300 ease-out active:scale-95 shrink-0 ml-2"
@@ -143,43 +112,137 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         >
                             <div
                                 style={{ clipPath: 'url(#squircleClip)' }}
-                                className="w-12 h-12 md:w-14 md:h-14 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 hover:scale-110 transition-all duration-300"
+                                className="w-14 h-14 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 hover:scale-110 transition-all duration-300"
                             >
-                                <span className="material-symbols-outlined text-2xl md:text-3xl font-variation-settings-fill">account_circle</span>
-                            </div>
-                            <span className="hidden md:block absolute -top-10 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0 whitespace-nowrap pointer-events-none shadow-xl">
-                                Perfil
-                            </span>
-                        </button>
-
-                        {/* MENU BUTTON (Mobile Only or Overflow) */}
-                        <button
-                            onClick={() => setIsMenuOpen(true)}
-                            className="relative group transition-all duration-300 ease-out active:scale-95 shrink-0 md:hidden"
-                        >
-                            <div
-                                style={{ clipPath: 'url(#squircleClip)' }}
-                                className="w-12 h-12 bg-white dark:bg-gray-800/80 flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 hover:scale-105"
-                            >
-                                <span className="material-symbols-outlined text-2xl">apps</span>
+                                <span className="material-symbols-outlined text-3xl font-variation-settings-fill">account_circle</span>
                             </div>
                         </button>
                     </div>
                 </div>
             </div>
-            {/* FULL GRID MENU OVERLAY */}
-            < MobileMenuOverlay
+
+            {/* MOBILE: SAMSUNG EDGE PANEL (Right Side) */}
+            <MobileEdgePanel
                 isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)
-                }
+                setIsOpen={setIsMenuOpen}
+                navItems={visibleNavItems}
+                activeTab={activeTab}
+            />
+
+            {/* FULL GRID MENU OVERLAY */}
+            <MobileMenuOverlay
+                isOpen={isMenuOpen}
+                onClose={() => setIsMenuOpen(false)}
                 onNavigate={onNavigate}
                 onProfile={onProfile}
                 visibleNavItems={visibleNavItems}
                 activeTab={activeTab}
-
-                // Pass Role Props for Admin Switcher in Menu
                 userRole={userRole}
             />
         </>
+    );
+}
+
+// --- SUB-COMPONENTS ---
+
+function NavItem({ item, activeTab, onNavigate }) {
+    const isActive = activeTab === item.id;
+    const activeGradient = "bg-gradient-to-br from-red-600 to-red-800";
+    const inactiveGradient = "bg-white dark:bg-gray-800/80";
+
+    return (
+        <button
+            onClick={() => onNavigate(item.id)}
+            className="relative group transition-all duration-300 ease-out active:scale-95"
+            title={item.label}
+        >
+            <div
+                style={{ clipPath: 'url(#squircleClip)' }}
+                className={`w-12 h-12 md:w-12 md:h-12 flex items-center justify-center shadow-lg border transition-all duration-300
+                    ${isActive
+                        ? `${activeGradient} border-red-500/50 text-white scale-110 -translate-y-1`
+                        : `${inactiveGradient} border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-400 hover:scale-105`
+                    }`}
+            >
+                <span className={`material-symbols-outlined text-2xl ${isActive ? 'font-variation-settings-fill' : ''}`}>
+                    {item.icon}
+                </span>
+            </div>
+            {isActive && (
+                <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none md:block hidden">
+                    {item.label}
+                </span>
+            )}
+        </button>
+    );
+}
+
+
+
+
+// --- SUB-COMPONENTS ---
+
+function MobileEdgePanel({ isOpen, setIsOpen, navItems, activeTab, onNavigate, onProfile }) {
+    return (
+        <div className="md:hidden fixed inset-y-0 right-0 z-[100] pointer-events-none flex items-center">
+
+            {/* OVERLAY (Click to close) */}
+            {isOpen && (
+                <div
+                    className="fixed inset-0 bg-black/20 backdrop-blur-sm pointer-events-auto animate-fade-in"
+                    onClick={() => setIsOpen(false)}
+                />
+            )}
+
+            {/* HANDLE (Visible when closed) */}
+            <div
+                className={`pointer-events-auto absolute right-0 transition-transform duration-300 ease-out 
+                    ${isOpen ? 'translate-x-full opacity-0' : 'translate-x-0 opacity-100'}
+                `}
+            >
+                <button
+                    onClick={() => setIsOpen(true)}
+                    className="h-24 w-8 bg-white/50 dark:bg-black/50 backdrop-blur-md rounded-l-xl border-y border-l border-white/20 shadow-lg flex items-center justify-center active:bg-white/70"
+                >
+                    <span className="material-symbols-outlined text-gray-600 dark:text-gray-300 text-sm opacity-70">drag_handle</span>
+                </button>
+            </div>
+
+            {/* PANEL CONTENT */}
+            <div
+                className={`pointer-events-auto relative h-[85vh] w-20 bg-white/90 dark:bg-black/80 backdrop-blur-3xl rounded-l-3xl border-y border-l border-white/20 dark:border-white/10 shadow-2xl flex flex-col items-center py-6 gap-4 transition-transform duration-300 ease-out
+                    ${isOpen ? 'translate-x-0' : 'translate-x-full'}
+                `}
+            >
+                {/* Scrollable Icons */}
+                <div className="flex-1 overflow-y-auto no-scrollbar w-full flex flex-col items-center gap-4 pb-4">
+                    {navItems.map((item) => (
+                        <NavItem key={item.id} item={item} activeTab={activeTab} onNavigate={(id) => {
+                            onNavigate(id);
+                            setIsOpen(false); // Close on selection
+                        }} />
+                    ))}
+                </div>
+
+                {/* Separator */}
+                <div className="w-8 h-px bg-gray-300 dark:bg-gray-700 shrink-0" />
+
+                {/* Profile Button */}
+                <button
+                    onClick={() => {
+                        onProfile();
+                        setIsOpen(false);
+                    }}
+                    className="shrink-0"
+                >
+                    <div
+                        style={{ clipPath: 'url(#squircleClip)' }}
+                        className="w-12 h-12 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 active:scale-95 transition-transform"
+                    >
+                        <span className="material-symbols-outlined text-2xl font-variation-settings-fill">account_circle</span>
+                    </div>
+                </button>
+            </div>
+        </div>
     );
 }
