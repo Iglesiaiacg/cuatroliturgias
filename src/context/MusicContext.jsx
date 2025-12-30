@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { db, auth } from '../services/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, serverTimestamp, query, orderBy, setDoc, getDoc } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
@@ -75,7 +75,7 @@ export function MusicProvider({ children }) {
     }, [currentUser]);
 
     // Helper: Migrate local to cloud
-    const migrateSongs = async (localList) => {
+    const migrateSongs = useCallback(async (localList) => {
         for (const song of localList) {
             try {
                 const { id, ...data } = song;
@@ -88,9 +88,9 @@ export function MusicProvider({ children }) {
                 console.error("Error migrating song:", song.title, e);
             }
         }
-    };
+    }, []);
 
-    const addSong = async (song) => {
+    const addSong = useCallback(async (song) => {
         try {
             await addDoc(collection(db, 'songs'), {
                 ...song, // Includes title, key, lyrics, category, tags
@@ -103,9 +103,9 @@ export function MusicProvider({ children }) {
             console.error("Error adding song:", e);
             throw e;
         }
-    };
+    }, []);
 
-    const updateSong = async (id, updates) => {
+    const updateSong = useCallback(async (id, updates) => {
         try {
             await updateDoc(doc(db, 'songs', id), {
                 ...updates,
@@ -115,24 +115,24 @@ export function MusicProvider({ children }) {
             console.error("Error updating song:", e);
             throw e;
         }
-    };
+    }, []);
 
-    const deleteSong = async (id) => {
+    const deleteSong = useCallback(async (id) => {
         try {
             await deleteDoc(doc(db, 'songs', id));
         } catch (e) {
             console.error("Error deleting song:", e);
             throw e;
         }
-    };
+    }, []);
 
-    const getSongsByCategory = (category) => {
+    const getSongsByCategory = useCallback((category) => {
         return songs.filter(s => s.category === category);
-    };
+    }, [songs]);
 
     // --- ANNOTATIONS (User Specific) ---
     // Saved in users/{uid}/annotations/{songId}
-    const saveAnnotation = async (songId, content) => {
+    const saveAnnotation = useCallback(async (songId, content) => {
         if (!auth.currentUser) return;
         try {
             const ref = doc(db, `users/${auth.currentUser.uid}/annotations/${songId}`);
@@ -143,9 +143,9 @@ export function MusicProvider({ children }) {
         } catch (e) {
             console.error("Error saving annotation:", e);
         }
-    };
+    }, []);
 
-    const getAnnotation = async (songId) => {
+    const getAnnotation = useCallback(async (songId) => {
         if (!auth.currentUser) return '';
         try {
             const ref = doc(db, `users/${auth.currentUser.uid}/annotations/${songId}`);
@@ -155,9 +155,9 @@ export function MusicProvider({ children }) {
             console.error("Error fetching annotation:", e);
             return '';
         }
-    };
+    }, []);
 
-    const value = {
+    const value = useMemo(() => ({
         songs,
         addSong,
         updateSong,
@@ -170,7 +170,7 @@ export function MusicProvider({ children }) {
         getSongsByCategory,
         saveAnnotation,
         getAnnotation
-    };
+    }), [songs, addSong, updateSong, deleteSong, loading, error, notationSystem, getSongsByCategory, saveAnnotation, getAnnotation]);
 
     return (
         <MusicContext.Provider value={value}>
