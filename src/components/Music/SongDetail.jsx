@@ -83,27 +83,29 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
             if (segments.length === 0) return <div key={i} className="h-4"></div>;
 
             return (
-                <div key={i} className="flex flex-wrap items-end min-h-[2.5em] my-1">
+                <div key={i} className="flex flex-wrap items-end min-h-[3.5em] my-1 gap-y-2">
                     {segments.map((seg, j) => {
                         const displayChord = seg.chord
                             ? transposeAndFormat(seg.chord, transpose, notationSystem).replace(/[\[\]]/g, '')
                             : null;
 
-                        // If chords hidden, just render text plain? 
-                        // Actually, maintaining structure is safer for consistent layout when toggling
-                        // But we hide the chord div.
-
                         return (
-                            <div key={j} className="flex flex-col items-start mr-0.5 group">
-                                {/* Chord Line */}
+                            <div key={j} className="flex flex-col justify-end group min-w-[1ch]">
+                                {/* Chord Line - Absolute positioning relative to text sometimes better, but block is safer for spacing */}
+                                {/* If we want the word NOT to break, we shouldn't use margins. */}
+                                {/* If chord is wider than text, the text WILL have a gap. This is standard behavior. */}
+
                                 {showChords && (
-                                    <div className={`text-red-600 font-bold text-sm h-5 mb-0.5 whitespace-nowrap select-none`}>
-                                        {displayChord || ''}
+                                    <div
+                                        className={`font-bold text-base mb-1 whitespace-pre select-none leading-none ${displayChord ? 'text-primary dark:text-primary-light' : 'invisible h-5'}`}
+                                        style={{ fontFamily: 'monospace' }} // Monospace for chords helps alignment
+                                    >
+                                        {displayChord || ' '}
                                     </div>
                                 )}
                                 {/* Lyrics Line */}
-                                <div className="whitespace-pre-wrap text-gray-800 dark:text-gray-200 leading-tight">
-                                    {seg.text || '\u00A0'}
+                                <div className="whitespace-pre text-gray-900 dark:text-gray-100 text-lg sm:text-xl leading-none font-medium font-sans">
+                                    {seg.text || ''}
                                 </div>
                             </div>
                         );
