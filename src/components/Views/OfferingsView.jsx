@@ -251,11 +251,11 @@ export default function OfferingsView() {
                             {/* TOGGLE TO GUEST VIEW */}
                             <button
                                 onClick={() => setViewMode('guest')}
-                                className="px-3 py-2 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95"
+                                className="px-3 py-2 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white rounded-lg text-sm font-bold flex items-center gap-2 transition-all shadow-md active:scale-95 !text-white"
                                 title="Información de donación"
                             >
-                                <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
-                                <span className="hidden sm:inline">Ofrenda de amor</span>
+                                <span className="material-symbols-outlined text-[18px] !text-white">volunteer_activism</span>
+                                <span className="hidden sm:inline !text-white">Ofrenda de amor</span>
                             </button>
 
                             <div className="flex items-center bg-gray-100 dark:bg-black/20 rounded-lg p-1">
@@ -282,10 +282,10 @@ export default function OfferingsView() {
                             {(userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'))) && (
                                 <button
                                     onClick={() => setShowForm(!showForm)}
-                                    className="btn-primary"
+                                    className="btn-primary !text-white"
                                 >
-                                    <span className="material-symbols-outlined text-lg">add_circle</span>
-                                    <span className="hidden sm:inline">Nuevo</span>
+                                    <span className="material-symbols-outlined text-lg !text-white">add_circle</span>
+                                    <span className="hidden sm:inline !text-white">Nuevo</span>
                                 </button>
                             )}
                         </div>

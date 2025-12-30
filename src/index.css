@@ -100,8 +100,7 @@ body {
 /* HIGH CONTRAST ENFORCEMENT FOR PWA */
 input,
 select,
-textarea,
-button {
+textarea {
     color: var(--text-main);
 }
 
@@ -268,6 +267,7 @@ button {
 
     .btn-primary {
         @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 gap-2 bg-primary text-white hover:bg-[var(--color-primary-light)] hover:shadow-md hover:text-white active:text-white;
+        color: white !important;
     }
 
     .btn-secondary {

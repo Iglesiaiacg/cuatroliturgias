@@ -298,16 +298,16 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
             {/* Comm Button */}
             <button
                 onClick={() => setIsCommOpen(true)}
-                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 mb-6 hover:scale-[1.01] transition-transform"
             >
                 <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
                     <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Chat de Equipo y Avisos</p>
                 </div>
-                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                <span className="material-symbols-outlined text-red-400 ml-auto transition-colors group-hover:text-red-600">open_in_new</span>
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -317,8 +317,8 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
 
                     {/* EXTRACTED HYMNS CARD */}
                     {docContent && (
-                        <div className="neumorphic-card p-6 border-l-4 border-pink-500 animate-slide-in">
-                            <h3 className="font-bold text-pink-700 dark:text-pink-400 mb-3 flex items-center gap-2">
+                        <div className="neumorphic-card p-6 border-l-4 border-red-500 animate-slide-in">
+                            <h3 className="font-bold text-red-700 dark:text-red-400 mb-3 flex items-center gap-2">
                                 <span className="material-symbols-outlined">queue_music</span>
                                 Sugerencias del Guion
                             </h3>
