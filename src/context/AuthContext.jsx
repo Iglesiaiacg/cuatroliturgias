@@ -102,9 +102,10 @@ export function AuthProvider({ children }) {
                 // Default to guest immediately so UI renders
                 setUserRole('guest');
 
-                // SUPER ADMIN HARDCHECK
-                const SUPER_ADMINS = ['alexveo855@gmail.com']; // Replace/Add your email
-                const isSuperAdmin = SUPER_ADMINS.includes(user.email);
+                // SUPER ADMIN HARDCHECK (Case Insensitive)
+                const SUPER_ADMINS = ['alexveo855@gmail.com'];
+                const normalizedEmail = user.email.toLowerCase();
+                const isSuperAdmin = SUPER_ADMINS.includes(normalizedEmail);
 
                 // PRE-EMPTIVE ROLE ASSIGNMENT
                 // If Super Admin, grant access immediately so UI works even if Firestore permissions fail
@@ -139,7 +140,12 @@ export function AuthProvider({ children }) {
                         unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
                             if (snap.exists()) {
                                 const role = snap.data().role;
-                                if (!isSuperAdmin) setUserRole(role);
+                                // FORCE ADMIN for Super Admin, ignore DB if it drifts
+                                if (isSuperAdmin) {
+                                    setUserRole('admin');
+                                } else {
+                                    setUserRole(role);
+                                }
                             }
                         }, (error) => {
                             console.warn("User role snapshot error (graceful fallback):", error.code);
