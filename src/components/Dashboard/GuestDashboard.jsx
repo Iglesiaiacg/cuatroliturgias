@@ -23,27 +23,49 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
 
             {/* PINNED LITURGY SECTION (Devotional Focus) */}
             {pinnedLiturgy && !isReadingPinned && (
-                <div className="bg-gradient-to-br from-red-900 to-red-700 rounded-2xl p-8 text-white shadow-xl relative overflow-hidden text-center">
-                    <div className="relative z-10 flex flex-col items-center gap-4">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="material-symbols-outlined text-red-200">church</span>
-                            <span className="text-red-100 font-bold tracking-widest uppercase text-xs">Misa en Curso</span>
+                (() => {
+                    const now = new Date();
+                    const isSunday = now.getDay() === 0;
+                    const hour = now.getHours();
+                    const isLive = isSunday && hour >= 8 && hour < 14;
+
+                    return (
+                        <div className={`rounded-2xl p-8 shadow-xl relative overflow-hidden text-center transition-all duration-500
+                            ${isLive
+                                ? 'bg-gradient-to-br from-red-900 to-red-700 text-white'
+                                : 'bg-white dark:bg-[#1c1c1e] text-gray-900 dark:text-white border border-gray-100 dark:border-white/5'
+                            }`}>
+
+                            <div className="relative z-10 flex flex-col items-center gap-4">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className={`material-symbols-outlined ${isLive ? 'text-red-200' : 'text-primary'}`}>church</span>
+                                    <span className={`${isLive ? 'text-red-100' : 'text-gray-500'} font-bold tracking-widest uppercase text-xs`}>
+                                        {isLive ? 'Misa en Curso' : 'Próxima Celebración'}
+                                    </span>
+                                </div>
+
+                                <h2 className="text-4xl font-display font-bold mb-1">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
+                                <p className={`${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'} text-lg opacity-90 max-w-lg mx-auto`}>
+                                    {isLive
+                                        ? "Únete a la celebración desde tu dispositivo. Sigue las lecturas y cantos en tiempo real."
+                                        : "Prepárate para la Santa Misa. Puedes revisar las lecturas y cantos con anticipación."}
+                                </p>
+
+                                <button
+                                    onClick={() => setIsReadingPinned(true)}
+                                    className={`mt-4 px-8 py-4 font-bold rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center justify-center gap-2
+                                        ${isLive
+                                            ? 'bg-white text-red-900 hover:bg-gray-100'
+                                            : 'bg-primary text-white hover:bg-blue-700'
+                                        }`}
+                                >
+                                    <span className="material-symbols-outlined">menu_book</span>
+                                    {isLive ? 'SEGUIR LITURGIA AHORA' : 'VER GUION Y LECTURAS'}
+                                </button>
+                            </div>
                         </div>
-
-                        <h2 className="text-4xl font-display font-bold mb-1">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
-                        <p className="text-red-100 text-lg opacity-90 max-w-lg mx-auto">
-                            Únete a la celebración desde tu dispositivo. Sigue las lecturas y cantos en tiempo real.
-                        </p>
-
-                        <button
-                            onClick={() => setIsReadingPinned(true)}
-                            className="mt-4 px-8 py-4 bg-white text-red-900 font-bold rounded-xl shadow-lg hover:bg-gray-100 transition-transform hover:scale-105 flex items-center justify-center gap-2"
-                        >
-                            <span className="material-symbols-outlined">menu_book</span>
-                            SEGUIR LITURGIA AHORA
-                        </button>
-                    </div>
-                </div>
+                    );
+                })()
             )}
 
             {/* READER MODE */}

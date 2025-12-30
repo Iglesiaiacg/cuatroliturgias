@@ -102,54 +102,74 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
             {/* PINNED LITURGY SECTION (Takes Priority) */}
             {pinnedLiturgy && !isReadingPinned && (
-                <div className="bg-gradient-to-r from-red-900 to-red-800 rounded-2xl p-4 md:p-6 text-white shadow-xl relative overflow-hidden group">
-                    {/* Visual Pulse Effect (Optional, using standard Tailwind if needed) */}
-                    <div className="absolute top-0 right-0 m-4 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>
+                (() => {
+                    const now = new Date();
+                    const isSunday = now.getDay() === 0;
+                    const hour = now.getHours();
+                    // Active Sunday Window: 8:00 AM to 1:00 PM (13:00)
+                    const isLive = isSunday && hour >= 8 && hour < 14; // Extended to 2pm for safety
 
-                    <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="bg-red-500/30 text-red-100 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border border-red-400/30">
-                                    En Curso
-                                </span>
-                                <span className="text-red-200 text-xs flex items-center gap-1">
-                                    <span className="material-symbols-outlined text-[14px]">push_pin</span>
-                                    Fijado por el Sacerdote
-                                </span>
+                    return (
+                        <div className={`rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden group transition-all duration-500
+                            ${isLive
+                                ? 'bg-gradient-to-r from-red-900 to-red-800 text-white'
+                                : 'bg-white dark:bg-[#1c1c1e] text-gray-900 dark:text-white border border-gray-100 dark:border-white/5'
+                            }`}>
+
+                            {/* Visual Pulse Effect (Only when Live) */}
+                            {isLive && <div className="absolute top-0 right-0 m-4 w-3 h-3 bg-red-400 rounded-full animate-ping opacity-75"></div>}
+
+                            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                                <div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border 
+                                            ${isLive
+                                                ? 'bg-red-500/30 text-red-100 border-red-400/30'
+                                                : 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
+                                            }`}>
+                                            {isLive ? 'En Curso' : 'Próxima Misa'}
+                                        </span>
+                                        <span className={`text-xs flex items-center gap-1 ${isLive ? 'text-red-200' : 'text-gray-400'}`}>
+                                            <span className="material-symbols-outlined text-[14px]">push_pin</span>
+                                            Fijado por el Sacerdote
+                                        </span>
+                                    </div>
+                                    <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
+                                    <p className={`text-sm opacity-90 ${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'}`}>
+                                        {pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy'}
+                                    </p>
+                                </div>
+                                <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                                    <button
+                                        onClick={() => setIsReadingPinned(true)}
+                                        className={`w-full md:w-auto px-6 py-3 font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2
+                                            ${isLive
+                                                ? 'bg-white text-red-900 hover:bg-gray-100'
+                                                : 'bg-primary text-white hover:bg-blue-700 shadow-blue-500/30'
+                                            }`}
+                                    >
+                                        <span className="material-symbols-outlined">menu_book</span>
+                                        {isLive ? 'SEGUIR LITURGIA' : 'Ver Guion'}
+                                    </button>
+                                    <div className="flex items-center justify-center gap-2">
+                                        <button
+                                            onClick={() => window.print()}
+                                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-colors
+                                                ${isLive
+                                                    ? 'bg-white/50 hover:bg-white/80 text-white' // Adjusted for red background contrast
+                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-white/10 dark:hover:bg-white/20 dark:text-gray-300'
+                                                }`}
+                                            title="Imprimir para el Altar"
+                                        >
+                                            <span className="material-symbols-outlined text-sm">print</span>
+                                            <span className="hidden sm:inline">Imprimir</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight">{pinnedLiturgy.title || "Santa Eucaristía"}</h2>
-                            <p className="text-red-100 text-sm opacity-90">
-                                {pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy'}
-                            </p>
                         </div>
-                        <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                            <button
-                                onClick={() => setIsReadingPinned(true)}
-                                className="w-full md:w-auto px-6 py-3 bg-white text-red-900 font-bold rounded-xl shadow-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
-                            >
-                                <span className="material-symbols-outlined">menu_book</span>
-                                SEGUIR LITURGIA
-                            </button>
-                            <div className="flex items-center justify-center gap-2">
-                                <button
-                                    onClick={() => window.print()}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 hover:bg-white/80 dark:bg-black/20 dark:hover:bg-white/10 text-xs font-bold text-gray-600 dark:text-gray-300 transition-colors"
-                                    title="Imprimir para el Altar"
-                                >
-                                    <span className="material-symbols-outlined text-sm">print</span>
-                                    <span className="hidden sm:inline">Imprimir</span>
-                                </button>
-                                <button
-                                    onClick={() => setIsReadingPinned(true)}
-                                    className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:bg-primary/20 text-xs font-bold transition-colors"
-                                >
-                                    <span className="material-symbols-outlined text-sm">open_in_full</span>
-                                    <span className="hidden sm:inline">Leer</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    );
+                })()
             )}
 
             {/* FULL SCREEN READER MODE */}
