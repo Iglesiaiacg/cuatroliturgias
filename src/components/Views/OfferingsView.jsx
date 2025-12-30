@@ -178,6 +178,10 @@ export default function OfferingsView() {
         balance: balance
     };
 
+    const formatMoney = (amount) => {
+        return `$${amount.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
     // ROLE CHECK: If not manager, show GUEST DONATION VIEW
     const canManage = userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'));
 
