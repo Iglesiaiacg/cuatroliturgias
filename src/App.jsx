@@ -46,12 +46,9 @@ import PublicSetlistView from './components/Views/PublicSetlistView'; // Public 
 function AppContent() {
   const { currentUser, userRole, logout, checkPermission } = useAuth()
 
-  // --- PUBLIC ROUTES (Bypass Auth Guard) ---
-  const hash = window.location.hash;
-  if (hash.startsWith('#public/setlist/')) {
-    const setlistId = hash.replace('#public/setlist/', '');
-    return <PublicSetlistView setlistId={setlistId} />;
-  }
+  // Use centralized settings hook
+  const { settings, updateSetting } = useSettings();
+  const rubricLevel = settings.rubricLevel;
 
   const {
     tradition, setTradition,
@@ -63,9 +60,10 @@ function AppContent() {
     generate
   } = useLiturgy()
 
-  // Use centralized settings hook
-  const { settings, updateSetting } = useSettings();
-  const rubricLevel = settings.rubricLevel;
+
+
+  // Use centralized settings hook (Moved up)
+
 
   // UI State - Initialize from Hash
   const getTabFromHash = () => {
@@ -91,11 +89,7 @@ function AppContent() {
     // State updates automatically via the effect
   };
 
-  const goBack = () => {
-    const hash = window.location.hash.replace('#', '');
-    if (!hash || hash === 'dashboard') return;
-    window.history.back();
-  };
+
 
   // Backward compatibility wrapper (for props looking for setActiveTab)
   const setActiveTab = navigateTo;
@@ -171,12 +165,7 @@ function AppContent() {
     }
   }
 
-  const handleRestoreHistory = (item) => {
-    setDocContent(item.content)
-    handleToast("Liturgia restaurada del historial")
-    setIsHistoryOpen(false)
-    setActiveTab('generator') // Switch to generator to view restored content
-  }
+
 
   // Document Actions
   const handlePrint = () => window.print()
@@ -349,6 +338,15 @@ function AppContent() {
       saveAs(blob, `Liturgia_${selectedDate.toISOString().split('T')[0]}.docx`)
       handleToast("Documento exportado")
     })
+  }
+
+
+  // --- PUBLIC ROUTES (Bypass Auth Guard) ---
+  // MOVED TO END to ensure all hooks run unconditionally
+  const hash = window.location.hash;
+  if (hash.startsWith('#public/setlist/')) {
+    const setlistId = hash.replace('#public/setlist/', '');
+    return <PublicSetlistView setlistId={setlistId} />;
   }
 
   // AUTH GUARD: If no user, show Login

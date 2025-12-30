@@ -11,7 +11,7 @@ export const marriageRite = {
         { id: 'date', label: 'Fecha', type: 'date' }
     ],
     generate: (data) => {
-        const { groom, bride, witnesses, celebrant, date } = data;
+        const { groom, bride, witnesses, date } = data;
         const groomName = groom || 'El Esposo';
         const brideName = bride || 'La Esposa';
 
