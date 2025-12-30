@@ -585,7 +585,9 @@ function AppContent() {
 
           {/* --- SACRISTY VIEW --- */}
           {activeTab === 'sacristy' && (
-            <SacristyView date={selectedDate} />
+            <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
+              <SacristyView date={selectedDate} />
+            </div>
           )}
 
           {/* --- USERS VIEW (Admin Only) --- */}
