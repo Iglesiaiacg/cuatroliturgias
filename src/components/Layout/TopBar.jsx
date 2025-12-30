@@ -88,8 +88,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                     <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                                         {item.icon}
                                     </span>
-                                    {/* Show label on larger screens, hide on tablet/small laptop to save space */}
-                                    <span className="text-xs hidden xl:block">{item.label}</span>
+                                    {/* Always show label on desktop */}
+                                    <span className="text-xs font-bold">{item.label}</span>
                                 </button>
                             ))}
                         </nav>
