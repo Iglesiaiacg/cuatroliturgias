@@ -193,10 +193,8 @@ function MobileEdgePanel({ isOpen, setIsOpen, navItems, activeTab, onNavigate, o
             >
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="h-24 w-8 bg-white/50 dark:bg-black/50 backdrop-blur-md rounded-l-xl border-y border-l border-white/20 shadow-lg flex items-center justify-center active:bg-white/70"
-                >
-                    <span className="material-symbols-outlined text-gray-600 dark:text-gray-300 text-sm opacity-70">drag_handle</span>
-                </button>
+                    className="h-48 w-1.5 bg-amber-400/90 dark:bg-amber-500/90 backdrop-blur-md rounded-l-full shadow-[0_0_15px_rgba(251,191,36,0.5)] border-l border-white/30 active:scale-95 transition-all hover:w-2"
+                />
             </div>
 
             {/* PANEL CONTENT */}
