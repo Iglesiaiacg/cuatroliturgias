@@ -51,17 +51,20 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                                         : "Prepárate para la Santa Misa. Puedes revisar las lecturas y cantos con anticipación."}
                                 </p>
 
-                                <button
-                                    onClick={() => setIsReadingPinned(true)}
-                                    className={`mt-4 px-8 py-4 font-bold rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center justify-center gap-2
-                                        ${isLive
-                                            ? 'bg-white text-red-900 hover:bg-gray-100'
-                                            : 'bg-primary text-white hover:bg-blue-700'
-                                        }`}
-                                >
-                                    <span className="material-symbols-outlined">menu_book</span>
-                                    {isLive ? 'SEGUIR LITURGIA AHORA' : 'VER GUION Y LECTURAS'}
-                                </button>
+                                {/* Buttons only visible on Weekend (Sat/Sun) */}
+                                {(isSunday || (now.getDay() === 6)) && (
+                                    <button
+                                        onClick={() => setIsReadingPinned(true)}
+                                        className={`mt-4 px-8 py-4 font-bold rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center justify-center gap-2
+                                            ${isLive
+                                                ? 'bg-white text-red-900 hover:bg-gray-100'
+                                                : 'bg-primary text-white hover:bg-blue-700'
+                                            }`}
+                                    >
+                                        <span className="material-symbols-outlined">menu_book</span>
+                                        {isLive ? 'SEGUIR LITURGIA AHORA' : 'VER GUION Y LECTURAS'}
+                                    </button>
+                                )}
                             </div>
                         </div>
                     );

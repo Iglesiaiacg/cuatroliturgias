@@ -140,31 +140,36 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                     </p>
                                 </div>
                                 <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
-                                    <button
-                                        onClick={() => setIsReadingPinned(true)}
-                                        className={`w-full md:w-auto px-6 py-3 font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2
-                                            ${isLive
-                                                ? 'bg-white text-red-900 hover:bg-gray-100'
-                                                : 'bg-primary text-white hover:bg-blue-700 shadow-blue-500/30'
-                                            }`}
-                                    >
-                                        <span className="material-symbols-outlined">menu_book</span>
-                                        {isLive ? 'SEGUIR LITURGIA' : 'Ver Guion'}
-                                    </button>
-                                    <div className="flex items-center justify-center gap-2">
-                                        <button
-                                            onClick={() => window.print()}
-                                            className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-colors
-                                                ${isLive
-                                                    ? 'bg-white/50 hover:bg-white/80 text-white' // Adjusted for red background contrast
-                                                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-white/10 dark:hover:bg-white/20 dark:text-gray-300'
-                                                }`}
-                                            title="Imprimir para el Altar"
-                                        >
-                                            <span className="material-symbols-outlined text-sm">print</span>
-                                            <span className="hidden sm:inline">Imprimir</span>
-                                        </button>
-                                    </div>
+                                    {/* Action Buttons: Visible ONLY on Saturday (Preparation) & Sunday (Service) */}
+                                    {(isSunday || (now.getDay() === 6)) && (
+                                        <>
+                                            <button
+                                                onClick={() => setIsReadingPinned(true)}
+                                                className={`w-full md:w-auto px-6 py-3 font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2
+                                                    ${isLive
+                                                        ? 'bg-white text-red-900 hover:bg-gray-100'
+                                                        : 'bg-primary text-white hover:bg-blue-700 shadow-blue-500/30'
+                                                    }`}
+                                            >
+                                                <span className="material-symbols-outlined">menu_book</span>
+                                                {isLive ? 'SEGUIR LITURGIA' : 'Ver Guion'}
+                                            </button>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <button
+                                                    onClick={() => window.print()}
+                                                    className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-colors
+                                                        ${isLive
+                                                            ? 'bg-white/50 hover:bg-white/80 text-white'
+                                                            : 'bg-gray-100 hover:bg-gray-200 text-gray-600 dark:bg-white/10 dark:hover:bg-white/20 dark:text-gray-300'
+                                                        }`}
+                                                    title="Imprimir para el Altar"
+                                                >
+                                                    <span className="material-symbols-outlined text-sm">print</span>
+                                                    <span className="hidden sm:inline">Imprimir</span>
+                                                </button>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
