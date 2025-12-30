@@ -127,17 +127,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 setIsOpen={setIsMenuOpen}
                 navItems={visibleNavItems}
                 activeTab={activeTab}
-            />
-
-            {/* FULL GRID MENU OVERLAY */}
-            <MobileMenuOverlay
-                isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
                 onNavigate={onNavigate}
                 onProfile={onProfile}
-                visibleNavItems={visibleNavItems}
-                activeTab={activeTab}
-                userRole={userRole}
             />
         </>
     );
