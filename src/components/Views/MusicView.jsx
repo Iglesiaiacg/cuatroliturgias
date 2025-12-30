@@ -171,6 +171,48 @@ export default function MusicView() {
             ) : (
                 /* SONGS VIEW */
                 <>
+                    {/* LITURGICAL SUGGESTIONS (Only when not searching/filtering specific categories) */}
+                    {viewMode === 'songs' && selectedCategory === 'all' && !searchTerm && (
+                        <div className="mb-8 animate-fade-in">
+                            <div className="flex items-center gap-2 mb-3 px-1">
+                                <span className="material-symbols-outlined text-primary">auto_awesome</span>
+                                <h3 className="font-bold text-gray-800 dark:text-gray-200">
+                                    Sugeridos para {seasonLabel}
+                                </h3>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {songs
+                                    .filter(s => s.tags && s.tags.includes(currentSeason))
+                                    .slice(0, 3) // Limit to 3 suggestions
+                                    .map(song => (
+                                        <div
+                                            key={song.id}
+                                            onClick={() => setSelectedSong(song)}
+                                            className="neumorphic-card p-4 cursor-pointer hover:-translate-y-1 transition-all border-l-4 border-primary bg-yellow-50/50 dark:bg-yellow-900/10"
+                                        >
+                                            <div className="flex justify-between items-start mb-1">
+                                                <h4 className="font-bold text-gray-900 dark:text-white">{song.title}</h4>
+                                                <span className="text-[10px] font-mono bg-primary/20 text-primary px-2 py-0.5 rounded font-bold">
+                                                    {song.key}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-gray-500 line-clamp-1 italic">
+                                                {song.lyrics.replace(/\[.*?\]/g, '')}
+                                            </p>
+                                        </div>
+                                    ))}
+                                {songs.filter(s => s.tags && s.tags.includes(currentSeason)).length === 0 && (
+                                    <div className="col-span-full p-4 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl text-center text-sm text-gray-500">
+                                        No hay sugerencias específicas para este tiempo aún.
+                                        <br />
+                                        <span className="text-xs opacity-70">Añade etiquetas como "{currentSeason}" a tus cantos.</span>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
+
                     {/* Category Chips */}
                     <div className="flex flex-wrap gap-2 mb-6 overflow-x-auto pb-2 no-scrollbar">
                         {CATEGORIES.map(cat => (

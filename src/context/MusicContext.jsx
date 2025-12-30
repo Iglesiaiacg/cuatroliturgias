@@ -93,7 +93,8 @@ export function MusicProvider({ children }) {
     const addSong = async (song) => {
         try {
             await addDoc(collection(db, 'songs'), {
-                ...song, // Should include title, key, lyrics, category
+                ...song, // Includes title, key, lyrics, category, tags
+                tags: song.tags || [],
                 createdBy: auth.currentUser?.email || 'anonymous',
                 createdAt: serverTimestamp(),
                 updatedAt: serverTimestamp()

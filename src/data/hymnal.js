@@ -3,6 +3,7 @@ export const HYMNAL = [
         title: "Pescador de Hombres",
         key: "C",
         category: "entrada",
+        tags: ['ordinario', 'vocacion'],
         lyrics: `[C] Tú has venido a la [G] orilla
 [F] no has buscado ni a [G] sabios ni a ricos,
 [C] tan solo [G] quieres que yo te [C] siga.
@@ -34,6 +35,7 @@ export const HYMNAL = [
         title: "Cordero de Dios",
         key: "G",
         category: "cordero",
+        tags: ['ordinario', 'adviento', 'cuaresma', 'navidad', 'pascua'],
         lyrics: `[G] Cordero de Dios que [C] quitas
 el pe[D]cado del [G] mundo,
 [C] ten pie[D]dad de no[G]sotros.
