@@ -144,9 +144,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 activeTab={activeTab}
 
                 // Pass Role Props for Admin Switcher in Menu
-                realRole={realRole}
                 userRole={userRole}
-                setPreviewRole={setPreviewRole}
             />
         </>
     );
