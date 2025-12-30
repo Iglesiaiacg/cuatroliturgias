@@ -45,41 +45,41 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
             {/* Comm Button */}
             <button
                 onClick={() => setIsCommOpen(true)}
-                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 mb-6 hover:scale-[1.01] transition-transform"
             >
                 <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
                     <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Chat de Equipo y Avisos</p>
                 </div>
-                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Action: View Liturgy */}
                 <button
                     onClick={() => onNavigate('generator')}
-                    className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] transition-transform group"
+                    className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] hover:bg-primary transition-all group"
                 >
-                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
+                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-white/20 group-hover:text-white transition-all shadow-sm">
                         <span className="material-symbols-outlined text-4xl">menu_book</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">Ver Liturgia</h3>
-                    <p className="text-sm text-gray-500">Consultar guion de la misa</p>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-white">Ver Liturgia</h3>
+                    <p className="text-sm text-gray-500 group-hover:text-red-100">Consultar guion de la misa</p>
                 </button>
 
                 {/* Main Action: Register Offering */}
                 <button
                     onClick={() => onNavigate('offerings')}
-                    className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] transition-transform group"
+                    className="neumorphic-card p-8 flex flex-col items-center justify-center text-center gap-4 hover:scale-[1.02] hover:bg-primary transition-all group"
                 >
-                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
+                    <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-white/20 group-hover:text-white transition-all shadow-sm">
                         <span className="material-symbols-outlined text-4xl">savings</span>
                     </div>
-                    <h3 className="text-xl font-bold text-gray-800 dark:text-white">Registrar Ofrenda</h3>
-                    <p className="text-sm text-gray-500">Ingresar diezmos, colectas o donativos</p>
+                    <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-white">Registrar Ofrenda</h3>
+                    <p className="text-sm text-gray-500 group-hover:text-red-100">Ingresar diezmos, colectas o donativos</p>
                 </button>
 
                 {/* Quick Stats */}
@@ -125,16 +125,16 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
             {/* Comm Button */}
             <button
                 onClick={() => setIsCommOpen(true)}
-                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 mb-6 hover:scale-[1.01] transition-transform"
             >
                 <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
                     <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Chat de Equipo y Avisos</p>
                 </div>
-                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -215,16 +215,16 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
             {/* Comm Button */}
             <button
                 onClick={() => setIsCommOpen(true)}
-                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 mb-6 hover:scale-[1.01] transition-transform"
+                className="w-full neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 mb-6 hover:scale-[1.01] transition-transform"
             >
                 <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg">
                     <span className="material-symbols-outlined text-[20px]">forum</span>
                 </div>
                 <div className="text-left">
                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Chat de Equipo y Avisos</p>
+                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Chat de Equipo y Avisos</p>
                 </div>
-                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
             </button>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -237,18 +237,18 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
                     <div className="mt-6">
                         <button
                             onClick={() => onNavigate('generator')}
-                            className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] transition-transform"
+                            className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] hover:bg-primary transition-all group"
                         >
                             <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
+                                <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 group-hover:bg-white/20 group-hover:text-white transition-all">
                                     <span className="material-symbols-outlined text-2xl">menu_book</span>
                                 </div>
                                 <div>
-                                    <h3 className="font-bold text-gray-800 dark:text-white">Ver Liturgia Completa</h3>
-                                    <p className="text-xs text-gray-500">Consultar guiones pasados o futuros</p>
+                                    <h3 className="font-bold text-gray-800 dark:text-white group-hover:text-white">Ver Liturgia Completa</h3>
+                                    <p className="text-xs text-gray-500 group-hover:text-red-100">Consultar guiones pasados o futuros</p>
                                 </div>
                             </div>
-                            <span className="material-symbols-outlined text-gray-400">arrow_forward</span>
+                            <span className="material-symbols-outlined text-gray-400 group-hover:text-white">arrow_forward</span>
                         </button>
                     </div>
                 </div>
@@ -257,13 +257,13 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
                 <div className="space-y-6">
                     <button
                         onClick={() => onNavigate('directory')}
-                        className="w-full neumorphic-card p-6 flex flex-col items-center text-center gap-3 hover:scale-[1.02] transition-transform"
+                        className="w-full neumorphic-card p-6 flex flex-col items-center text-center gap-3 hover:scale-[1.02] hover:bg-primary transition-all group"
                     >
-                        <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800">
+                        <div className="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 group-hover:bg-white/20 group-hover:text-white transition-all">
                             <span className="material-symbols-outlined text-3xl">search</span>
                         </div>
-                        <h3 className="font-bold text-gray-800 dark:text-white">Buscar Fiel</h3>
-                        <p className="text-xs text-gray-500">Directorio telefónico y datos</p>
+                        <h3 className="font-bold text-gray-800 dark:text-white group-hover:text-white">Buscar Fiel</h3>
+                        <p className="text-xs text-gray-500 group-hover:text-red-100">Directorio telefónico y datos</p>
                     </button>
 
                     <div className="h-full">
@@ -339,13 +339,13 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
                 <div className="space-y-4">
                     <button
                         onClick={() => onNavigate('music')}
-                        className="w-full neumorphic-card p-8 flex flex-col items-center text-center gap-4 hover:scale-[1.02] transition-transform"
+                        className="w-full neumorphic-card p-8 flex flex-col items-center text-center gap-4 hover:scale-[1.02] hover:bg-primary transition-all group"
                     >
-                        <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-gradient-to-br group-hover:from-red-600 group-hover:to-red-800 group-hover:text-white transition-all shadow-sm">
+                        <div className="w-20 h-20 rounded-full bg-red-50 dark:bg-red-900/10 flex items-center justify-center text-red-800 dark:text-red-400 group-hover:bg-white/20 group-hover:text-white transition-all shadow-sm">
                             <span className="material-symbols-outlined text-4xl">music_note</span>
                         </div>
-                        <h3 className="text-xl font-bold text-gray-800 dark:text-white">Cantoral Digital</h3>
-                        <p className="text-sm text-gray-500">Ver acordes y gestionar banco de canciones</p>
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-white group-hover:text-white">Cantoral Digital</h3>
+                        <p className="text-sm text-gray-500 group-hover:text-red-100">Ver acordes y gestionar banco de canciones</p>
                     </button>
 
                     {/* Quick Access to Generator for Full Context */}

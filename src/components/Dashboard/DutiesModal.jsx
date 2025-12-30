@@ -92,14 +92,14 @@ export default function DutiesModal({ role, isOpen, onClose }) {
 
     return createPortal(
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-amber-500/30 max-h-[90vh] flex flex-col">
+            <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-red-500/30 max-h-[90vh] flex flex-col">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-amber-700 to-amber-900 p-6 text-white text-center relative shrink-0">
+                <div className="bg-gradient-to-r from-red-700 to-red-900 p-6 text-white text-center relative shrink-0">
                     <div className="mx-auto w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-3 backdrop-blur-md">
                         <span className="material-symbols-outlined text-4xl">{icon}</span>
                     </div>
                     <h2 className="text-2xl font-display font-bold">{title}</h2>
-                    <p className="text-amber-100 text-sm opacity-90">Tus Deberes Ministeriales</p>
+                    <p className="text-red-100 text-sm opacity-90">Tus Deberes Ministeriales</p>
 
                     <button
                         onClick={onClose}
@@ -123,12 +123,12 @@ export default function DutiesModal({ role, isOpen, onClose }) {
                         </ul>
                     </div>
 
-                    <div className="bg-amber-50 dark:bg-amber-900/10 border-l-4 border-amber-500 p-4 rounded-r-lg">
+                    <div className="bg-red-50 dark:bg-red-900/10 border-l-4 border-red-500 p-4 rounded-r-lg">
                         <div className="flex gap-3">
-                            <span className="material-symbols-outlined text-amber-600">assignment_late</span>
+                            <span className="material-symbols-outlined text-red-600">assignment_late</span>
                             <div>
-                                <h4 className="font-bold text-amber-800 dark:text-amber-400 text-sm">Informe Mensual</h4>
-                                <p className="text-xs text-amber-900/70 dark:text-amber-300/70 mt-1">
+                                <h4 className="font-bold text-red-800 dark:text-red-400 text-sm">Informe Mensual</h4>
+                                <p className="text-xs text-red-900/70 dark:text-red-300/70 mt-1">
                                     Recuerda que debes enviar tu informe de actividades al Párroco el <strong>último día de cada mes</strong>.
                                 </p>
                             </div>

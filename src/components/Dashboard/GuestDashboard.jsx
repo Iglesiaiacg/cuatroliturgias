@@ -70,7 +70,7 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                                         className={`mt-4 px-8 py-4 font-bold rounded-xl shadow-lg transition-transform hover:scale-105 flex items-center justify-center gap-2
                                             ${isLive
                                                 ? 'bg-white text-red-900 hover:bg-gray-100'
-                                                : 'bg-primary text-white hover:bg-blue-700'
+                                                : 'bg-primary text-white hover:bg-red-700'
                                             }`}
                                     >
                                         <span className="material-symbols-outlined">menu_book</span>

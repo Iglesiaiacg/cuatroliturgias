@@ -518,7 +518,7 @@ export default function OfferingsView() {
                                                             {t.type === 'income' && (
                                                                 <button
                                                                     onClick={() => handleDownloadReceipt(t)}
-                                                                    className="p-1.5 text-gray-400 hover:text-blue-500 transition-colors"
+                                                                    className="p-1.5 text-gray-400 hover:text-red-600 transition-colors"
                                                                     title="Descargar Recibo"
                                                                 >
                                                                     <span className="material-symbols-outlined text-lg">receipt</span>
@@ -566,7 +566,7 @@ function FinancialCards({ summary, formatMoney, currentDate }) {
     // I replaced the inline code with <FinancialCards>. So I need to add the function definition below.
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="neumorphic-card p-4 md:p-6 bg-gradient-to-br from-white to-gray-50 dark:from-stone-800 dark:to-stone-900 border-l-4 border-l-blue-500">
+            <div className="neumorphic-card p-4 md:p-6 bg-gradient-to-br from-white to-gray-50 dark:from-stone-800 dark:to-stone-900 border-l-4 border-l-red-600">
                 <p className="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 mb-1">Saldo Actual</p>
                 <h3 className="text-3xl font-mono font-bold text-gray-900 dark:text-white tracking-tighter">
                     {formatMoney(summary.balance)}
@@ -655,7 +655,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                 {isAdmin && (
                     <button
                         onClick={() => setIsEditing(!isEditing)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${isEditing ? 'bg-red-100 text-red-600' : 'bg-amber-100 text-amber-700 hover:bg-amber-200'}`}
+                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all ${isEditing ? 'bg-red-100 text-red-600' : 'bg-red-50 text-red-800 hover:bg-red-100'}`}
                     >
                         <span className="material-symbols-outlined text-sm">{isEditing ? 'close' : 'edit'}</span>
                         {isEditing ? 'Cancelar' : 'Editar Datos'}
@@ -666,7 +666,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
             {isEditing ? (
                 <div className="w-full bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800 p-8 flex-shrink-0 mb-32 animate-slide-in">
                     <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                        <span className="material-symbols-outlined text-amber-600">settings</span>
+                        <span className="material-symbols-outlined text-primary">settings</span>
                         Configurar Ofrenda
                     </h3>
 
@@ -705,7 +705,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                         <button
                             onClick={handleSave}
                             disabled={saving}
-                            className="w-full btn-primary bg-amber-600 hover:bg-amber-700 text-white rounded-xl py-3 justify-center text-sm mt-4 shadow-lg shadow-amber-200 dark:shadow-none transition-all active:scale-95 disabled:opacity-50"
+                            className="w-full btn-primary rounded-xl py-3 justify-center text-sm mt-4 shadow-lg shadow-red-200 dark:shadow-none transition-all active:scale-95 disabled:opacity-50"
                         >
                             {saving ? 'Guardando...' : 'Guardar Cambios'}
                         </button>
@@ -714,7 +714,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
             ) : (
                 <div className="w-full bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800 overflow-hidden relative flex-shrink-0 mb-32">
                     {/* Decorative Header */}
-                    <div className="h-28 bg-gradient-to-br from-amber-500 to-amber-700 relative flex items-center justify-center overflow-hidden">
+                    <div className="h-28 bg-gradient-to-br from-red-600 to-red-800 relative flex items-center justify-center overflow-hidden">
                         <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
                         <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg animate-pulse-slow">volunteer_activism</span>
                     </div>
@@ -722,7 +722,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                     <div className="p-6 text-center relative">
                         {/* Avatar/Logo overlapping */}
                         <div className="w-14 h-14 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center shadow-lg absolute -top-7 left-1/2 -translate-x-1/2 border-2 border-white dark:border-stone-800">
-                            <span className="material-symbols-outlined text-amber-600 text-2xl">church</span>
+                            <span className="material-symbols-outlined text-primary text-2xl">church</span>
                         </div>
 
                         <h2 className="mt-8 text-xl font-display font-bold text-gray-900 dark:text-white mb-1">Ofrenda Digital</h2>
@@ -734,7 +734,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                             {/* Bank Details */}
                             <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5">
                                 <div className="flex items-center gap-3 mb-2">
-                                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+                                    <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400">
                                         <span className="material-symbols-outlined">account_balance</span>
                                     </div>
                                     <div>
@@ -759,11 +759,11 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                             </div>
 
                             {/* QR Instructions */}
-                            <div className="flex items-center gap-4 bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/20">
+                            <div className="flex items-center gap-4 bg-red-50 dark:bg-red-900/10 p-4 rounded-xl border border-red-100 dark:border-red-900/20">
                                 <div className="qr-placeholder w-16 h-16 bg-white p-1 rounded-lg shrink-0 shadow-sm">
                                     <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${settings.clabe}`} alt="QR Bancario" className="w-full h-full object-contain" />
                                 </div>
-                                <p className="text-[11px] text-amber-800 dark:text-amber-200 leading-tight">
+                                <p className="text-[11px] text-red-800 dark:text-red-200 leading-tight">
                                     Escanea este código desde tu App Bancaria para donar rápidamente.
                                 </p>
                             </div>
@@ -774,7 +774,7 @@ function DigitalOfferingCard({ showBack, onBack, settings, onUpdate, isAdmin }) 
                                     <span className="material-symbols-outlined text-sm">share</span>
                                     Compartir
                                 </button>
-                                <button className="btn-primary w-full justify-center text-xs py-2.5 rounded-2xl bg-green-600 hover:bg-green-700 text-white border-none shadow-green-200 dark:shadow-none">
+                                <button className="btn-primary w-full justify-center text-xs py-2.5 rounded-2xl bg-red-800 hover:bg-red-900 text-white border-none shadow-red-200 dark:shadow-none">
                                     <span className="material-symbols-outlined text-sm">chat</span>
                                     Reportar
                                 </button>

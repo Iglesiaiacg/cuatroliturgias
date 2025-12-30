@@ -112,7 +112,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         >
                             <div
                                 style={{ clipPath: 'url(#squircleClip)' }}
-                                className="w-14 h-14 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 hover:scale-110 transition-all duration-300"
+                                className="w-14 h-14 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-red-600 dark:text-red-700 hover:scale-110 transition-all duration-300"
                             >
                                 <span className="material-symbols-outlined text-3xl font-variation-settings-fill">account_circle</span>
                             </div>
@@ -193,7 +193,7 @@ function MobileEdgePanel({ isOpen, setIsOpen, navItems, activeTab, onNavigate, o
             >
                 <button
                     onClick={() => setIsOpen(true)}
-                    className="h-48 w-1.5 bg-amber-400/90 dark:bg-amber-500/90 backdrop-blur-md rounded-l-full shadow-[0_0_15px_rgba(251,191,36,0.5)] border-l border-white/30 active:scale-95 transition-all hover:w-2"
+                    className="h-48 w-1.5 bg-red-600/90 dark:bg-red-500/90 backdrop-blur-md rounded-l-full shadow-[0_0_15px_rgba(153,27,27,0.5)] border-l border-white/30 active:scale-95 transition-all hover:w-2"
                 />
             </div>
 
@@ -226,7 +226,7 @@ function MobileEdgePanel({ isOpen, setIsOpen, navItems, activeTab, onNavigate, o
                 >
                     <div
                         style={{ clipPath: 'url(#squircleClip)' }}
-                        className="w-12 h-12 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 active:scale-95 transition-transform"
+                        className="w-12 h-12 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-red-600 dark:text-red-700 active:scale-95 transition-transform"
                     >
                         <span className="material-symbols-outlined text-2xl font-variation-settings-fill">account_circle</span>
                     </div>

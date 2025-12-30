@@ -125,7 +125,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider border 
                                             ${isLive
                                                 ? 'bg-red-500/30 text-red-100 border-red-400/30'
-                                                : 'bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
+                                                : 'bg-red-50 text-red-600 border-red-100 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
                                             }`}>
                                             {isLive ? 'En Curso' : 'Próxima Misa'}
                                         </span>
@@ -175,7 +175,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                                 className={`w-full md:w-auto px-6 py-3 font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2
                                                     ${isLive
                                                         ? 'bg-white text-red-900 hover:bg-gray-100'
-                                                        : 'bg-primary text-white hover:bg-blue-700 shadow-blue-500/30'
+                                                        : 'bg-primary text-white hover:bg-red-700 shadow-red-500/20'
                                                     }`}
                                             >
                                                 <span className="material-symbols-outlined">menu_book</span>
@@ -275,16 +275,16 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                         {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
                             <button
                                 onClick={() => setIsCommOpen(true)}
-                                className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/30 dark:to-indigo-900/30 border border-blue-100 dark:border-blue-800 hover:scale-[1.02] transition-transform"
+                                className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 hover:scale-[1.02] transition-transform"
                             >
-                                <div className="w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center shadow-lg shadow-blue-500/30">
+                                <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
                                     <span className="material-symbols-outlined text-2xl">forum</span>
                                 </div>
                                 <div className="text-left">
                                     <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                                    <p className="text-xs text-blue-600 dark:text-blue-300 font-medium">Avisos, Mensajes y Chat</p>
+                                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Avisos, Mensajes y Chat</p>
                                 </div>
-                                <span className="material-symbols-outlined text-blue-300 ml-auto">open_in_new</span>
+                                <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
                             </button>
                         )}
 

@@ -192,8 +192,8 @@ button {
     .neumorphic-inset:focus {
         background: var(--bg-card);
         border-color: var(--color-primary-light);
-        box-shadow: 0 0 0 2px rgba(120, 53, 15, 0.1);
-        /* Amber Tint */
+        box-shadow: 0 0 0 2px rgba(153, 27, 27, 0.1);
+        /* Red Tint */
         outline: none;
     }
 
@@ -211,8 +211,8 @@ button {
     }
 
     .neumorphic-btn:hover {
-        background: rgba(120, 53, 15, 0.05);
-        /* Amber tint hover */
+        background: rgba(153, 27, 27, 0.05);
+        /* Red tint hover */
         color: var(--color-primary);
         transform: translateY(-1px);
     }

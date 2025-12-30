@@ -288,7 +288,7 @@ export default function MusicView() {
                                         <button
                                             type="button"
                                             onClick={handleWebSearch}
-                                            className="btn-secondary !text-blue-600 !bg-blue-50 hover:!bg-blue-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
+                                            className="btn-secondary !text-red-600 !bg-red-50 hover:!bg-red-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
                                             title="Buscar acordes en Google"
                                         >
                                             <span className="material-symbols-outlined text-sm">search</span>Web

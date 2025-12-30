@@ -160,7 +160,7 @@ export default function PulpitView({ content, onClose, title, date }) {
                     {/* Briefing Toggle */}
                     <button
                         onClick={() => setShowBriefing(!showBriefing)}
-                        className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${showBriefing ? 'bg-amber-500 text-white' : 'bg-white/10 text-gray-500 hover:text-white hover:bg-white/20'}`}
+                        className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${showBriefing ? 'bg-red-600 text-white' : 'bg-white/10 text-gray-500 hover:text-white hover:bg-white/20'}`}
                         title="Notas del Celebrante"
                     >
                         <span className="material-symbols-outlined text-2xl">assignment</span>
@@ -186,9 +186,9 @@ export default function PulpitView({ content, onClose, title, date }) {
 
                     {/* Theme Toggles */}
                     <div className="flex items-center gap-2">
-                        <button onClick={() => setTheme('light')} className={`w-6 h-6 rounded-full border border-gray-400 bg-white ${theme === 'light' ? 'ring-2 ring-blue-500' : 'opacity-50 hover:opacity-100'}`} title="Luz"></button>
-                        <button onClick={() => setTheme('sepia')} className={`w-6 h-6 rounded-full border border-[#5b4636] bg-[#f4ecd8] ${theme === 'sepia' ? 'ring-2 ring-blue-500' : 'opacity-50 hover:opacity-100'}`} title="Sepia"></button>
-                        <button onClick={() => setTheme('dark')} className={`w-6 h-6 rounded-full border border-gray-600 bg-gray-900 ${theme === 'dark' ? 'ring-2 ring-blue-500' : 'opacity-50 hover:opacity-100'}`} title="Noche"></button>
+                        <button onClick={() => setTheme('light')} className={`w-6 h-6 rounded-full border border-gray-400 bg-white ${theme === 'light' ? 'ring-2 ring-red-500' : 'opacity-50 hover:opacity-100'}`} title="Luz"></button>
+                        <button onClick={() => setTheme('sepia')} className={`w-6 h-6 rounded-full border border-[#5b4636] bg-[#f4ecd8] ${theme === 'sepia' ? 'ring-2 ring-red-500' : 'opacity-50 hover:opacity-100'}`} title="Sepia"></button>
+                        <button onClick={() => setTheme('dark')} className={`w-6 h-6 rounded-full border border-gray-600 bg-gray-900 ${theme === 'dark' ? 'ring-2 ring-red-500' : 'opacity-50 hover:opacity-100'}`} title="Noche"></button>
                     </div>
 
                     <div className="w-px h-8 bg-white/20 mx-1"></div>
@@ -240,7 +240,7 @@ export default function PulpitView({ content, onClose, title, date }) {
             <div className={`fixed top-0 right-0 h-full w-full md:w-96 bg-gray-900/95 backdrop-blur-xl border-l border-white/10 z-[110] transition-transform duration-300 transform ${showBriefing ? 'translate-x-0' : 'translate-x-full'} overflow-y-auto`}>
                 <div className="p-6">
                     <div className="flex justify-between items-center mb-8">
-                        <h2 className="text-xl font-display font-bold text-amber-500 flex items-center gap-2">
+                        <h2 className="text-xl font-display font-bold text-red-500 flex items-center gap-2">
                             <span className="material-symbols-outlined">assignment</span>
                             Mesa del Celebrante
                         </h2>
@@ -258,7 +258,7 @@ export default function PulpitView({ content, onClose, title, date }) {
                             <ul className="space-y-3">
                                 {intentions.map(i => (
                                     <li key={i.id} className="bg-white/5 rounded-lg p-3 border border-white/5">
-                                        <span className={`text-[10px] font-bold uppercase block mb-1 ${i.type === 'difuntos' ? 'text-gray-500' : 'text-amber-400'}`}>
+                                        <span className={`text-[10px] font-bold uppercase block mb-1 ${i.type === 'difuntos' ? 'text-gray-500' : 'text-red-400'}`}>
                                             {i.type === 'difuntos' ? '✞ Difunto' : i.type === 'salud' ? 'Salud' : 'Acción de Gracias'}
                                         </span>
                                         <span className="text-gray-200 font-medium text-lg">{i.text}</span>
@@ -277,7 +277,7 @@ export default function PulpitView({ content, onClose, title, date }) {
                             <ul className="space-y-4">
                                 {notices.map((n, idx) => (
                                     <li key={n.id} className="flex gap-3 items-start">
-                                        <span className="text-amber-500 font-bold text-lg">{idx + 1}.</span>
+                                        <span className="text-red-500 font-bold text-lg">{idx + 1}.</span>
                                         <span className="text-gray-300 leading-relaxed text-lg">{n.text}</span>
                                     </li>
                                 ))}
