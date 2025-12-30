@@ -76,14 +76,14 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         </div>
 
-                        <nav className="flex items-center gap-1 xl:gap-2 flex-1 mx-4 overflow-x-auto no-scrollbar mask-linear-fade">
+                        <nav className="flex items-center gap-1 xl:gap-2 flex-1 mx-4 overflow-x-auto no-scrollbar">
                             {visibleNavItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => onNavigate(item.id)}
                                     className={`h-10 px-3 xl:px-4 rounded-full flex items-center gap-2 transition-all duration-300 whitespace-nowrap shrink-0 ${activeTab === item.id
-                                        ? 'neumorphic-inset font-bold text-primary shadow-inner'
-                                        : 'neumorphic-btn text-gray-500 hover:text-primary'}`}
+                                        ? 'bg-white shadow-inner font-bold text-primary border border-gray-100'
+                                        : 'text-gray-600 hover:text-primary hover:bg-white/50'}`}
                                 >
                                     <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
                                         {item.icon}
