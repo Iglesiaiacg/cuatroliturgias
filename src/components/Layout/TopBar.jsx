@@ -76,20 +76,22 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         </div>
 
-                        <nav className="flex items-center gap-1 xl:gap-2 flex-1 mx-4 overflow-x-auto no-scrollbar">
+                        <nav className="flex items-center gap-2 flex-1 mx-2 overflow-x-auto no-scrollbar">
                             {visibleNavItems.map((item) => (
                                 <button
                                     key={item.id}
                                     onClick={() => onNavigate(item.id)}
-                                    className={`h-10 px-3 xl:px-4 rounded-full flex items-center gap-2 transition-all duration-300 whitespace-nowrap shrink-0 ${activeTab === item.id
-                                        ? 'bg-white shadow-inner font-bold text-primary border border-gray-100'
-                                        : 'text-gray-600 hover:text-primary hover:bg-white/50'}`}
+                                    className={`relative flex-none h-10 px-4 rounded-full flex items-center gap-2 transition-all duration-200 ${activeTab === item.id
+                                        ? 'bg-white shadow-sm ring-1 ring-gray-200 text-primary font-bold z-10'
+                                        : 'text-gray-500 hover:text-primary hover:bg-white/60'}`}
                                 >
-                                    <span className={`material-symbols-outlined text-[20px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''}`}>
+                                    <span className="material-symbols-outlined text-[20px] shrink-0">
                                         {item.icon}
                                     </span>
-                                    {/* Always show label on desktop */}
-                                    <span className="text-xs font-bold">{item.label}</span>
+                                    {/* Force Text Display */}
+                                    <span className="text-xs font-bold leading-none whitespace-nowrap">
+                                        {item.label}
+                                    </span>
                                 </button>
                             ))}
                         </nav>
