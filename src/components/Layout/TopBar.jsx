@@ -78,13 +78,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
 
 
-                        <div className="flex items-center gap-3">
-                            {/* Role Switcher Removed - Moved to Profile Settings */}
 
-                            <button onClick={onProfile} className="w-10 h-10 neumorphic-btn" title="Mi Perfil">
-                                <span className="material-symbols-outlined">account_circle</span>
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -140,6 +134,23 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 );
                             })}
 
+                            {/* PROFILE BUTTON (Distinct Style) */}
+                            <button
+                                onClick={onProfile}
+                                className="relative group transition-all duration-300 ease-out active:scale-95 shrink-0 ml-2"
+                                title="Mi Perfil"
+                            >
+                                <div
+                                    style={{ clipPath: 'url(#squircleClip)' }}
+                                    className="w-12 h-12 md:w-14 md:h-14 bg-stone-900 dark:bg-stone-100 flex items-center justify-center shadow-lg border border-stone-800 dark:border-stone-200 text-amber-500 dark:text-amber-600 hover:scale-110 transition-all duration-300"
+                                >
+                                    <span className="material-symbols-outlined text-2xl md:text-3xl font-variation-settings-fill">account_circle</span>
+                                </div>
+                                <span className="hidden md:block absolute -top-10 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs font-bold px-3 py-1.5 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-2 group-hover:translate-y-0 whitespace-nowrap pointer-events-none shadow-xl">
+                                    Perfil
+                                </span>
+                            </button>
+
                             {/* MENU BUTTON (Mobile Only or Overflow) */}
                             <button
                                 onClick={() => setIsMenuOpen(true)}
@@ -155,12 +166,13 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                         </div>
                     </div>
                 </div>
-            </header>
+            </header >
 
             {/* FULL GRID MENU OVERLAY */}
-            <MobileMenuOverlay
+            < MobileMenuOverlay
                 isOpen={isMenuOpen}
-                onClose={() => setIsMenuOpen(false)}
+                onClose={() => setIsMenuOpen(false)
+                }
                 onNavigate={onNavigate}
                 onProfile={onProfile}
                 visibleNavItems={visibleNavItems}
