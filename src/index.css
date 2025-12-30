@@ -15,38 +15,40 @@
 }
 
 :root {
-    /* Solemn Theme Variables (Based on DutiesModal) */
+    /* Modern Theme Variables (Bike Shop Aesthetic) */
     /* Light Mode */
-    --bg-main: #f5f5f4;
-    /* Stone-100 */
+    --bg-main: #f8fafc;
+    /* Slate-50 - Ultra clean */
     --bg-card: #ffffff;
-    --text-main: #292524;
-    /* Stone-800 - Softer than pure black */
+    --text-main: #1e293b;
+    /* Slate-800 */
 
     /* Typography Colors */
     --text-display: #991b1b;
-    /* Red-800 for Headers */
-    --text-secondary: #57534e;
-    /* Stone-600 */
+    /* Red-800 for Headers (Retaining Liturgical Identity) */
+    --text-secondary: #64748b;
+    /* Slate-500 */
 
-    /* Modern Shadows */
-    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.025);
-    --shadow-floating: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    /* Modern Shadows - Soft & Diffused */
+    --shadow-card: 0 20px 40px -5px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.04);
+    --shadow-floating: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 
-    /* Borders */
-    --border-subtle: 1px solid #e7e5e4;
-    /* Stone-200 */
+    /* Borders & Radius */
+    --border-subtle: 1px solid #f1f5f9;
+    /* Slate-200 */
+    --radius-card: 28px;
+    /* Big, bold curves */
+    --radius-btn: 9999px;
+    /* Pills */
 
-    /* Accents - The "Gold/Cream" Palette */
+    /* Accents - Retaining Liturgical Gold but cleaner application */
     --color-primary: #cfa355;
-    /* Liturgical Gold */
     --color-primary-light: #e3c080;
-    /* Light Gold */
     --icon-color: #cfa355;
-    /* Amber-900 */
 
     --drop-cap-size: 3.5em;
-    --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+    --paper-texture: none;
+    /* Removing texture for modern clean look */
 }
 
 /* Dark Mode Overrides */
@@ -151,23 +153,28 @@ button {
 /* REPLACED NEUMORPHIC ENGINE -> SOLEMN CARD ENGINE */
 @layer utilities {
 
-    /* The Main Card - Now Solemn/Clean */
+    /* The Main Card - Modern Clean */
     .neumorphic-card {
         background: var(--bg-card);
         box-shadow: var(--shadow-card);
-        border: var(--border-subtle);
-        border-radius: 1rem;
-        /* Position relative usually helps with absolute decorative elements */
+        border: none;
+        /* CLEAN */
+        border-radius: var(--radius-card);
         position: relative;
+        overflow: hidden;
+        /* Ensure content respects curves */
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* Inputs - Flat & Clean */
+    /* Inputs - Modern Filled */
     .neumorphic-inset {
-        background: var(--bg-main);
+        background: #f1f5f9;
+        /* Slate-100 */
         border: 1px solid transparent;
-        box-shadow: inset 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        border-radius: 0.5rem;
+        box-shadow: none;
+        border-radius: 16px;
         color: var(--text-main);
+        font-weight: 500;
     }
 
     /* Dark Mode Handling for Insets */

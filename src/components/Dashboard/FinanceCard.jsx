@@ -79,30 +79,30 @@ export default function FinanceCard() {
                 </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
                 <div>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Saldo (Registrado)</span>
-                    <div className="text-2xl font-mono font-bold text-gray-900 dark:text-white mt-1">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wide">Saldo Disponible</span>
+                    <div className="text-4xl font-mono font-bold text-gray-900 dark:text-white mt-2 tracking-tighter">
                         {isVisible ? formatMoney(summary.balance) : '****'}
                     </div>
                 </div>
 
-                <div className="flex items-center gap-4 pt-2 border-t border-gray-100 dark:border-white/5">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-green-600 dark:text-green-400 mb-0.5">
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-2xl">
+                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-green-600 dark:text-green-400 mb-1">
                             <span className="material-symbols-outlined text-sm">arrow_upward</span>
                             Entradas
                         </div>
-                        <div className="font-mono font-bold text-sm text-gray-700 dark:text-gray-300">
+                        <div className="font-mono font-bold text-sm text-gray-700 dark:text-gray-200">
                             {isVisible ? formatMoney(summary.income) : '****'}
                         </div>
                     </div>
-                    <div className="flex-1 border-l border-gray-100 dark:border-white/5 pl-4">
-                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-red-600 dark:text-red-400 mb-0.5">
+                    <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded-2xl">
+                        <div className="flex items-center gap-1 text-[10px] uppercase font-bold text-red-600 dark:text-red-400 mb-1">
                             <span className="material-symbols-outlined text-sm">arrow_downward</span>
                             Salidas
                         </div>
-                        <div className="font-mono font-bold text-sm text-gray-700 dark:text-gray-300">
+                        <div className="font-mono font-bold text-sm text-gray-700 dark:text-gray-200">
                             {isVisible ? formatMoney(summary.expense) : '****'}
                         </div>
                     </div>

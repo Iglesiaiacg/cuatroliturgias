@@ -74,28 +74,28 @@ export default function StatsCard() {
                 </button>
             </div>
 
-            <div className="flex items-end gap-3 mb-6">
-                <div className="text-4xl font-mono font-bold text-gray-900 dark:text-white leading-none">
+            <div className="flex items-end gap-3 mb-8">
+                <div className="text-5xl font-mono font-bold text-gray-900 dark:text-white leading-none tracking-tighter">
                     {total}
                 </div>
                 {lastWeek && (
-                    <div className={`flex items-center text-xs font-bold mb-1 ${trend >= 0 ? 'text-green-600' : 'text-red-500'}`}>
-                        <span className="material-symbols-outlined text-sm">{trend >= 0 ? 'trending_up' : 'trending_down'}</span>
-                        {Math.abs(trend)} vs semana ant.
+                    <div className={`flex items-center text-xs font-bold mb-1.5 px-2 py-1 rounded-full ${trend >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                        <span className="material-symbols-outlined text-sm mr-1">{trend >= 0 ? 'trending_up' : 'trending_down'}</span>
+                        {Math.abs(trend)}
                     </div>
                 )}
             </div>
 
-            <div className="grid grid-cols-4 gap-2 text-center">
+            <div className="grid grid-cols-4 gap-3 text-center mb-4">
                 <StatInput icon="man" label="H" value={stats.men} onChange={v => setStats({ ...stats, men: v })} isEditing={isEditing} />
                 <StatInput icon="woman" label="M" value={stats.women} onChange={v => setStats({ ...stats, women: v })} isEditing={isEditing} />
                 <StatInput icon="child_care" label="N" value={stats.children} onChange={v => setStats({ ...stats, children: v })} isEditing={isEditing} />
                 <StatInput icon="church" label="Com" value={stats.communicants} onChange={v => setStats({ ...stats, communicants: v })} isEditing={isEditing} highlight />
             </div>
 
-            <div className="mt-4 pt-3 border-t border-gray-100 dark:border-white/5 text-center">
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-                    Domingo {format(new Date(dateKey), 'dd MMM', { locale: es })}
+            <div className="mt-auto pt-2 text-center">
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                    {format(new Date(dateKey), 'EEEE d MMMM', { locale: es })}
                 </p>
             </div>
         </div>
