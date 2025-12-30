@@ -415,7 +415,7 @@ function AppContent() {
 
           {/* --- DASHBOARD VIEW --- */}
           {activeTab === 'dashboard' && (
-            <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
               <HomeView
                 key="home-refresh-v3"
                 date={selectedDate}
@@ -429,7 +429,7 @@ function AppContent() {
 
           {/* --- GENERATOR VIEW (Classic Workspace) --- */}
           {activeTab === 'generator' && (
-            <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
               {/* ROLE GUARD: Only Admins can Generate */}
               {(checkPermission && checkPermission('generate_liturgy')) && (
                 <GeneratorToolbar
@@ -519,7 +519,7 @@ function AppContent() {
 
           {/* --- CALENDAR VIEW --- */}
           {activeTab === 'calendar' && (
-            <div className="flex-1 flex flex-col w-full overflow-y-auto">
+            <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
               <CalendarView
                 selectedDate={selectedDate}
                 onDateChange={setSelectedDate}
@@ -542,7 +542,7 @@ function AppContent() {
           {activeTab === 'directory' && (
             /* ROLE GUARD: Permission check */
             (checkPermission && checkPermission('view_directory')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-y-auto px-4 py-6 max-w-7xl mx-auto">
+              <div className="flex-1 flex flex-col w-full overflow-y-auto px-4 py-6 max-w-7xl mx-auto pb-40">
                 <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white mb-6">Directorio de Fieles</h1>
                 <DirectoryView />
               </div>
@@ -572,7 +572,7 @@ function AppContent() {
           {/* --- MUSIC VIEW --- */}
           {activeTab === 'music' && (
             (checkPermission && checkPermission('view_music')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-y-auto">
+              <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
                 <MusicView />
               </div>
             ) : (
@@ -591,7 +591,7 @@ function AppContent() {
           {/* --- USERS VIEW (Admin Only) --- */}
           {activeTab === 'users' && (
             (checkPermission && checkPermission('manage_users')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-y-auto p-4 md:p-8">
+              <div className="flex-1 flex flex-col w-full overflow-y-auto p-4 md:p-8 pb-40">
                 <UserManagement />
               </div>
             ) : (
@@ -605,7 +605,7 @@ function AppContent() {
           {/* --- ROSTER VIEW (Admin/Sacristy) --- */}
           {activeTab === 'roster' && (
             (checkPermission && (checkPermission('manage_roster') || userRole === 'admin' || userRole === 'sacristan')) ? (
-              <div className="flex-1 flex flex-col w-full overflow-y-auto">
+              <div className="flex-1 flex flex-col w-full overflow-y-auto pb-40">
                 <RosterView />
               </div>
             ) : (
