@@ -229,20 +229,18 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
             {/* Dashboard Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
 
-                {/* Column 1: Priority (Next Liturgy & Actions) */}
+                {/* Column 1: Priority & Devotion */}
                 <div className="space-y-6">
-                    {/* Hide automatic suggestion if Pinned exists to avoid confusion, or keep as "Upcoming"? Keeping it. */}
+                    {/* Next Liturgy (If no pinned event or just strictly next) */}
                     {!pinnedLiturgy && (
                         <section>
-                            <section>
-                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
-                                <NextLiturgyCard onClick={() => onNavigate('generator')} />
-                            </section>
+                            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
+                            <NextLiturgyCard onClick={() => onNavigate('generator')} />
                         </section>
                     )}
 
                     <section>
-                        <NoticesCard />
+                        <IntentionsCard date={date} />
                     </section>
 
                     <section>
@@ -268,7 +266,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     </section>
                 </div>
 
-                {/* Column 2: Management */}
+                {/* Column 2: Management & Communication */}
                 <div className="space-y-6">
                     <section>
                         <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
@@ -292,15 +290,13 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
                         <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
                     </section>
+
                     <section>
-                        <StatsCard />
-                    </section>
-                    <section>
-                        <IntentionsCard date={date} />
+                        <NoticesCard />
                     </section>
                 </div>
 
-                {/* Column 3: Finance & Checklist */}
+                {/* Column 3: Administration & Stats */}
                 <div className="space-y-6">
                     <section>
                         <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
@@ -310,6 +306,10 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     <section>
                         <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>
                         <FinanceCard />
+                    </section>
+
+                    <section>
+                        <StatsCard />
                     </section>
 
                     <section>
