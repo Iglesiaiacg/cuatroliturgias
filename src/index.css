@@ -41,12 +41,13 @@
     --radius-btn: 9999px;
     /* Pills */
 
-    /* Accents - Electric Blue (Bike Shop Style) */
-    --color-primary: #2563eb;
-    /* Blue-600 - The Electric Blue */
-    --color-primary-light: #60a5fa;
-    /* Blue-400 */
-    --icon-color: #2563eb;
+    /* Accents - Liturgical Red */
+    --color-primary: #991b1b;
+    /* Red-800 */
+    --color-primary-light: #b91c1c;
+    /* Red-700 */
+    --color-primary-text: #ffffff;
+    --icon-color: #991b1b;
 
     --drop-cap-size: 3.5em;
     --paper-texture: none;
@@ -72,11 +73,11 @@
         --border-subtle: 1px solid #44403c;
         /* Stone-700 */
 
-        --color-primary: #fbbf24;
-        /* Amber-400 */
-        --color-primary-light: #fcd34d;
-        /* Amber-300 */
-        --icon-color: #fbbf24;
+        --color-primary: #fca5a5;
+        /* Red-300 - Readable on dark */
+        --color-primary-light: #fecaca;
+        /* Red-200 */
+        --icon-color: #fca5a5;
     }
 }
 
@@ -224,7 +225,7 @@ button {
     .neumorphic-btn:active,
     .neumorphic-btn.active {
         background: var(--color-primary);
-        color: #292524 !important;
+        color: #ffffff !important;
         border-color: var(--color-primary);
         transform: scale(0.95) translateY(0);
         box-shadow: none;
@@ -266,7 +267,7 @@ button {
     }
 
     .btn-primary {
-        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 gap-2 bg-primary text-stone-900 hover:bg-[var(--color-primary-light)] hover:shadow-md hover:text-stone-900 active:text-stone-900;
+        @apply inline-flex items-center justify-center px-4 py-2 rounded-lg text-sm font-bold shadow-sm transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100 gap-2 bg-primary text-white hover:bg-[var(--color-primary-light)] hover:shadow-md hover:text-white active:text-white;
     }
 
     .btn-secondary {

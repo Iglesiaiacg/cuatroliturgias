@@ -120,9 +120,9 @@ export default function MusicView() {
     }
 
     return (
-        <div className="flex-1 flex flex-col h-full p-4 w-full max-w-7xl mx-auto pb-24">
+        <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto pb-24">
             {/* Header with Navigation and Notation Toggle */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 flex-shrink-0">
                 <div>
                     <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">Cantoral</h1>
                     <div className="flex items-center gap-4 mt-1">
@@ -133,13 +133,13 @@ export default function MusicView() {
                         <div className="flex bg-gray-100 dark:bg-white/5 rounded-lg p-1">
                             <button
                                 onClick={() => setViewMode('songs')}
-                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${viewMode === 'songs' ? 'bg-white dark:bg-white/10 shadow text-primary' : 'text-gray-500'}`}
+                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${viewMode === 'songs' ? 'bg-white dark:bg-white/10 shadow text-primary' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 Cantos
                             </button>
                             <button
                                 onClick={() => setViewMode('setlists')}
-                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${viewMode === 'setlists' ? 'bg-white dark:bg-white/10 shadow text-primary' : 'text-gray-500'}`}
+                                className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${viewMode === 'setlists' ? 'bg-white dark:bg-white/10 shadow text-primary' : 'text-gray-500 hover:text-gray-700'}`}
                             >
                                 Listas {activeSetlistId && <span className="w-2 h-2 bg-green-500 rounded-full inline-block ml-1"></span>}
                             </button>
@@ -216,17 +216,17 @@ export default function MusicView() {
                         </div>
                     )}
 
-                    {/* Category Chips */}
-                    <div className="flex flex-wrap gap-2 mb-6 overflow-x-auto pb-2 no-scrollbar">
+                    {/* Category Chips - Scrollable to prevent overlap */}
+                    <div className="flex overflow-x-auto pb-4 pt-2 -mx-4 px-4 no-scrollbar gap-2 mb-6 flex-shrink-0">
                         {CATEGORIES.map(cat => (
                             <button
                                 key={cat.id}
                                 onClick={() => setSelectedCategory(cat.id)}
                                 className={`
-                                    px-4 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap
+                                    px-4 py-2 rounded-full text-sm font-bold transition-all whitespace-nowrap shadow-sm
                                     ${selectedCategory === cat.id
-                                        ? 'bg-primary text-white shadow-md transform scale-105'
-                                        : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10'}
+                                        ? 'bg-primary text-white shadow-md transform scale-105 active:scale-100'
+                                        : 'bg-white dark:bg-white/5 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/10'}
                                 `}
                             >
                                 {cat.label}
@@ -347,18 +347,18 @@ export default function MusicView() {
                     )}
 
                     {/* Search and Toggle Wrapper */}
-                    <div className="flex gap-4 mb-6">
+                    <div className="flex flex-col sm:flex-row gap-4 mb-8 flex-shrink-0">
                         <div className="relative flex-1">
-                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">search</span>
+                            <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">search</span>
                             <input
                                 type="text"
-                                placeholder={`Buscar en ${selectedCategory === 'all' ? 'todo' : selectedCategory}...`}
-                                className="w-full pl-10 pr-4 py-3 rounded-xl border-none shadow-sm bg-white dark:bg-surface-dark focus:ring-2 focus:ring-primary dark:text-white"
+                                placeholder={`Buscar en ${selectedCategory === 'all' ? 'todo' : CATEGORIES.find(c => c.id === selectedCategory)?.label || 'esta categoría'}...`}
+                                className="w-full pl-10 pr-4 py-3 rounded-xl border-none shadow-sm bg-white dark:bg-surface-dark focus:ring-2 focus:ring-primary dark:text-white transition-shadow"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                             />
                         </div>
-                        <div className="flex bg-gray-100 dark:bg-white/5 p-1 rounded-xl h-full items-center">
+                        <div className="flex bg-gray-100 dark:bg-white/10 p-1 rounded-xl h-fit items-center self-end sm:self-auto">
                             <button
                                 onClick={() => setViewFormat('grid')}
                                 className={`p-2 rounded-lg transition-all ${viewFormat === 'grid' ? 'bg-white dark:bg-white/10 shadow text-primary' : 'text-gray-400 hover:text-gray-600'}`}
