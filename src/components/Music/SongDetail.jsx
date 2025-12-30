@@ -51,9 +51,49 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
         if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
     }, []);
 
-    // ... (Process Lyrics content logic remains safely below)
+    // Process Lyrics
+    const content = useMemo(() => {
+        const lines = song.lyrics.split('\n');
 
-    // ... (handleDelete logic)
+        return lines.map((line, i) => {
+            // Split by chords
+            const components = line.split(/(\[.*?\])/g);
+            return (
+                <div key={i} className="min-h-[1.5em] my-1 leading-relaxed">
+                    {components.map((part, j) => {
+                        if (part.startsWith('[') && part.endsWith(']')) {
+                            // It's a chord
+                            if (!showChords) return null; // Hide if toggled off
+
+                            // Transpose using utility with Notation System
+                            const displayChord = transposeAndFormat(part, transpose, notationSystem).replace(/[\[\]]/g, '');
+
+                            return (
+                                <span key={j} className="text-red-600 font-bold mx-1 select-none" style={{ fontSize: '0.9em' }}>
+                                    {displayChord}
+                                </span>
+                            );
+                        } else {
+                            // It's lyrics
+                            return <span key={j}>{part}</span>;
+                        }
+                    })}
+                </div>
+            );
+        });
+    }, [song.lyrics, transpose, showChords, notationSystem]);
+
+    const handleDelete = async () => {
+        if (window.confirm(`¿Estás seguro de que quieres eliminar "${song.title}"? Esta acción no se puede deshacer.`)) {
+            try {
+                await deleteSong(song.id);
+                onClose();
+            } catch (error) {
+                console.error("Error deleting song:", error);
+                alert("Error al eliminar el canto: " + error.message);
+            }
+        }
+    };
 
     const canDelete = (checkPermission && checkPermission('manage_music')) || userRole === 'admin';
 
