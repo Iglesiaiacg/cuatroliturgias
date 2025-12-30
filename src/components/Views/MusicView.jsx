@@ -39,6 +39,7 @@ export default function MusicView() {
     const [newKey, setNewKey] = useState('C');
     const [newCategory, setNewCategory] = useState('entrada');
     const [newLyrics, setNewLyrics] = useState('');
+    const [newYoutubeUrl, setNewYoutubeUrl] = useState('');
     const [suggestions, setSuggestions] = useState([]);
 
     // Liturgical Context for Suggestions
@@ -67,6 +68,7 @@ export default function MusicView() {
         setNewKey(hymn.key);
         setNewLyrics(hymn.lyrics);
         if (hymn.category) setNewCategory(hymn.category);
+        if (hymn.youtubeUrl) setNewYoutubeUrl(hymn.youtubeUrl);
         setSuggestions([]);
     };
 
@@ -83,11 +85,13 @@ export default function MusicView() {
             title: newTitle,
             key: newKey,
             lyrics: newLyrics,
-            category: newCategory
+            category: newCategory,
+            youtubeUrl: newYoutubeUrl
         });
         setIsCreating(false);
         setNewTitle('');
         setNewLyrics('');
+        setNewYoutubeUrl('');
         setSuggestions([]);
     };
 
@@ -285,8 +289,23 @@ export default function MusicView() {
                                             type="button"
                                             onClick={handleWebSearch}
                                             className="btn-secondary !text-blue-600 !bg-blue-50 hover:!bg-blue-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
+                                            title="Buscar acordes en Google"
                                         >
                                             <span className="material-symbols-outlined text-sm">search</span>Web
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                if (newTitle.length > 2) {
+                                                    window.open(`https://www.youtube.com/results?search_query=${encodeURIComponent(newTitle + ' letra')}`, '_blank');
+                                                } else {
+                                                    alert("Escribe un título primero");
+                                                }
+                                            }}
+                                            className="btn-secondary !text-red-600 !bg-red-50 hover:!bg-red-100 flex items-center gap-1 text-xs px-2 py-1 h-auto"
+                                            title="Buscar video en YouTube para copiar enlace"
+                                        >
+                                            <span className="material-symbols-outlined text-sm">play_circle</span>YouTube
                                         </button>
                                         <button
                                             type="button"
@@ -301,6 +320,15 @@ export default function MusicView() {
                                             <span className="material-symbols-outlined text-sm">magic_button</span>Pegar
                                         </button>
                                     </div>
+
+                                    <input
+                                        className="w-full neumorphic-inset p-2 mb-2 text-xs font-mono text-gray-500"
+                                        placeholder="Enlace de YouTube (opcional) - Para modo ensayo"
+                                        value={newYoutubeUrl}
+                                        onChange={e => setNewYoutubeUrl(e.target.value)}
+                                        autoComplete="off"
+                                    />
+
                                     <textarea
                                         className="w-full neumorphic-inset p-4 h-64 font-mono text-sm"
                                         placeholder={`Letra y acordes...\n[C] Ejemplo\nPegar Mágico formateará texto de la web.`}

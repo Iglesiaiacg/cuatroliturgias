@@ -19,17 +19,43 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
     const timerRef = useRef(null);
     const saveTimeoutRef = useRef(null);
 
-    // Persist BPM changes
-    const handleBpmChange = (newBpm) => {
-        const val = Math.max(40, Math.min(240, Number(newBpm)));
-        setBpm(val);
+    // Rehearsal & Auto-Scroll State
+    const [isRehearsal, setIsRehearsal] = useState(false);
+    const [isAutoScroll, setIsAutoScroll] = useState(false);
+    const scrollRef = useRef(null);
+    const scrollIntervalRef = useRef(null);
 
-        // Debounce save
-        if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-        saveTimeoutRef.current = setTimeout(() => {
-            updateSong(song.id, { bpm: val });
-        }, 1000);
-    };
+    const videoId = useMemo(() => {
+        if (!song.youtubeUrl) return null;
+        try {
+            const url = new URL(song.youtubeUrl);
+            if (url.hostname.includes('youtube.com')) return url.searchParams.get('v');
+            if (url.hostname.includes('youtu.be')) return url.pathname.slice(1);
+        } catch (e) { return null; }
+        return null;
+    }, [song.youtubeUrl]);
+
+    // Auto Scroll Logic
+    useEffect(() => {
+        if (isAutoScroll && scrollRef.current) {
+            const speed = 1; // Pixels per tick
+            scrollIntervalRef.current = setInterval(() => {
+                if (scrollRef.current) {
+                    scrollRef.current.scrollTop += speed;
+                    // Stop if reached bottom
+                    if (scrollRef.current.scrollTop + scrollRef.current.clientHeight >= scrollRef.current.scrollHeight) {
+                        setIsAutoScroll(false);
+                    }
+                }
+            }, 50); // Adjust for speed
+        } else {
+            clearInterval(scrollIntervalRef.current);
+        }
+        return () => clearInterval(scrollIntervalRef.current);
+    }, [isAutoScroll]);
+
+    // Cleanup scroll on unmount
+    useEffect(() => () => clearInterval(scrollIntervalRef.current), []);
 
     // Metronome Logic
     useEffect(() => {
@@ -151,6 +177,26 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
                         </button>
                     )}
 
+                    {/* REHEARSAL TOGGLE */}
+                    {videoId && (
+                        <button
+                            onClick={() => setIsRehearsal(!isRehearsal)}
+                            className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold transition-all ${isRehearsal ? 'bg-red-100 text-red-600 ring-2 ring-red-500' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                        >
+                            <span className="material-symbols-outlined text-lg">videocam</span>
+                            <span className="hidden sm:inline">Ensayo</span>
+                        </button>
+                    )}
+
+                    {/* AUTO SCROLL TOGGLE */}
+                    <button
+                        onClick={() => setIsAutoScroll(!isAutoScroll)}
+                        className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold transition-all ${isAutoScroll ? 'bg-blue-100 text-blue-600 ring-2 ring-blue-500' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
+                    >
+                        <span className="material-symbols-outlined text-lg">swipe_up</span>
+                        <span className="hidden sm:inline">Scroll</span>
+                    </button>
+
                     {/* METRONOME */}
                     <div className="flex items-center gap-1 bg-white dark:bg-white/5 rounded-lg p-1 border border-gray-200 dark:border-white/10 shadow-sm">
                         <button
@@ -166,7 +212,14 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
                             <input
                                 type="number"
                                 value={bpm}
-                                onChange={(e) => handleBpmChange(e.target.value)}
+                                onChange={(e) => {
+                                    const val = Math.max(40, Math.min(240, Number(e.target.value)));
+                                    setBpm(val);
+                                    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+                                    saveTimeoutRef.current = setTimeout(() => {
+                                        updateSong(song.id, { bpm: val });
+                                    }, 1000);
+                                }}
                                 className="w-full text-center bg-transparent font-mono font-bold text-xs outline-none appearance-none"
                                 min="40" max="240"
                             />
@@ -237,21 +290,46 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
                 </div>
             </div>
 
-            {/* Song Content */}
-            <div className="flex-1 overflow-y-auto bg-paper-pattern p-4 sm:p-12 text-center" style={{ fontSize: `${fontSize}px` }}>
-                <h1 className="text-3xl sm:text-4xl font-display font-bold mb-4">{song.title}</h1>
-                <p className="text-base text-gray-500 mb-8 italic print:hidden">
-                    Clave: <span className="font-bold text-primary">{song.key}</span>
-                    {transpose !== 0 && ` (Transportado)`}
-                    <span className="ml-4 text-xs bg-gray-100 dark:bg-white/10 px-2 py-1 rounded">
-                        {notationSystem === 'latin' ? 'Do Re Mi' : 'C D E'}
-                    </span>
-                </p>
-                {/* Print only info */}
-                <p className="hidden print:block text-xs text-gray-600 mb-8">Cuatro Liturgias - Cantoral</p>
+            {/* Song Content Container with Side Panel for Video */}
+            <div className="flex flex-1 overflow-hidden">
+                {/* VIDEO PANEL (Visible on Desktop Split or Mobile Top) */}
+                {isRehearsal && videoId && (
+                    <div className="w-full lg:w-96 bg-black shrink-0 flex items-center justify-center relative lg:border-r border-gray-800">
+                        {/* Close Rehearsal Mode button for mobile convenience */}
+                        <div className="absolute top-2 right-2 z-10 lg:hidden">
+                            <button onClick={() => setIsRehearsal(false)} className="bg-black/50 text-white rounded-full p-1"><span className="material-symbols-outlined">close</span></button>
+                        </div>
+                        <iframe
+                            src={`https://www.youtube.com/embed/${videoId}?autoplay=1`}
+                            title="YouTube video player"
+                            className="w-full h-full lg:h-64 aspect-video"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                        ></iframe>
+                    </div>
+                )}
 
-                <div className="font-serif text-gray-800 dark:text-gray-200 whitespace-pre-wrap max-w-3xl mx-auto pb-40 print:pb-0 text-left md:text-center inline-block">
-                    {content}
+                {/* LYRICS SCROLL AREA */}
+                <div
+                    ref={scrollRef}
+                    className="flex-1 overflow-y-auto bg-paper-pattern p-4 sm:p-12 text-center relative scroll-smooth"
+                    style={{ fontSize: `${fontSize}px` }}
+                >
+                    <h1 className="text-3xl sm:text-4xl font-display font-bold mb-4">{song.title}</h1>
+                    <p className="text-base text-gray-500 mb-8 italic print:hidden">
+                        Clave: <span className="font-bold text-primary">{song.key}</span>
+                        {transpose !== 0 && ` (Transportado)`}
+                        <span className="ml-4 text-xs bg-gray-100 dark:bg-white/10 px-2 py-1 rounded">
+                            {notationSystem === 'latin' ? 'Do Re Mi' : 'C D E'}
+                        </span>
+                    </p>
+                    {/* Print only info */}
+                    <p className="hidden print:block text-xs text-gray-600 mb-8">Cuatro Liturgias - Cantoral</p>
+
+                    <div className="font-serif text-gray-800 dark:text-gray-200 whitespace-pre-wrap max-w-3xl mx-auto pb-64 print:pb-0 text-left md:text-center inline-block">
+                        {content}
+                    </div>
                 </div>
             </div>
 
