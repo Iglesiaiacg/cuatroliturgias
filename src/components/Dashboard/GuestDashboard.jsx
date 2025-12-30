@@ -125,10 +125,10 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Apoya a nuestra comunidad. Tu generosidad hace posible nuestra misión.</p>
                     </div>
                     <button
-                        onClick={() => alert("Próximamente: Donaciones en línea")}
-                        className="px-6 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-700 transition-colors w-full md:w-auto"
+                        onClick={() => onNavigate('offerings')}
+                        className="px-6 py-2 bg-orange-500 text-[#3E2723] font-bold rounded-lg hover:bg-orange-600 transition-colors w-full md:w-auto shadow-sm"
                     >
-                        Dar Ofrenda
+                        Ofrenda de amor
                     </button>
                 </div>
 

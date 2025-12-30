@@ -251,11 +251,11 @@ export default function OfferingsView() {
                             {/* TOGGLE TO GUEST VIEW */}
                             <button
                                 onClick={() => setViewMode('guest')}
-                                className="px-3 py-2 bg-amber-100 hover:bg-amber-200 text-amber-800 rounded-lg text-sm font-bold flex items-center gap-2 transition-colors dark:bg-amber-900/30 dark:text-amber-200 dark:hover:bg-amber-900/50"
-                                title="Ver información de donación"
+                                className="px-3 py-2 bg-orange-500 hover:bg-orange-600 text-[#3E2723] rounded-lg text-sm font-bold flex items-center gap-2 transition-colors shadow-sm"
+                                title="Información de donación"
                             >
                                 <span className="material-symbols-outlined text-[18px]">volunteer_activism</span>
-                                <span className="hidden sm:inline">Ver Donación</span>
+                                <span className="hidden sm:inline">Ofrenda de amor</span>
                             </button>
 
                             <div className="flex items-center bg-gray-100 dark:bg-black/20 rounded-lg p-1">
