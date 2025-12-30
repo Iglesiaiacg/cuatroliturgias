@@ -106,32 +106,72 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                     </div>
                 </div>
 
-                {/* MOBILE BOTTOM NAVIGATION (Redesigned) */}
-                <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white/95 dark:bg-[#1c1c1e]/95 backdrop-blur-xl border-t border-gray-200 dark:border-white/10 pb-safe-area pt-1 px-4 flex justify-between items-center z-40 shadow-[0_-5px_15px_-5px_rgba(0,0,0,0.1)]">
-                    {priorityItems.map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => onNavigate(item.id)}
-                            className={`flex flex-col items-center justify-center gap-1 flex-1 py-2 rounded-xl transition-all active:scale-90 ${activeTab === item.id ? 'text-primary' : 'text-stone-400'}`}
-                        >
-                            <span className={`material-symbols-outlined text-[26px] ${activeTab === item.id ? 'font-variation-settings-fill' : ''} transition-all duration-300`}>
-                                {item.icon}
-                            </span>
-                            <span className={`text-[10px] font-medium transition-all duration-300 ${activeTab === item.id ? 'opacity-100 scale-100' : 'opacity-0 scale-0 h-0'}`}>
-                                {item.label}
-                            </span>
-                        </button>
-                    ))}
+                {/* MOBILE SQUIRCLE DOCK NAVIGATION */}
+                <div className="md:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
+                    {/* SVG Definitions for Squircle Shape */}
+                    <svg width={0} height={0} style={{ position: 'absolute' }}>
+                        <defs>
+                            <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
+                                <path d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5" />
+                            </clipPath>
+                        </defs>
+                    </svg>
 
-                    {/* MENU TAB (FAB-like) */}
-                    <button
-                        onClick={() => setIsMenuOpen(true)}
-                        className="flex flex-col items-center justify-center gap-1 flex-1 py-2 text-stone-400 active:text-primary active:scale-90 transition-all"
-                    >
-                        <span className="material-symbols-outlined text-[26px]">apps</span>
-                        <span className="text-[10px] font-medium">Menú</span>
-                    </button>
-                </nav>
+                    <div className="relative">
+                        {/* Glass Background Container */}
+                        <div className="absolute inset-0 bg-white/80 dark:bg-black/40 backdrop-blur-2xl rounded-3xl border border-white/20 dark:border-white/10 shadow-2xl scale-105" />
+
+                        <div className="relative flex items-end gap-x-2 p-2.5">
+                            {priorityItems.map((item, index) => {
+                                const isActive = activeTab === item.id;
+                                // Gradients for active state vs inactive
+                                const activeGradient = "bg-gradient-to-br from-red-600 to-red-800";
+                                const inactiveGradient = "bg-white dark:bg-gray-800/80";
+
+                                return (
+                                    <button
+                                        key={item.id}
+                                        onClick={() => onNavigate(item.id)}
+                                        className="relative group transition-all duration-300 ease-out active:scale-95"
+                                        title={item.label}
+                                    >
+                                        <div
+                                            style={{ clipPath: 'url(#squircleClip)' }}
+                                            className={`w-12 h-12 flex items-center justify-center shadow-lg border transition-all duration-300
+                                                ${isActive
+                                                    ? `${activeGradient} border-red-500/50 text-white scale-110 -translate-y-1`
+                                                    : `${inactiveGradient} border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-400 hover:scale-105`
+                                                }`}
+                                        >
+                                            <span className={`material-symbols-outlined text-2xl ${isActive ? 'font-variation-settings-fill' : ''}`}>
+                                                {item.icon}
+                                            </span>
+                                        </div>
+                                        {/* Tooltip Label (Optional) */}
+                                        {isActive && (
+                                            <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                                                {item.label}
+                                            </span>
+                                        )}
+                                    </button>
+                                );
+                            })}
+
+                            {/* MENU BUTTON (As Squircle) */}
+                            <button
+                                onClick={() => setIsMenuOpen(true)}
+                                className="relative group transition-all duration-300 ease-out active:scale-95"
+                            >
+                                <div
+                                    style={{ clipPath: 'url(#squircleClip)' }}
+                                    className="w-12 h-12 bg-white dark:bg-gray-800/80 flex items-center justify-center shadow-lg border border-gray-200 dark:border-gray-700 text-gray-400 hover:text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-300 hover:scale-105"
+                                >
+                                    <span className="material-symbols-outlined text-2xl">apps</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </header>
 
             {/* FULL GRID MENU OVERLAY */}
