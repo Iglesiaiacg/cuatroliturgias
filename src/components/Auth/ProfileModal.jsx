@@ -181,8 +181,8 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
 
                     <form onSubmit={handleUpdateProfile} className="space-y-4">
 
-                        {/* Global Settings Section - HIDDEN FOR GUESTS */}
-                        {userRole !== 'guest' && (
+                        {/* Global Settings Section - HIDDEN FOR GUESTS (Unless Admin is simulating) */}
+                        {(userRole !== 'guest' || realRole === 'admin') && (
                             <div className="neumorphic-card p-4 space-y-4">
                                 <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Ajustes Globales</h3>
 
