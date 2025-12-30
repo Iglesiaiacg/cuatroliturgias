@@ -580,7 +580,7 @@ function CopyableText({ text }) {
 
 function DigitalOfferingCard({ showBack, onBack }) {
     return (
-        <main className="flex-1 flex flex-col items-center p-6 pt-4 overflow-y-auto no-scrollbar animate-fade-in w-full max-w-md mx-auto pb-48">
+        <div className="flex-1 flex flex-col items-center p-4 pt-2 overflow-y-auto no-scrollbar animate-fade-in w-full max-w-md mx-auto relative h-full">
             {showBack && (
                 <button
                     onClick={onBack}
@@ -590,25 +590,25 @@ function DigitalOfferingCard({ showBack, onBack }) {
                     Volver a Tesorería
                 </button>
             )}
-            <div className="w-full bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800 overflow-hidden relative">
+            <div className="w-full bg-white dark:bg-stone-900 rounded-3xl shadow-xl border border-stone-200 dark:border-stone-800 overflow-hidden relative flex-shrink-0 mb-32">
                 {/* Decorative Header */}
-                <div className="h-32 bg-gradient-to-br from-amber-500 to-amber-700 relative flex items-center justify-center overflow-hidden">
+                <div className="h-28 bg-gradient-to-br from-amber-500 to-amber-700 relative flex items-center justify-center overflow-hidden">
                     <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
-                    <span className="material-symbols-outlined text-white text-6xl drop-shadow-lg animate-pulse-slow">volunteer_activism</span>
+                    <span className="material-symbols-outlined text-white text-5xl drop-shadow-lg animate-pulse-slow">volunteer_activism</span>
                 </div>
 
-                <div className="p-8 text-center relative">
+                <div className="p-6 text-center relative">
                     {/* Avatar/Logo overlapping */}
-                    <div className="w-16 h-16 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center shadow-lg absolute -top-8 left-1/2 -translate-x-1/2 border-4 border-white dark:border-stone-800">
-                        <span className="material-symbols-outlined text-amber-600 text-3xl">church</span>
+                    <div className="w-14 h-14 bg-white dark:bg-stone-800 rounded-full flex items-center justify-center shadow-lg absolute -top-7 left-1/2 -translate-x-1/2 border-2 border-white dark:border-stone-800">
+                        <span className="material-symbols-outlined text-amber-600 text-2xl">church</span>
                     </div>
 
-                    <h2 className="mt-8 text-2xl font-display font-bold text-gray-900 dark:text-white mb-2">Ofrenda Digital</h2>
-                    <p className="text-gray-600 dark:text-gray-400 text-sm mb-6">
-                        "Dios ama al dador alegre."<br /><span className="text-xs italic">- 2 Corintios 9:7</span>
+                    <h2 className="mt-8 text-xl font-display font-bold text-gray-900 dark:text-white mb-1">Ofrenda Digital</h2>
+                    <p className="text-gray-500 dark:text-gray-400 text-xs mb-4">
+                        "Dios ama al dador alegre."<br /><span className="text-[10px] italic">- 2 Corintios 9:7</span>
                     </p>
 
-                    <div className="space-y-4 text-left">
+                    <div className="space-y-3 text-left">
                         {/* Bank Details */}
                         <div className="bg-gray-50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5">
                             <div className="flex items-center gap-3 mb-2">
@@ -616,43 +616,43 @@ function DigitalOfferingCard({ showBack, onBack }) {
                                     <span className="material-symbols-outlined">account_balance</span>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-bold text-gray-500 uppercase">Transferencia / Depósito</p>
-                                    <p className="font-bold text-gray-900 dark:text-white">BBVA Bancomer</p>
+                                    <p className="text-[10px] font-bold text-gray-400 uppercase">Transferencia / Depósito</p>
+                                    <p className="font-bold text-sm text-gray-900 dark:text-white leading-tight">BBVA Bancomer</p>
                                 </div>
                             </div>
-                            <div className="space-y-1 ml-11">
-                                <p className="text-sm flex justify-between">
-                                    <span className="text-gray-600 dark:text-gray-400">Cuenta:</span>
-                                    <CopyableText text="0123456789" />
+                            <div className="space-y-1.5 ml-11">
+                                <p className="text-sm flex justify-between gap-4">
+                                    <span className="text-gray-500 dark:text-gray-400 text-xs">Cuenta:</span>
+                                    <CopyableText text="0120740968" />
                                 </p>
-                                <p className="text-sm flex justify-between">
-                                    <span className="text-gray-600 dark:text-gray-400">CLABE:</span>
-                                    <CopyableText text="012345678901234567" />
+                                <p className="text-sm flex justify-between gap-4">
+                                    <span className="text-gray-500 dark:text-gray-400 text-xs">CLABE:</span>
+                                    <CopyableText text="012540001207409682" />
                                 </p>
-                                <p className="text-sm flex justify-between">
-                                    <span className="text-gray-600 dark:text-gray-400">Beneficiario:</span>
-                                    <span className="font-medium text-right">Iglesia Anglocatólica</span>
+                                <p className="text-sm flex flex-col items-end">
+                                    <span className="text-gray-500 dark:text-gray-400 text-[10px] uppercase font-bold w-full text-left">Beneficiario:</span>
+                                    <span className="font-medium text-right text-gray-900 dark:text-white">Iglesia Anglicana Comunidad de Gracia</span>
                                 </p>
                             </div>
                         </div>
 
                         {/* QR Instructions */}
                         <div className="flex items-center gap-4 bg-amber-50 dark:bg-amber-900/10 p-4 rounded-xl border border-amber-100 dark:border-amber-900/20">
-                            <div className="qr-placeholder w-16 h-16 bg-white p-1 rounded-lg shrink-0">
-                                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=012345678901234567`} alt="QR Bancario" className="w-full h-full object-contain" />
+                            <div className="qr-placeholder w-16 h-16 bg-white p-1 rounded-lg shrink-0 shadow-sm">
+                                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=012540001207409682`} alt="QR Bancario" className="w-full h-full object-contain" />
                             </div>
-                            <p className="text-xs text-amber-800 dark:text-amber-200 leading-tight">
+                            <p className="text-[11px] text-amber-800 dark:text-amber-200 leading-tight">
                                 Escanea este código desde tu App Bancaria para donar rápidamente.
                             </p>
                         </div>
 
                         {/* Actions */}
-                        <div className="grid grid-cols-2 gap-3 pt-2">
-                            <button className="btn-secondary w-full justify-center text-xs py-3">
+                        <div className="grid grid-cols-2 gap-3 pt-1">
+                            <button className="btn-secondary w-full justify-center text-xs py-2.5 rounded-2xl">
                                 <span className="material-symbols-outlined text-sm">share</span>
                                 Compartir
                             </button>
-                            <button className="btn-primary w-full justify-center text-xs py-3 bg-green-600 hover:bg-green-700 text-white border-none shadow-green-200 dark:shadow-none">
+                            <button className="btn-primary w-full justify-center text-xs py-2.5 rounded-2xl bg-green-600 hover:bg-green-700 text-white border-none shadow-green-200 dark:shadow-none">
                                 <span className="material-symbols-outlined text-sm">chat</span>
                                 Reportar
                             </button>
@@ -660,6 +660,6 @@ function DigitalOfferingCard({ showBack, onBack }) {
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     );
 }
