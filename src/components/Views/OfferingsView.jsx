@@ -580,7 +580,7 @@ function CopyableText({ text }) {
 
 function DigitalOfferingCard({ showBack, onBack }) {
     return (
-        <main className="flex-1 flex flex-col items-center justify-center p-6 animate-fade-in w-full max-w-md mx-auto pb-40">
+        <main className="flex-1 flex flex-col items-center justify-start p-6 pt-4 animate-fade-in w-full max-w-md mx-auto pb-24">
             {showBack && (
                 <button
                     onClick={onBack}
