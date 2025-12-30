@@ -56,27 +56,57 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
         const lines = song.lyrics.split('\n');
 
         return lines.map((line, i) => {
-            // Split by chords
-            const components = line.split(/(\[.*?\])/g);
+            const rawParts = line.split(/(\[.*?\])/g);
+            const segments = [];
+            let currentChord = null;
+
+            rawParts.forEach(part => {
+                if (part.startsWith('[') && part.endsWith(']')) {
+                    if (currentChord) {
+                        // Double chord sequence (render previous chord with space)
+                        segments.push({ chord: currentChord, text: '\u00A0' });
+                    }
+                    currentChord = part;
+                } else {
+                    // Filter empty parts unless they hold a chord place
+                    if (part === '' && !currentChord) return;
+                    segments.push({ chord: currentChord, text: part });
+                    currentChord = null;
+                }
+            });
+
+            if (currentChord) {
+                segments.push({ chord: currentChord, text: '' });
+            }
+
+            // If line is empty string in source, render a break
+            if (segments.length === 0) return <div key={i} className="h-4"></div>;
+
             return (
-                <div key={i} className="min-h-[1.5em] my-1 leading-relaxed">
-                    {components.map((part, j) => {
-                        if (part.startsWith('[') && part.endsWith(']')) {
-                            // It's a chord
-                            if (!showChords) return null; // Hide if toggled off
+                <div key={i} className="flex flex-wrap items-end min-h-[2.5em] my-1">
+                    {segments.map((seg, j) => {
+                        const displayChord = seg.chord
+                            ? transposeAndFormat(seg.chord, transpose, notationSystem).replace(/[\[\]]/g, '')
+                            : null;
 
-                            // Transpose using utility with Notation System
-                            const displayChord = transposeAndFormat(part, transpose, notationSystem).replace(/[\[\]]/g, '');
+                        // If chords hidden, just render text plain? 
+                        // Actually, maintaining structure is safer for consistent layout when toggling
+                        // But we hide the chord div.
 
-                            return (
-                                <span key={j} className="text-red-600 font-bold mx-1 select-none" style={{ fontSize: '0.9em' }}>
-                                    {displayChord}
-                                </span>
-                            );
-                        } else {
-                            // It's lyrics
-                            return <span key={j}>{part}</span>;
-                        }
+                        return (
+                            <div key={j} className="flex flex-col items-start mr-0.5 group">
+                                {/* Chord Line */}
+                                {showChords && (
+                                    <div className={`text-red-600 font-bold text-sm h-5 mb-0.5 whitespace-nowrap select-none`}>
+                                        {displayChord || ''}
+                                    </div>
+                                )}
+                                {/* Lyrics Line */}
+                                <div className="whitespace-pre-wrap text-gray-800 dark:text-gray-200 leading-tight">
+                                    {seg.text || '\u00A0'}
+                                </div>
+                            </div>
+                        );
                     })}
                 </div>
             );
