@@ -507,17 +507,9 @@ export default function OfferingsView() {
             {/* Print Sheet (Hidden on Screen) */}
             <div className="hidden print:block fixed inset-0 bg-white z-[9999]">
                 <AccountSheet
-                    monthName={format(currentDate, 'MMMM yyyy', { locale: es })}
-                    transactions={transactions.filter(t => {
-                        if (!t.date) return false;
-                        const d = t.date.toDate ? t.date.toDate() : new Date(t.date);
-                        return d.getMonth() === currentDate.getMonth() && d.getFullYear() === currentDate.getFullYear();
-                    })}
-                    summary={{
-                        income: totalIncome,
-                        expense: totalExpense,
-                        balance: balance
-                    }}
+                    transactions={transactions}
+                    currentMonth={currentDate.getMonth()}
+                    currentYear={currentDate.getFullYear()}
                 />
             </div>
         </main>

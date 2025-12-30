@@ -27,7 +27,11 @@ const AccountSheet = forwardRef(({ transactions, currentMonth, currentYear }, re
         return { monthlyTransactions: filtered };
     }, [transactions, currentMonth, currentYear]);
 
-    const monthName = format(new Date(currentYear, currentMonth, 1), 'MMMM', { locale: es });
+    // Fallback if props are missing
+    const month = (currentMonth !== undefined && currentMonth !== null) ? currentMonth : new Date().getMonth();
+    const year = (currentYear !== undefined && currentYear !== null) ? currentYear : new Date().getFullYear();
+
+    const monthName = format(new Date(year, month, 1), 'MMMM', { locale: es });
 
     return (
         <div ref={ref} className="bg-white p-8 max-w-[210mm] mx-auto text-black print:p-0">

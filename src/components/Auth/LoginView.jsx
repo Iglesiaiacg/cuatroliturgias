@@ -59,12 +59,18 @@ export default function LoginView() {
             await login(email, password);
         } catch (err) {
             console.error("LOGIN ERROR DETAILED:", err);
-            if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
-                setError(`Credenciales incorrectas (${err.code}).`);
+
+            // Clearer user-facing messages
+            if (err.code === 'auth/invalid-credential') {
+                setError('El correo o la contraseña no son válidos. Por favor, verifica tus datos.');
+            } else if (err.code === 'auth/user-not-found') {
+                setError('No se encontró ninguna cuenta con este correo.');
             } else if (err.code === 'auth/too-many-requests') {
-                setError('Demasiados intentos. Espera un momento.');
+                setError('Tu cuenta ha sido bloqueada temporalmente por demasiados intentos fallidos. Inténtalo más tarde.');
+            } else if (err.code === 'auth/network-request-failed') {
+                setError('Error de conexión. Verifica tu internet.');
             } else {
-                setError(`Error al iniciar sesión: ${err.message} (${err.code})`);
+                setError('Ocurrió un error inesperado al iniciar sesión. Reintenta en unos segundos.');
             }
         }
         setLoading(false);
