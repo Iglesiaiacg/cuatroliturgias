@@ -55,11 +55,14 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             </div>
                         ) : (
                             // MODE 2: Standard Brand Text Only (No Icons)
-                            <div className="flex items-center justify-center w-full py-2 animate-fade-in gap-2">
-                                <JerusalemCross className="w-6 h-6 text-[#991b1b]" />
-                                <h1 className="text-xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
-                                    LITÚRG-<span style={{ color: '#991b1b' }}>IA</span>
-                                </h1>
+                            <div className="flex flex-col items-center justify-center w-full py-1 animate-fade-in">
+                                <span className="text-[10px] font-bold uppercase tracking-widest text-primary mb-1 capitalize opacity-80">{dateStr}</span>
+                                <div className="flex items-center justify-center gap-3 w-full">
+                                    <JerusalemCross className="w-10 h-10 text-[#991b1b] shrink-0" />
+                                    <h1 className="text-2xl xs:text-3xl font-bold tracking-tight text-stone-900 dark:text-white font-display whitespace-nowrap">
+                                        LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
+                                    </h1>
+                                </div>
                             </div>
                         )}
                     </div>
