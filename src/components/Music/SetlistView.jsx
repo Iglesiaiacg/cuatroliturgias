@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { useSetlists } from '../../context/SetlistContext';
 import { useMusic } from '../../context/MusicContext';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { generateSetlistPDF } from '../../utils/pdfGenerator';
 import SongDetail from './SongDetail';
 import { QRCodeSVG } from 'qrcode.react';
 
 export default function SetlistView() {
-    const { setlists, createSetlist, deleteSetlist, activeSetlistId, setActiveSetlistId, removeSongFromSetlist } = useSetlists();
+    const { setlists, createSetlist, deleteSetlist, activeSetlistId, setActiveSetlistId, removeSongFromSetlist, reorderSetlist } = useSetlists();
     const { songs } = useMusic();
     const [isCreating, setIsCreating] = useState(false);
     const [newDate, setNewDate] = useState(new Date().toISOString().split('T')[0]);
@@ -33,6 +37,38 @@ export default function SetlistView() {
     // Helper to get full song data if needed
     const getFullSong = (entry) => {
         return songs.find(s => s.id === entry.id) || entry;
+    };
+
+    // DnD Sensors
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        })
+    );
+
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            const oldIndex = activeSetlist.songs.findIndex((item) => item.instanceId === active.id);
+            const newIndex = activeSetlist.songs.findIndex((item) => item.instanceId === over.id);
+
+            // Optimistic update handled by context via arrayMove logic passed down?
+            // Actually context creates a new array and saves it.
+            // We need to call reorderSetlist
+            const newOrder = arrayMove(activeSetlist.songs, oldIndex, newIndex);
+            // We need to call reorderSetlist from context
+            // But wait, the context method is async.
+            // Ideally we should have local state or context handles it fast.
+            // Let's grab reorderSetlist from context.
+            reorderSetlist(activeSetlistId, newOrder);
+        }
+    };
+
+    const handleDownloadPDF = () => {
+        const fullSongs = activeSetlist.songs.map(entry => getFullSong(entry)).filter(Boolean);
+        generateSetlistPDF(activeSetlist, fullSongs);
     };
 
     if (activeSetlistId && activeSetlist) {
@@ -63,6 +99,13 @@ export default function SetlistView() {
                                 <span className="material-symbols-outlined">qr_code_2</span>
                             </button>
                             <button
+                                onClick={handleDownloadPDF}
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500"
+                                title="Descargar PDF para Músicos"
+                            >
+                                <span className="material-symbols-outlined">picture_as_pdf</span>
+                            </button>
+                            <button
                                 onClick={() => window.print()}
                                 className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-lg text-gray-500"
                                 title="Imprimir Lista"
@@ -74,25 +117,28 @@ export default function SetlistView() {
 
                     {activeSetlist.songs && activeSetlist.songs.length > 0 ? (
                         <div className="space-y-2">
-                            {activeSetlist.songs.map((songEntry, idx) => (
-                                <div key={songEntry.instanceId || idx} className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-black/20 rounded-lg group">
-                                    <span className="font-mono text-gray-400 text-sm w-6 text-center">{idx + 1}</span>
-                                    <div
-                                        className="flex-1 cursor-pointer"
-                                        onClick={() => setViewingSong(getFullSong(songEntry))}
-                                    >
-                                        <p className="font-bold text-gray-900 dark:text-white">{songEntry.title}</p>
-                                        <p className="text-xs text-gray-500 uppercase">{songEntry.category || 'General'} • {songEntry.key}</p>
-                                    </div>
-                                    <button
-                                        onClick={() => removeSongFromSetlist(activeSetlistId, songEntry.instanceId)}
-                                        className="opacity-0 group-hover:opacity-100 p-2 text-red-400 hover:text-red-500 transition-opacity"
-                                        title="Quitar de la lista"
-                                    >
-                                        <span className="material-symbols-outlined text-lg">close</span>
-                                    </button>
-                                </div>
-                            ))}
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <SortableContext
+                                    items={activeSetlist.songs.map(s => s.instanceId)}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    {activeSetlist.songs.map((songEntry, idx) => (
+                                        <SortableItem
+                                            key={songEntry.instanceId || idx}
+                                            id={songEntry.instanceId}
+                                            songEntry={songEntry}
+                                            idx={idx}
+                                            onClick={() => setViewingSong(getFullSong(songEntry))}
+                                            onRemove={() => removeSongFromSetlist(activeSetlistId, songEntry.instanceId)}
+                                            activeListName={activeSetlist.title}
+                                        />
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
                         </div>
                     ) : (
                         <div className="text-center py-12 border-2 border-dashed border-gray-200 dark:border-white/10 rounded-xl">
