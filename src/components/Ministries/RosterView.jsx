@@ -3,6 +3,7 @@ import { useDirectory } from '../../context/DirectoryContext';
 import { useAuth } from '../../context/AuthContext';
 import { db } from '../../services/firebase';
 import { collection, getDocs, setDoc, doc, getDoc } from 'firebase/firestore';
+import { generateRosterPDF } from '../../utils/rosterPDFGenerator';
 
 export default function RosterView() {
     const { members } = useDirectory(); // All users
@@ -174,102 +175,59 @@ export default function RosterView() {
                     </h1>
                     <p className="text-gray-500 text-sm">Asigna ministros para los servicios dominicales.</p>
                 </div>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-white/5">
+                {sundays.map(sunday => {
+                    const dateKey = sunday.toISOString().split('T')[0];
+                    const assignments = rosterData[dateKey] || {};
 
-                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-4 bg-white dark:bg-black/20 p-2 rounded-xl shadow-sm w-full md:w-auto justify-between md:justify-start">
-                        <button onClick={() => changeMonth(-1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
-                            <span className="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <span className="font-bold w-32 text-center text-lg capitalize">{monthNames[currentMonth.getMonth()]} {currentMonth.getFullYear()}</span>
-                        <button onClick={() => changeMonth(1)} className="p-2 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full">
-                            <span className="material-symbols-outlined">chevron_right</span>
-                        </button>
-                    </div>
-
-                    <div className="flex gap-2 w-full md:w-auto">
-                        <button
-                            onClick={handleAutoGenerate}
-                            disabled={loading}
-                            className="btn-secondary flex-1 md:flex-none flex items-center justify-center gap-2"
-                        >
-                            <span className="material-symbols-outlined star-icon">auto_awesome</span>
-                            {loading ? '...' : 'Auto-Completar'}
-                        </button>
-                        <button
-                            onClick={handleSave}
-                            className="btn-primary flex-1 md:flex-none flex items-center justify-center gap-2"
-                        >
-                            <span className="material-symbols-outlined">save</span>
-                            Guardar
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div className="overflow-x-auto rounded-xl shadow-lg border border-gray-100 dark:border-white/5 bg-white dark:bg-[#1a1a1a]">
-                <table className="w-full text-sm">
-                    <thead>
-                        <tr className="bg-gray-50 dark:bg-white/5 border-b border-gray-100 dark:border-white/5">
-                            <th className="p-4 text-left font-bold text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 dark:bg-[#252525] z-10 w-32">
-                                Fecha
-                            </th>
+                    return (
+                        <tr key={dateKey} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                            <td className="p-4 font-bold text-gray-900 dark:text-gray-200 sticky left-0 bg-white dark:bg-[#1a1a1a] z-10 shadow-r">
+                                <div className="flex flex-col">
+                                    <span className="text-lg">{sunday.getDate()}</span>
+                                    <span className="text-xs text-gray-400 uppercase">{monthNames[sunday.getMonth()].substring(0, 3)}</span>
+                                </div>
+                            </td>
                             {roles.map(role => (
-                                <th key={role.id} className="p-4 text-left font-bold text-gray-500 uppercase tracking-wider min-w-[150px]">
-                                    {role.label}
-                                </th>
+                                <td key={role.id} className="p-2">
+                                    <select
+                                        value={assignments[role.id] || ''}
+                                        onChange={(e) => handleChangeAssignment(dateKey, role.id, e.target.value)}
+                                        className="w-full bg-transparent border border-gray-200 dark:border-white/10 rounded-lg p-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary truncate"
+                                    >
+                                        <option value="" className="text-gray-400">-- Asignar --</option>
+                                        {members.map(m => (
+                                            <option key={m.id} value={m.id}>
+                                                {m.fullName || m.email}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </td>
                             ))}
                         </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                        {sundays.map(sunday => {
-                            const dateKey = sunday.toISOString().split('T')[0];
-                            const assignments = rosterData[dateKey] || {};
+                    );
+                })}
+            </tbody>
+        </table >
+            </div >
 
-                            return (
-                                <tr key={dateKey} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                                    <td className="p-4 font-bold text-gray-900 dark:text-gray-200 sticky left-0 bg-white dark:bg-[#1a1a1a] z-10 shadow-r">
-                                        <div className="flex flex-col">
-                                            <span className="text-lg">{sunday.getDate()}</span>
-                                            <span className="text-xs text-gray-400 uppercase">{monthNames[sunday.getMonth()].substring(0, 3)}</span>
-                                        </div>
-                                    </td>
-                                    {roles.map(role => (
-                                        <td key={role.id} className="p-2">
-                                            <select
-                                                value={assignments[role.id] || ''}
-                                                onChange={(e) => handleChangeAssignment(dateKey, role.id, e.target.value)}
-                                                className="w-full bg-transparent border border-gray-200 dark:border-white/10 rounded-lg p-2 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary truncate"
-                                            >
-                                                <option value="" className="text-gray-400">-- Asignar --</option>
-                                                {members.map(m => (
-                                                    <option key={m.id} value={m.id}>
-                                                        {m.fullName || m.email}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </td>
-                                    ))}
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
-            </div>
-
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
-                    <h3 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
-                        <span className="material-symbols-outlined">info</span>
-                        Cómo funciona
-                    </h3>
-                    <p className="text-sm text-blue-700 dark:text-blue-200">
-                        1. Selecciona el mes a planificar.<br />
-                        2. Pulsa <b>Auto-Completar</b> para llenar huecos vacíos respetando las "No Disponibilidades".<br />
-                        3. Ajusta manualmente si es necesario.<br />
-                        4. Pulsa <b>Guardar</b> para publicar.
-                    </p>
-                </div>
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                <h3 className="font-bold text-blue-800 dark:text-blue-300 mb-2 flex items-center gap-2">
+                    <span className="material-symbols-outlined">info</span>
+                    Cómo funciona
+                </h3>
+                <p className="text-sm text-blue-700 dark:text-blue-200">
+                    1. Selecciona el mes a planificar.<br />
+                    2. Pulsa <b>Auto-Completar</b> para llenar huecos vacíos respetando las "No Disponibilidades".<br />
+                    3. Ajusta manualmente si es necesario.<br />
+                    4. Pulsa <b>Guardar</b> para publicar.
+                </p>
             </div>
         </div>
+            )
+}
+        </div >
     );
 }
