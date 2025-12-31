@@ -554,6 +554,10 @@ function MainLayout() {
                     </div>
                   ) : docContent ? (
                     <div className="w-full flex flex-col items-center">
+                      {/* Notifications */}
+                      <BellIcon />
+
+                      {/* User Menu */}
                       {/* Context Title for Manual Services */}
                       {serviceTitle && (
                         <div className="w-full max-w-4xl mx-auto mb-8 text-center animate-fade-in relative">
