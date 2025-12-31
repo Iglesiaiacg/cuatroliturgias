@@ -13,8 +13,13 @@ export function useIntentionsSync(date) {
     // Using dateKey in dependancy array is fine
     const dateKey = format(date || new Date(), 'yyyy-MM-dd');
 
+    // ALLOW ALL ROLES to use the hook (for adding), but restricting VIEWING to privileged roles.
     useEffect(() => {
-        if (!currentUser || !checkPermission || !checkPermission('view_liturgy')) {
+        // PERMISSION CHECK: Only Admin, Priest, Sacristan, Secretary can VIEW the list.
+        // Guests/Faithful can only ADD (so they get an empty list here).
+        const canView = userRole === 'admin' || userRole === 'priest' || checkPermission('view_directory') || checkPermission('manage_sacristy');
+
+        if (!currentUser || !canView) {
             setIntentions([]);
             setLoading(false);
             return;

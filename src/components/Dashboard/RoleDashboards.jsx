@@ -229,12 +229,14 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Col 1: Intentions (Priority for Secretary) */}
-                <div className="lg:col-span-2">
-                    <IntentionsCard />
-                    <div className="mt-6">
+                <div className="lg:col-span-2 flex flex-col gap-6">
+                    <div className="h-96 lg:h-auto">
+                        <IntentionsCard />
+                    </div>
+                    <div>
                         <NextLiturgyCard />
                     </div>
-                    <div className="mt-6">
+                    <div>
                         <button
                             onClick={() => onNavigate('generator')}
                             className="w-full neumorphic-card p-4 flex items-center justify-between text-left gap-4 hover:scale-[1.01] hover:bg-primary transition-all group"

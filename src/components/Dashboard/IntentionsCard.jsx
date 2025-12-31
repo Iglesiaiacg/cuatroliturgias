@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function IntentionsCard({ date }) {
     const { userRole, checkPermission } = useAuth();
-    const { intentions, addIntention, removeIntention, loading } = useIntentionsSync(date);
+    const { intentions, addIntention, removeIntention, toggleIntention, loading } = useIntentionsSync(date);
     const [newItem, setNewItem] = useState('');
     const [type, setType] = useState('difuntos'); // difuntos, salud, accion_gracias
 
@@ -49,26 +49,42 @@ export default function IntentionsCard({ date }) {
                     </div>
                 ) : (
                     intentions.map(item => (
-                        <div key={item.id} className="flex items-center justify-between group neumorphic-inset p-3 rounded-xl transition-all">
-                            <div>
-                                <span className={`text-[10px] font-bold uppercase mr-2 ${item.type === 'difuntos' ? 'text-gray-500' :
-                                    item.type === 'salud' ? 'text-red-400' : 'text-yellow-500'
-                                    }`}>
-                                    {getTypeLabel(item.type)}
-                                </span>
-                                <span className="text-sm text-gray-700 dark:text-gray-200">{item.text}</span>
+                        intentions.map(item => (
+                            <div key={item.id} className={`flex items-center justify-between group neumorphic-inset p-3 rounded-xl transition-all ${item.completed ? 'opacity-50' : ''}`}>
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                    {(userRole === 'admin' || userRole === 'priest' || checkPermission && checkPermission('manage_sacristy')) && (
+                                        <button
+                                            onClick={() => toggleIntention(item.id)}
+                                            className={`w-5 h-5 rounded flex items-center justify-center border transition-colors shrink-0
+                                            ${item.completed
+                                                    ? 'bg-green-500 border-green-500 text-white'
+                                                    : 'border-gray-300 hover:border-gray-400'}`}
+                                        >
+                                            {item.completed && <span className="material-symbols-outlined text-xs">check</span>}
+                                        </button>
+                                    )}
+                                    <div>
+                                        <span className={`text-[10px] font-bold uppercase mr-2 ${item.type === 'difuntos' ? 'text-gray-500' :
+                                            item.type === 'salud' ? 'text-red-400' : 'text-yellow-500'
+                                            }`}>
+                                            {getTypeLabel(item.type)}
+                                        </span>
+                                        <span className={`text-sm text-gray-700 dark:text-gray-200 ${item.completed ? 'line-through text-gray-400' : ''}`}>
+                                            {item.text}
+                                        </span>
+                                    </div>
+                                </div>
+                                {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (
+                                    <button
+                                        onClick={() => removeIntention(item.id)}
+                                        className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0"
+                                    >
+                                        <span className="material-symbols-outlined text-sm">close</span>
+                                    </button>
+                                )}
                             </div>
-                            {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (
-                                <button
-                                    onClick={() => removeIntention(item.id)}
-                                    className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity"
-                                >
-                                    <span className="material-symbols-outlined text-sm">close</span>
-                                </button>
-                            )}
-                        </div>
-                    ))
-                )}
+                        ))
+                    )}
             </div>
 
             {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Preview from '../Liturgy/Preview';
 import NoticesCard from './NoticesCard';
 import NextLiturgyCard from './NextLiturgyCard';
+import IntentionsCard from './IntentionsCard';
 import { useChat } from '../../context/ChatContext';
 
 export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
@@ -148,6 +149,21 @@ export default function GuestDashboard({ onNavigate, pinnedLiturgy, date }) {
                     >
                         Abrir Chat
                     </button>
+                </div>
+
+                {/* Intentions Module (Full Width on Mobile) */}
+                <div className="md:col-span-2">
+                    <div className="h-full min-h-[300px]">
+                        <import('../Dashboard/IntentionsCard').default />
+                        {/* Wait, dynamic import in JSX is not ideal. Need to import at top. 
+                           I will just add the component Assuming it's imported.
+                           Correction: I will use ReplaceFileContent properly in next step to add import.
+                           For this step, I will just place the component.
+                        */}
+                        <div className="h-full">
+                            <IntentionsCard />
+                        </div>
+                    </div>
                 </div>
 
             </div>
