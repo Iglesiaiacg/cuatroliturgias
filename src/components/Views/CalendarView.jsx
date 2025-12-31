@@ -29,7 +29,7 @@ export default function CalendarView({ selectedDate, onDateChange, onNavigate })
     const prevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
 
     return (
-        <main className="flex-1 flex flex-col w-full h-full animate-fade-in pb-24 overflow-hidden">
+        <main className="flex-1 flex flex-col w-full h-auto min-h-full animate-fade-in pb-24 overflow-y-auto">
 
             {/* Header / Month Navigator */}
             <div className="flex items-center justify-between px-6 py-4 bg-primary text-white shadow-md z-10">
