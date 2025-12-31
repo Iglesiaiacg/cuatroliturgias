@@ -14,6 +14,7 @@ import StatsCard from '../Dashboard/StatsCard';
 import NoticesCard from '../Dashboard/NoticesCard';
 import QuickCertCard from '../Dashboard/QuickCertCard';
 import SacristyStatusCard from '../Dashboard/SacristyStatusCard';
+import SundaySummaryCard from '../Dashboard/SundaySummaryCard'; // NEW
 
 // Role Dashboards
 import { TreasurerDashboard, SacristanDashboard, SecretaryDashboard, MusicianDashboard, AcolyteDashboard } from '../Dashboard/RoleDashboards';
@@ -25,6 +26,26 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
     const [isCommOpen, setIsCommOpen] = useState(false);
+
+    // CELEBRANT MODE LOGIC
+    const [isSundayLive, setIsSundayLive] = useState(false);
+    // If it's Sunday Live time, default to Celebrant Mode (Admin Hidden). Else Admin Mode.
+    const [showAdminDashboard, setShowAdminDashboard] = useState(true);
+
+    useEffect(() => {
+        const now = new Date();
+        const isSunday = now.getDay() === 0;
+        const hour = now.getHours();
+        const isLive = isSunday && hour >= 7 && hour < 15; // 7am to 3pm wide window
+        setIsSundayLive(isLive);
+
+        // Auto-switch to Celebrant Mode on Sunday Morning
+        if (isLive) {
+            setShowAdminDashboard(false);
+        } else {
+            setShowAdminDashboard(true);
+        }
+    }, []);
 
     useEffect(() => {
         const unsub = onSnapshot(doc(db, 'config', 'pinned_liturgy'), (doc) => {
@@ -72,31 +93,43 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
         return <GuestDashboard onNavigate={onNavigate} pinnedLiturgy={pinnedLiturgy} date={date} />;
     }
 
-    // 7. ADMIN (Full Dashboard)
-    // Guests only see limited actions if permissions are blocked, but UI structure is same "Home".
-    // We kept the existing layout for Admins.
-
+    // 7. ADMIN / PRIEST (Context-Aware Dashboard)
     return (
         <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 w-full max-w-7xl mx-auto animate-fade-in pb-32">
 
             {/* Communication Center Modal */}
             {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
 
-            {/* Greeting Header */}
-            <div className="mb-6 md:text-center">
-                <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
-                    {(() => {
-                        const hour = new Date().getHours();
-                        if (hour < 12) return "Buenos días";
-                        if (hour < 20) return "Buenas tardes";
-                        return "Buenas noches";
-                    })()},
-                </h1>
-                <div className="flex items-center gap-2 md:justify-center">
-                    <p className="text-gray-600 dark:text-gray-500">
-                        {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
-                    </p>
-                    {userRole === 'admin' && <span className="bg-red-100 text-red-800 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full">Modo Director</span>}
+            {/* Greeting Header & Mode Switcher */}
+            <div className="mb-2 md:text-center flex flex-col md:items-center">
+                <div className="flex justify-between items-center w-full md:justify-center md:flex-col md:gap-2">
+                    <div>
+                        <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
+                            {(() => {
+                                const hour = new Date().getHours();
+                                if (hour < 12) return "Buenos días";
+                                if (hour < 20) return "Buenas tardes";
+                                return "Buenas noches";
+                            })()}, <span className="text-primary">Padre</span>.
+                        </h1>
+                        <p className="text-gray-600 dark:text-gray-500">
+                            {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
+                        </p>
+                    </div>
+
+                    {/* Mode Toggle Button */}
+                    <button
+                        onClick={() => setShowAdminDashboard(!showAdminDashboard)}
+                        className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all flex items-center gap-2
+                        ${!showAdminDashboard
+                                ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800'
+                                : 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-white/10 dark:text-gray-400 dark:border-white/10'}`}
+                    >
+                        <span className="material-symbols-outlined text-sm">
+                            {!showAdminDashboard ? 'church' : 'dashboard'}
+                        </span>
+                        {!showAdminDashboard ? 'Modo Celebrante' : 'Modo Director'}
+                    </button>
                 </div>
             </div>
 
@@ -107,12 +140,12 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                     const isSunday = now.getDay() === 0;
                     const hour = now.getHours();
                     // Active Sunday Window: 8:00 AM to 1:00 PM (13:00)
-                    const isLive = isSunday && hour >= 8 && hour < 14; // Extended to 2pm for safety
+                    const isLive = isSunday && hour >= 8 && hour < 14;
 
                     return (
                         <div className={`rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden group transition-all duration-500
                             ${isLive
-                                ? 'bg-gradient-to-r from-red-900 to-red-800 text-white'
+                                ? 'bg-gradient-to-r from-red-900 to-red-800 text-white scan-line-effect'
                                 : 'bg-white dark:bg-[#1c1c1e] text-gray-900 dark:text-white border border-gray-100 dark:border-white/5'
                             }`}>
 
@@ -131,10 +164,10 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                         </span>
                                         <span className={`text-xs flex items-center gap-1 ${isLive ? 'text-red-200' : 'text-gray-400'}`}>
                                             <span className="material-symbols-outlined text-[14px]">push_pin</span>
-                                            Fijado por el Sacerdote
+                                            Fijado por ti
                                         </span>
                                     </div>
-                                    <h2 className="text-xl md:text-2xl font-display font-bold mb-1 leading-tight capitalize">
+                                    <h2 className="text-2xl md:text-4xl font-display font-bold mb-1 leading-tight capitalize">
                                         {(() => {
                                             if (!pinnedLiturgy.date) return pinnedLiturgy.title || "Santa Eucaristía";
                                             const lDate = new Date(pinnedLiturgy.date.seconds * 1000);
@@ -149,18 +182,6 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                         })()}
                                     </h2>
                                     <p className={`text-sm opacity-90 ${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'}`}>
-                                        {/* Date or original title as subtitle depending on what was shown above? 
-                                            If we showed date above, maybe show "Tiempo Ordinario" here if possible? 
-                                            But we don't store plain season name easily. 
-                                            Let's just show the year or time. Or just "Comunidad de Gracia" generic text?
-                                            Actually, user said "no debe decir Tiempo de Navidad".
-                                            If we showed Date above, we don't need Date here.
-                                            Let's show pinnedLiturgy.title (Season) here as secondary info?
-                                            Or simply the Time if available?
-                                            Let's just show the original title here as "Context", e.g. "Tiempo de Navidad".
-                                            User said "no debe decir tiempo de navidad SINO la fecha...".
-                                            So swapping them makes sense.
-                                         */}
                                         {pinnedLiturgy.date && new Date(pinnedLiturgy.date.seconds * 1000).getDay() === 0
                                             ? (pinnedLiturgy.title || "Santa Misa")
                                             : (pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy')}
@@ -172,14 +193,14 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                         <>
                                             <button
                                                 onClick={() => setIsReadingPinned(true)}
-                                                className={`w-full md:w-auto px-6 py-3 font-bold rounded-xl shadow-lg transition-colors flex items-center justify-center gap-2
+                                                className={`w-full md:w-auto px-6 py-4 font-bold rounded-xl shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-3
                                                     ${isLive
                                                         ? 'bg-white text-red-900 hover:bg-gray-100'
                                                         : 'bg-primary text-white hover:bg-red-700 shadow-red-500/20'
                                                     }`}
                                             >
-                                                <span className="material-symbols-outlined">menu_book</span>
-                                                {isLive ? 'SEGUIR LITURGIA' : 'Ver Guion'}
+                                                <span className="material-symbols-outlined text-2xl">menu_book</span>
+                                                <span className="text-lg">{isLive ? 'ABRIR MISAL' : 'Revisar Guion'}</span>
                                             </button>
                                             <div className="flex items-center justify-center gap-2">
                                                 <button
@@ -227,9 +248,9 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
 
             {/* Dashboard Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+            <div className={`grid grid-cols-1 ${!showAdminDashboard ? 'lg:grid-cols-2 max-w-5xl mx-auto' : 'lg:grid-cols-3'} gap-6 pb-8`}>
 
-                {/* Column 1: Priority & Devotion */}
+                {/* Column 1: Priority & Devotion (ALWAYS VISIBLE - But simplified if Celebrant) */}
                 <div className="space-y-6">
                     {/* Next Liturgy (If no pinned event or just strictly next) */}
                     {!pinnedLiturgy && (
@@ -239,83 +260,111 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                         </section>
                     )}
 
+                    {/* Intentions - Critical for Mass */}
                     <section>
                         <IntentionsCard date={date} />
                     </section>
 
-                    <section>
-                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
-                        <div className="grid grid-cols-2 gap-4">
-                            <StyledCard
-                                title="Liturgia"
-                                description="Generador"
-                                icon="menu_book"
-                                onClick={() => onNavigate('generator')}
-                                actionText="Ir"
-                                compact={true}
-                            />
-                            <StyledCard
-                                title="Servicios"
-                                description="Ocasionales"
-                                icon="church"
-                                onClick={() => onNavigate('occasional')}
-                                actionText="Ir"
-                                compact={true}
-                            />
-                        </div>
-                    </section>
-                </div>
-
-                {/* Column 2: Management & Communication */}
-                <div className="space-y-6">
-                    <section>
-                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
-
-                        {/* COMMUNICATION CENTER BUTTON (ADMIN ONLY) */}
-                        {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
-                            <button
-                                onClick={() => setIsCommOpen(true)}
-                                className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 hover:scale-[1.02] transition-transform"
-                            >
-                                <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
-                                    <span className="material-symbols-outlined text-2xl">forum</span>
-                                </div>
-                                <div className="text-left">
-                                    <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                                    <p className="text-xs text-red-600 dark:text-red-300 font-medium">Avisos, Mensajes y Chat</p>
-                                </div>
-                                <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
-                            </button>
-                        )}
-
-                        <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
-                    </section>
-
+                    {/* Notices - Critical for Mass Announcements */}
                     <section>
                         <NoticesCard />
                     </section>
+
+                    {/* Access to Tools (Hidden in simple mode unless needed, but shortcuts are handy) */}
+                    {showAdminDashboard && (
+                        <section>
+                            <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
+                            <div className="grid grid-cols-2 gap-4">
+                                <StyledCard
+                                    title="Liturgia"
+                                    description="Generador"
+                                    icon="menu_book"
+                                    onClick={() => onNavigate('generator')}
+                                    actionText="Ir"
+                                    compact={true}
+                                />
+                                <StyledCard
+                                    title="Servicios"
+                                    description="Ocasionales"
+                                    icon="church"
+                                    onClick={() => onNavigate('occasional')}
+                                    actionText="Ir"
+                                    compact={true}
+                                />
+                            </div>
+                        </section>
+                    )}
                 </div>
 
-                {/* Column 3: Administration & Stats */}
-                <div className="space-y-6">
-                    <section>
-                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
-                        <SacristyStatusCard date={date} />
-                    </section>
+                {/* CELEBRANT MODE: Secondary Column (Summary) */}
+                {!showAdminDashboard && (
+                    <div className="space-y-6 animate-fade-in">
+                        <SundaySummaryCard />
 
-                    <section>
-                        <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>
-                        <FinanceCard />
-                    </section>
+                        {/* Quick link to full dashboard if they need deep access */}
+                        <div className="text-center pt-8 opacity-50 hover:opacity-100 transition-opacity">
+                            <button
+                                onClick={() => setShowAdminDashboard(true)}
+                                className="text-xs text-gray-500 font-bold underline"
+                            >
+                                Necesito gestionar algo más...
+                            </button>
+                        </div>
+                    </div>
+                )}
 
-                    <section>
-                        <StatsCard />
-                    </section>
 
-                    <section>
-                        <QuickCertCard />
-                    </section>
-                </div>
+                {/* ADMIN MODE: Columns 2 & 3 */}
+                {showAdminDashboard && (
+                    <>
+                        {/* Column 2: Management & Communication */}
+                        <div className="space-y-6 animate-fade-in">
+                            <section>
+                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
+
+                                {/* COMMUNICATION CENTER BUTTON (ADMIN ONLY) */}
+                                {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
+                                    <button
+                                        onClick={() => setIsCommOpen(true)}
+                                        className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 hover:scale-[1.02] transition-transform"
+                                    >
+                                        <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
+                                            <span className="material-symbols-outlined text-2xl">forum</span>
+                                        </div>
+                                        <div className="text-left">
+                                            <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
+                                            <p className="text-xs text-red-600 dark:text-red-300 font-medium">Avisos, Mensajes y Chat</p>
+                                        </div>
+                                        <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
+                                    </button>
+                                )}
+
+                                <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
+                            </section>
+                        </div>
+
+                        {/* Column 3: Administration & Stats */}
+                        <div className="space-y-6 animate-fade-in">
+                            <section>
+                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
+                                <SacristyStatusCard date={date} />
+                            </section>
+
+                            <section>
+                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>
+                                <FinanceCard />
+                            </section>
+
+                            <section>
+                                <StatsCard />
+                            </section>
+
+                            <section>
+                                <QuickCertCard />
+                            </section>
+                        </div>
+                    </>
+                )}
 
             </div>
         </main>
