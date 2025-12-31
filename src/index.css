@@ -117,6 +117,16 @@ textarea {
     color: rgba(255, 255, 255, 0.5);
 }
 
+/* SENIOR MOBILE FIX: Prevent iOS Zoom on focus */
+@media screen and (max-width: 768px) {
+
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
 /* Global Text Selection Override */
 ::selection {
     background-color: var(--color-primary-light);
