@@ -56,35 +56,35 @@ export default function SacristyChecklist({ date }) {
                 className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 p-3 bg-gray-50/50 dark:bg-black/20 transition-all duration-300 origin-top overflow-hidden ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-[800px] opacity-100'}`}
             >
                 {items.map(item => (
-                    <div key={item.id} className="group relative flex items-center gap-2 p-2 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors">
+                    <div key={item.id} className="group relative flex items-center gap-2 p-3 rounded-lg hover:bg-white dark:hover:bg-white/5 transition-colors border border-transparent hover:border-gray-100 dark:hover:border-white/5 active:scale-[0.99]">
                         <button
                             onClick={() => toggleItem(item.id)}
                             disabled={loading}
-                            className={`flex flex-1 items-start gap-2 text-left transition-all
+                            className={`flex flex-1 items-start gap-3 text-left transition-all py-1
                                 ${item.checked ? 'opacity-60' : ''}
                             `}
                         >
                             <div className={`
-                                mt-0.5 w-4 h-4 rounded-[4px] border flex items-center justify-center transition-colors shrink-0
+                                mt-0.5 w-5 h-5 rounded-[6px] border flex items-center justify-center transition-colors shrink-0
                                 ${item.checked
                                     ? 'bg-green-500 border-green-500 text-white'
                                     : 'border-gray-300 dark:border-gray-600 group-hover:border-primary bg-white dark:bg-transparent'
                                 }
                             `}>
-                                {item.checked && <span className="material-symbols-outlined text-[10px] font-bold leading-none">check</span>}
+                                {item.checked && <span className="material-symbols-outlined text-xs font-bold leading-none">check</span>}
                             </div>
-                            <span className={`text-xs font-medium leading-tight ${item.checked ? 'text-gray-400 line-through' : 'text-gray-700 dark:text-gray-200'}`}>
+                            <span className={`text-sm font-medium leading-tight ${item.checked ? 'text-gray-400 line-through' : 'text-gray-700 dark:text-gray-200'}`}>
                                 {item.label}
                             </span>
                         </button>
 
-                        {/* Assign Button - Visible on hover or touch */}
+                        {/* Assign Button - Always visible on touch/mobile, Hover on Desktop */}
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
                                 setAssigningItem(item);
                             }}
-                            className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full transition-all"
+                            className="opacity-100 lg:opacity-0 lg:group-hover:opacity-100 p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-full transition-all active:scale-95 bg-white dark:bg-white/5 lg:bg-transparent shadow-sm lg:shadow-none border border-gray-100 dark:border-white/5 lg:border-none"
                             title="Asignar tarea"
                         >
                             <span className="material-symbols-outlined text-lg">person_add</span>
