@@ -48,6 +48,12 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    
+    // Contenido General (Notices, etc)
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if isAdmin() || isSecretary() || isSacristan() || isMusician() || getUserRole() == 'treasurer' || getUserRole() == 'acolyte';
+    }
     // ----------------------------------------------
 
     match /transactions/{docId} { allow read, write: if isAdmin() || getUserRole() == 'treasurer'; }

@@ -30,9 +30,8 @@ export default function MinistryReportModal({ isOpen, onClose }) {
                 suggestions: reportData.suggestions,
                 createdAt: serverTimestamp()
             });
-            console.log("Reporte guardado en la nube.");
+            // Report saved
         } catch (error) {
-            console.error("Error al guardar reporte:", error);
             // Non-blocking error, user still gets their PDF
         }
 
@@ -51,7 +50,6 @@ export default function MinistryReportModal({ isOpen, onClose }) {
             });
             doc.addImage(img, 'PNG', 20, 15, 25, 25); // Adjusted ratio if needed
         } catch (e) {
-            console.error("Logo error", e);
         }
 
         doc.setFont("times", "bold");

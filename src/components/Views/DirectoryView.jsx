@@ -306,7 +306,7 @@ export default function DirectoryView() {
     });
 
     return (
-        <div className="flex flex-col md:flex-row neumorphic-card overflow-hidden h-[calc(100vh-140px)] animate-fade-in">
+        <div className="flex flex-col md:flex-row neumorphic-card overflow-hidden h-full animate-fade-in">
             {/* Sidebar List (Hidden on mobile if member selected) */}
             <div className={`${selectedMember ? 'hidden md:flex' : 'flex'} w-full md:w-1/3 min-w-[300px] border-r border-gray-200 flex-col bg-transparent h-full`}>
                 <div className="p-4 border-b border-gray-100 dark:border-white/5 space-y-3">

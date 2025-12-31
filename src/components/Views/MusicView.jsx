@@ -120,7 +120,7 @@ export default function MusicView() {
     }
 
     return (
-        <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto pb-24">
+        <div className="flex-1 flex flex-col p-4 w-full max-w-7xl mx-auto">
             {/* Header with Navigation and Notation Toggle */}
             <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4 flex-shrink-0">
                 <div>

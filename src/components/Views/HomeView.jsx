@@ -95,7 +95,7 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
     // 7. ADMIN / PRIEST (Context-Aware Dashboard)
     return (
-        <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 w-full max-w-7xl mx-auto animate-fade-in pb-32">
+        <main className="flex-1 flex flex-col px-4 pt-6 space-y-8 w-full max-w-7xl mx-auto animate-fade-in">
 
             {/* Communication Center Modal */}
             {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
