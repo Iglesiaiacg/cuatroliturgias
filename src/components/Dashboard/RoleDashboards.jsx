@@ -10,6 +10,7 @@ import Preview from '../Liturgy/Preview';
 import QuickCertCard from './QuickCertCard';
 import DutiesModal from './DutiesModal';
 import CommunicationCenter from './CommunicationCenter';
+import NoticesCard from './NoticesCard';
 
 // Helper for persistent modal state
 const shouldShowDuties = (role) => {
@@ -58,6 +59,11 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Notices - High Priority for Everyone */}
+                <div className="md:col-span-2 h-64">
+                    <NoticesCard />
+                </div>
+
                 {/* Action: View Liturgy */}
                 <button
                     onClick={() => onNavigate('generator')}
@@ -138,6 +144,11 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Notices - High Priority */}
+                <div className="md:col-span-2 h-64">
+                    <NoticesCard />
+                </div>
+
                 {/* Inventory Status */}
                 <div className="flex flex-col gap-6">
                     <SacristyStatusCard />
@@ -257,6 +268,10 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
 
                 {/* Col 2: Directory & Certs */}
                 <div className="space-y-6">
+                    <div className="h-64">
+                        <NoticesCard />
+                    </div>
+
                     <button
                         onClick={() => onNavigate('directory')}
                         className="w-full neumorphic-card p-6 flex flex-col items-center text-center gap-3 hover:scale-[1.02] hover:bg-primary transition-all group"
@@ -313,6 +328,10 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="md:col-span-2 h-64">
+                    <NoticesCard />
+                </div>
+
                 {/* Liturgy Info - UNIFIED */}
                 <div className="space-y-6">
                     <NextLiturgyCard />

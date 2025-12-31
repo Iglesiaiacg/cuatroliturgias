@@ -803,6 +803,10 @@ textarea {
     }
 }
 
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
 /* Mystagogical Annotations */
 .mystagogy {
     @apply border-b-2 border-dotted border-primary cursor-help relative inline-block text-primary/80;
