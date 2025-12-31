@@ -10,6 +10,8 @@ import { ChatProvider } from './context/ChatContext';
 import { DirectoryProvider } from './context/DirectoryContext';
 import { MusicProvider } from './context/MusicContext';
 import { SetlistProvider } from './context/SetlistContext';
+import { NotificationProvider, useNotifications } from './context/NotificationContext';
+import { Toaster, toast } from 'react-hot-toast';
 import { ThemeProvider } from './context/ThemeContext';
 
 // Components
@@ -40,7 +42,76 @@ const ProfileModal = React.lazy(() => import('./components/Auth/ProfileModal'));
 const RosterView = React.lazy(() => import('./components/Ministries/RosterView'));
 const PublicSetlistView = React.lazy(() => import('./components/Views/PublicSetlistView'));
 
-function AppContent() {
+function BellIcon() {
+  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <div className="relative">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="relative p-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full transition-colors"
+        title="Notificaciones"
+      >
+        <span className="material-symbols-outlined text-2xl">notifications</span>
+        {unreadCount > 0 && (
+          <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm animate-pulse">
+            {unreadCount}
+          </span>
+        )}
+      </button>
+
+      {isOpen && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)}></div>
+          <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-surface-dark rounded-xl shadow-xl border border-gray-100 dark:border-white/10 z-50 overflow-hidden animate-fade-in-up origin-top-right">
+            <div className="p-3 border-b border-gray-100 dark:border-white/5 flex justify-between items-center bg-gray-50 dark:bg-white/5">
+              <h3 className="font-bold text-sm text-gray-700 dark:text-gray-200">Notificaciones</h3>
+              {unreadCount > 0 && (
+                <button onClick={markAllAsRead} className="text-xs text-primary hover:underline">
+                  Marcar leídas
+                </button>
+              )}
+            </div>
+            <div className="max-h-80 overflow-y-auto">
+              {notifications.length === 0 ? (
+                <div className="p-8 text-center text-gray-400 text-xs">
+                  <span className="material-symbols-outlined text-3xl mb-2 opacity-50">notifications_off</span>
+                  <p>No tienes notificaciones</p>
+                </div>
+              ) : (
+                <ul>
+                  {notifications.map(n => (
+                    <li
+                      key={n.id}
+                      className={`p-3 border-b border-gray-100 dark:border-white/5 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors cursor-pointer ${!n.read ? 'bg-blue-50/50 dark:bg-blue-900/10' : ''}`}
+                      onClick={() => markAsRead(n.id)}
+                    >
+                      <div className="flex gap-3">
+                        <div className={`mt-1 w-2 h-2 rounded-full shrink-0 ${!n.read ? 'bg-primary' : 'bg-transparent'}`}></div>
+                        <div>
+                          <p className={`text-sm ${!n.read ? 'font-bold text-gray-900 dark:text-white' : 'text-gray-600 dark:text-gray-300'}`}>
+                            {n.title}
+                          </p>
+                          <p className="text-xs text-gray-500 line-clamp-2 mt-0.5">{n.message}</p>
+                          <p className="text-[10px] text-gray-400 mt-2 text-right">
+                            {n.createdAt?.toDate ? n.createdAt.toDate().toLocaleDateString() : 'Reciente'}
+                          </p>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+function MainLayout() {
   const { currentUser, userRole, logout, checkPermission } = useAuth()
 
   // Use centralized settings hook
@@ -634,11 +705,13 @@ function App() {
       <AuthProvider>
         <DirectoryProvider>
           <MusicProvider>
-            <SetlistProvider> {/* [FIXED] */}
-              <ChatProvider>
-                <AppContent />
-              </ChatProvider>
-            </SetlistProvider> {/* [FIXED] */}
+            <SetlistProvider>
+              <NotificationProvider>
+                <ChatProvider>
+                  <AppContent />
+                </ChatProvider>
+              </NotificationProvider>
+            </SetlistProvider>
           </MusicProvider>
         </DirectoryProvider>
       </AuthProvider>
