@@ -3,7 +3,7 @@ import { useFinanceSync } from '../../hooks/useFinanceSync';
 import { useCalendarEvents } from '../../hooks/useCalendarEvents';
 import { format, addDays, isSameDay } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { getLiturgicalColor, getLiturgicalRubrics } from '../../services/liturgy';
+import { getLiturgicalColor, getLiturgicalRubrics, identifyFeast, getLiturgicalCycle } from '../../services/liturgy';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 
@@ -13,6 +13,10 @@ function LiturgicalVestmentCard({ date }) {
     // Default to 'romana' or fetch from settings context if available. For now 'romana' is safe default.
     const rubrics = getLiturgicalRubrics(date, 'romana');
 
+    // SENIOR LITURGIST ADDITIONS:
+    const cycle = getLiturgicalCycle(date);
+    const feastName = identifyFeast(date);
+
     return (
         <div className={`neumorphic-card p-6 border-l-4 ${colorData.classes?.split(' ')[0]?.replace('bg-', 'border-')} relative overflow-hidden`}>
             {/* Background Tint */}
@@ -21,10 +25,17 @@ function LiturgicalVestmentCard({ date }) {
             <div className="relative z-10">
                 <div className="flex justify-between items-start mb-4">
                     <div>
-                        <h3 className="uppercase text-xs font-bold text-gray-500 tracking-wider mb-1">Color Litúrgico</h3>
+                        <h3 className="uppercase text-xs font-bold text-gray-500 tracking-wider mb-1">
+                            {cycle.text}
+                        </h3>
                         <div className="flex items-center gap-3">
                             <span className={`w-8 h-8 rounded-full shadow-lg border-2 border-white dark:border-stone-800 ${colorData.code === 'purple' ? 'bg-purple-700' : colorData.code === 'red' ? 'bg-red-700' : colorData.code === 'green' ? 'bg-green-700' : 'bg-slate-100'}`}></span>
-                            <h2 className="text-2xl font-display font-bold text-gray-900 dark:text-white capitalize">{colorData.name}</h2>
+                            <div>
+                                <h2 className="text-xl md:text-2xl font-display font-bold text-gray-900 dark:text-white leading-tight capitalize">
+                                    {feastName}
+                                </h2>
+                                <p className="text-xs font-bold opacity-60 uppercase">{colorData.name}</p>
+                            </div>
                         </div>
                     </div>
                     {/* Visual Vestment Icon Placeholder */}
