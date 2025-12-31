@@ -11,6 +11,7 @@ import { createPortal } from 'react-dom';
 import MinistryOrbit from '../UI/MinistryOrbit';
 import MinistryReportModal from '../Views/MinistryReportModal';
 import RectorReportModal from '../Views/RectorReportModal';
+import AvailabilityCalendar from '../Ministries/AvailabilityCalendar';
 
 export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricChange }) {
     const { currentUser, userRole, logout, setPreviewRole, realRole } = useAuth();
@@ -247,6 +248,12 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
                                 )}
                             </div>
                         )}
+
+                        {/* Availability Calendar Section */}
+                        <div className="neumorphic-card p-4 space-y-4">
+                            <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Mi Disponibilidad</h3>
+                            <AvailabilityCalendar />
+                        </div>
 
                         {/* Profile Fields */}
                         <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">Datos Personales</h3>

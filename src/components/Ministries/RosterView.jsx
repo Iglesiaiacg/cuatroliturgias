@@ -78,8 +78,6 @@ export default function RosterView() {
         const newRoster = { ...rosterData };
 
         // Prepare: Fetch availabilities for all members relevant to the month
-        // This is expensive, in production use Cloud Functions.
-        // Client-side simulation:
         const memberAvailabilities = {};
 
         for (const member of members) {
@@ -108,12 +106,17 @@ export default function RosterView() {
 
                 const eligible = members.filter(m => {
                     // Check availability
+                    // The AvailabilityCalendar stores keys as YYYY-MM-DD
                     if (memberAvailabilities[m.id]?.[dateKey]) return false; // User marked this date as unavailable
 
-                    // Role check (simplified logic)
-                    if (role.id === 'presider' || role.id === 'preacher') return m.role === 'admin' || m.role === 'presbyter';
-                    if (role.id === 'musician') return m.role === 'musician' || m.role === 'admin';
-                    return true; // Everyone else
+                    // Role check
+                    if (role.id === 'presider') return m.roles?.includes('presbyter') || m.role === 'admin' || m.role === 'presbyter';
+                    if (role.id === 'preacher') return m.roles?.includes('preacher') || m.roles?.includes('presbyter') || m.role === 'admin' || m.role === 'presbyter';
+                    if (role.id === 'acolyte') return m.roles?.includes('acolyte') || m.role === 'acolyte' || m.role === 'admin' || m.role === 'sacristan';
+                    if (role.id === 'lector') return m.roles?.includes('lector') || m.role === 'lector' || m.role === 'admin' || m.role === 'presbyter';
+                    if (role.id === 'musician') return m.roles?.includes('musician') || m.role === 'musician' || m.role === 'admin';
+                    if (role.id === 'usher') return true; // Anyone can be an usher
+                    return true;
                 });
 
                 if (eligible.length > 0) {
