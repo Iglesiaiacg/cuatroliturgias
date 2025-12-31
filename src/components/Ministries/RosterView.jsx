@@ -264,5 +264,6 @@ export default function RosterView() {
                     </div>
                 </div>
             </div>
-            );
+        </div>
+    );
 }
