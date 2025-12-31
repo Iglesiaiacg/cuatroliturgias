@@ -39,13 +39,70 @@ export default function SetlistView() {
         return songs.find(s => s.id === entry.id) || entry;
     };
 
-    // DnD Sensors
+    // DnD Sensors - Optimized for Mobile (delay/distance to allow scrolling)
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         })
     );
+
+    function SortableItem({ id, songEntry, idx, onClick, onRemove, activeListName }) {
+        const {
+            attributes,
+            listeners,
+            setNodeRef,
+            transform,
+            transition,
+            isDragging
+        } = useSortable({ id });
+
+        const style = {
+            transform: CSS.Transform.toString(transform),
+            transition,
+            zIndex: isDragging ? 50 : 'auto',
+            position: 'relative',
+        };
+
+        return (
+            <div
+                ref={setNodeRef}
+                style={style}
+                {...attributes}
+                {...listeners}
+                className={`bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5 p-3 rounded-lg flex justify-between items-center mb-2 shadow-sm ${isDragging ? 'shadow-xl ring-2 ring-primary opacity-90' : 'hover:border-primary/30'} touch-none`}
+            >
+                <div className="flex items-center gap-3 flex-1 overflow-hidden" onClick={onClick}>
+                    <div className="bg-gray-100 dark:bg-white/5 text-gray-400 p-2 rounded cursor-grab active:cursor-grabbing">
+                        <span className="material-symbols-outlined text-lg">drag_indicator</span>
+                    </div>
+                    <div className="flex-1 truncate">
+                        <div className="flex items-center gap-2">
+                            <span className="text-xs font-mono text-gray-400 w-5 text-center">{idx + 1}</span>
+                            <h4 className="font-bold text-gray-800 dark:text-gray-200 truncate">{songEntry.title}</h4>
+                        </div>
+                        {songEntry.artist && <p className="text-xs text-gray-500 truncate ml-7">{songEntry.artist}</p>}
+                    </div>
+                </div>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation(); // Prevent drag/click when deleting
+                        // We need to implement remove on parent or handle it here?
+                        // The parent passed onRemove
+                        onRemove();
+                    }}
+                    className="text-gray-300 hover:text-red-500 p-2 transition-colors"
+                >
+                    <span className="material-symbols-outlined text-lg">close</span>
+                </button>
+            </div>
+        );
+    }
 
     const handleDragEnd = (event) => {
         const { active, over } = event;
