@@ -232,6 +232,69 @@ export const getLiturgicalColor = (date) => {
     }
 };
 
+export const getLiturgicalRubrics = (date, tradition) => {
+    const season = getSeason(date);
+    const day = date.getDay(); // 0 is Sunday
+
+    // Default Defaults (Ordinary Time)
+    let rubrics = {
+        gloria: day === 0, // Gloria on Sundays
+        credo: day === 0,  // Credo on Sundays
+        alleluia: true,
+        preface: 'Común / Dominical'
+    };
+
+    // Calculate Septuagesima for Tridentine/Ordinariate
+    const year = date.getFullYear();
+    const easter = getEasterDate(year);
+    const septuagesima = new Date(easter); septuagesima.setDate(easter.getDate() - 63);
+    const ashWed = new Date(easter); ashWed.setDate(easter.getDate() - 46);
+
+    const isPreLent = date >= septuagesima && date < ashWed;
+
+    // SEASONAL OVERRIDES
+    if (season === 'adviento') {
+        rubrics.gloria = false; // No Gloria in Advent (Romana)
+        // Tridentine override for Advent: Still YES Alleluia, NO Gloria.
+        rubrics.preface = 'Adviento';
+    }
+
+    if (season === 'navidad') {
+        rubrics.gloria = true;
+        rubrics.credo = true; // Even weekdays in Octave? Simplified: Yes for season.
+        rubrics.preface = 'Navidad';
+    }
+
+    if (season === 'cuaresma') {
+        rubrics.gloria = false;
+        rubrics.alleluia = false; // No Alleluia at all
+        rubrics.preface = 'Cuaresma';
+    }
+
+    if (season === 'semana_santa') {
+        rubrics.gloria = false; // Holy Thursday is exception (handle separately if needed)
+        rubrics.alleluia = false;
+        rubrics.preface = 'La Pasión';
+    }
+
+    if (season === 'pascua') {
+        rubrics.gloria = true;
+        rubrics.alleluia = true; // Double Alleluia
+        rubrics.preface = 'Pascua';
+    }
+
+    // TRADITION SPECIFIC OVERRIDES
+    if (tradition === 'tridentina' || tradition === 'ordinariato') {
+        if (isPreLent) {
+            rubrics.gloria = false; // No Gloria in Septuagesima
+            rubrics.alleluia = false; // No Alleluia (use Tract)
+            rubrics.preface = 'Trinidad (Domingo) / Común';
+        }
+    }
+
+    return rubrics;
+};
+
 export const getTips = () => {
     const tips = [
         "El color morado se usa en Adviento y Cuaresma como signo de penitencia.",
