@@ -44,7 +44,14 @@ export function useIntentionsSync(date) {
     }, [dateKey, currentUser, checkPermission, userRole]);
 
     const addIntention = async (text, type = 'general') => {
-        const newIntention = { id: Date.now(), text, type, completed: false };
+        const newIntention = {
+            id: Date.now(),
+            text,
+            type,
+            completed: false,
+            requestedBy: currentUser?.displayName || currentUser?.email || 'Anónimo',
+            createdAt: new Date().toISOString()
+        };
         const newList = [...intentions, newIntention];
         setIntentions(newList); // Optimistic
 
