@@ -712,7 +712,7 @@ function App() {
             <SetlistProvider>
               <NotificationProvider>
                 <ChatProvider>
-                  <AppContent />
+                  <MainLayout />
                 </ChatProvider>
               </NotificationProvider>
             </SetlistProvider>
