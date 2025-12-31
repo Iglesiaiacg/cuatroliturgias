@@ -800,11 +800,18 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
     // Fallback
     const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
 
+    // SENIOR LITURGIST ENFORCEMENT:
+    const rubrics = getLiturgicalRubrics(selectedDate, 'romana');
+
     return `
         ${basePrompt}
         FUENTE: Misal Romano (3ª Edición).
         IDIOMA: Español.
         ${omissionRules}
+        
+        ⚠️ RÚBRICA DE PREFACIO (CRÍTICO):
+        EL USUARIO REQUIERE EXACTAMENTE ESTE PREFACIO (Si es posible): "${rubrics.preface}".
+        SI EL MISAL LO PERMITE, USA ESE TEMA.
         
         ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
         NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
@@ -844,7 +851,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            
            (OMITIR ACTO PENITENCIAL DE RITOS INICIALES CUANDO HAY CENIZA).
            (NO HAY CREDO).
-           ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
+           ` : `- Credo: ${rubrics.credo ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
 
         4. ORACIÓN UNIVERSAL:
            - Redacta peticiones adaptadas a las lecturas de hoy.
@@ -852,7 +859,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         5. LITURGIA EUCARÍSTICA:
            - Ofertorio y Oración sobre las ofrendas.
            - PLEGARIA EUCARÍSTICA:
-             - Prefacio y Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+             - Prefacio OBLIGATORIO: "${rubrics.preface}" (Si no es fijo, usa el más apropiado para este día).
+             - Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
              - Plegaria Eucarística II (Texto completo, consagración verbatim).
              - Doxología final.
 
