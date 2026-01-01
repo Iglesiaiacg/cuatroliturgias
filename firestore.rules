@@ -25,7 +25,7 @@ service cloud.firestore {
     }
 
     match /songs/{songId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Público para el "Boletín Digital" (QR)
       allow write: if isMusician() || isAdmin();
     }
 
