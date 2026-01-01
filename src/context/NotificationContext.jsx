@@ -34,6 +34,9 @@ export function NotificationProvider({ children }) {
             }));
             setNotifications(list);
             setUnreadCount(list.filter(n => !n.read).length);
+        }, (error) => {
+            console.error("Notifications Sync Error:", error);
+            // Gracefully handle permission denied
         });
 
         return () => unsubscribe();

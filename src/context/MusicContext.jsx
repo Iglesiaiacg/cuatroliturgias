@@ -28,11 +28,8 @@ export function MusicProvider({ children }) {
 
     // Initial load from Firestore
     useEffect(() => {
-        if (!currentUser) {
-            setSongs([]);
-            setLoading(false);
-            return;
-        }
+        // ALLOW PUBLIC ACCESS: Songs are strictly public (read-only).
+        // Only skip if offline logic dictates, but generally we want to fetch.
 
         setLoading(true);
         // Query songs ordered by title

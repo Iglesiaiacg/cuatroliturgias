@@ -84,6 +84,11 @@ service cloud.firestore {
     match /users/{userId}/annotations/{docId} {
       allow read, write: if request.auth.uid == userId;
     }
+
+    match /users/{userId}/notifications/{notifId} {
+      allow read: if request.auth.uid == userId;
+      allow write: if isAdmin(); // System/Admins send notifications
+    }
     
     match /{document=**} { allow read, write: if false; }
   }
