@@ -124,6 +124,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
 
             {/* MOBILE: GOOEY RADIAL MENU (User Requested) */}
             <GooeyNav
+                navItems={visibleNavItems}
                 onNavigate={onNavigate}
                 activeTab={activeTab}
                 onProfile={onProfile}
