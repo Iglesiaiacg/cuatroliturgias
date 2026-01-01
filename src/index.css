@@ -160,6 +160,11 @@ textarea {
         -ms-overflow-style: none;
         scrollbar-width: none;
     }
+
+    /* iOS Safe Areas */
+    .pb-safe {
+        padding-bottom: env(safe-area-inset-bottom, 20px) !important;
+    }
 }
 
 /* REPLACED NEUMORPHIC ENGINE -> SOLEMN CARD ENGINE */
@@ -176,6 +181,15 @@ textarea {
         overflow: hidden;
         /* Ensure content respects curves */
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        padding: 1rem;
+        /* Default mobile padding (p-4) */
+    }
+
+    @media (min-width: 768px) {
+        .neumorphic-card {
+            padding: 1.5rem;
+            /* Desktop padding */
+        }
     }
 
     /* Inputs - Modern Filled */

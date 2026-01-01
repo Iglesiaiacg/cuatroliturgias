@@ -41,6 +41,19 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Tesorería Parroquial</h2>
                 <p className="text-gray-500">Gestión de recursos y ofrendas</p>
+
+                {/* Quick Actions Chips */}
+                <div className="flex gap-3 justify-center mt-4 overflow-x-auto pb-2 no-scrollbar">
+                    <button onClick={() => onNavigate('offerings')} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                        <span className="material-symbols-outlined text-[16px]">add_circle</span> Nuevo Ingreso
+                    </button>
+                    <button onClick={() => isCommOpen ? setIsCommOpen(false) : setIsCommOpen(true)} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                        <span className="material-symbols-outlined text-[16px]">forum</span> Chat
+                    </button>
+                    <button onClick={() => window.print()} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                        <span className="material-symbols-outlined text-[16px]">print</span> Reporte
+                    </button>
+                </div>
             </header>
 
             {/* Comm Button */}
@@ -127,6 +140,19 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
                     )}
                 </div>
             </header>
+
+            {/* Quick Actions Chips - SACRISTAN */}
+            <div className="flex gap-3 justify-center -mt-6 mb-6 overflow-x-auto pb-2 no-scrollbar">
+                <button onClick={() => onNavigate('sacristy')} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">checklist</span> Checklist
+                </button>
+                <button onClick={() => onNavigate('sacristy')} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">inventory_2</span> Inventario
+                </button>
+                <button onClick={() => setIsCommOpen(true)} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">forum</span> Chat
+                </button>
+            </div>
 
             {/* Comm Button */}
             <button
@@ -311,6 +337,19 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Ministerio de Canto</h2>
                 <p className="text-gray-500">Preparación musical para la liturgia</p>
             </header>
+
+            {/* Quick Actions Chips - MUSICIAN */}
+            <div className="flex gap-3 justify-center -mt-6 mb-6 overflow-x-auto pb-2 no-scrollbar">
+                <button onClick={() => onNavigate('music')} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">search</span> Buscar Canto
+                </button>
+                <button onClick={() => onNavigate('generator')} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">description</span> Ver Lecturas
+                </button>
+                <button onClick={() => setIsCommOpen(true)} className="btn-secondary text-xs py-1 rounded-full whitespace-nowrap">
+                    <span className="material-symbols-outlined text-[16px]">forum</span> Chat
+                </button>
+            </div>
 
             {/* Comm Button */}
             <button

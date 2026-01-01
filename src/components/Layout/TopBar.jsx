@@ -3,7 +3,8 @@ import { es } from 'date-fns/locale';
 import { useTheme } from '../../context/ThemeContext';
 // import { useAuth } from '../../context/AuthContext'; // Removed
 import { useState } from 'react';
-import MobileMenuOverlay from './MobileMenuOverlay';
+// import MobileMenuOverlay from './MobileMenuOverlay'; // Removed
+import MobileBottomNav from './MobileBottomNav';
 import JerusalemCross from '../UI/JerusalemCross';
 
 export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission, canGoBack, onBack }) {
@@ -120,10 +121,8 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </div>
             </div>
 
-            {/* MOBILE: SAMSUNG EDGE PANEL (Right Side) */}
-            <MobileEdgePanel
-                isOpen={isMenuOpen}
-                setIsOpen={setIsMenuOpen}
+            {/* MOBILE: BOTTOM NAVIGATION BAR (Persistent) */}
+            <MobileBottomNav
                 navItems={visibleNavItems}
                 activeTab={activeTab}
                 onNavigate={onNavigate}
