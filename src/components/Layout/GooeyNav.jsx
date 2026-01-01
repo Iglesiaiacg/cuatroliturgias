@@ -90,17 +90,14 @@ export default function GooeyNav({ navItems = [], onNavigate, activeTab, onProfi
                 {/* Render Dynamic Items */}
                 {allItems.map((item, index) => {
                     // LITURGICAL RED COLOR SCHEME (User Requested)
-                    // Alternate between Red and White
+                    // UNIFORM LITURGICAL RED STYLE (User Requirement)
+                    // "Color Rojo Liturgico" -> All Red Bubbles.
 
-                    const isEven = index % 2 === 0;
+                    const bgClass = 'bg-[#991b1b] text-white'; // Always Red-800
 
-                    const bgClass = isEven
-                        ? 'bg-[#991b1b] text-white' // Liturgical Red (Red-800)
-                        : 'bg-white text-[#991b1b]'; // White with Red Icon
-
-                    // If active, maybe highlight? 
+                    // If active, Gold Ring to highlight
                     const isActive = activeTab === item.id;
-                    const ringClass = isActive ? 'ring-2 ring-yellow-400' : ''; // Gold ring for active
+                    const ringClass = isActive ? 'ring-2 ring-[#fbbf24] dark:ring-yellow-500' : '';
 
                     const style = isOpen
                         ? getItemStyle(index)
