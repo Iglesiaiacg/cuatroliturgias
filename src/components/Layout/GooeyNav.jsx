@@ -17,26 +17,26 @@ export default function GooeyNav({ navItems = [], onNavigate, activeTab, onProfi
         { id: 'profile', label: 'Perfil', icon: 'person', action: onProfile }
     ];
 
-    const radius = 110; // px
+    // INCREASED RADIUS for more separation (User requested)
+    const radius = 125; // px (was 110)
     const totalItems = allItems.length;
-    const span = 160;   // Arc span in degrees
-    const startAngle = -80; // Start angle
+    const span = 170;   // Arc span in degrees (Wider arc)
+    const startAngle = -85; // Start angle (Shifted left to center the wider arc)
 
     // --- AUTO-SIZING LOGIC ---
     // Calculate arc length available per item
     // Circumference of full circle = 2 * PI * R
     // Arc Length = (Span/360) * Circumference
     // Max diameter per item ~= ArcLength / TotalItems
-    // We add a safety margin (gap).
-
-    // Standard size is 80px (w-20).
-    // Let's calculate proportional size.
+    // We deduct margin for gap.
 
     const arcLength = (span / 360) * (2 * Math.PI * radius);
-    const maxDiameter = (arcLength / totalItems) * 0.9; // 90% of slot to allow gap
 
-    // Clamp size: Min 40px, Max 80px
-    const bubbleSize = Math.min(Math.max(maxDiameter, 40), 80);
+    // Reduced multiplier (0.8 -> 80% usage) to ensure 20% gap between bubbles
+    const maxDiameter = (arcLength / totalItems) * 0.8;
+
+    // Clamp size: Min 35px, Max 65px (Smaller caps to ensure separation)
+    const bubbleSize = Math.min(Math.max(maxDiameter, 35), 65);
 
     // Offset for centering (margin-left: -size/2)
     const marginOffset = -(bubbleSize / 2);
@@ -89,27 +89,18 @@ export default function GooeyNav({ navItems = [], onNavigate, activeTab, onProfi
 
                 {/* Render Dynamic Items */}
                 {allItems.map((item, index) => {
-                    // GRAYSCALE COLOR SCHEME (User Request)
-                    // Alternate between White and Gray
-                    // White bubble -> Dark Icon
-                    // Gray bubble -> Dark Icon (or White if dark enough)
-                    // Let's use Stone-100 (Light Gray) and White.
+                    // LITURGICAL RED COLOR SCHEME (User Requested)
+                    // Alternate between Red and White
 
                     const isEven = index % 2 === 0;
 
-                    // Tailwind classes for colors
-                    // We need to apply these classes conditionaly but "menu-item" class enforces background usually?
-                    // The original CSS uses .menu-item.blue { background... }
-                    // We will override background via style or class.
-                    // Let's use generic styles.
-
                     const bgClass = isEven
-                        ? 'bg-stone-200 text-stone-800' // Gray Bubble
-                        : 'bg-white text-stone-800';    // White Bubble
+                        ? 'bg-[#991b1b] text-white' // Liturgical Red (Red-800)
+                        : 'bg-white text-[#991b1b]'; // White with Red Icon
 
                     // If active, maybe highlight? 
                     const isActive = activeTab === item.id;
-                    const ringClass = isActive ? 'ring-4 ring-red-500/30' : '';
+                    const ringClass = isActive ? 'ring-2 ring-yellow-400' : ''; // Gold ring for active
 
                     const style = isOpen
                         ? getItemStyle(index)
@@ -147,7 +138,7 @@ export default function GooeyNav({ navItems = [], onNavigate, activeTab, onProfi
                             {/* Scale icon based on bubble size */}
                             <span
                                 className="material-symbols-outlined"
-                                style={{ fontSize: `${bubbleSize * 0.5}px` }}
+                                style={{ fontSize: `${bubbleSize * 0.55}px` }}
                             >
                                 {item.icon}
                             </span>
