@@ -901,7 +901,7 @@ textarea {
 
 .menu-item,
 .menu-open-button {
-    background: #EEEEEE;
+    /* background: #EEEEEE; REMOVED to allow Tailwind bg classes */
     border-radius: 100%;
     width: 80px;
     height: 80px;
@@ -947,33 +947,7 @@ textarea {
 }
 
 /* Radial Positions - Adjusted for semi-circle UPWARDS */
-.gooey-open .menu-item:nth-child(2) {
-    /* 1st Item (Blue) */
-    transition-duration: 180ms;
-    transform: translate3d(-100px, -20px, 0);
-    /* Far Left */
-}
-
-.gooey-open .menu-item:nth-child(3) {
-    /* 2nd Item (Green) */
-    transition-duration: 280ms;
-    transform: translate3d(-60px, -90px, 0);
-    /* Mid Left-Up */
-}
-
-.gooey-open .menu-item:nth-child(4) {
-    /* 3rd Item (Red) */
-    transition-duration: 380ms;
-    transform: translate3d(60px, -90px, 0);
-    /* Mid Right-Up */
-}
-
-.gooey-open .menu-item:nth-child(5) {
-    /* 4th Item (Purple) */
-    transition-duration: 480ms;
-    transform: translate3d(100px, -20px, 0);
-    /* Far Right */
-}
+/* Legacy nth-child positions removed. Now handled dynamically by React */
 
 /* Extra items if needed - Overlapped or higher */
 
@@ -1016,29 +990,7 @@ textarea {
 }
 
 /* Colors */
-.menu-item.blue {
-    background-color: #669AE1;
-}
-
-.menu-item.green {
-    background-color: #70CC72;
-}
-
-.menu-item.red {
-    background-color: #FE4365;
-}
-
-.menu-item.purple {
-    background-color: #C49CDE;
-}
-
-.menu-item.orange {
-    background-color: #FC913A;
-}
-
-.menu-item.lightblue {
-    background-color: #62C2E4;
-}
+/* Legacy colors removed to allow dynamic Tailwind overrides */
 
 .menu-item:hover {
     color: white;
