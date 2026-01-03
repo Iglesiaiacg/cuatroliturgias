@@ -75,22 +75,23 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with AGGRESSIVE Rescue Mode...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with NUCLEAR Rescue Mode...");
                 const safePrompt = prompt + `
                 
-                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO POR COPYRIGHT (INTENTO 2/2) ⚠️
+                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO PERSISTENTE POR COPYRIGHT (INTENTO 2/2) ⚠️
                 
-                Google ha eliminado tu respuesta porque estás copiando texto protegido del Leccionario moderno.
+                Google sigue bloqueando la respuesta. NO INTENTES COPIAR NINGÚN TEXTO BÍBLICO LITERAL.
                 
-                TU NUEVA MISIÓN: "PARAFRASEA O MUERE".
+                INSTRUCCIONES DE SUPERVIVENCIA:
+                1. ⛔ NO ESCRIBAS LOS TEXTOS DE LAS LECTURAS BÍBLICAS NI DEL EVANGELIO.
+                2. ✅ EN SU LUGAR, escribe SOLO la Cita Bíblica (ej. "Mateo 2, 1-12") y un BREVE RESUMEN de 2 líneas.
+                3. Usa el formato: 
+                   "**EVANGELIO:** (Mateo X, Y-Z)
+                   > [Resumen: Jesús nació en Belén y llegaron unos magos...]"
+                4. PARAFASEA TODAS LAS ORACIONES.
                 
-                1. ⛔ PROHIBIDO USAR EL TEXTO LITERAL DEL LECCIONARIO ACTUAL.
-                2. ✅ USA ÚNICAMENTE LA BIBLIA "TORRES AMAT" (1825) O "VULGATA TRADUCIDA" (Dominio Público).
-                3. SI NO TIENES ACCESO: TRADUCE TÚ MISMO DEL LATÍN O INGLÉS (RSV) AL ESPAÑOL.
-                4. SI TODO FALLA: ESCRIBE UN RESUMEN HOMILÉTICO DETALLADO DE LA LECTURA EN LUGAR DEL TEXTO (Ej: "En esta lectura, San Pablo exhorta a los corintios a...").
-                
-                PREFIERO UNA TRADUCCIÓN ANTIGUA O UN RESUMEN A UN MENSAJE DE ERROR.
-                ¡NO DEJES EL CAMPO VACÍO!
+                ¡TU META ES ENTREGAR LA ESTRUCTURA DEL MISAL SIN ERRORES!
+                Es preferible entregar el esqueleto con resúmenes que fallar por completo.
                 `;
                 return generateLiturgy(safePrompt, true);
             }
