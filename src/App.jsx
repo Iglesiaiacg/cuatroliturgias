@@ -6,7 +6,7 @@ import { useSettings } from './hooks/useSettings'
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './services/firebase';
 import { AuthProvider, useAuth } from './context/AuthContext'
-import { ChatProvider } from './context/ChatContext';
+import { ChatProvider, useChat } from './context/ChatContext';
 import { DirectoryProvider } from './context/DirectoryContext';
 import { MusicProvider } from './context/MusicContext';
 import { SetlistProvider } from './context/SetlistContext';
@@ -109,6 +109,34 @@ function BellIcon() {
       )}
     </div>
   );
+}
+
+function AiActionHandler({ onNavigate, onToast, onSetDate }) {
+  const { aiAction, clearAiAction } = useChat();
+
+  useEffect(() => {
+    if (aiAction) {
+      console.log("Processing AI Action:", aiAction);
+
+      if (aiAction.action === 'NAVIGATE' && aiAction.target) {
+        onNavigate(aiAction.target);
+        onToast(aiAction.message || "Navegando...", "success");
+      } else if (aiAction.action === 'TOAST') {
+        onToast(aiAction.message, "info");
+      } else if (aiAction.action === 'SET_DATE' && aiAction.date) {
+        try {
+          onSetDate(new Date(aiAction.date));
+          onToast(aiAction.message || "Fecha actualizada", "success");
+        } catch (e) {
+          console.error("Invalid date from AI", e);
+        }
+      }
+
+      clearAiAction();
+    }
+  }, [aiAction, onNavigate, onToast, onSetDate, clearAiAction]);
+
+  return null;
 }
 
 function MainLayout() {
@@ -429,7 +457,17 @@ function MainLayout() {
         <Suspense fallback={<Loading tip="Cargando módulo..." />}>
 
           {/* Chat Widget */}
-          <ChatWidget />
+          <ChatWidget
+            context={{
+              role: userRole,
+              currentView: activeTab,
+              selectedDate: selectedDate,
+              calculatedFeast: calculatedFeast || serviceTitle
+            }}
+          />
+
+          {/* AI Action Handler */}
+          <AiActionHandler onNavigate={setActiveTab} onToast={handleToast} onSetDate={setSelectedDate} />
 
           {/* Pulpit Mode Overlay */}
           {isPulpitOpen && docContent && (

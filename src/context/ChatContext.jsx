@@ -171,6 +171,75 @@ export function ChatProvider({ children }) {
         setIsOpen(true);
     };
 
+    const [isAiMode, setIsAiMode] = useState(false);
+    const [aiMessages, setAiMessages] = useState([]);
+    const [aiAction, setAiAction] = useState(null); // { type: 'NAVIGATE', payload: ... }
+
+    // Clear action after consumption
+    const clearAiAction = () => setAiAction(null);
+
+    const toggleAiMode = () => setIsAiMode(!isAiMode);
+
+    const sendAiMessage = async (text, context) => {
+        // Add User Message
+        const userMsg = {
+            id: Date.now().toString(),
+            text,
+            role: 'user',
+            createdAt: new Date()
+        };
+        setAiMessages(prev => [...prev, userMsg]);
+
+        // Add Placeholder for AI
+        const loadingId = 'loading-' + Date.now();
+        setAiMessages(prev => [...prev, { id: loadingId, text: '', role: 'ai', loading: true }]);
+
+        try {
+            // Import dynamically to avoid circular deps if any, though gemini.js is independent
+            const { chatWithAI } = await import('../services/gemini');
+
+            // Filter history for context (last 10 messages)
+            const history = aiMessages.slice(-10).map(m => ({
+                role: m.role,
+                text: m.text
+            }));
+
+            const response = await chatWithAI(text, context, history);
+
+            // Update AI Message
+            setAiMessages(prev => prev.map(msg => {
+                if (msg.id === loadingId) {
+                    return {
+                        ...msg,
+                        text: response.text || (response.action ? response.message : "Acción realizada."),
+                        loading: false,
+                        createdAt: new Date()
+                    };
+                }
+                return msg;
+            }));
+
+            // Handle Actions
+            if (response.action) {
+                setAiAction(response);
+            }
+
+        } catch (error) {
+            console.error("AI Error:", error);
+            setAiMessages(prev => prev.map(msg => {
+                if (msg.id === loadingId) {
+                    return {
+                        ...msg,
+                        text: "Lo siento, hubo un error al procesar tu solicitud. " + error.message,
+                        loading: false,
+                        error: true
+                    };
+                }
+                return msg;
+            }));
+        }
+    };
+
     const value = {
         messages,
         sendMessage,
@@ -179,7 +248,14 @@ export function ChatProvider({ children }) {
         unreadCount,
         activeChat,
         setActiveChat,
-        startPrivateChat
+        startPrivateChat,
+        // AI Exports
+        isAiMode,
+        toggleAiMode,
+        aiMessages,
+        sendAiMessage,
+        aiAction,
+        clearAiAction
     };
 
     return (

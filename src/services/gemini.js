@@ -104,3 +104,100 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
         throw e;
     }
 };
+
+export const chatWithAI = async (message, context = {}, history = []) => {
+    try {
+        let userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
+
+        if (!userKey) {
+            const globalSettings = await getGlobalSettings();
+            if (globalSettings?.googleApiKey) {
+                userKey = globalSettings.googleApiKey;
+            }
+        }
+
+        if (!userKey) {
+            throw new Error("Falta la API Key. Configúrala en el menú ⚙️");
+        }
+
+        // Construct System Prompt with Context
+        const systemPrompt = `
+        Eres el Asistente Litúrgico Inteligente de la app "Cuatro Liturgias".
+        
+        CONTEXTO ACTUAL DEL USUARIO:
+        - Rol: ${context.role || 'Usuario'}
+        - Vista Actual: ${context.currentView || 'Desconocida'}
+        - Fecha Seleccionada: ${context.selectedDate ? new Date(context.selectedDate).toLocaleDateString() : 'Hoy'}
+        - Fiesta Calculada: ${context.calculatedFeast || 'Ninguna'}
+        
+        CAPACIDADES:
+        1. Responder preguntas sobre liturgia, el calendario, o el funcionamiento de la app.
+        2. Realizar acciones de navegación si el usuario lo pide explícitamente.
+        
+        FORMATO DE RESPUESTA:
+        Si solo respondes texto, envía texto plano.
+        Si el usuario pide una ACCIÓN (ir a una vista, cambiar algo), responde EXCLUSIVAMENTE un JSON con este formato:
+        {
+            "action": "NAVIGATE", // o "TOAST", "SET_DATE"
+            "target": "calendar", // el ID de la vista (dashboard, calendar, music, offerings, directory, sacristy)
+            "message": "Entendido, yendo al calendario."
+        }
+        
+        IMPORTANTE:
+        - Sé breve y servicial.
+        - Si te preguntan "¿Dónde estoy?", usa el contexto proveído.
+        - Si te piden "Ir a tesorería", responde con el JSON de acción NAVIGATE target: 'offerings'.
+        `;
+
+        // Format History for Gemini (User/Model turns)
+        const contents = [
+            { role: 'user', parts: [{ text: systemPrompt }] }, // System instruction as first user msg mostly works well or separate system instruction
+            ...history.map(msg => ({
+                role: msg.role === 'ai' ? 'model' : 'user',
+                parts: [{ text: msg.text }]
+            })),
+            { role: 'user', parts: [{ text: message }] }
+        ];
+
+        const response = await fetchWithRetry(`${CONFIG.ENDPOINTS.GENERATE}?key=${userKey}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: contents,
+                safetySettings: [
+                    { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                    { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+                ]
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error.message || "Error de IA");
+        }
+
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) throw new Error("Sin respuesta de IA");
+
+        // Try parsing as JSON for Actions
+        try {
+            // Clean markdown code blocks if present
+            const cleanText = text.replace(/```json/g, '').replace(/```/g, '').trim();
+            if (cleanText.startsWith('{') && cleanText.endsWith('}')) {
+                return JSON.parse(cleanText);
+            }
+        } catch (e) {
+            // Not JSON, return text
+        }
+
+        return { text: text };
+
+    } catch (e) {
+        console.error("AI Chat Error:", e);
+        throw e;
+    }
+};
