@@ -75,21 +75,22 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with Rescue Mode Prompt...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with AGGRESSIVE Rescue Mode...");
                 const safePrompt = prompt + `
                 
-                ⚠️ EMERGENCIA POR BLOQUEO DE COPYRIGHT (INTENTO 2/2) ⚠️
+                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO POR COPYRIGHT (INTENTO 2/2) ⚠️
                 
-                Google ha eliminado tu respuesta porque contenía texto protegido idéntico a una fuente online.
+                Google ha eliminado tu respuesta porque estás copiando texto protegido del Leccionario moderno.
                 
-                INSTRUCCIONES DE RESCATE OBLIGATORIAS:
-                1. CAMBIA RADICALMENTE EL FRASEO: No copies y pegues NADA del Leccionario moderno.
-                2. PARAFRASEA TODO: "En aquel tiempo..." -> "Sucedió en aquellos días..."
-                3. USA SINÓNIMOS CONSTANTES: Cambia "dijo" por "exclamó", "camino" por "sendero", etc.
-                4. SI ES IMPOSIBLE TENER EL TEXTO EXACTO, INVENTA UNA "TRADUCCIÓN LIBRE" fiel al sentido.
+                TU NUEVA MISIÓN: "PARAFRASEA O MUERE".
                 
-                TU NUEVA PRIORIDAD: ¡QUE NO TE BLOQUEEN!
-                Prefiero una lectura "ligeramente diferente en palabras pero fiel en sentido" a un error de bloqueo.
+                1. ⛔ PROHIBIDO USAR EL TEXTO LITERAL DEL LECCIONARIO ACTUAL.
+                2. ✅ USA ÚNICAMENTE LA BIBLIA "TORRES AMAT" (1825) O "VULGATA TRADUCIDA" (Dominio Público).
+                3. SI NO TIENES ACCESO: TRADUCE TÚ MISMO DEL LATÍN O INGLÉS (RSV) AL ESPAÑOL.
+                4. SI TODO FALLA: ESCRIBE UN RESUMEN HOMILÉTICO DETALLADO DE LA LECTURA EN LUGAR DEL TEXTO (Ej: "En esta lectura, San Pablo exhorta a los corintios a...").
+                
+                PREFIERO UNA TRADUCCIÓN ANTIGUA O UN RESUMEN A UN MENSAJE DE ERROR.
+                ¡NO DEJES EL CAMPO VACÍO!
                 `;
                 return generateLiturgy(safePrompt, true);
             }
