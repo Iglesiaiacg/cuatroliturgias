@@ -171,113 +171,6 @@ export function ChatProvider({ children }) {
         setIsOpen(true);
     };
 
-    const [isAiMode, setIsAiMode] = useState(false);
-    const [aiMessages, setAiMessages] = useState([]);
-    const [aiAction, setAiAction] = useState(null); // { type: 'NAVIGATE', payload: ... }
-
-    // Clear action after consumption
-    const clearAiAction = () => setAiAction(null);
-
-    const toggleAiMode = () => setIsAiMode(!isAiMode);
-
-    const sendAiMessage = async (text, context) => {
-        // Add User Message
-        const userMsg = {
-            id: Date.now().toString(),
-            text,
-            role: 'user',
-            createdAt: new Date()
-        };
-        setAiMessages(prev => [...prev, userMsg]);
-
-        // Add Placeholder for AI
-        const loadingId = 'loading-' + Date.now();
-        setAiMessages(prev => [...prev, { id: loadingId, text: '', role: 'ai', loading: true }]);
-
-        try {
-            // Import dynamically to avoid circular deps if any, though gemini.js is independent
-            const { chatWithAI } = await import('../services/gemini');
-
-            // Filter history for context (last 10 messages)
-            const history = aiMessages.slice(-10).map(m => ({
-                role: m.role,
-                text: m.text
-            }));
-
-            const response = await chatWithAI(text, context, history);
-
-            // Update AI Message
-            setAiMessages(prev => prev.map(msg => {
-                if (msg.id === loadingId) {
-                    return {
-                        ...msg,
-                        text: response.text || (response.action ? response.message : "Acción realizada."),
-                        loading: false,
-                        createdAt: new Date()
-                    };
-                }
-                return msg;
-            }));
-
-            // Handle Actions
-            if (response.action) {
-                if (response.action === 'NAVIGATE' || response.action === 'TOAST' || response.action === 'SET_DATE') {
-                    // Safe Actions: Execute via App Handler
-                    setAiAction(response);
-                } else {
-                    // Hazardous Actions (CREATE, UPDATE, DELETE): Require User Confirmation
-                    // We append a special "action card" message
-                    setAiMessages(prev => [...prev, {
-                        id: 'action-' + Date.now(),
-                        role: 'system',
-                        isAction: true,
-                        content: response, // Contains action, target, data, message
-                        createdAt: new Date()
-                    }]);
-                }
-            }
-
-        } catch (error) {
-            console.error("AI Error:", error);
-            setAiMessages(prev => prev.map(msg => {
-                if (msg.id === loadingId) {
-                    return {
-                        ...msg,
-                        text: "Lo siento, hubo un error al procesar tu solicitud. " + error.message,
-                        loading: false,
-                        error: true
-                    };
-                }
-                return msg;
-            }));
-        }
-    };
-
-    // Execute Confirmation
-    const contentExecuteAction = async (actionPayload) => {
-        try {
-            const { executeAiAction } = await import('../services/AiActionService');
-            // Assuming validation happens in UI before calling this
-            const result = await executeAiAction(actionPayload.action, actionPayload.target, actionPayload.data);
-
-            // Add success message
-            setAiMessages(prev => [...prev, {
-                id: 'success-' + Date.now(),
-                role: 'system',
-                text: `✅ ${result.message}`,
-                createdAt: new Date()
-            }]);
-
-        } catch (e) {
-            setAiMessages(prev => [...prev, {
-                id: 'error-' + Date.now(),
-                role: 'system',
-                text: `❌ Error: ${e.message}`,
-                createdAt: new Date()
-            }]);
-        }
-    };
-
     const value = {
         messages,
         sendMessage,
@@ -286,16 +179,7 @@ export function ChatProvider({ children }) {
         unreadCount,
         activeChat,
         setActiveChat,
-        startPrivateChat,
-        // AI Exports
-        isAiMode,
-        toggleAiMode,
-        openAiChat: () => { setIsOpen(true); setIsAiMode(true); },
-        aiMessages,
-        sendAiMessage,
-        aiAction,
-        clearAiAction,
-        executePendingAction: contentExecuteAction
+        startPrivateChat
     };
 
     return (

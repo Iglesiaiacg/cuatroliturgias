@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { useChat } from '../../context/ChatContext';
 import { useTheme } from '../../context/ThemeContext';
+// import { useAuth } from '../../context/AuthContext'; // Removed
 import { useState } from 'react';
 // import MobileMenuOverlay from './MobileMenuOverlay'; // Removed
 // import MobileBottomNav from './MobileBottomNav'; // Replaced by GooeyNav
@@ -10,7 +10,6 @@ import JerusalemCross from '../UI/JerusalemCross';
 
 export default function TopBar({ date, onSettings, onProfile, activeTab, onNavigate, userRole, checkPermission, canGoBack, onBack }) {
     const { theme, setTheme } = useTheme();
-    const { isOpen: isChatOpen } = useChat();
     // Auth context no longer needed here for role switching (moved to profile)
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -19,7 +18,6 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
     // Full List for Desktop & Grid
     const navItems = [
         { id: 'dashboard', icon: 'home', label: 'Inicio', permission: null },
-        { id: 'ai_chat', icon: 'smart_toy', label: 'Asistente', permission: null }, // AI Chat Item
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario', permission: 'view_calendar' },
         { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía', permission: 'view_sacristy' },
         { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'view_liturgy' },
@@ -124,15 +122,13 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                 </div>
             </div>
 
-            {/* MOBILE: GOOEY RADIAL MENU (User Requested) - Hidden when Chat is Open to prevent overlap */}
-            {!isChatOpen && (
-                <GooeyNav
-                    navItems={visibleNavItems}
-                    onNavigate={onNavigate}
-                    activeTab={activeTab}
-                    onProfile={onProfile}
-                />
-            )}
+            {/* MOBILE: GOOEY RADIAL MENU (User Requested) */}
+            <GooeyNav
+                navItems={visibleNavItems}
+                onNavigate={onNavigate}
+                activeTab={activeTab}
+                onProfile={onProfile}
+            />
         </>
     );
 }
