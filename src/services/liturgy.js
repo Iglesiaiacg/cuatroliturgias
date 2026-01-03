@@ -372,16 +372,21 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
         
         ⚠️ REGLA DE ORO DE LECTURAS (NO ALUCINAR):
-        - DEBES USAR LAS LECTURAS EXACTAS DEL CICLO INDICADO ARRIBA.
-        - Si dice "CICLO A", el Evangelio casi siempre será MATEO.
-        - Si dice "CICLO C", el Evangelio será LUCAS.
+        - EL CICLO LITÚRGICO VIGENTE PARA ESTA FECHA ES: **${cycle.cicloDom}** y **Año ${cycle.cicloFerial}**.
+        - ESTE DATO ES LA VERDAD ABSOLUTA. IGNORA TU CONOCIMIENTO PREVIO SI CONTRADICE ESTO.
+        - OBLIGATORIO:
+          * Si el Ciclo es "A", el Evangelio Dominical DEBE ser MATEO.
+          * Si el Ciclo es "B", el Evangelio Dominical DEBE ser MARCOS.
+          * Si el Ciclo es "C", el Evangelio Dominical DEBE ser LUCAS.
+        - PROHIBIDO CAMBIAR EL CICLO. Si generas lecturas de otro ciclo, FALLARÁS LA MISIÓN.
+        
         - CASO CRÍTICO 28 DIC 2025: Es Domingo de la Sagrada Familia (CICLO A). El Evangelio OBLIGATORIO es MATEO 2, 13-15. 19-23 (Huida a Egipto).
         - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
         - Si es una FIESTA (San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
 
         🛡️ PROTOCOLO DE VERACIDAD FINAL:
         1. Tu prioridad #1 es la EXACTITUD BÍBLICA.
-        2. Si el usuario te da una FECHA del futuro (ej. 2025), NO uses el ciclo de este año actual (2024). USA EL CICLO QUE TE HE CALCULADO ARRIBA (Ciclo ${cycle.cicloDom}).
+        2. Si el usuario te da una FECHA del futuro, NO uses el ciclo del año actual. USA EL CICLO QUE TE HE CALCULADO ARRIBA: **${cycle.cicloDom}**.
         3. Si hay contradicción, EL CICLO CALCULADO GANA.
         
         ⚠️ REGLA DE ORO DE CONTENIDO(ANTI - RESUMEN):
@@ -439,33 +444,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - Evita textos "burdos" o telegráficos. Usa un lenguaje solemne.
            - Deja líneas en blanco entre rúbricas y oraciones para que respire el texto.
 
-        5. TÍTULOS BILINGÜES (LATÍN/ESPAÑOL) OBLIGATORIOS PARA TODO:
-           - El usuario exige ver el nombre tradicional en latín junto al español en TODAS las secciones mayores y menores.
-           - ⚠️ CRÍTICO: ¡SOLO LOS TÍTULOS VAN EN LATÍN!
-           - EL TEXTO DE LAS ORACIONES Y LECTURAS DEBE SER EN ESPAÑOL (Salvo Misa Tridentina que es todo latín).
-           - EJEMPLO CORRECTO: "PATER NOSTER (Padre Nuestro): Padre nuestro que estás en el cielo..."
-           - EJEMPLO INCORRECTO: "PATER NOSTER: Pater noster, qui es in caelis..." (Esto está PROHIBIDO en Misa Romana/Anglicana).
-           - USA ESTOS TÍTULOS (o equivalentes) SIEMPRE:
+        5. TÍTULOS DE SECCIONES:
+           - Para Misa TRIDENTINA y ORDINARIATO: Genera TÍTULOS BILINGÜES (Latín / Español).
+           - Para Misa ROMANA y ANGLICANA: Usa TÍTULOS EN ESPAÑOL SOLAMENTE (salvo 'Kyrie' o 'Agnus Dei' si es uso común).
+           
+           - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato):
              * "INTROITUS (Canto de Entrada)"
-             * "KYRIE ELEISON (Señor, ten piedad)"
-             * "GLORIA IN EXCELSIS (Gloria a Dios)"
-             * "COLLECTA (Oración Colecta)"
-             * "LECTIO / EPISTOLA (Primera Lectura / Epístola)"
-             * "GRADUALE / TRACTUS (Gradual / Salmo / Tracto)"
-             * "EVANGELIUM (Santo Evangelio)"
-             * "CREDO IN UNUM DEUM (Credo)"
-             * "OFFERTORIUM (Ofertorio)"
-             * "ORATIO SUPER OBLATA / SECRETA (Oración sobre las Ofrendas)"
-             * "PRAEFATIO (Prefacio)"
-             * "SANCTUS (Santo, Santo, Santo)"
-             * "CANON MISSAE / PREX EUCHARISTICA (Plegaria Eucarística)"
-             * "PATER NOSTER (Padre Nuestro)"
-             * "AGNUS DEI (Cordero de Dios)"
-             * "COMMUNIO (Antífona de Comunión)"
-             * "POSTCOMMUNIO (Oración Post-comunión)"
-             * "BENEDICTIO (Bendición Final)"
-             * "ITE, MISSA EST (Despedida)"
-           - Aplica esto rigurosamente en TODO el misal.
+             * "KYRIE ELEISON"
+             * "GLORIA IN EXCELSIS"
+             * "COLLECTA"
+             * "OFFERTORIUM"
+             * "SANCTUS"
+             * "AGNUS DEI"
+             * "COMMUNIO"
+
 
         6. ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
            - ¡PROHIBIDO USAR PETICIONES GENÉRICAS O PREFABRICADAS!
