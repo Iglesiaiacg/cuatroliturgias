@@ -755,22 +755,22 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             - [[INSERTAR_PADRE_NUESTRO]]
             - [[INSERTAR_CORDERO]]
 
-            ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
+            ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES - PERO TEXTO EN ESPAÑOL):
             0. PROCESIÓN DE ENTRADA.
             1. INTROITUS (Canto de Entrada): 
                ⚠️ ESCRIBE EL TEXTO COMPLETO DE LA ANTÍFONA DE ENTRADA PROPIA DEL DÍA (Traducida al español).
-               - Ritos Iniciales y Colecta de Pureza ("Almighty God, unto whom all hearts be open..." - En Español).
-               - EL SUMARIO DE LA LEY o LOS DIEZ MANDAMIENTOS (Texto completo).
+               - Ritos Iniciales y Colecta de Pureza ("Dios omnipotente, para quien todos los corazones..." - TEXTO COMPLETO EN ESPAÑOL).
+               - EL SUMARIO DE LA LEY (Texto completo: "Oye lo que dice nuestro Señor Jesucristo...") o LOS DIEZ MANDAMIENTOS.
                - KYRIE ELEISON.
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Sigue el Leccionario Romano de hoy).
+               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO EN ESPAÑOL (Sigue el Leccionario Romano de hoy).
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: (¡OBLIGATORIO RESPONSORIAL! NO GRADUAL).
-                 * Escribe la RESPUESTA (R.) y las ESTROFAS claramente. 
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO.
-               ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
-               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO.
+                 * Escribe la RESPUESTA (R.) y las ESTROFAS claramente en ESPAÑOL. 
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO EN ESPAÑOL.
+               ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio en ESPAÑOL).'}
+               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO EN ESPAÑOL.
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
@@ -781,9 +781,9 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             5. ORATIO FIDELIUM (Oración Universal):
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
                - RITO PENITENCIAL (CONFESIÓN Y ABSOLUCIÓN):
-                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO DE LA CONFESIÓN ("Almighty God, Father of our Lord Jesus Christ..." o "Yo confieso a Dios Todopoderoso...").
-                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO DE LA ABSOLUCIÓN.
-                 ⚠️ ESCRIBE EXPLICITAMENTE LAS PALABRAS DE CONSUELO (Comfortable Words).
+                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO EN ESPAÑOL DE LA CONFESIÓN ("Dios omnipotente, Padre de nuestro Señor Jesucristo, Hacedor de todas las cosas...").
+                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO EN ESPAÑOL DE LA ABSOLUCIÓN ("Dios Todopoderoso, nuestro Padre celestial...").
+                 ⚠️ ESCRIBE EXPLICITAMENTE LAS PALABRAS DE CONSUELO EN ESPAÑOL ("Oíd las palabras de consuelo..." - Comfortable Words).
             6. OFFERTORIUM (Antífona) y Orate Fratres.
             7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
                - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
@@ -795,7 +795,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Rito de la Paz.
                ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
                - AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-               - Oración de Humilde Acceso (Prayer of Humble Access).
+               - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos venir a esta tu Mesa...").
             9. COMMUNIO y Oración de Acción de Gracias.
             10. AVISOS, BENEDICTIO y Despedida.
             11. ${marianAntiphonText}
