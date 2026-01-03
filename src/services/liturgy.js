@@ -757,7 +757,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
             ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
             0. PROCESIÓN DE ENTRADA.
-            1. INTROITUS (Canto de Entrada) y Ritos Iniciales (Colecta de Pureza obligatoria).
+            1. INTROITUS (Canto de Entrada): 
+               ⚠️ ESCRIBE EL TEXTO COMPLETO DE LA ANTÍFONA DE ENTRADA PROPIA DEL DÍA (Traducida al español).
+               - Ritos Iniciales y Colecta de Pureza ("Almighty God, unto whom all hearts be open..." - En Español).
+               - EL SUMARIO DE LA LEY o LOS DIEZ MANDAMIENTOS (Texto completo).
+               - KYRIE ELEISON.
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
@@ -776,7 +780,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             ` : ''}
             5. ORATIO FIDELIUM (Oración Universal):
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
-               - Confesión y Absolución (Penitential Rite).
+               - RITO PENITENCIAL (CONFESIÓN Y ABSOLUCIÓN):
+                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO DE LA CONFESIÓN ("Almighty God, Father of our Lord Jesus Christ..." o "Yo confieso a Dios Todopoderoso...").
+                 ⚠️ ESCRIBE EXPLICITAMENTE EL TEXTO DE LA ABSOLUCIÓN.
+                 ⚠️ ESCRIBE EXPLICITAMENTE LAS PALABRAS DE CONSUELO (Comfortable Words).
             6. OFFERTORIUM (Antífona) y Orate Fratres.
             7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
                - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
