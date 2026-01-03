@@ -180,7 +180,13 @@ function MainLayout() {
   }, []);
 
   // Enhanced Navigation - Pushes to Browser History
+  const { openAiChat } = useChat();
+
   const navigateTo = (tab) => {
+    if (tab === 'ai_chat') {
+      openAiChat();
+      return;
+    }
     window.location.hash = tab;
     // State updates automatically via the effect
   };

@@ -18,6 +18,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
     // Full List for Desktop & Grid
     const navItems = [
         { id: 'dashboard', icon: 'home', label: 'Inicio', permission: null },
+        { id: 'ai_chat', icon: 'smart_toy', label: 'Asistente', permission: null }, // AI Chat Item
         { id: 'calendar', icon: 'calendar_month', label: 'Calendario', permission: 'view_calendar' },
         { id: 'sacristy', icon: 'inventory_2', label: 'Sacristía', permission: 'view_sacristy' },
         { id: 'generator', icon: 'menu_book', label: 'Liturgia', permission: 'view_liturgy' },

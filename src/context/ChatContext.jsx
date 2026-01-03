@@ -252,6 +252,7 @@ export function ChatProvider({ children }) {
         // AI Exports
         isAiMode,
         toggleAiMode,
+        openAiChat: () => { setIsOpen(true); setIsAiMode(true); },
         aiMessages,
         sendAiMessage,
         aiAction,
