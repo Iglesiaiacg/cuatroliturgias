@@ -759,10 +759,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Sigue el Leccionario Romano de hoy).
+               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Torres Amat/Paráfrasis permitida).
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: (¡OBLIGATORIO RESPONSORIAL! NO GRADUAL).
                  * Escribe la RESPUESTA (R.) y las ESTROFAS claramente. 
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO.
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Evita versiones con Copyright).
                ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
                - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO (Usa Torres Amat/Paráfrasis permitida).
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}

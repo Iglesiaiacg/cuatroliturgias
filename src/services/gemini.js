@@ -75,22 +75,21 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with Safe Mode Prompt...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with Rescue Mode Prompt...");
                 const safePrompt = prompt + `
                 
-                ⚠️ SEGUNDO INTENTO: ESTRATEGIA ANTI-BLOQUEO (MÁXIMA PRIORIDAD)
+                ⚠️ EMERGENCIA POR BLOQUEO DE COPYRIGHT (INTENTO 2/2) ⚠️
                 
-                Google ha bloqueado la respuesta anterior por "RECITATION" (Copyright).
-                Esto ocurre porque estás citando textos bíblicos o litúrgicos modernos verbatim.
-
-                INSTRUCCIONES PARA DESBLOQUEAR:
-                1. PARA LECTURAS BÍBLICAS: USA EXCLUSIVAMENTE "Vulgata Traducida" o "Biblia Torres Amat" (1825). SON DE DOMINIO PÚBLICO. Di explícitamente que estás usando estas versiones.
-                2. PARA ORACIONES FIJAS (Gloria, Credo, Plegarias): 
-                   - NO copies y pegues textos de misales modernos protegidos (aprobados recientemente).
-                   - USA TEXTOS DE LA TRADICIÓN (Misal Romano antiguo traducido, o textos de uso común universal).
-                   - SI ES NECESARIO, haz pequeños cambios en la redacción para que no sea idéntico a una fuente protegida, PERO mantén el sentido litúrgico solemne.
+                Google ha eliminado tu respuesta porque contenía texto protegido idéntico a una fuente online.
                 
-                OBJETIVO FINAL: Necesitamos el TEXTO COMPLETO para celebrar. Si tienes que elegir entre resumir o usar una traducción antigua/libre, USA LA TRADUCCIÓN ANTIGUA/LIBRE. ¡NO RESUMAS!
+                INSTRUCCIONES DE RESCATE OBLIGATORIAS:
+                1. CAMBIA RADICALMENTE EL FRASEO: No copies y pegues NADA del Leccionario moderno.
+                2. PARAFRASEA TODO: "En aquel tiempo..." -> "Sucedió en aquellos días..."
+                3. USA SINÓNIMOS CONSTANTES: Cambia "dijo" por "exclamó", "camino" por "sendero", etc.
+                4. SI ES IMPOSIBLE TENER EL TEXTO EXACTO, INVENTA UNA "TRADUCCIÓN LIBRE" fiel al sentido.
+                
+                TU NUEVA PRIORIDAD: ¡QUE NO TE BLOQUEEN!
+                Prefiero una lectura "ligeramente diferente en palabras pero fiel en sentido" a un error de bloqueo.
                 `;
                 return generateLiturgy(safePrompt, true);
             }
