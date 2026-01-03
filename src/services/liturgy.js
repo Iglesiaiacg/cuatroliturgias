@@ -762,6 +762,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                - Ritos Iniciales y Colecta de Pureza ("Dios omnipotente, para quien todos los corazones..." - TEXTO COMPLETO EN ESPAÑOL).
                - EL SUMARIO DE LA LEY (Texto completo: "Oye lo que dice nuestro Señor Jesucristo...") o LOS DIEZ MANDAMIENTOS.
                - KYRIE ELEISON.
+               ⚠️ (NO INCLUYAS "YO CONFIESO" NI ACTO PENITENCIAL AQUÍ - VA DESPUÉS DE LA ORACIÓN DE LOS FIELES).
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
