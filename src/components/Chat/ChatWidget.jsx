@@ -10,7 +10,7 @@ export default function ChatWidget({ context }) {
         messages, sendMessage, isOpen, toggleChat, activeChat, setActiveChat, startPrivateChat,
         isAiMode, toggleAiMode, aiMessages, sendAiMessage
     } = useChat();
-    const { currentUser } = useAuth();
+    const { currentUser, userRole } = useAuth();
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
 
@@ -56,7 +56,7 @@ export default function ChatWidget({ context }) {
                     <div className="bg-white dark:bg-surface-dark w-[90vw] md:w-96 h-[80vh] md:h-[500px] rounded-2xl shadow-2xl border border-gray-100 dark:border-white/10 mb-4 flex flex-col overflow-hidden pointer-events-auto animate-fade-in-up z-50 relative transition-all duration-300">
                         {/* Header */}
                         <div className={`p-4 flex justify-between items-center shadow-md shrink-0 transition-colors ${isAiMode ? 'bg-gradient-to-r from-blue-600 to-indigo-600' :
-                                activeChat ? 'bg-purple-600' : 'bg-[var(--color-primary)]'
+                            activeChat ? 'bg-purple-600' : 'bg-[var(--color-primary)]'
                             }`}>
                             <div className="flex items-center gap-3 text-white">
                                 {activeChat && !isAiMode && (
@@ -150,16 +150,24 @@ export default function ChatWidget({ context }) {
                                                 )}
                                             </div>
 
-                                            {/* CONTENT */}
-                                            {isAiMode && !isMe ? (
-                                                <div
-                                                    className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:pl-4"
-                                                    dangerouslySetInnerHTML={{ __html: msg.loading ? '<span class="animate-pulse">Pensando...</span>' : marked.parse(msg.text) }}
+                                            {/* ACTION CARD RENDERER */}
+                                            {msg.isAction ? (
+                                                <ActionCard
+                                                    message={msg}
+                                                    userRole={userRole || 'guest'} // Pass effective role
                                                 />
                                             ) : (
-                                                <p className={`text-sm leading-relaxed whitespace-pre-wrap ${!isMe && isPrivateMsg ? 'text-purple-900 dark:text-purple-100' : ''}`}>
-                                                    {msg.text}
-                                                </p>
+                                                /* REGULAR TEXT CONTENT */
+                                                isAiMode && !isMe ? (
+                                                    <div
+                                                        className="text-sm leading-relaxed prose prose-sm dark:prose-invert max-w-none [&>p]:mb-2 [&>p:last-child]:mb-0 [&>ul]:list-disc [&>ul]:pl-4"
+                                                        dangerouslySetInnerHTML={{ __html: msg.loading ? '<span class="animate-pulse">Pensando...</span>' : marked.parse(msg.text || '') }}
+                                                    />
+                                                ) : (
+                                                    <p className={`text-sm leading-relaxed whitespace-pre-wrap ${!isMe && isPrivateMsg ? 'text-purple-900 dark:text-purple-100' : ''}`}>
+                                                        {msg.text}
+                                                    </p>
+                                                )
                                             )}
 
                                             <div className={`text-[10px] mt-1 text-right ${isMe ? 'text-white/70' : (isPrivateMsg || isAiMode ? 'text-indigo-400' : 'text-gray-400')}`}>
@@ -215,6 +223,91 @@ export default function ChatWidget({ context }) {
                     <span className="absolute top-0 right-0 w-4 h-4 bg-red-500 border-2 border-white dark:border-gray-900 rounded-full animate-pulse shadow-sm"></span>
                 )}
             </button>
+        </div>
+    );
+}
+
+// --- SUB-COMPONENTS ---
+
+function ActionCard({ message, userRole }) {
+    const { executePendingAction } = useChat();
+    const [status, setStatus] = useState('pending'); // pending, executing, done, error
+    const [validationError, setValidationError] = useState(null);
+
+    // Dynamic import to avoid circular dep issues in rendering if necessary,
+    // but here we just need the validator function. 
+    // We'll rely on a simple permission check or assume the service is available.
+    // Ideally we import { validateAiAction } from '../../services/AiActionService';
+    // but since we are inside a component, let's just do the check.
+
+    useEffect(() => {
+        // Validate Permission on Mount
+        const check = async () => {
+            const { validateAiAction } = await import('../../services/AiActionService');
+            const allowed = validateAiAction(userRole, message.content.target);
+            if (!allowed) {
+                setValidationError("No tienes permiso para modificar esto.");
+            }
+        };
+        check();
+    }, [userRole, message]);
+
+    const handleConfirm = () => {
+        setStatus('executing');
+        executePendingAction(message.content)
+            .then(() => setStatus('done'))
+            .catch(() => setStatus('error'));
+    };
+
+    const action = message.content;
+    const isDestructive = action.action === 'DELETE';
+
+    return (
+        <div className="bg-gray-50 dark:bg-black/20 rounded-lg p-3 border border-gray-200 dark:border-white/10 mt-2">
+            <h4 className="font-bold text-xs uppercase tracking-wider mb-2 flex items-center gap-2">
+                <span className={`material-symbols-outlined text-sm ${isDestructive ? 'text-red-600' : 'text-indigo-600'}`}>
+                    {isDestructive ? 'warning' : 'edit_square'}
+                </span>
+                {action.action} : {action.target}
+            </h4>
+
+            <p className="text-sm text-gray-800 dark:text-gray-200 mb-3 italic">
+                "{action.message}"
+            </p>
+
+            {/* DETAILS PREVIEW (Simplified) */}
+            {action.data && (
+                <div className="text-xs font-mono bg-white dark:bg-black/40 p-2 rounded mb-3 overflow-x-auto text-gray-600 dark:text-gray-400">
+                    {JSON.stringify(action.data).substring(0, 100)}{JSON.stringify(action.data).length > 100 && '...'}
+                </div>
+            )}
+
+            {validationError ? (
+                <div className="text-xs text-red-500 font-bold flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">lock</span>
+                    PERMISO DENEGADO
+                </div>
+            ) : status === 'done' ? (
+                <div className="text-xs text-green-600 font-bold flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm">check_circle</span>
+                    REALIZADO
+                </div>
+            ) : status === 'executing' ? (
+                <div className="text-xs text-indigo-500 animate-pulse">Procesando...</div>
+            ) : (
+                <div className="flex gap-2">
+                    <button
+                        onClick={handleConfirm}
+                        className={`px-3 py-1.5 rounded text-xs font-bold text-white shadow-sm active:scale-95 transition-all ${isDestructive ? 'bg-red-600 hover:bg-red-700' : 'bg-indigo-600 hover:bg-indigo-700'}`}
+                    >
+                        CONFIRMAR
+                    </button>
+                    {/* Only show Cancel if not forced by system to persist? Actually just ignoring it is "Cancel" */}
+                    <div className="text-[10px] text-gray-400 self-center">
+                        Requiere aprobación
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

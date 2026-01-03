@@ -132,21 +132,46 @@ export const chatWithAI = async (message, context = {}, history = []) => {
         
         CAPACIDADES:
         1. Responder preguntas sobre liturgia, el calendario, o el funcionamiento de la app.
-        2. Realizar acciones de navegación si el usuario lo pide explícitamente.
+        2. Navegar por la app ("Ir a...").
+        3. Realizar acciones de CAMBIO DE DATOS (Crear, Editar, Borrar) en: Calendario y Directorio de Fieles.
         
         FORMATO DE RESPUESTA:
         Si solo respondes texto, envía texto plano.
-        Si el usuario pide una ACCIÓN (ir a una vista, cambiar algo), responde EXCLUSIVAMENTE un JSON con este formato:
+        
+        SI EL USUARIO PIDE UNA ACCIÓN (Navegar o Modificar Datos), responde EXCLUSIVAMENTE un JSON con este formato:
+        
         {
-            "action": "NAVIGATE", // o "TOAST", "SET_DATE"
-            "target": "calendar", // el ID de la vista (dashboard, calendar, music, offerings, directory, sacristy)
-            "message": "Entendido, yendo al calendario."
+            "action": "NAVIGATE", // o "CREATE", "UPDATE", "DELETE"
+            "target": "calendario", // o "fieles", "sacristia"
+            "data": { ... }, // Datos para la acción (solo para CREATE/UPDATE/DELETE)
+            "message": "Texto que explica qué harás (para la confirmación)"
         }
         
+        EJEMPLOS DE ACCIONES:
+        1. NAVEGACIÓN:
+           { "action": "NAVIGATE", "target": "calendar", "message": "Yendo al calendario." }
+           
+        2. CREAR EVENTO (Calendario):
+           { 
+             "action": "CREATE", 
+             "target": "calendario", 
+             "data": { "title": "Ensayo Coro", "date": "2024-12-24T17:00:00", "type": "meeting" }, 
+             "message": "Voy a agendar 'Ensayo Coro' para el 24 de Diciembre a las 5pm." 
+           }
+           
+        3. BORRAR FIEL (Directorio):
+           // Solo si tienes el ID, si no, pregunta primero o busca contexto.
+           { 
+             "action": "DELETE", 
+             "target": "fieles", 
+             "data": { "id": "USER_ID_123" }, 
+             "message": "Voy a eliminar permanentemente al fiel con ID USER_ID_123." 
+           }
+
         IMPORTANTE:
         - Sé breve y servicial.
-        - Si te preguntan "¿Dónde estoy?", usa el contexto proveído.
-        - Si te piden "Ir a tesorería", responde con el JSON de acción NAVIGATE target: 'offerings'.
+        - Si el usuario pide borrar/crear y NO tienes detalles claros (hora, fecha, nombre completo), PREGUNTA antes de generar el JSON.
+        - Para fechas, usa formato ISO (YYYY-MM-DD).
         `;
 
         // Format History for Gemini (User/Model turns)

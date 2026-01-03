@@ -221,7 +221,20 @@ export function ChatProvider({ children }) {
 
             // Handle Actions
             if (response.action) {
-                setAiAction(response);
+                if (response.action === 'NAVIGATE' || response.action === 'TOAST' || response.action === 'SET_DATE') {
+                    // Safe Actions: Execute via App Handler
+                    setAiAction(response);
+                } else {
+                    // Hazardous Actions (CREATE, UPDATE, DELETE): Require User Confirmation
+                    // We append a special "action card" message
+                    setAiMessages(prev => [...prev, {
+                        id: 'action-' + Date.now(),
+                        role: 'system',
+                        isAction: true,
+                        content: response, // Contains action, target, data, message
+                        createdAt: new Date()
+                    }]);
+                }
             }
 
         } catch (error) {
@@ -237,6 +250,31 @@ export function ChatProvider({ children }) {
                 }
                 return msg;
             }));
+        }
+    };
+
+    // Execute Confirmation
+    const contentExecuteAction = async (actionPayload) => {
+        try {
+            const { executeAiAction } = await import('../services/AiActionService');
+            // Assuming validation happens in UI before calling this
+            const result = await executeAiAction(actionPayload.action, actionPayload.target, actionPayload.data);
+
+            // Add success message
+            setAiMessages(prev => [...prev, {
+                id: 'success-' + Date.now(),
+                role: 'system',
+                text: `✅ ${result.message}`,
+                createdAt: new Date()
+            }]);
+
+        } catch (e) {
+            setAiMessages(prev => [...prev, {
+                id: 'error-' + Date.now(),
+                role: 'system',
+                text: `❌ Error: ${e.message}`,
+                createdAt: new Date()
+            }]);
         }
     };
 
@@ -256,7 +294,8 @@ export function ChatProvider({ children }) {
         aiMessages,
         sendAiMessage,
         aiAction,
-        clearAiAction
+        clearAiAction,
+        executePendingAction: contentExecuteAction
     };
 
     return (
