@@ -26,6 +26,7 @@ export default function OfferingsView() {
     // Month/Year Selection for Sheet
     const [currentDate, setCurrentDate] = useState(new Date());
     const [showForm, setShowForm] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const [formData, setFormData] = useState({
         description: '',
@@ -98,6 +99,8 @@ export default function OfferingsView() {
             return;
         }
 
+        setLoading(true);
+
         const newTransaction = {
             date: new Date().toISOString(),
             ...formData,
@@ -111,6 +114,8 @@ export default function OfferingsView() {
         } catch (error) {
             console.error("Error saving:", error);
             alert("Error al guardar. Permiso denegado o error de red.");
+        } finally {
+            setLoading(false);
         }
     };
 
