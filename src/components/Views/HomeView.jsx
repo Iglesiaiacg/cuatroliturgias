@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { doc, onSnapshot, deleteDoc, collection, query, where, orderBy, limit } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { useAuth } from '../../context/AuthContext'; // NEW: Auth Hook
+import AssignmentPopup from '../Common/AssignmentPopup'; // NEW
 import Preview from '../Liturgy/Preview';
 
 // Common Components
@@ -28,10 +29,43 @@ import GuestDashboard from '../Dashboard/GuestDashboard';
 import CommunicationCenter from '../Dashboard/CommunicationCenter';
 
 export default function HomeView({ onNavigate, date, docContent, season, calculatedFeast }) {
-    const { userRole, checkPermission } = useAuth(); // Get current role
+    const { userRole, checkPermission, currentUser } = useAuth(); // Get current role
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
     const [isCommOpen, setIsCommOpen] = useState(false);
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+    // --- ASSIGNMENT NOTIFICATION LOGIC ---
+    const [pendingAssignment, setPendingAssignment] = useState(null);
+
+    useEffect(() => {
+        if (!currentUser) return;
+
+        // Listen for assignments status = 'pending'
+        const q = query(
+            collection(db, 'users', currentUser.uid, 'assignments'),
+            where('status', '==', 'pending'),
+            limit(1)
+        );
+
+        const unsub = onSnapshot(q, (snapshot) => {
+            if (!snapshot.empty) {
+                const docData = snapshot.docs[0];
+                setPendingAssignment({ id: docData.id, ...docData.data() });
+            } else {
+                setPendingAssignment(null);
+            }
+        });
+        return () => unsub();
+    }, [currentUser]);
+
+    // Timer for Dashboard clock
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setCurrentDate(new Date());
+        }, 1000 * 60); // Update every minute
+        return () => clearInterval(timer);
+    }, []);
 
     // CELEBRANT MODE LOGIC
     const [isSundayLive, setIsSundayLive] = useState(false);
@@ -207,6 +241,15 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                     </div>
                                 </div>
                                 <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
+                                    {/* ASSIGNMENT POPUP */}
+                                    {pendingAssignment && (
+                                        <AssignmentPopup
+                                            assignment={pendingAssignment}
+                                            onClose={() => setPendingAssignment(null)}
+                                        />
+                                    )}
+
+                                    {/* Floating Action Button (Only visible if scrolled down?) */}
                                     {/* Action Buttons: Visible ONLY on Saturday (Preparation) & Sunday (Service) */}
                                     {/* UNPIN BUTTON FOR ADMINS */}
                                     {(userRole === 'admin' || (checkPermission && checkPermission('generate_liturgy'))) && (

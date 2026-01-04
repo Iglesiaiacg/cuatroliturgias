@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useDirectory } from '../../context/DirectoryContext';
-
+import { useAuth } from '../../context/AuthContext';
+import { db } from '../../services/firebase';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { createPortal } from 'react-dom';
 
 export default function AssignmentModal({ isOpen, onClose, taskName, contextData, onAssign }) {
+    const { currentUser } = useAuth();
 
     const { members } = useDirectory();
     const [selectedMemberId, setSelectedMemberId] = useState("");
@@ -18,21 +21,26 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
         }
     }, [contextData]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const member = members.find(m => m.id === selectedMemberId);
-        if (!member || !member.phone) return;
+        if (!member) return;
 
-        // Clean phone number
-        const phone = member.phone.replace(/\D/g, '');
+        try {
+            await addDoc(collection(db, 'users', selectedMemberId, 'assignments'), {
+                title: taskName,
+                content: customMessage || contextData || '',
+                assignedBy: currentUser?.email || 'Admin',
+                assignedAt: serverTimestamp(),
+                status: 'pending', // 'pending' -> 'accepted'
+                viewed: false
+            });
 
-        // Construct message
-        const text = `Hola ${member.fullName.split(' ')[0]}, se te ha asignado: *${taskName}*.\n\n${customMessage}`;
-        const encodedText = encodeURIComponent(text);
-
-        // Open WhatsApp
-        window.open(`https://wa.me/${phone}?text=${encodedText}`, '_blank');
-
-        onAssign(selectedMemberId);
+            // alert("Asignación enviada al Dashboard del usuario."); // Optional feedback
+            onAssign(selectedMemberId);
+        } catch (e) {
+            console.error("Error assigning task:", e);
+            alert("Error al asignar: " + e.message);
+        }
     };
 
     if (!isOpen) return null;
@@ -84,10 +92,10 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
                     <button
                         onClick={handleSend}
                         disabled={!selectedMemberId}
-                        className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 flex items-center gap-2 font-bold shadow-md transition-all active:scale-95"
+                        className="px-4 py-2 bg-primary text-white rounded hover:bg-red-700 disabled:opacity-50 flex items-center gap-2 font-bold shadow-md transition-all active:scale-95"
                     >
-                        <span className="material-symbols-outlined text-lg">send</span>
-                        Enviar WhatsApp
+                        <span className="material-symbols-outlined text-lg">assignment_ind</span>
+                        Asignar al Dashboard
                     </button>
                 </div>
             </div>
