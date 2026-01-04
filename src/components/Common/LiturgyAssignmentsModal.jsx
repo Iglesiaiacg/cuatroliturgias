@@ -18,8 +18,12 @@ export default function LiturgyAssignmentsModal({ isOpen, onClose, docContent })
         // Headers to look for (Standard Liturgical Headers)
         const targetHeaders = [
             "Primera Lectura",
+            "Primera Lección",
             "Salmo",
+            "Gradual",
             "Segunda Lectura",
+            "Segunda Lección",
+            "Epístola",
             "Evangelio",
             "Oración Colecta",
             "Homilía"
