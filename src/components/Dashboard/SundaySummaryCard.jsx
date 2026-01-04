@@ -9,8 +9,8 @@ import { db } from '../../services/firebase';
 
 import LiturgicalVestmentCard from './LiturgicalVestmentCard';
 import MinistersOnDutyCard from './MinistersOnDutyCard';
-// ... other imports
-
+import StatsCard from './StatsCard'; // NEW
+import PendingCertificatesCard from './PendingCertificatesCard'; // NEW
 
 export default function SundaySummaryCard() {
     const today = new Date();
@@ -45,8 +45,14 @@ export default function SundaySummaryCard() {
             {/* NEW: VESTMENT & RUBRICS */}
             <LiturgicalVestmentCard date={today} />
 
-            {/* NEW: MINISTERS ON DUTY */}
+            {/* NEW: MINISTERS ON DUTY (Supervisory) */}
             <MinistersOnDutyCard date={today} />
+
+            {/* NEW: ATTENDANCE (Supervisory - Read Only) */}
+            <StatsCard readOnly={true} />
+
+            {/* NEW: PENDING CERTIFICATES (Supervisory) */}
+            <PendingCertificatesCard />
 
             {/* FUNDS READ-ONLY */}
             <div className="neumorphic-card p-6 border-l-4 border-emerald-500 bg-emerald-50/50 dark:bg-emerald-900/10">

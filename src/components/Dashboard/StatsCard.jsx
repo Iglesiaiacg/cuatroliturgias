@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import StatsHistoryModal from './StatsHistoryModal';
 
-export default function StatsCard() {
+export default function StatsCard({ readOnly = false }) {
     // Key calculation
     const getSundayDate = () => {
         const current = new Date();
@@ -13,16 +13,9 @@ export default function StatsCard() {
         return current.toDateString();
     };
 
-    // We calculate dateKey once per render, but strictly it might fluctuate if render spans midnight.
-    // However, for lazy init, we call it inside the initializer.
-    // To make it stable for updates, `dateKey` is derived.
+    // ... (rest of state initialization remains the same)
 
-    // We can't easily use "dateKey" inside useState(initializer) unless we copy logic or use a ref.
-    // But since `getSundayDate` is cheap...
-
-    const [dateKey] = useState(() => getSundayDate()); // Store dateKey in state to keep it stable? 
-    // Or just calculate it. It shouldn't change.
-    // If we calculate it outside, we can pass it to lazy init.
+    const [dateKey] = useState(() => getSundayDate());
 
     const [stats, setStats] = useState(() => {
         const key = getSundayDate();
@@ -66,12 +59,14 @@ export default function StatsCard() {
                     <span className="material-symbols-outlined text-sm">equalizer</span>
                     <span className="text-xs font-bold uppercase tracking-wider">Asistencia</span>
                 </div>
-                <button
-                    onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-                    className="text-xs font-bold text-primary hover:text-red-700 transition-colors"
-                >
-                    {isEditing ? 'GUARDAR' : 'EDITAR'}
-                </button>
+                {!readOnly && (
+                    <button
+                        onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                        className="text-xs font-bold text-primary hover:text-red-700 transition-colors"
+                    >
+                        {isEditing ? 'GUARDAR' : 'EDITAR'}
+                    </button>
+                )}
             </div>
 
             <div className="flex items-end gap-3 mb-8">
