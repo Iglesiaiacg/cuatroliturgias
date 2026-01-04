@@ -393,11 +393,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
         Queremos el TEXTO COMPLETO, pero evitando el bloqueo por Copyright.
         
-        ESTRATEGIA DE SEGURIDAD:
-        1. PRIORIZA EL SENTIDO LITÚRGICO sobre la exactitud literal moderna.
-        2. SI UN TEXTO ES MODERNO Y PROTEGIDO: PARAFRASEA O USA UNA VERSIÓN ANTIGUA (Torres Amat).
+        ESTRATEGIA DE SEGURIDAD (TORRES AMAT OBLIGATORIO):
+        1. USA SIEMPRE Y EXCLUSIVAMENTE LA BIBLIA "TORRES AMAT" (1825).
+        2. Es de DOMINIO PÚBLICO y GARANTIZA que Google no bloqueará la respuesta.
         3. SI ES UNA ORACIÓN FIJA ANTIGUA (Canon Romano, Pater Noster): Escribe el texto tradicional completo.
-        4. NUNCA DEJES SOLO EL TÍTULO. Si no puedes copiar el texto exacto, RECONSTRUYELO o TRADÚCELO tú mismo.
+        4. NUNCA DEJES SOLO EL TÍTULO.
 
         ⚠️ REGLA DE VERSIONES BÍBLICAS(CRÍTICO - ANTI COPYRIGTH):
         NUNCA USES EL NOMBRE "JEHOVÁ".ES PROHIBIDO EN ESTA LITURGIA.
@@ -409,11 +409,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         NO USES "Biblia de Jerusalén" ni "Latinoamericana"(Tienen Copyright estricto).
         NUNCA USES REINA VALERA(Protestante).
         
-        ⚠️ ESTRATEGIA DE EMERGENCIA (SI SIENTES QUE VAS A SER BLOQUEADO):
-        - Si el texto de leccionario es muy conocido y reciente, NO LO COPIES "TAL CUAL".
-        - USA TU CAPACIDAD DE TRADUCCIÓN: Traduce mentalmente del latín o del inglés (RSV-CE) al español.
-        - O PARAFRASEA LIGERAMENTE: Cambia "Hermanos, os ruego" por "Hermanos, les suplico".
-        - EL OBJETIVO ES EVITAR LA DETECCIÓN AUTOMÁTICA DE COPYRIGHT DE GOOGLE.
+        ⚠️ ESTRATEGIA DE EMERGENCIA (SI NO ENCUENTRAS TORRES AMAT):
+        - TRADUCE TÚ MISMO DEL LATÍN (Vulgata) O DEL INGLÉS (Douay-Rheims/RSV).
+        - EL OBJETIVO ES EVITAR TEXTO IDÉNTICO AL LECCIONARIO MODERNO (CEM/CEE) QUE TIENE COPYRIGHT.
+        - Prefiero un lenguaje "arcaico" (vuestro, sois) a un error de bloqueo.
         
         ⚠️ REGLA DE FORMATO "VOX SECRETA":
         Para las oraciones que el sacerdote dice en secreto(Secreto, Ofertorio, Canon bajo), usa el formato de CITA(Blockquote con >).
@@ -683,13 +682,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
             4. COLECTA DEL DÍA (Propia).
                ⚠️ OBLIGATORIO: Incluir el SALUDO ("El Señor esté con ustedes...") antes del Oremos y la Colecta.
             5. LITURGIA DE LA PALABRA:
-               - Primera Lectura (Antiguo Testamento) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
+               - Primera Lectura (Antiguo Testamento) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
                - SALMO RESPONSORIAL [SALMISTA o LECTOR]: (Indica la Antífona y las Estrofas COMPLETAS).
-               - Segunda Lectura (Epístola) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Verbatim).
+               - Segunda Lectura (Epístola) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
                ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).'}
                - Evangelio [DIÁCONO o SACERDOTE]:
                  ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio.
-                 ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO PALABRA POR PALABRA.
+                 ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat).
             6. HOMILÍA y CREDO NICENO.
                ${isAshWednesday ? `
                ⚠ **MIÉRCOLES DE CENIZA**
@@ -759,12 +758,12 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Torres Amat/Paráfrasis permitida).
+               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: (¡OBLIGATORIO RESPONSORIAL! NO GRADUAL).
                  * Escribe la RESPUESTA (R.) y las ESTROFAS claramente. 
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Evita versiones con Copyright).
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
                ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
-               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO (Usa Torres Amat/Paráfrasis permitida).
+               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
@@ -830,11 +829,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - Oración Colecta (Propia del día).
 
         2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Usa Torres Amat o parafrasea fielmente).
+           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
            - Salmo Responsorial [SALMISTA]: (Respuesta y estrofas completas).
-           - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Evita versiones con Copyright).
+           - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
            ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: Verso propio.'}
-           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ TEXTO COMPLETO (Usa traducción libre o antigua si es necesario).
+           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
