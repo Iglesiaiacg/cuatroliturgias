@@ -306,7 +306,7 @@ export default function OfferingsView() {
                         <div className="lg:col-span-2 animate-slide-in">
                             <form
                                 ref={formRef}
-                                onSubmit={handleAddTransaction}
+                                onSubmit={handleSubmit}
                                 className="bg-white dark:bg-stone-900 rounded-2xl shadow-lg border border-gray-200 dark:border-gray-800 p-6 relative overflow-hidden group"
                             >
                                 {/* Form content remains same, extracted or inline? Inline is fine for now as logic is simple */}
