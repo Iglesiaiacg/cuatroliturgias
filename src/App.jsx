@@ -25,6 +25,7 @@ import AssignmentModal from './components/Common/AssignmentModal'
 import Toast from './components/Common/Toast'
 import TopBar from './components/Layout/TopBar'
 import PulpitView from './components/Liturgy/PulpitView'
+import LiturgyAssignmentsModal from './components/Common/LiturgyAssignmentsModal'
 import BackgroundWrapper from './components/Layout/BackgroundWrapper'
 import LoginView from './components/Auth/LoginView'
 import ChatWidget from './components/Chat/ChatWidget';
@@ -166,6 +167,7 @@ function MainLayout() {
   const [isPulpitOpen, setIsPulpitOpen] = useState(false)
   const [toast, setToast] = useState({ message: '', type: '' })
   const [isAssignmentOpen, setIsAssignmentOpen] = useState(false)
+  const [isLiturgyAssignOpen, setIsLiturgyAssignOpen] = useState(false);
 
 
   // Navigation State
@@ -227,6 +229,12 @@ function MainLayout() {
         pinnedBy: currentUser?.email || 'unknown'
       });
       handleToast("Liturgia fijada en el Inicio para todos", "success");
+
+      // AUTO-PROMPT: Ask to assign parts
+      if (window.confirm("Liturgia fijada correctamente.\n\n¿Quieres asignar partes de la liturgia a los ministros ahora?")) {
+        setIsLiturgyAssignOpen(true);
+      }
+
     } catch (e) {
       console.error(e);
       handleToast("Error al fijar liturgia: " + e.message, "error");
@@ -468,6 +476,13 @@ function MainLayout() {
             onClose={() => setIsAssignmentOpen(false)}
             taskName="" // Empty for ad-hoc
             onAssign={() => setIsAssignmentOpen(false)}
+          />
+
+          {/* Liturgy Assignments Modal (Multi-step) */}
+          <LiturgyAssignmentsModal
+            isOpen={isLiturgyAssignOpen}
+            onClose={() => setIsLiturgyAssignOpen(false)}
+            docContent={docContent}
           />
 
           {/* Main Content Area */}

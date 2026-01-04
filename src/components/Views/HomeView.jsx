@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
+import { doc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { useAuth } from '../../context/AuthContext'; // NEW: Auth Hook
 import Preview from '../Liturgy/Preview';
@@ -65,6 +65,17 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
         });
         return () => unsub();
     }, []);
+
+    const handleUnpin = async (e) => {
+        e.stopPropagation(); // Prevent card click
+        if (window.confirm("¿Deseas desfijar esta liturgia? Se quitará del inicio de todos los usuarios.")) {
+            try {
+                await deleteDoc(doc(db, 'config', 'pinned_liturgy'));
+            } catch (err) {
+                alert("Error al desfijar: " + err.message);
+            }
+        }
+    };
 
     // --- RENDER LOGIC BASED ON ROLE ---
 
@@ -173,28 +184,42 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                             Fijado por ti
                                         </span>
                                     </div>
-                                    <h2 className="text-2xl md:text-4xl font-display font-bold mb-1 leading-tight capitalize">
-                                        {(() => {
-                                            if (!pinnedLiturgy.date) return pinnedLiturgy.title || "Santa Eucaristía";
-                                            const lDate = new Date(pinnedLiturgy.date.seconds * 1000);
-                                            // If it's a Sunday, show formatted date. Else, show title (e.g., Jueves Santo).
-                                            if (lDate.getDay() === 0) {
-                                                const options = { weekday: 'long', day: 'numeric', month: 'long' };
-                                                const dateStr = lDate.toLocaleDateString('es-MX', options);
-                                                // Ensure capitalization
-                                                return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
-                                            }
-                                            return pinnedLiturgy.title;
-                                        })()}
-                                    </h2>
-                                    <p className={`text-sm opacity-90 ${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'}`}>
-                                        {pinnedLiturgy.date && new Date(pinnedLiturgy.date.seconds * 1000).getDay() === 0
-                                            ? (pinnedLiturgy.title || "Santa Misa")
-                                            : (pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy')}
-                                    </p>
+                                    <div className="flex justify-between items-start gap-2">
+                                        <h2 className="text-2xl md:text-4xl font-display font-bold mb-1 leading-tight capitalize">
+                                            {(() => {
+                                                if (!pinnedLiturgy.date) return pinnedLiturgy.title || "Santa Eucaristía";
+                                                const lDate = new Date(pinnedLiturgy.date.seconds * 1000);
+                                                // If it's a Sunday, show formatted date. Else, show title (e.g., Jueves Santo).
+                                                if (lDate.getDay() === 0) {
+                                                    const options = { weekday: 'long', day: 'numeric', month: 'long' };
+                                                    const dateStr = lDate.toLocaleDateString('es-MX', options);
+                                                    // Ensure capitalization
+                                                    return dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+                                                }
+                                                return pinnedLiturgy.title;
+                                            })()}
+                                        </h2>
+                                        <p className={`text-sm opacity-90 ${isLive ? 'text-red-100' : 'text-gray-500 dark:text-gray-400'}`}>
+                                            {pinnedLiturgy.date && new Date(pinnedLiturgy.date.seconds * 1000).getDay() === 0
+                                                ? (pinnedLiturgy.title || "Santa Misa")
+                                                : (pinnedLiturgy.date ? new Date(pinnedLiturgy.date.seconds * 1000).toLocaleDateString('es-MX', { weekday: 'long', day: 'numeric', month: 'long' }) : 'Hoy')}
+                                        </p>
+                                    </div>
                                 </div>
                                 <div className="w-full md:w-auto flex flex-col sm:flex-row gap-3">
                                     {/* Action Buttons: Visible ONLY on Saturday (Preparation) & Sunday (Service) */}
+                                    {/* UNPIN BUTTON FOR ADMINS */}
+                                    {(userRole === 'admin' || (checkPermission && checkPermission('generate_liturgy'))) && (
+                                        <button
+                                            onClick={handleUnpin}
+                                            className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-2 border border-white/10"
+                                            title="Desfijar del Inicio"
+                                        >
+                                            <span className="material-symbols-outlined text-sm">cancel</span>
+                                            <span className="hidden md:inline">Desfijar</span>
+                                        </button>
+                                    )}
+
                                     {(isSunday || (now.getDay() === 6)) && (
                                         <>
                                             <button

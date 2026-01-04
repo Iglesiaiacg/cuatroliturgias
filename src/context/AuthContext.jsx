@@ -200,7 +200,8 @@ export function AuthProvider({ children }) {
 
     // Default Permissions (fallback)
     const DEFAULT_PERMISSIONS = {
-        admin: ['generate_liturgy', 'view_liturgy', 'view_calendar', 'view_sacristy', 'manage_sacristy', 'view_directory', 'manage_directory', 'view_offerings', 'manage_users', 'view_treasury', 'manage_treasury', 'view_music', 'manage_music', 'view_dashboard_admin', 'manage_communication'],
+
+        admin: ['view_liturgy', 'view_calendar', 'view_sacristy', 'manage_sacristy', 'view_directory', 'manage_directory', 'view_offerings', 'manage_users', 'view_treasury', 'manage_treasury', 'view_music', 'manage_music', 'view_dashboard_admin', 'manage_communication'],
         treasurer: ['view_liturgy', 'view_calendar', 'view_offerings', 'view_treasury', 'manage_treasury', 'view_dashboard_treasurer', 'manage_communication'],
         secretary: ['view_liturgy', 'view_calendar', 'view_sacristy', 'manage_sacristy', 'view_directory', 'manage_directory', 'view_offerings', 'view_dashboard_secretary', 'manage_communication'],
         sacristan: ['view_liturgy', 'view_calendar', 'view_sacristy', 'manage_sacristy', 'view_dashboard_sacristan', 'manage_communication', 'view_offerings'],
@@ -218,7 +219,13 @@ export function AuthProvider({ children }) {
     const checkPermission = useCallback((permissionId) => {
         if (!effectiveRole) return false;
 
-        // ADMIN Override: IF acting as admin (no preview) -> ALL Access
+        // SUPER ADMIN EXCLUSIVE: Only specific emails can generate liturgy
+        if (permissionId === 'generate_liturgy') {
+            const SUPER_ADMINS = ['alexveo855@gmail.com'];
+            return currentUser && SUPER_ADMINS.includes(currentUser.email.toLowerCase());
+        }
+
+        // ADMIN Override: IF acting as admin (no preview) -> ALL Access (except generate_liturgy which is restricted above)
         // IF acting as preview (e.g. sacristan) -> Only that role's access
         if (effectiveRole === 'admin') return true;
 
@@ -226,7 +233,7 @@ export function AuthProvider({ children }) {
         // We could also allow passing overrides via props if needed, but Context is best.
         const rolePerms = DEFAULT_PERMISSIONS[effectiveRole] || [];
         return rolePerms.includes(permissionId);
-    }, [effectiveRole]);
+    }, [effectiveRole, currentUser]);
 
     const value = {
         currentUser,
@@ -243,8 +250,9 @@ export function AuthProvider({ children }) {
     };
 
     return (
-        <AuthContext.Provider value={value}>
-            {!loading && children}
-        </AuthContext.Provider>
+        <AuthContext.Provider value={value} >
+            {!loading && children
+            }
+        </AuthContext.Provider >
     );
 }

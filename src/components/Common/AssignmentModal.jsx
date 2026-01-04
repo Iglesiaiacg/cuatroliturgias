@@ -12,7 +12,7 @@ export default function AssignmentModal({ isOpen, onClose, taskName, contextData
     // Pre-fill message with context (Reading text) if available
     useEffect(() => {
         if (contextData) {
-            setCustomMessage(`Aquí tienes el texto para preparar:\n\n"${contextData.substring(0, 500)}..."\n\n(Revisa el leccionario completo)`);
+            setCustomMessage(`Aquí tienes el texto para preparar:\n\n"${contextData}"\n\n(Revisa el leccionario completo)`);
         } else {
             setCustomMessage("");
         }
