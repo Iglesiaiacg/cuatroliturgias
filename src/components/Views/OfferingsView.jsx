@@ -76,6 +76,14 @@ export default function OfferingsView() {
     // Save to local storage on change
 
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         // Validation
