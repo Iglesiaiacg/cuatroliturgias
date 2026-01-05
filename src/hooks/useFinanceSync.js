@@ -47,6 +47,9 @@ export function useFinanceSync(limitCount = 100) {
                 setGlobalBalance(0);
             }
             setLoading(false); // Global stats/list loaded (approx)
+        }, (error) => {
+            if (error.code !== 'permission-denied') console.warn("Finance Stats Sync Error:", error);
+            setLoading(false);
         });
         return () => unsubscribe();
     }, [currentUser]);
