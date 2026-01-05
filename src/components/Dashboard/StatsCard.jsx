@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../../services/firebase';
+import { useAuth } from '../../context/AuthContext';
 import StatsHistoryModal from './StatsHistoryModal';
 
 export default function StatsCard({ readOnly = false }) {
@@ -29,8 +30,12 @@ export default function StatsCard({ readOnly = false }) {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
+    const { currentUser } = useAuth(); // Import useAuth at the top
+
     // Sync Current Week
     useEffect(() => {
+        if (!currentUser) return;
+
         setLoading(true);
         const unsubscribe = onSnapshot(doc(db, 'stats', currentKey), (doc) => {
             if (doc.exists()) {
@@ -39,12 +44,17 @@ export default function StatsCard({ readOnly = false }) {
                 setStats({ men: '', women: '', children: '', communicants: '' });
             }
             setLoading(false);
-        }, (err) => console.error("Stats Sync Error", err));
+        }, (err) => {
+            // Ignore permission errors during initial load/logout
+            if (err.code !== 'permission-denied') console.error("Stats Sync Error", err);
+        });
         return () => unsubscribe();
-    }, [currentKey]);
+    }, [currentKey, currentUser]);
 
     // Fetch Last Week (One-time fetch usually enough, but listener is fine too)
     useEffect(() => {
+        if (!currentUser) return;
+
         const unsubscribe = onSnapshot(doc(db, 'stats', prevKey), (doc) => {
             if (doc.exists()) {
                 const d = doc.data();
@@ -54,7 +64,7 @@ export default function StatsCard({ readOnly = false }) {
             }
         });
         return () => unsubscribe();
-    }, [prevKey]);
+    }, [prevKey, currentUser]);
 
     const handleSave = async () => {
         try {
