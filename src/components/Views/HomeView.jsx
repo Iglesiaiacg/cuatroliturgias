@@ -40,6 +40,9 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
             } else {
                 setPendingAssignment(null);
             }
+        }, (error) => {
+            console.warn("Assignments listener error:", error);
+            // Verify permission issues don't crash app
         });
         return () => unsub();
     }, [currentUser]);

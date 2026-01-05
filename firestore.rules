@@ -108,6 +108,11 @@ service cloud.firestore {
       allow read: if request.auth.uid == userId;
       allow write: if isAdmin(); // System/Admins send notifications
     }
+
+    match /users/{userId}/assignments/{assignmentId} {
+      allow read: if request.auth.uid == userId;
+      allow write: if isAdmin();
+    }
     
     match /{document=**} { allow read, write: if false; }
   }
