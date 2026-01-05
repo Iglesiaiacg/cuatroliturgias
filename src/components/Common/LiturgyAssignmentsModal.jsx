@@ -112,7 +112,7 @@ export default function LiturgyAssignmentsModal({ isOpen, onClose, docContent })
                                     <p className="text-xs text-gray-500 line-clamp-3 font-serif italic">
                                         "{section.content}"
                                     </p>
-                                    <div className="mt-3 flex items-center justify-end text-xs font-bold text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <div className="mt-3 flex items-center justify-end text-xs font-bold text-primary transition-opacity">
                                         Asignar <span className="material-symbols-outlined text-sm ml-1">arrow_forward</span>
                                     </div>
                                 </button>

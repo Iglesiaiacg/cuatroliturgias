@@ -401,7 +401,7 @@ export default function DirectoryView() {
                                     </div>
 
                                     {isEditing && (
-                                        <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 cursor-pointer rounded-full transition-opacity z-20" style={{ top: '20px', left: '20px', width: '80px', height: '80px' }}>
+                                        <label className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white cursor-pointer rounded-full transition-colors z-20" style={{ top: '20px', left: '20px', width: '80px', height: '80px' }}>
                                             <span className="material-symbols-outlined text-sm">upload</span>
                                             <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
                                         </label>

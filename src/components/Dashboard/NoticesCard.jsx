@@ -210,7 +210,7 @@ export default function NoticesCard() {
                                     {canManage && (
                                         <button
                                             onClick={() => handleDelete(item.id)}
-                                            className="opacity-0 group-hover:opacity-100 text-gray-300 hover:text-red-500 transition-all shrink-0 p-1"
+                                            className="text-gray-300 hover:text-red-500 transition-all shrink-0 p-1"
                                         >
                                             <span className="material-symbols-outlined text-xs">delete</span>
                                         </button>

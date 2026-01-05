@@ -527,7 +527,7 @@ export default function OfferingsView() {
                                                         {t.type === 'income' ? '+' : '-'}{formatMoney(t.amount)}
                                                     </span>
                                                     {(userRole === 'admin' || (checkPermission && checkPermission('manage_treasury'))) && (
-                                                        <div className="flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <div className="flex items-center gap-1">
                                                             {t.type === 'income' && (
                                                                 <button
                                                                     onClick={() => handleDownloadReceipt(t)}
@@ -564,7 +564,7 @@ export default function OfferingsView() {
                     currentYear={currentDate.getFullYear()}
                 />
             </div>
-        </main>
+        </main >
     );
 }
 

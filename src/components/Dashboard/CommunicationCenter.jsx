@@ -138,7 +138,7 @@ export default function CommunicationCenter({ onClose }) {
                                         notices.map(n => (
                                             <div key={n.id} className="p-4 bg-gray-50 dark:bg-black/20 rounded-lg flex justify-between items-start group">
                                                 <p className="text-gray-800 dark:text-gray-200 text-sm leading-relaxed">{n.text}</p>
-                                                <button onClick={() => removeNotice(n.id)} className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-all">
+                                                <button onClick={() => removeNotice(n.id)} className="text-gray-400 hover:text-red-500 transition-all">
                                                     <span className="material-symbols-outlined">delete</span>
                                                 </button>
                                             </div>

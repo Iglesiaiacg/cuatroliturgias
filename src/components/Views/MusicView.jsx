@@ -420,7 +420,7 @@ export default function MusicView() {
                                                     e.stopPropagation();
                                                     handleAddToSetlist(song);
                                                 }}
-                                                className="absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center bg-gray-100 dark:bg-white/10 hover:bg-green-100 dark:hover:bg-green-900/40 text-gray-400 hover:text-green-600 rounded-full transition-all opacity-0 group-hover:opacity-100"
+                                                className="absolute bottom-2 right-2 w-8 h-8 flex items-center justify-center bg-gray-100 dark:bg-white/10 hover:bg-green-100 dark:hover:bg-green-900/40 text-gray-400 hover:text-green-600 rounded-full transition-all"
                                                 title={`Añadir a lista: ${activeListName}`}
                                             >
                                                 <span className="material-symbols-outlined text-lg">playlist_add</span>

@@ -189,7 +189,7 @@ export default function DayDetailsModal({ date, onClose, onGenerate }) {
                                         {!evt.isAuto && evt.type !== 'birthday' && evt.type !== 'roster' && (
                                             <button
                                                 onClick={() => deleteEvent(evt.id)}
-                                                className="text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                className="text-gray-300 hover:text-red-500 transition-opacity"
                                             >
                                                 <span className="material-symbols-outlined text-sm">delete</span>
                                             </button>
