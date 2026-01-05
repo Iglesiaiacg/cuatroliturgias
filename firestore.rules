@@ -9,8 +9,7 @@ service cloud.firestore {
     }
     function isAdmin() {
       return isAuthenticated() && (
-        getUserRole() == 'admin' || 
-        request.auth.token.email == 'alexveo855@gmail.com' // PRIMACÍA TOTAL
+        getUserRole() == 'admin'
       );
     }
     function isMusician() { return isAuthenticated() && (getUserRole() == 'musician' || isAdmin()); }
@@ -36,15 +35,15 @@ service cloud.firestore {
       allow read, write: if isAuthenticated() && (resource == null || resource.data.userId == request.auth.uid || isAdmin());
     }
 
-    // --- DIAGNOSTICO: LECTURA ABIERTA TEMPORAL ---
+    // --- SECURED COLLECTIONS ---
     match /intentions/{dateId} {
-      allow read: if true; 
-      allow write: if isSecretary();
+      allow read: if isAuthenticated(); 
+      allow write: if isSecretary() || isAdmin();
     }
 
     match /sacristy_checks/{dateId} {
-      allow read: if true;
-      allow write: if isSacristan();
+      allow read: if isAuthenticated();
+      allow write: if isSacristan() || isAdmin();
     }
 
     match /config/{configId} {
