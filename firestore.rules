@@ -21,7 +21,10 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow read: if isAuthenticated();
-      allow write: if isAdmin() || request.auth.uid == userId;
+      // SECURITY FIX: Prevent users from escalating their own role.
+      // Users can write to their own doc ONLY if they are NOT modifying the 'role' field.
+      // Admins can write anything.
+      allow write: if isAdmin() || (request.auth.uid == userId && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])));
     }
 
     match /songs/{songId} {

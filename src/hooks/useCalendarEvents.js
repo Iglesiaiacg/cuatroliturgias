@@ -1,86 +1,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import { startOfDay, isSameDay } from 'date-fns';
-
-const EVENTS_STORAGE_KEY = 'parish_calendar_events';
-const DIRECTORY_STORAGE_KEY = 'liturgia_directory';
-
-// Helper to read data (pure function logic)
-const readData = () => {
-    // 1. Manual Events
-    const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
-    const manual = stored ? JSON.parse(stored) : [];
-
-    // 2. Directory Harvest
-    const dirStored = localStorage.getItem(DIRECTORY_STORAGE_KEY);
-    const members = dirStored ? JSON.parse(dirStored) : [];
-
-    const harvested = [];
-
-    members.forEach(m => {
-        if (m.birthDate) {
-            try {
-                // Assuming birthDate is YYYY-MM-DD or similar standard
-                const date = new Date(m.birthDate + 'T12:00:00'); // Midday to avoid timezone shifts
-                if (!isNaN(date)) {
-                    harvested.push({
-                        id: `bd-${m.id}`,
-                        title: `Cumpleaños de ${m.fullName.split(' ')[0]}`,
-                        date: date, // Will be year-adjusted in getter
-                        type: 'birthday',
-                        color: 'blue' // UI indicator color
-                    });
-                }
-            } catch (e) {
-                console.error("Error parsing date for", m.fullName, e);
-            }
-        }
-    });
-
-    return { manual, harvested };
-};
+import { db } from '../services/firebase';
+import { collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 
 export function useCalendarEvents() {
-    // Lazy initialization
-    const [events, setEvents] = useState(() => readData().manual);
-    const [directoryEvents, setDirectoryEvents] = useState(() => readData().harvested);
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Refresh function (used for storage listener)
-    const loadEvents = useCallback(() => {
-        const { manual, harvested } = readData();
-        setEvents(manual);
-        setDirectoryEvents(harvested);
+    // Subscribe to Firestore 'events'
+    useEffect(() => {
+        setLoading(true);
+        // Can filter by month range if needed for performance, currently fetching all
+        const q = query(collection(db, 'events'));
+
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const list = snapshot.docs.map(doc => {
+                const data = doc.data();
+                return {
+                    id: doc.id,
+                    ...data,
+                    // Convert Timestamp to Date if exists, else keep as string (legacy safety)
+                    date: data.date?.toDate ? data.date.toDate() : new Date(data.date)
+                };
+            });
+            setEvents(list);
+            setLoading(false);
+        }, (error) => {
+            console.error("Calendar Sync Error:", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
-    // Listener for storage changes (sync across tabs/updates)
-    useEffect(() => {
-        // We already initialized via useState lazy init, so no need to call loadEvents() immediately on mount
-        // unless we want to ensure freshness if storage changed between init and effect (rare).
-        // Standard pattern: just listen.
-        window.addEventListener('storage', loadEvents);
-        return () => window.removeEventListener('storage', loadEvents);
-    }, [loadEvents]);
+    // Helper: Directory birthdays (Still strictly local or parsed from DirectoryContext separately)
+    // For now, we keep the original logic but rely on external DirectoryContext if possible.
+    // However, to satisfy the signature of the hook, we'll strip directory harvesting from THIS hook
+    // and rely on the CalendarView to merge them, OR we can fetch them here if we import DirectoryContext.
+    // Given the architecture, let's keep this hook focused on FIRESTORE events.
+    // The previous implementation 'readData' combined local storage events + directory.
+    // Now 'events' is purely Firestore. 
 
-    // Helpers
     const getEventsForDate = useCallback((date) => {
         if (!date) return [];
         const target = startOfDay(date);
-        const targetYear = target.getFullYear();
 
-        // Filter Manual
-        const dayManual = events.filter(e => isSameDay(new Date(e.date), target));
+        // 1. Firestore Events
+        const dayEvents = events.filter(e => isSameDay(new Date(e.date), target));
 
-        // Filter Directory (adjusted to current year)
-        const dayDirectory = directoryEvents.filter(e => {
-            const originalDate = new Date(e.date);
-            // Handle leap years edge case if needed, but simple matching mainly:
-            return originalDate.getDate() === target.getDate() &&
-                originalDate.getMonth() === target.getMonth();
-        }).map(e => ({
-            ...e,
-            date: target // Return with current year date for display logic
-        }));
-
-        // Special Sunday Tasks (Auto-generated)
+        // 2. Special Sunday Tasks (Auto-generated)
         const dayAuto = [];
         if (target.getDay() === 0) { // Sunday
             dayAuto.push({
@@ -91,9 +59,9 @@ export function useCalendarEvents() {
             });
         }
 
-        // Month End
+        // 3. Month End
         const dayOfMonth = target.getDate();
-        const lastDay = new Date(targetYear, target.getMonth() + 1, 0).getDate();
+        const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0).getDate();
         if (dayOfMonth === lastDay) {
             dayAuto.push({
                 id: 'auto-report',
@@ -103,78 +71,88 @@ export function useCalendarEvents() {
             });
         }
 
-        return [...dayManual, ...dayDirectory, ...dayAuto];
-    }, [events, directoryEvents]);
+        return [...dayEvents, ...dayAuto];
+    }, [events]);
 
-    const addEvent = useCallback((event) => {
-        setEvents(prev => {
-            const newEvents = [...prev, { ...event, id: crypto.randomUUID() }];
-            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-            return newEvents;
-        });
+    const addEvent = useCallback(async (event) => {
+        try {
+            await addDoc(collection(db, 'events'), {
+                ...event,
+                createdAt: new Date()
+            });
+        } catch (e) {
+            console.error("Error adding event:", e);
+            throw e;
+        }
     }, []);
 
-    const deleteEvent = useCallback((id) => {
-        setEvents(prev => {
-            const newEvents = prev.filter(e => e.id !== id);
-            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-            return newEvents;
-        });
+    const deleteEvent = useCallback(async (id) => {
+        try {
+            await deleteDoc(doc(db, 'events', id));
+        } catch (e) {
+            console.error("Error deleting event:", e);
+            throw e;
+        }
     }, []);
 
-    // Roster Management (Stored inside manual events for simplicity or separate key)
-    // We'll store roster as a special event type='roster' per day
-    const updateRoster = useCallback((date, positions) => {
+    // Roster Management (Stored as event type='roster')
+    const updateRoster = useCallback(async (date, positions) => {
         if (!date) return;
-        setEvents(prev => {
-            // Remove existing roster for this date
-            const filtered = prev.filter(e => !(e.type === 'roster' && isSameDay(new Date(e.date), date)));
 
-            const rosterEvent = {
-                id: `roster-${date.toISOString()}`,
+        // Find existing roster for this date to update (or delete then create)
+        // Ideally we use a consistent ID based on date, e.g., 'roster_YYYY-MM-DD'
+        // But Firestore auto-IDs are safer for concurrency.
+        // Let's search first.
+        const target = startOfDay(date);
+        const existing = events.find(e => e.type === 'roster' && isSameDay(new Date(e.date), target));
+
+        try {
+            if (existing) {
+                await deleteDoc(doc(db, 'events', existing.id));
+            }
+            await addDoc(collection(db, 'events'), {
                 date: date,
                 type: 'roster',
-                data: positions // { lector: 'Px', acolyte: 'Py' }
-            };
-
-            const newEvents = [...filtered, rosterEvent];
-            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
-            return newEvents;
-        });
-    }, []);
+                data: positions, // { lector: 'Px', acolyte: 'Py' }
+                updatedAt: new Date()
+            });
+        } catch (e) {
+            console.error("Error updating roster:", e);
+        }
+    }, [events]);
 
     const getRoster = useCallback((date) => {
         if (!date) return {};
-        // Note: 'events' dependency is needed here to get latest state
-        return events.find(e => e.type === 'roster' && isSameDay(new Date(e.date), date))?.data || {};
+        const target = startOfDay(date);
+        return events.find(e => e.type === 'roster' && isSameDay(new Date(e.date), target))?.data || {};
     }, [events]);
 
     // Daily Reminder Management
-    const updateDailyReminder = (date, text) => {
-        // Remove existing reminder for this date
-        const filtered = events.filter(e => !(e.type === 'daily_reminder' && isSameDay(new Date(e.date), date)));
+    const updateDailyReminder = async (date, text) => {
+        if (!date) return;
+        const target = startOfDay(date);
+        const existing = events.find(e => e.type === 'daily_reminder' && isSameDay(new Date(e.date), target));
 
-        if (!text || text.trim() === '') {
-            // If empty, just remove (already done by filter)
-            setEvents(filtered);
-            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(filtered));
-            return;
+        try {
+            if (existing) {
+                await deleteDoc(doc(db, 'events', existing.id));
+            }
+            if (text && text.trim() !== '') {
+                await addDoc(collection(db, 'events'), {
+                    date: date,
+                    type: 'daily_reminder',
+                    title: text,
+                    updatedAt: new Date()
+                });
+            }
+        } catch (e) {
+            console.error("Error updating reminder:", e);
         }
-
-        const reminderEvent = {
-            id: `reminder-${date.toISOString()}`,
-            date: date,
-            type: 'daily_reminder',
-            title: text
-        };
-
-        const newEvents = [...filtered, reminderEvent];
-        setEvents(newEvents);
-        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(newEvents));
     };
 
     const getDailyReminder = (date) => {
-        return events.find(e => e.type === 'daily_reminder' && isSameDay(new Date(e.date), date))?.title || '';
+        const target = startOfDay(date);
+        return events.find(e => e.type === 'daily_reminder' && isSameDay(new Date(e.date), target))?.title || '';
     };
 
     return {
@@ -186,6 +164,6 @@ export function useCalendarEvents() {
         getRoster,
         updateDailyReminder,
         getDailyReminder,
-        refresh: loadEvents
+        loading
     };
 }

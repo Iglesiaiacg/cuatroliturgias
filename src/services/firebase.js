@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBcGhWrIT0it8-4470Xb49gSRyLcMc1C_U",
@@ -28,5 +29,6 @@ const app = initializeApp(firebaseConfig);
 // TEMPORARY FIX: Disable persistence to resolve crash (Internal Assertion Failed)
 const db = getFirestore(app);
 const auth = getAuth(app);
+const storage = getStorage(app);
 
-export { db, auth };
+export { db, auth, storage };

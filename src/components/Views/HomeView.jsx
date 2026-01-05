@@ -1,46 +1,31 @@
 import { useState, useEffect } from 'react';
-import { doc, onSnapshot, deleteDoc, collection, query, where, orderBy, limit } from 'firebase/firestore';
+import { doc, onSnapshot, deleteDoc, collection, query, where, limit } from 'firebase/firestore';
 import { db } from '../../services/firebase';
-import { useAuth } from '../../context/AuthContext'; // NEW: Auth Hook
-import AssignmentPopup from '../Common/AssignmentPopup'; // NEW
+import { useAuth } from '../../context/AuthContext';
+import AssignmentPopup from '../Common/AssignmentPopup';
 import Preview from '../Liturgy/Preview';
 
-// Common Components
-import StyledCard from '../Common/StyledCard';
-import NextLiturgyCard from '../Dashboard/NextLiturgyCard';
-import FinanceCard from '../Dashboard/FinanceCard';
-import RolesCard from '../Dashboard/RolesCard';
-import IntentionsCard from '../Dashboard/IntentionsCard';
-import StatsCard from '../Dashboard/StatsCard'; // Used in both modes
-import NoticesCard from '../Dashboard/NoticesCard';
-import QuickCertCard from '../Dashboard/QuickCertCard';
-import SacristyStatusCard from '../Dashboard/SacristyStatusCard';
-// SundaySummaryCard removed in favor of exploded view
-
-// New Individual Components for Celebrant Grid
-import LiturgicalVestmentCard from '../Dashboard/LiturgicalVestmentCard';
-import MinistersOnDutyCard from '../Dashboard/MinistersOnDutyCard';
-import UpcomingEventsCard from '../Dashboard/UpcomingEventsCard';
-import PendingCertificatesCard from '../Dashboard/PendingCertificatesCard';
+// Modular Dashboards
+import DashboardHeader from '../Dashboard/DashboardHeader';
+import CelebrantDashboard from '../Dashboard/CelebrantDashboard';
+import AdminDashboard from '../Dashboard/AdminDashboard';
+import CommunicationCenter from '../Dashboard/CommunicationCenter';
 
 // Role Dashboards
 import { TreasurerDashboard, SacristanDashboard, SecretaryDashboard, MusicianDashboard, AcolyteDashboard } from '../Dashboard/RoleDashboards';
 import GuestDashboard from '../Dashboard/GuestDashboard';
-import CommunicationCenter from '../Dashboard/CommunicationCenter';
 
 export default function HomeView({ onNavigate, date, docContent, season, calculatedFeast }) {
-    const { userRole, checkPermission, currentUser } = useAuth(); // Get current role
+    const { userRole, checkPermission, currentUser } = useAuth();
     const [pinnedLiturgy, setPinnedLiturgy] = useState(null);
     const [isReadingPinned, setIsReadingPinned] = useState(false);
     const [isCommOpen, setIsCommOpen] = useState(false);
-    const [currentDate, setCurrentDate] = useState(new Date());
 
     // --- ASSIGNMENT NOTIFICATION LOGIC ---
     const [pendingAssignment, setPendingAssignment] = useState(null);
 
     useEffect(() => {
         if (!currentUser) return;
-
         // Listen for assignments status = 'pending'
         const q = query(
             collection(db, 'users', currentUser.uid, 'assignments'),
@@ -58,14 +43,6 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
         });
         return () => unsub();
     }, [currentUser]);
-
-    // Timer for Dashboard clock
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentDate(new Date());
-        }, 1000 * 60); // Update every minute
-        return () => clearInterval(timer);
-    }, []);
 
     // CELEBRANT MODE LOGIC
     const [isSundayLive, setIsSundayLive] = useState(false);
@@ -151,38 +128,12 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
             {/* Communication Center Modal */}
             {isCommOpen && <CommunicationCenter onClose={() => setIsCommOpen(false)} />}
 
-            {/* Greeting Header & Mode Switcher */}
-            <div className="mb-2 md:text-center flex flex-col md:items-center">
-                <div className="flex justify-between items-center w-full md:justify-center md:flex-col md:gap-2">
-                    <div>
-                        <h1 className="text-3xl font-display font-bold text-gray-900 dark:text-white">
-                            {(() => {
-                                const hour = new Date().getHours();
-                                if (hour < 12) return "Buenos días";
-                                if (hour < 20) return "Buenas tardes";
-                                return "Buenas noches";
-                            })()}, <span className="text-primary">Padre</span>.
-                        </h1>
-                        <p className="text-gray-600 dark:text-gray-500">
-                            {date ? new Intl.DateTimeFormat('es-MX', { dateStyle: 'full' }).format(date) : 'Bienvenido'}
-                        </p>
-                    </div>
-
-                    {/* Mode Toggle Button */}
-                    <button
-                        onClick={() => setShowAdminDashboard(!showAdminDashboard)}
-                        className={`text-xs font-bold px-3 py-1.5 rounded-full border transition-all flex items-center gap-2
-                        ${!showAdminDashboard
-                                ? 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800'
-                                : 'bg-gray-100 text-gray-600 border-gray-200 dark:bg-white/10 dark:text-gray-400 dark:border-white/10'}`}
-                    >
-                        <span className="material-symbols-outlined text-sm">
-                            {!showAdminDashboard ? 'church' : 'dashboard'}
-                        </span>
-                        {!showAdminDashboard ? 'Modo Celebrante' : 'Modo Director'}
-                    </button>
-                </div>
-            </div>
+            {/* Header & Clock */}
+            <DashboardHeader
+                date={date}
+                showAdminDashboard={showAdminDashboard}
+                setShowAdminDashboard={setShowAdminDashboard}
+            />
 
             {/* PINNED LITURGY SECTION (Takes Priority) */}
             {pinnedLiturgy && !isReadingPinned && (
@@ -249,7 +200,6 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
                                         />
                                     )}
 
-                                    {/* Floating Action Button (Only visible if scrolled down?) */}
                                     {/* Action Buttons: Visible ONLY on Saturday (Preparation) & Sunday (Service) */}
                                     {/* UNPIN BUTTON FOR ADMINS */}
                                     {(userRole === 'admin' || (checkPermission && checkPermission('generate_liturgy'))) && (
@@ -322,138 +272,25 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
 
             {/* Dashboard Grid - CELEBRANT MODE OPTIMIZED (3 Columns) */}
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-8`}>
 
-                {/* 1. CELEBRANT MODE : BALANCED LAYOUT */}
-                {!showAdminDashboard && (
-                    <>
-                        {/* COL 1: Liturgical Essentials */}
-                        <div className="space-y-6 animate-fade-in">
-                            {/* Rubrics & Color - Always Top Priority */}
-                            <LiturgicalVestmentCard date={date || new Date()} />
+            {!showAdminDashboard && (
+                <CelebrantDashboard
+                    date={date}
+                    setShowAdminDashboard={setShowAdminDashboard}
+                />
+            )}
 
-                            {/* Intentions - Who are we praying for? */}
-                            <IntentionsCard date={date} />
-                        </div>
+            {showAdminDashboard && (
+                <AdminDashboard
+                    onNavigate={onNavigate}
+                    date={date}
+                    userRole={userRole}
+                    checkPermission={checkPermission}
+                    setIsCommOpen={setIsCommOpen}
+                    pinnedLiturgy={pinnedLiturgy}
+                />
+            )}
 
-                        {/* COL 2: People & Ministers */}
-                        <div className="space-y-6 animate-fade-in">
-                            {/* Who is serving? (Read Only) */}
-                            <MinistersOnDutyCard date={date || new Date()} />
-
-                            {/* Announcements to make */}
-                            <UpcomingEventsCard />
-                        </div>
-
-                        {/* COL 3: Supervision & Notices */}
-                        <div className="space-y-6 animate-fade-in">
-                            {/* Pending Paperwork (Supervisory) */}
-                            <PendingCertificatesCard />
-
-                            {/* Attendance Count (Read Only) */}
-                            <StatsCard readOnly={true} />
-
-                            {/* General Notices Card (e.g. from Bishop) */}
-                            <NoticesCard />
-
-                            {/* Quick link to full dashboard */}
-                            <div className="text-center pt-4 opacity-50 hover:opacity-100 transition-opacity">
-                                <button
-                                    onClick={() => setShowAdminDashboard(true)}
-                                    className="text-xs text-gray-500 font-bold underline"
-                                >
-                                    Necesito herramientas administrativas...
-                                </button>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-
-                {/* 2. ADMIN MODE : FULL DASHBOARD */}
-                {showAdminDashboard && (
-                    <>
-                        {/* Column 1: Priority & Devotion */}
-                        <div className="space-y-6">
-                            {!pinnedLiturgy && (
-                                <section>
-                                    <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Próxima Celebración</h3>
-                                    <NextLiturgyCard onClick={() => onNavigate('generator')} />
-                                </section>
-                            )}
-                            <section>
-                                <IntentionsCard date={date} />
-                            </section>
-                            <section>
-                                <NoticesCard />
-                            </section>
-                            <section>
-                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Accesos Directos</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    <StyledCard
-                                        title="Liturgia"
-                                        description="Generador"
-                                        icon="menu_book"
-                                        onClick={() => onNavigate('generator')}
-                                        actionText="Ir"
-                                        compact={true}
-                                    />
-                                    <StyledCard
-                                        title="Servicios"
-                                        description="Ocasionales"
-                                        icon="church"
-                                        onClick={() => onNavigate('occasional')}
-                                        actionText="Ir"
-                                        compact={true}
-                                    />
-                                </div>
-                            </section>
-                        </div>
-
-                        {/* Column 2: Management & Communication */}
-                        <div className="space-y-6 animate-fade-in">
-                            <section>
-                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Gestión Pastoral</h3>
-                                {/* COMMUNICATION CENTER BUTTON (ADMIN ONLY) */}
-                                {(userRole === 'admin' || (checkPermission && checkPermission('manage_communication'))) && (
-                                    <button
-                                        onClick={() => setIsCommOpen(true)}
-                                        className="w-full mb-4 neumorphic-card p-4 flex items-center gap-4 bg-gradient-to-r from-red-50 to-stone-50 dark:from-red-900/10 dark:to-stone-900/10 border border-red-100 dark:border-red-800 hover:scale-[1.02] transition-transform"
-                                    >
-                                        <div className="w-12 h-12 rounded-full bg-red-600 text-white flex items-center justify-center shadow-lg shadow-red-500/20">
-                                            <span className="material-symbols-outlined text-2xl">forum</span>
-                                        </div>
-                                        <div className="text-left">
-                                            <h3 className="font-bold text-gray-800 dark:text-white">Centro de Comunicaciones</h3>
-                                            <p className="text-xs text-red-600 dark:text-red-300 font-medium">Avisos, Mensajes y Chat</p>
-                                        </div>
-                                        <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
-                                    </button>
-                                )}
-                                <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
-                            </section>
-                        </div>
-
-                        {/* Column 3: Administration & Stats */}
-                        <div className="space-y-6 animate-fade-in">
-                            <section>
-                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
-                                <SacristyStatusCard date={date} />
-                            </section>
-                            <section>
-                                <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>
-                                <FinanceCard />
-                            </section>
-                            <section>
-                                <StatsCard />
-                            </section>
-                            <section>
-                                <QuickCertCard />
-                            </section>
-                        </div>
-                    </>
-                )}
-            </div>
         </main>
     );
 }

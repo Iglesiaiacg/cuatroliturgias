@@ -3,12 +3,10 @@ import { useFinanceSync } from '../../hooks/useFinanceSync';
 import { useAuth } from '../../context/AuthContext';
 
 export default function FinanceCard() {
-    // Only fetch last ~50 transactions for summary to save bandwidth, 
-    // or fetch all if needed for accurate monthly balance. 
-    // For a card, catching 100 is safe.
-    const { transactions, loading } = useFinanceSync(100);
-    const { checkPermission } = useAuth();
+    const { transactions, globalBalance, recalculateBalance, loading } = useFinanceSync(100);
+    const { checkPermission, userRole } = useAuth();
     const [isVisible, setIsVisible] = useState(false);
+    const [isCalibrating, setIsCalibrating] = useState(false);
 
     // If no permission, show nothing or placeholder
     if (!checkPermission('view_treasury')) {
@@ -35,17 +33,10 @@ export default function FinanceCard() {
             .filter(t => t.type === 'expense')
             .reduce((sum, t) => sum + parseFloat(t.amount || 0), 0);
 
-        // Overall balance logic might require fetching ALL history, 
-        // using just monthly balance for now or summing visible transactions.
-        // For a simple card, let's use the sum of loaded transactions as "Current Balance" (Assuming transactions is descending valid list)
-        // OR better: Just show Monthly balance flow.
-        const totalBalance = transactions
-            .reduce((sum, t) => sum + (t.type === 'income' ? parseFloat(t.amount) : -parseFloat(t.amount)), 0);
-
         return {
             income,
             expense,
-            balance: totalBalance,
+            balance: globalBalance, // Use Server-Side Balance
             monthName: new Intl.DateTimeFormat('es-MX', { month: 'long' }).format(now)
         };
     };
@@ -56,9 +47,21 @@ export default function FinanceCard() {
         return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
     };
 
+    const handleRecalibrate = async () => {
+        if (!confirm("¿Recalcular el balance total basado en TODO el historial? Esto corregirá cualquier error de sincronización.")) return;
+        setIsCalibrating(true);
+        try {
+            await recalculateBalance();
+            alert("Balance recalibrado exitosamente.");
+        } catch (e) {
+            alert("Error al recalibrar.");
+        }
+        setIsCalibrating(false);
+    };
+
     return (
-        <div className="neumorphic-card p-6 flex flex-col justify-between h-full relative overflow-hidden">
-            {loading && (
+        <div className="neumorphic-card p-6 flex flex-col justify-between h-full relative overflow-hidden group">
+            {(loading || isCalibrating) && (
                 <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-10 flex items-center justify-center backdrop-blur-sm">
                     <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
                 </div>
@@ -69,20 +72,31 @@ export default function FinanceCard() {
                     <span className="material-symbols-outlined text-sm">savings</span>
                     <span className="text-xs font-bold uppercase tracking-wider">Finanzas ({summary.monthName})</span>
                 </div>
-                <button
-                    onClick={() => setIsVisible(!isVisible)}
-                    className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
-                >
-                    <span className="material-symbols-outlined text-lg">
-                        {isVisible ? 'visibility' : 'visibility_off'}
-                    </span>
-                </button>
+                <div className="flex items-center gap-2">
+                    {userRole === 'admin' && (
+                        <button
+                            onClick={handleRecalibrate}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-primary"
+                            title="Recalibrar Balance (Admin)"
+                        >
+                            <span className="material-symbols-outlined text-sm">build</span>
+                        </button>
+                    )}
+                    <button
+                        onClick={() => setIsVisible(!isVisible)}
+                        className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                    >
+                        <span className="material-symbols-outlined text-lg">
+                            {isVisible ? 'visibility' : 'visibility_off'}
+                        </span>
+                    </button>
+                </div>
             </div>
 
             <div className="space-y-6">
                 <div>
                     <span className="text-xs text-gray-500 dark:text-gray-400 font-bold uppercase tracking-wide">Saldo Disponible</span>
-                    <div className="text-4xl font-mono font-bold text-gray-900 dark:text-white mt-2 tracking-tighter">
+                    <div className={`text-4xl font-mono font-bold mt-2 tracking-tighter ${summary.balance < 0 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
                         {isVisible ? formatMoney(summary.balance) : '****'}
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { db } from '../services/firebase';
+import { db, storage } from '../services/firebase';
 import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useAuth } from './AuthContext';
 
 const DirectoryContext = createContext();
@@ -71,9 +72,24 @@ export const DirectoryProvider = ({ children }) => {
     const addMember = async (memberData) => {
         try {
             const dataToSave = { ...memberData };
+
+            // Handle Photo Upload if it's a File object (not string)
+            if (dataToSave.photoURL && typeof dataToSave.photoURL !== 'string') {
+                const file = dataToSave.photoURL;
+                // Generate a unique path: directory_photos/[timestamp]_[filename]
+                const photoPath = `directory_photos/${Date.now()}_${file.name}`;
+                const storageRef = ref(storage, photoPath);
+
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+
+                dataToSave.photoURL = downloadURL; // Save URL string to Firestore
+            }
+
             if (!dataToSave.memberId) {
                 dataToSave.memberId = generateMemberId(dataToSave.fullName, members);
             }
+
             // For manual members (not linked to Auth UID), let Firestore gen ID
             await addDoc(collection(db, 'users'), {
                 ...dataToSave,
@@ -89,11 +105,24 @@ export const DirectoryProvider = ({ children }) => {
 
     const updateMember = async (id, updates) => {
         try {
+            const dataToUpdate = { ...updates };
+            // Handle Photo Upload if it's a File object
+            if (dataToUpdate.photoURL && typeof dataToUpdate.photoURL !== 'string') {
+                const file = dataToUpdate.photoURL;
+                const photoPath = `directory_photos/${id}_${Date.now()}_${file.name}`;
+                const storageRef = ref(storage, photoPath);
+
+                await uploadBytes(storageRef, file);
+                const downloadURL = await getDownloadURL(storageRef);
+
+                dataToUpdate.photoURL = downloadURL;
+            }
+
             const userRef = doc(db, 'users', id);
             await updateDoc(userRef, {
-                ...updates,
+                ...dataToUpdate,
                 // Update displayName if fullName changes to keep sync
-                ...(updates.fullName ? { displayName: updates.fullName } : {})
+                ...(dataToUpdate.fullName ? { displayName: dataToUpdate.fullName } : {})
             });
         } catch (error) {
             console.error("Error updating member:", error);
@@ -104,6 +133,8 @@ export const DirectoryProvider = ({ children }) => {
     const deleteMember = async (id) => {
         try {
             await deleteDoc(doc(db, 'users', id));
+            // Note: We are not automatically deleting photos from Storage here to avoid complex path tracking,
+            // but a cloud function would be ideal for cleanup.
         } catch (error) {
             console.error("Error deleting member:", error);
             throw error;

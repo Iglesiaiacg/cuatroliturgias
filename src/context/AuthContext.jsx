@@ -75,18 +75,19 @@ export function AuthProvider({ children }) {
 
     // Assign Role (Admin Function)
     const assignRole = useCallback(async (uid, role, displayName) => {
-        // Important: checking state directly inside async callback might be stale if not careful,
-        // but 'userRole' is in dependency array.
-        // However, standard practice is to rely on server rules. 
-        // We'll keep the client check but remove 'userRole' dependency loop by using ref or trusting backend error.
-        // For simplicity:
+        // Security Check: Client-side enforcement
+        if (userRole !== 'admin') {
+            console.error("Critical: Unauthorized attempt to assign role.");
+            throw new Error("No tienes permisos para realizar esta acción.");
+        }
+
         const userRef = doc(db, 'users', uid);
         await setDoc(userRef, {
             role: role,
             displayName: displayName, // Update name if provided
             updatedAt: new Date()
         }, { merge: true });
-    }, []);
+    }, [userRole]);
 
     // Logout
     const logout = useCallback(() => {

@@ -54,14 +54,16 @@ export default function DirectoryView() {
 
 
 
-    const handlePhotoChange = (e) => {
+    const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSelectedMember(prev => ({ ...prev, photo: reader.result }));
-            };
-            reader.readAsDataURL(file);
+            if (file.size > 2 * 1024 * 1024) {
+                alert("La imagen es demasiado grande. Máximo 2MB.");
+                return;
+            }
+            // Create preview URL for immediate UI feedback
+            const previewUrl = URL.createObjectURL(file);
+            setSelectedMember(prev => ({ ...prev, photo: file, _preview: previewUrl }));
         }
     };
 
@@ -390,7 +392,7 @@ export default function DirectoryView() {
                                     {/* ORBITAL USER CARD (Mini Version) */}
                                     <div className="scale-75 origin-top-left -m-4">
                                         <MinistryOrbit
-                                            photo={selectedMember.photo}
+                                            photo={selectedMember._preview || selectedMember.photo}
                                             initial={selectedMember.fullName ? selectedMember.fullName.charAt(0).toUpperCase() : '?'}
                                             role={selectedMember.ministryOrder || 'Laico'}
                                             ministries={[
@@ -403,7 +405,7 @@ export default function DirectoryView() {
                                     {isEditing && (
                                         <label className="absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/50 text-white cursor-pointer rounded-full transition-colors z-20" style={{ top: '20px', left: '20px', width: '80px', height: '80px' }}>
                                             <span className="material-symbols-outlined text-sm">upload</span>
-                                            <input type="file" accept="image/*" className="hidden" onChange={handlePhotoChange} />
+                                            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
                                         </label>
                                     )}
                                 </div>

@@ -1,59 +1,79 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+import { db } from '../../services/firebase';
 import StatsHistoryModal from './StatsHistoryModal';
 
 export default function StatsCard({ readOnly = false }) {
-    // Key calculation
-    const getSundayDate = () => {
-        const current = new Date();
+    // Key calculation (Standardize to YYYY-MM-DD)
+    const getSundayDate = (date = new Date()) => {
+        const current = new Date(date);
         if (current.getDay() !== 0) { // Not Sunday
             current.setDate(current.getDate() - current.getDay());
         }
-        return current.toDateString();
+        return format(current, 'yyyy-MM-dd');
     };
 
-    // ... (rest of state initialization remains the same)
+    const currentKey = getSundayDate();
+    const prevKey = getSundayDate(new Date(new Date().setDate(new Date().getDate() - 7)));
 
-    const [dateKey] = useState(() => getSundayDate());
-
-    const [stats, setStats] = useState(() => {
-        const key = getSundayDate();
-        const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
-        return allStats[key] || {
-            men: '',
-            women: '',
-            children: '',
-            communicants: ''
-        };
+    const [stats, setStats] = useState({
+        men: '',
+        women: '',
+        children: '',
+        communicants: ''
     });
 
-    const [lastWeek] = useState(() => {
-        const key = getSundayDate();
-        const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
-
-        const keys = Object.keys(allStats).sort((a, b) => new Date(b) - new Date(a));
-        const prevKey = keys.find(k => k !== key);
-        return prevKey ? { date: prevKey, ...allStats[prevKey] } : null;
-    });
-
+    const [lastWeekTotal, setLastWeekTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
-    const handleSave = () => {
-        const allStats = JSON.parse(localStorage.getItem('liturgia_stats') || '{}');
-        allStats[dateKey] = stats;
-        localStorage.setItem('liturgia_stats', JSON.stringify(allStats));
-        setIsEditing(false);
+    // Sync Current Week
+    useEffect(() => {
+        setLoading(true);
+        const unsubscribe = onSnapshot(doc(db, 'stats', currentKey), (doc) => {
+            if (doc.exists()) {
+                setStats(doc.data());
+            } else {
+                setStats({ men: '', women: '', children: '', communicants: '' });
+            }
+            setLoading(false);
+        }, (err) => console.error("Stats Sync Error", err));
+        return () => unsubscribe();
+    }, [currentKey]);
+
+    // Fetch Last Week (One-time fetch usually enough, but listener is fine too)
+    useEffect(() => {
+        const unsubscribe = onSnapshot(doc(db, 'stats', prevKey), (doc) => {
+            if (doc.exists()) {
+                const d = doc.data();
+                setLastWeekTotal((parseInt(d.men || 0) + parseInt(d.women || 0) + parseInt(d.children || 0)));
+            } else {
+                setLastWeekTotal(0);
+            }
+        });
+        return () => unsubscribe();
+    }, [prevKey]);
+
+    const handleSave = async () => {
+        try {
+            await setDoc(doc(db, 'stats', currentKey), stats, { merge: true });
+            setIsEditing(false);
+        } catch (e) {
+            console.error("Error saving stats:", e);
+            alert("Error al guardar estadísticas");
+        }
     };
 
     const total = (parseInt(stats.men || 0) + parseInt(stats.women || 0) + parseInt(stats.children || 0));
-    const lastTotal = lastWeek ? (parseInt(lastWeek.men || 0) + parseInt(lastWeek.women || 0) + parseInt(lastWeek.children || 0)) : 0;
 
     // Trend
-    const trend = total - lastTotal;
+    const trend = total - lastWeekTotal;
 
     return (
-        <div className="neumorphic-card p-6 h-full">
+        <div className="neumorphic-card p-6 h-full relative">
+            {loading && <div className="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full animate-ping"></div>}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
                     <span className="material-symbols-outlined text-sm">equalizer</span>
@@ -73,7 +93,7 @@ export default function StatsCard({ readOnly = false }) {
                 <div className="text-5xl font-mono font-bold text-gray-900 dark:text-white leading-none tracking-tighter">
                     {total}
                 </div>
-                {lastWeek && (
+                {lastWeekTotal > 0 && (
                     <div className={`flex items-center text-xs font-bold mb-1.5 px-2 py-1 rounded-full ${trend >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                         <span className="material-symbols-outlined text-sm mr-1">{trend >= 0 ? 'trending_up' : 'trending_down'}</span>
                         {Math.abs(trend)}
@@ -90,7 +110,7 @@ export default function StatsCard({ readOnly = false }) {
 
             <div className="mt-auto pt-2 text-center">
                 <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                    {format(new Date(dateKey), 'EEEE d MMMM', { locale: es })}
+                    {format(new Date(), 'EEEE d MMMM', { locale: es })}
                 </p>
             </div>
         </div>
