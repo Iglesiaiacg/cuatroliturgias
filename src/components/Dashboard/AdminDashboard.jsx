@@ -3,7 +3,7 @@ import NextLiturgyCard from './NextLiturgyCard';
 import IntentionsCard from './IntentionsCard';
 import NoticesCard from './NoticesCard';
 import StyledCard from '../Common/StyledCard';
-import RolesCard from './RolesCard';
+import MinistersOnDutyCard from './MinistersOnDutyCard';
 import SacristyStatusCard from './SacristyStatusCard';
 import FinanceCard from './FinanceCard';
 import StatsCard from './StatsCard';
@@ -76,15 +76,16 @@ export default function AdminDashboard({
                             <span className="material-symbols-outlined text-red-300 ml-auto">open_in_new</span>
                         </button>
                     )}
-                    <RolesCard docContent={pinnedLiturgy ? pinnedLiturgy.content : null} />
+                    <div className="md:col-span-1 space-y-6">
+                        <MinistersOnDutyCard date={date} onNavigate={onNavigate} />
+                        <SacristyStatusCard onNavigate={onNavigate} />
+                    </div>
                 </section>
             </div>
 
             {/* Column 3: Administration & Stats */}
             <div className="space-y-6 animate-fade-in">
                 <section>
-                    <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Sacristía</h3>
-                    <SacristyStatusCard date={date} />
                 </section>
                 <section>
                     <h3 className="text-sm font-bold text-gray-600 uppercase tracking-wider mb-3 px-1">Administración</h3>

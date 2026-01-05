@@ -3,9 +3,10 @@ import { db } from '../../services/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { useDirectory } from '../../context/DirectoryContext';
-import { useAuth } from '../../context/AuthContext'; // Import Auth
+import { useAuth } from '../../context/AuthContext';
+import { generateDayRosterPDF } from '../../utils/rosterPDFGenerator';
 
-export default function MinistersOnDutyCard({ date }) {
+export default function MinistersOnDutyCard({ date, onNavigate }) {
     const { userRole } = useAuth(); // Get Role
     const [assignments, setAssignments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -67,6 +68,14 @@ export default function MinistersOnDutyCard({ date }) {
         return map[roleId] || roleId;
     };
 
+    const handlePrint = () => {
+        const printData = assignments.map(a => ({
+            role: getRoleName(a.role),
+            name: a.userName
+        }));
+        generateDayRosterPDF(date, printData);
+    };
+
     return (
         <div className="neumorphic-card p-6 border-l-4 border-indigo-500 bg-white dark:bg-stone-900">
             <div className="flex justify-between items-center mb-4">
@@ -74,12 +83,24 @@ export default function MinistersOnDutyCard({ date }) {
                     <span className="material-symbols-outlined text-lg">group</span>
                     Ministros de Hoy
                 </h3>
-                {/* Only Admin can see the Manage button */}
-                {userRole === 'admin' && (
-                    <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">
-                        GESTIONAR
+                <div className="flex items-center gap-2">
+                    <button
+                        onClick={handlePrint}
+                        className="p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-white/10 text-gray-400 hover:text-indigo-600 transition-colors"
+                        title="Imprimir Lista para Tablón"
+                    >
+                        <span className="material-symbols-outlined text-lg">print</span>
                     </button>
-                )}
+                    {/* Only Admin can see the Manage button */}
+                    {userRole === 'admin' && (
+                        <button
+                            onClick={() => onNavigate && onNavigate('roster')}
+                            className="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors"
+                        >
+                            GESTIONAR
+                        </button>
+                    )}
+                </div>
             </div>
 
             {loading ? (

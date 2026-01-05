@@ -55,3 +55,50 @@ export function generateRosterPDF(rosterData, month, year) {
 
     doc.save(`Rol_Ministerios_${monthName}_${year}.pdf`);
 }
+
+/**
+ * Generates a clean, large-font PDF for a Single Day's Roster
+ * Perfect for posting on the Sacristy door or bulletin board.
+ * @param {Date} date - The date of the liturgy
+ * @param {Array} assignments - Array of objects { label: 'Role Name', name: 'Person Name', imageUrl: '...' }
+ */
+export function generateDayRosterPDF(date, assignments) {
+    const doc = new jsPDF({ orientation: 'portrait' });
+    const dateStr = date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+    // Header
+    doc.setFontSize(22);
+    doc.setFont("helvetica", "bold");
+    doc.text("Ministros del Altar", 105, 20, { align: 'center' });
+
+    doc.setFontSize(14);
+    doc.setFont("helvetica", "normal");
+    doc.text(dateStr.charAt(0).toUpperCase() + dateStr.slice(1), 105, 30, { align: 'center' });
+    doc.line(20, 35, 190, 35); // Separator line
+
+    // Content
+    let yPos = 50;
+
+    assignments.forEach((assignment, index) => {
+        // Role Label
+        doc.setFontSize(12);
+        doc.setTextColor(100);
+        doc.setFont("helvetica", "bold");
+        doc.text(assignment.role.toUpperCase(), 20, yPos);
+
+        // Person Name
+        doc.setFontSize(16);
+        doc.setTextColor(0);
+        doc.setFont("helvetica", "normal");
+        doc.text(assignment.name || "Sin Asignar", 20, yPos + 8);
+
+        yPos += 20;
+    });
+
+    // Footer
+    doc.setFontSize(10);
+    doc.setTextColor(150);
+    doc.text("Generado por Cuatro Liturgias", 105, 280, { align: 'center' });
+
+    doc.save(`Ministros_${date.toISOString().split('T')[0]}.pdf`);
+}
