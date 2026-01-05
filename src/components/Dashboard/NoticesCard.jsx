@@ -16,11 +16,14 @@ export default function NoticesCard() {
     // Show notices that are targeted to 'all' OR targeted to my specific role
     const myNotices = notices.filter(n => {
         if (!n.target || n.target === 'all') return true;
-        if (canManage) return true; // Admins see everything
+        if (canManage && n.target !== 'admin') return true; // Admins see everything (except maybe private admin messages? No, they see those too)
+        if (canManage) return true;
 
         // Map target names to role checks
-        if (n.target === 'musicians' && (userRole === 'musician' || userRole === 'director')) return true;
-        if (n.target === 'lectors' && userRole === 'lector') return true;
+        if (n.target === 'musicians' && (userRole === 'musician' || userRole === 'director' || userRole === 'admin')) return true;
+        if (n.target === 'lectors' && (userRole === 'lector' || userRole === 'reader')) return true;
+        if (n.target === 'acolytes' && (userRole === 'acolyte' || userRole === 'sacristan')) return true;
+        if (n.target === 'admin' && userRole === 'admin') return true;
         if (n.target === 'parishioners' && (!userRole || userRole === 'guest')) return true;
 
         return false;
@@ -52,6 +55,8 @@ export default function NoticesCard() {
         switch (t) {
             case 'musicians': return 'Músicos';
             case 'lectors': return 'Lectores';
+            case 'acolytes': return 'Acólitos';
+            case 'admin': return 'Liderazgo';
             case 'parishioners': return 'Feligreses';
             default: return 'General';
         }
@@ -174,7 +179,7 @@ export default function NoticesCard() {
 
                     {/* Targeting Dropdown */}
                     <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
-                        {['all', 'musicians', 'lectors', 'parishioners'].map(t => (
+                        {['all', 'musicians', 'lectors', 'acolytes', 'admin', 'parishioners'].map(t => (
                             <button
                                 key={t}
                                 type="button"

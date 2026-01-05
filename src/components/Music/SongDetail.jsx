@@ -249,6 +249,24 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
                             <button onClick={() => setIsRehearsal(!isRehearsal)} className={`w-full text-left px-2 py-2 rounded flex items-center gap-2 text-sm ${isRehearsal ? 'bg-red-50 text-red-600' : ''}`}>
                                 <span className="material-symbols-outlined">youtube_activity</span> {isRehearsal ? 'Ocultar Video' : 'Modo Ensayo'}
                             </button>
+
+                            {/* Mobile Audio Upload */}
+                            <div className="relative w-full">
+                                <input
+                                    type="file"
+                                    accept="audio/*"
+                                    onChange={handleFileUpload}
+                                    className="hidden"
+                                    id="audio-upload-mobile"
+                                />
+                                <label
+                                    htmlFor="audio-upload-mobile"
+                                    className={`w-full text-left px-2 py-2 rounded flex items-center gap-2 text-sm cursor-pointer ${audioUrl ? 'bg-green-50 text-green-600' : ''}`}
+                                >
+                                    <span className="material-symbols-outlined">audio_file</span> {audioUrl ? 'Cambiar Audio' : 'Subir Audio (MP3)'}
+                                </label>
+                            </div>
+
                             {canDelete && (
                                 <button onClick={handleDelete} className="w-full text-left px-2 py-2 rounded flex items-center gap-2 text-sm text-red-500 hover:bg-red-50">
                                     <span className="material-symbols-outlined">delete</span> Eliminar
@@ -287,6 +305,24 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
 
                 {/* Desktop Actions (Hidden on Mobile) */}
                 <div className="hidden sm:flex items-center gap-2">
+                    {/* Audio Upload Button */}
+                    <div className="relative">
+                        <input
+                            type="file"
+                            accept="audio/*"
+                            onChange={handleFileUpload}
+                            className="hidden"
+                            id="audio-upload-desktop"
+                        />
+                        <label
+                            htmlFor="audio-upload-desktop"
+                            className={`p-2 rounded-full transition-colors cursor-pointer flex items-center justify-center ${audioUrl ? 'bg-green-100 text-green-600' : 'hover:bg-gray-100 text-gray-400 hover:text-gray-600'}`}
+                            title={audioUrl ? "Cambiar Audio" : "Subir Audio MP3"}
+                        >
+                            <span className="material-symbols-outlined">audio_file</span>
+                        </label>
+                    </div>
+
                     <button
                         onClick={() => setIsAutoScroll(!isAutoScroll)}
                         className={`p-2 rounded-full transition-colors ${isAutoScroll ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100 text-gray-400'}`}
