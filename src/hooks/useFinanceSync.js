@@ -30,8 +30,11 @@ export function useFinanceSync(limitCount = 100) {
                 ...doc.data()
             }));
             setTransactions(list);
-            // We kept the loading state shared for now, but really this is just list loading
-        }, (error) => console.error("Finance Sync Error:", error));
+            setLoading(false);
+        }, (error) => {
+            console.error("Finance Sync Error:", error);
+            setLoading(false);
+        });
 
         return () => unsubscribe();
     }, [limitCount, currentUser, checkPermission, userRole]);
