@@ -130,7 +130,11 @@ export function useFinanceSync(limitCount = 100) {
             setLoading(false);
             return total;
         } catch (e) {
-            console.error("Calibration failed:", e);
+            if (e.code === 'permission-denied') {
+                console.warn("Calibration blocked: Insufficient permissions.");
+            } else {
+                console.error("Calibration failed:", e);
+            }
             setLoading(false);
             throw e;
         }
