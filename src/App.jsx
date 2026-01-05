@@ -213,6 +213,8 @@ function MainLayout() {
             }
           }
         }
+      }, (error) => {
+        console.warn("Pinned Liturgy Sync Error:", error);
       });
       return () => unsub();
     }

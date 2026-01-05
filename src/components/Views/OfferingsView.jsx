@@ -188,6 +188,8 @@ export default function OfferingsView() {
             if (docSnap.exists()) {
                 setBankSettings(docSnap.data());
             }
+        }, (error) => {
+            console.warn("Bank Details Sync Error:", error);
         });
         return () => unsub();
     }, []);

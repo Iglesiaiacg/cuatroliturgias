@@ -62,6 +62,8 @@ export default function StatsCard({ readOnly = false }) {
             } else {
                 setLastWeekTotal(0);
             }
+        }, (error) => {
+            if (error.code !== 'permission-denied') console.warn("Prev Week Stats Sync Error:", error);
         });
         return () => unsubscribe();
     }, [prevKey, currentUser]);

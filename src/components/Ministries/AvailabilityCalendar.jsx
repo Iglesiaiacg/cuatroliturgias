@@ -25,6 +25,9 @@ export default function AvailabilityCalendar() {
                 setUnavailableDates({});
             }
             setLoading(false);
+        }, (error) => {
+            console.warn("Availability Sync Error:", error);
+            setLoading(false); // Ensure loading is set to false even on error
         });
 
         return () => unsubscribe();

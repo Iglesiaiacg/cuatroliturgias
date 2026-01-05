@@ -20,9 +20,10 @@ export default function PendingCertificatesCard() {
         );
 
         const unsubscribe = onSnapshot(q, (snapshot) => {
-            setPendingCount(snapshot.size);
+            setPendingCount(snapshot.docs.length);
             setLoading(false);
         }, (error) => {
+            console.warn("Certificates Sync Error:", error);
             // Silence permission errors
             if (error.code !== 'permission-denied') {
                 console.log("Certificates/Despacho sync info:", error.message);
