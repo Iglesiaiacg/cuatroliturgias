@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, Suspense } from 'react'
+import { useRegisterSW } from 'virtual:pwa-register/react'
 import { asBlob } from 'html-docx-js-typescript'
 import { saveAs } from 'file-saver'
 import { useLiturgy } from './hooks/useLiturgy'
@@ -719,6 +720,18 @@ function MainLayout() {
 }
 
 function App() {
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    onRegistered(r) {
+      console.log('SW Registered: ' + r)
+    },
+    onRegisterError(error) {
+      console.log('SW registration error', error)
+    },
+  })
+
   return (
     <ThemeProvider>
       <AuthProvider>
@@ -728,6 +741,26 @@ function App() {
               <NotificationProvider>
                 <ChatProvider>
                   <MainLayout />
+
+                  {/* PWA UPDATE PROMPT */}
+                  {needRefresh && (
+                    <div className="fixed bottom-4 left-4 z-[100] bg-blue-600 text-white p-4 rounded-xl shadow-2xl flex items-center gap-4 animate-slide-in border border-blue-500/50">
+                      <div className="flex items-center gap-3">
+                        <span className="material-symbols-outlined text-xl animate-spin-slow">sync</span>
+                        <div>
+                          <p className="font-bold text-sm leading-tight">Nueva versión disponible</p>
+                          <p className="text-[10px] opacity-90">Actualiza para ver los cambios.</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => updateServiceWorker(true)}
+                        className="px-3 py-1.5 bg-white text-blue-600 rounded-lg font-bold text-xs uppercase tracking-wider hover:bg-blue-50 transition-colors shadow-sm"
+                      >
+                        Actualizar
+                      </button>
+                    </div>
+                  )}
+
                 </ChatProvider>
               </NotificationProvider>
             </SetlistProvider>
