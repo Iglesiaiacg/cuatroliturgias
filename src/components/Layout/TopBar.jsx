@@ -62,7 +62,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                                 <div className="flex items-center justify-center gap-3 w-full">
                                     <JerusalemCross className="w-10 h-10 text-[#991b1b] shrink-0" />
                                     <h1 className="text-2xl xs:text-3xl font-bold tracking-tight text-stone-900 dark:text-white font-display whitespace-nowrap">
-                                        LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
+                                        LITÚRG-<span className="text-red-800">IA /CG</span>
                                     </h1>
                                 </div>
                             </div>
@@ -76,7 +76,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
                             <div className="flex items-center gap-3">
                                 <JerusalemCross className="w-8 h-8 text-[#991b1b]" />
                                 <h1 className="text-2xl font-bold tracking-tight text-stone-900 dark:text-white font-display">
-                                    LITÚRG-<span style={{ color: '#991b1b' }}>IA /CG</span>
+                                    LITÚRG-<span className="text-red-800">IA /CG</span>
                                 </h1>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ export default function TopBar({ date, onSettings, onProfile, activeTab, onNavig
             {/* DESKTOP: BOTTOM SQUIRCLE DOCK (Unchanged) */}
             <div className="hidden md:block fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
                 {/* SVG Definitions for Squircle Shape */}
-                <svg width={0} height={0} style={{ position: 'absolute' }}>
+                <svg width={0} height={0} className="absolute">
                     <defs>
                         <clipPath id="squircleClip" clipPathUnits="objectBoundingBox">
                             <path d="M 0,0.5 C 0,0 0,0 0.5,0 S 1,0 1,0.5 1,1 0.5,1 0,1 0,0.5" />

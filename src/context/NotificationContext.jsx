@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../services/firebase';
-import { collection, query, orderBy, limit, onSnapshot, updateDoc, doc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, limit, onSnapshot, updateDoc, doc, addDoc, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
@@ -56,7 +56,18 @@ export function NotificationProvider({ children }) {
     const markAllAsRead = async () => {
         if (!currentUser) return;
         const unread = notifications.filter(n => !n.read);
-        await Promise.all(unread.map(n => markAsRead(n.id)));
+        if (unread.length === 0) return;
+
+        try {
+            const batch = writeBatch(db);
+            unread.forEach(n => {
+                const docRef = doc(db, 'users', currentUser.uid, 'notifications', n.id);
+                batch.update(docRef, { read: true });
+            });
+            await batch.commit();
+        } catch (e) {
+            console.error("Error batch marking notifications:", e);
+        }
     };
 
     // Helper to send notification to ANY user (admin usage)

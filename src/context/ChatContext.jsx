@@ -36,8 +36,12 @@ export function ChatProvider({ children }) {
         ? getChatId(currentUser?.uid, activeChat.id)
         : 'general';
 
-    // Sound for notifications
-    const notificationSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    // Sound for notifications (Lazy init via ref to persist across renders)
+    const audioRef = useRef(null);
+    useEffect(() => {
+        audioRef.current = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+    }, []);
+
     const previousLastMessageIdRef = useRef(null);
 
     // Subscribe to messages based on current view
@@ -96,8 +100,8 @@ export function ChatProvider({ children }) {
                 if (isIncoming) {
                     // Play Sound (only if not initial load check - but relying on previousRef changing implies new data)
                     // We check if previousRef was populated to avoid sound on first mount
-                    if (previousLastMessageIdRef.current) {
-                        notificationSound.play().catch(e => console.log('Audio play blocked:', e));
+                    if (previousLastMessageIdRef.current && audioRef.current) {
+                        audioRef.current.play().catch(e => console.log('Audio play blocked:', e));
                     }
 
                     // Update Badge/Unread count if chat closed
