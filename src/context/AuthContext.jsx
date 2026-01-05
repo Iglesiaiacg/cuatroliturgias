@@ -118,72 +118,48 @@ export function AuthProvider({ children }) {
 
                 const userRef = doc(db, 'users', user.uid);
 
-                try {
-                    // Check existence/permission ONCE before listening
-                    const docSnap = await getDoc(userRef);
+                // Listen to User Document
+                unsubscribeUserDoc = onSnapshot(userRef, async (snap) => {
+                    if (snap.exists()) {
+                        const dbRole = snap.data().role;
 
-                    if (docSnap.exists()) {
-                        const dbRole = docSnap.data().role;
+                        // Fix Super Admin role if drifted
+                        if (isSuperAdmin && dbRole !== 'admin') {
+                            updateDoc(userRef, { role: 'admin' }).catch(e => console.error("Auto-fix admin error:", e));
+                        }
 
-                        // Only update state from DB if NOT super admin (who is already 'admin')
-                        // Or if we want to sync displayName etc.
-                        if (!isSuperAdmin) {
+                        // Update State
+                        if (isSuperAdmin) {
+                            setUserRole('admin');
+                        } else {
                             setUserRole(dbRole);
                         }
-
-                        // CRITICAL: If Super Admin has wrong role in DB, FIX IT immediately.
-                        // This allows firestore.rules (isAdmin()) to pass.
-                        if (isSuperAdmin && dbRole !== 'admin') {
-                            await updateDoc(userRef, { role: 'admin' });
-                        }
-
-                        // We have access, safe to listen for changes
-                        unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
-                            if (snap.exists()) {
-                                const role = snap.data().role;
-                                // FORCE ADMIN for Super Admin, ignore DB if it drifts
-                                if (isSuperAdmin) {
-                                    setUserRole('admin');
-                                } else {
-                                    setUserRole(role);
-                                }
-                            }
-                        }, (error) => {
-                            console.warn("User role snapshot error (graceful fallback):", error.code);
-                        });
                     } else {
                         // Profile doesn't exist, create it
-                        const year = new Date().getFullYear();
-                        const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                        // Check if we are creating now to avoid loops
+                        // (Snapshot will fire again after create)
+                        try {
+                            const year = new Date().getFullYear();
+                            const suffix = Math.random().toString(36).substring(2, 6).toUpperCase();
+                            const initialRole = isSuperAdmin ? 'admin' : 'guest';
 
-                        // If Super Admin, create as admin
-                        const initialRole = isSuperAdmin ? 'admin' : 'guest';
-
-                        await setDoc(userRef, {
-                            email: user.email,
-                            role: initialRole,
-                            credentialId: `${year}-${suffix}`,
-                            displayName: user.email.split('@')[0],
-                            createdAt: new Date()
-                        });
-
-                        // Listen
-                        unsubscribeUserDoc = onSnapshot(userRef, (snap) => {
-                            if (snap.exists()) {
-                                setUserRole(isSuperAdmin ? 'admin' : snap.data().role);
-                            }
-                        }, (error) => {
-                            console.warn("User role snapshot error (graceful fallback):", error.code);
-                        });
+                            await setDoc(userRef, {
+                                email: user.email,
+                                role: initialRole,
+                                credentialId: `${year}-${suffix}`,
+                                displayName: user.email.split('@')[0],
+                                createdAt: new Date()
+                            });
+                        } catch (e) {
+                            console.error("Error creating profile:", e);
+                        }
                     }
-                } catch (e) {
-                    // Squelch permission errors - they get 'guest' role by default
-                    if (e.code === 'permission-denied') {
-                        console.warn("Guest access: No profile permission.");
-                    } else {
-                        console.error("Profile Error:", e);
-                    }
-                }
+                    setLoading(false);
+                }, (error) => {
+                    console.warn("User role snapshot error:", error.code);
+                    setUserRole('guest'); // Fallback
+                    setLoading(false);
+                });
                 setLoading(false);
             } else {
                 setCurrentUser(null);

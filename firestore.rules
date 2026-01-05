@@ -21,9 +21,13 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if isAuthenticated();
       // SECURITY FIX: Prevent users from escalating their own role.
-      // Users can write to their own doc ONLY if they are NOT modifying the 'role' field.
-      // Admins can write anything.
-      allow write: if isAdmin() || (request.auth.uid == userId && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])));
+      // Users can write to their own doc.
+      // IF creating (resource == null): Role must be 'guest'.
+      // IF updating: Cannot modify 'role'.
+      allow write: if isAdmin() || (request.auth.uid == userId && (
+        resource == null ? request.resource.data.role == 'guest' :
+        !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role'])
+      ));
     }
 
     match /songs/{songId} {
