@@ -365,9 +365,15 @@ export default function UserManagement() {
                                                         <span className="inline-block mt-1 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase font-bold">Tú</span>
                                                     )}
                                                 </div>
-                                                <span className="px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 rounded text-xs font-bold">
-                                                    {getRoleLabel(user.role)}
-                                                </span>
+                                                {user.email === 'alexveo855@gmail.com' ? (
+                                                    <span className="px-2 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 rounded text-xs font-bold border border-purple-200 dark:border-purple-800">
+                                                        Super Admin
+                                                    </span>
+                                                ) : (
+                                                    <span className="px-2 py-1 bg-gray-100 dark:bg-white/10 text-gray-600 dark:text-gray-300 rounded text-xs font-bold">
+                                                        {getRoleLabel(user.role)}
+                                                    </span>
+                                                )}
                                             </div>
                                             <div className="text-[10px] font-mono text-gray-400 truncate bg-gray-50 dark:bg-black/20 p-1 rounded">
                                                 UID: {user.id}
@@ -412,7 +418,14 @@ export default function UserManagement() {
                                                         {user.id === currentUser.uid && <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-[10px] uppercase">Tú</span>}
                                                     </td>
                                                     <td className="px-6 py-3 text-gray-600 dark:text-gray-300">
-                                                        {getRoleLabel(user.role)}
+                                                        {user.email === 'alexveo855@gmail.com' ? (
+                                                            <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                                                                <span className="material-symbols-outlined text-[14px] mr-1">verified_user</span>
+                                                                Super Admin
+                                                            </span>
+                                                        ) : (
+                                                            getRoleLabel(user.role)
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-3 font-mono text-xs text-gray-400 truncate max-w-[150px]" title={user.id}>
                                                         {user.id}
