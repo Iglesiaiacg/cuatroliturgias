@@ -28,31 +28,50 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
 
+    const handleNavigate = (route) => {
+        window.location.hash = route;
+        onClose();
+    };
+
     // Generate Dynamic Ministries based on Role (Simulation for Visuals)
     const getMinistries = (role) => {
         const common = [
-            { id: 'bible', icon: 'menu_book', label: 'Lectura', color: 'text-blue-600' },
-            { id: 'service', icon: 'volunteer_activism', label: 'Servicio', color: 'text-green-600' }
+            { id: 'bible', icon: 'menu_book', label: 'Lectura', color: 'text-blue-600', onClick: () => handleNavigate('dashboard') },
+            { id: 'service', icon: 'volunteer_activism', label: 'Servicio', color: 'text-green-600', onClick: () => handleNavigate('roster') }
         ];
 
         if (role === 'admin' || role === 'presbyter') {
             return [
-                { id: 'sacraments', icon: 'church', label: 'Sacramentos', color: 'text-primary' },
-                { id: 'preaching', icon: 'mic', label: 'Predicación', color: 'text-purple-600' },
-                { id: 'pastoral', icon: 'diversity_1', label: 'Pastoral', color: 'text-orange-600' },
+                { id: 'sacraments', icon: 'church', label: 'Sacramentos', color: 'text-primary', onClick: () => handleNavigate('occasional') },
+                { id: 'preaching', icon: 'mic', label: 'Predicación', color: 'text-purple-600', onClick: () => handleNavigate('dashboard') }, // Or specific pulpit view if accessible?
+                { id: 'pastoral', icon: 'diversity_1', label: 'Pastoral', color: 'text-orange-600', onClick: () => handleNavigate('directory') },
                 ...common
             ];
         }
         if (role === 'musician') {
             return [
-                { id: 'music', icon: 'music_note', label: 'Música', color: 'text-pink-600' },
-                { id: 'choir', icon: 'groups', label: 'Coro', color: 'text-indigo-600' },
+                { id: 'music', icon: 'music_note', label: 'Música', color: 'text-pink-600', onClick: () => handleNavigate('music') },
+                { id: 'choir', icon: 'groups', label: 'Coro', color: 'text-indigo-600', onClick: () => handleNavigate('music') },
                 ...common
             ];
         }
+        if (role === 'sacristan') {
+            return [
+                { id: 'sacristy', icon: 'candle', label: 'Sacristía', color: 'text-red-600', onClick: () => handleNavigate('sacristy') },
+                { id: 'roster', icon: 'calendar_month', label: 'Roles', color: 'text-orange-600', onClick: () => handleNavigate('roster') },
+                ...common
+            ];
+        }
+        if (role === 'treasurer') {
+            return [
+                { id: 'treasury', icon: 'attach_money', label: 'Tesorería', color: 'text-green-700', onClick: () => handleNavigate('offerings') },
+                ...common
+            ];
+        }
+
         // Default
         return [
-            { id: 'prayer', icon: 'spa', label: 'Oración', color: 'text-teal-600' },
+            { id: 'prayer', icon: 'spa', label: 'Oración', color: 'text-teal-600', onClick: () => handleNavigate('dashboard') },
             ...common
         ];
     };

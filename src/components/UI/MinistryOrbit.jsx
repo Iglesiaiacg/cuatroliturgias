@@ -42,6 +42,7 @@ export default function MinistryOrbit({ photo, initial, role, ministries = [] })
                 {ministries.map((min, index) => (
                     <div
                         key={min.id || index}
+                        onClick={() => min.onClick && min.onClick()}
                         className="absolute w-12 h-12 rounded-full cursor-pointer border border-gray-200 dark:border-white/10 p-[2px] active:scale-95 hover:scale-110 transition-all duration-500 bg-[var(--bg-main)] z-10 shadow-sm"
                         style={getPositionStyle(index, ministries.length)}
                         title={min.label}
@@ -75,6 +76,6 @@ export default function MinistryOrbit({ photo, initial, role, ministries = [] })
                 </div>
 
             </div>
-        </div>
+        </div >
     );
 }
