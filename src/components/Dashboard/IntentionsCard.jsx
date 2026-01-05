@@ -108,7 +108,8 @@ export default function IntentionsCard({ date }) {
                                 {(userRole === 'admin' || (checkPermission && checkPermission('manage_sacristy'))) && (
                                     <button
                                         onClick={() => removeIntention(item.id)}
-                                        className="text-gray-300 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0"
+                                        className="text-gray-400 hover:text-red-500 transition-colors ml-2 shrink-0 p-1"
+                                        title="Eliminar petición"
                                     >
                                         <span className="material-symbols-outlined text-sm">close</span>
                                     </button>
