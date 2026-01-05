@@ -19,7 +19,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import GeneratorToolbar from './components/Liturgy/GeneratorToolbar'
 import Toolbar from './components/Layout/Toolbar'
 import Preview from './components/Liturgy/Preview'
-import Loading from './components/Liturgy/Loading'
+import Loading from './components/Common/Loading'
 import EmptyState from './components/Liturgy/EmptyState'
 import HistoryModal from './components/Common/HistoryModal'
 import AssignmentModal from './components/Common/AssignmentModal'

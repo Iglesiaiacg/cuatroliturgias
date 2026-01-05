@@ -564,6 +564,16 @@ export default function OfferingsView() {
                     currentYear={currentDate.getFullYear()}
                 />
             </div>
+
+            {/* Hidden Receipt Generator */}
+            <div className="absolute top-0 left-[-9999px] invisible">
+                {receiptData && (
+                    <Receipt
+                        ref={receiptRef}
+                        data={receiptData}
+                    />
+                )}
+            </div>
         </main >
     );
 }
