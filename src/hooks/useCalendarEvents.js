@@ -3,12 +3,21 @@ import { startOfDay, isSameDay } from 'date-fns';
 import { db } from '../services/firebase';
 import { collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
 
+import { useAuth } from '../context/AuthContext'; // Import useAuth
+
 export function useCalendarEvents() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { currentUser } = useAuth(); // Get currentUser
 
     // Subscribe to Firestore 'events'
     useEffect(() => {
+        if (!currentUser) {
+            setEvents([]);
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         // Can filter by month range if needed for performance, currently fetching all
         const q = query(collection(db, 'events'));
@@ -26,12 +35,12 @@ export function useCalendarEvents() {
             setEvents(list);
             setLoading(false);
         }, (error) => {
-            console.error("Calendar Sync Error:", error);
+            if (error.code !== 'permission-denied') console.error("Calendar Sync Error:", error);
             setLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [currentUser]);
 
     // Helper: Directory birthdays (Still strictly local or parsed from DirectoryContext separately)
     // For now, we keep the original logic but rely on external DirectoryContext if possible.

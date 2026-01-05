@@ -15,6 +15,12 @@ export function useNoticesSync() {
     const docId = 'current_notices';
 
     useEffect(() => {
+        if (!currentUser) {
+            setNotices([]);
+            setLoading(false);
+            return;
+        }
+
         // We fetch ALL notices, filtering happens in the UI or a derived state here.
         // For simplicity, we fetch all and let the component filter, 
         // OR we can return filteredNotices. 
@@ -48,7 +54,7 @@ export function useNoticesSync() {
             }
             setLoading(false);
         }, (error) => {
-            console.warn("Notices Sync skipped (permissions or offline).");
+            if (error.code !== 'permission-denied') console.warn("Notices Sync skipped (permissions or offline).");
             setNotices([]);
             setLoading(false);
         });
