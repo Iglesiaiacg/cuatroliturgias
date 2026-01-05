@@ -221,16 +221,21 @@ export function AuthProvider({ children }) {
     const [customPermissions, setCustomPermissions] = useState({});
 
     useEffect(() => {
+        if (!currentUser) return; // Only listen if authenticated
+
         // Listen to global permissions changes
         const unsubscribePerms = onSnapshot(doc(db, 'settings', 'permissions'), (docSnap) => {
             if (docSnap.exists()) {
                 setCustomPermissions(docSnap.data());
             }
         }, (error) => {
-            console.error("Error loading global permissions:", error);
+            // Ignore permission errors if they happen during logout/initial load
+            if (error.code !== 'permission-denied') {
+                console.error("Error loading global permissions:", error);
+            }
         });
         return () => unsubscribePerms();
-    }, []);
+    }, [currentUser]);
 
     const checkPermission = useCallback((permissionId) => {
         if (!effectiveRole) return false;
