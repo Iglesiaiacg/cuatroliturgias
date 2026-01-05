@@ -73,6 +73,8 @@ service cloud.firestore {
     match /inventory/{docId} { allow read, write: if isAdmin() || isSacristan(); }
     match /active_duties/{dutyId} { allow read: if isAuthenticated(); allow write: if isAdmin(); }
     match /messages/{msgId} { allow read, write: if isAuthenticated(); }
+    // FIX: Add rule for Despacho / Certificates
+    match /certificates/{certId} { allow read, write: if isSecretary() || isAdmin(); }
     
     // --- NUEVOS MODULOS ---
     

@@ -2,12 +2,17 @@ import { useState, useEffect } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore'; // Using manual fetch for now or onSnapshot? onSnapshot is better for realtime.
 import { onSnapshot } from 'firebase/firestore';
 import { db } from '../../services/firebase';
+import { useAuth } from '../../context/AuthContext';
 
 export default function PendingCertificatesCard() {
     const [pendingCount, setPendingCount] = useState(0);
     const [loading, setLoading] = useState(true);
 
+    const { currentUser } = useAuth();
+
     useEffect(() => {
+        if (!currentUser) return;
+
         // Assume 'certificates' collection exists with 'status' field
         const q = query(
             collection(db, 'certificates'),
@@ -18,13 +23,16 @@ export default function PendingCertificatesCard() {
             setPendingCount(snapshot.size);
             setLoading(false);
         }, (error) => {
-            console.log("Certificates collection might not exist yet, defaulting to 0.");
+            // Silence permission errors
+            if (error.code !== 'permission-denied') {
+                console.log("Certificates/Despacho sync info:", error.message);
+            }
             setPendingCount(0);
             setLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [currentUser]);
 
     if (loading) return null; // Or skeleton
 
