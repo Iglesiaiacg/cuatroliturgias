@@ -10,6 +10,7 @@ export default function RectorReportModal({ isOpen, onClose }) {
     const [loading, setLoading] = useState(false);
     const [period, setPeriod] = useState(new Date().toLocaleDateString('es-MX', { month: 'long', year: 'numeric' }));
     const [reports, setReports] = useState([]);
+    const [remarks, setRemarks] = useState("En virtud de los informes recibidos y la observación pastoral, certifico el avance de la obra...");
 
     useEffect(() => {
         if (isOpen) {
@@ -109,7 +110,7 @@ export default function RectorReportModal({ isOpen, onClose }) {
         }
 
         checkPage(20);
-        // --- RECTOR'S REMARKS (Placeholder) ---
+        // --- RECTOR'S REMARKS (Dynamic) ---
         y += 5;
         doc.setFont("times", "bold");
         doc.setFontSize(14);
@@ -120,7 +121,11 @@ export default function RectorReportModal({ isOpen, onClose }) {
         doc.setFont("times", "normal");
         doc.setTextColor(0);
         doc.setFontSize(11);
-        doc.text("En virtud de los informes recibidos y la observación pastoral, certifico el avance de la obra...", 20, y, { maxWidth: 170 });
+
+        // Use remarks from state
+        const splitRemarks = doc.splitTextToSize(remarks, 170);
+        doc.text(splitRemarks, 20, y);
+        y += (splitRemarks.length * 5) + 5;
 
         doc.save(`Informe_General_Obispo_${new Date().toISOString().slice(0, 10)}.pdf`);
     };
@@ -147,6 +152,20 @@ export default function RectorReportModal({ isOpen, onClose }) {
                         <p className="text-sm text-gray-600 dark:text-gray-300">
                             Se han encontrado <strong className="text-primary">{reports.length}</strong> reportes de ministerios recientes.
                             Este documento compilará automáticamente esta información para su presentación.
+                        </p>
+                    </div>
+
+                    {/* Rector's Remarks Editor */}
+                    <div>
+                        <h3 className="text-xs font-bold text-gray-500 uppercase mb-2">II. Observaciones del Rector</h3>
+                        <textarea
+                            value={remarks}
+                            onChange={(e) => setRemarks(e.target.value)}
+                            className="w-full h-32 p-3 text-sm border border-gray-200 dark:border-white/10 rounded-xl bg-white dark:bg-white/5 focus:ring-2 focus:ring-primary/50 outline-none resize-none"
+                            placeholder="Escriba aquí sus observaciones generales..."
+                        />
+                        <p className="text-[10px] text-gray-400 mt-1 max-w-prose">
+                            Este texto aparecerá al final del informe oficial.
                         </p>
                     </div>
 

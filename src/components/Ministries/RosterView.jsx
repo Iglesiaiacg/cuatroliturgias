@@ -78,9 +78,27 @@ export default function RosterView() {
         setLoading(true);
         const newRoster = { ...rosterData };
 
-        // Prepare: Fetch availabilities for all members relevant to the month
-        const memberAvailabilities = {};
+        // 1. Fetch Previous Month for History Context (Avoid burning out same people)
+        const prevMonthDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1);
+        const prevRosterId = `${prevMonthDate.getFullYear()}-${String(prevMonthDate.getMonth() + 1).padStart(2, '0')}`;
+        let historyUsage = {}; // { uid: count }
 
+        try {
+            const prevSnap = await getDoc(doc(db, 'rosters', prevRosterId));
+            if (prevSnap.exists()) {
+                const prevData = prevSnap.data().assignments || {};
+                Object.values(prevData).forEach(day => {
+                    Object.values(day).forEach(uid => {
+                        if (uid) historyUsage[uid] = (historyUsage[uid] || 0) + 1;
+                    });
+                });
+            }
+        } catch (e) {
+            console.warn("Could not fetch previous history, starting fresh.", e);
+        }
+
+        // 2. Prepare Availabilities
+        const memberAvailabilities = {};
         for (const member of members) {
             const userAvailRef = doc(db, `users/${member.id}/availability/calendar`);
             const snap = await getDoc(userAvailRef);
@@ -89,41 +107,61 @@ export default function RosterView() {
             }
         }
 
-        // Round-robin counters
-        const roleCounters = {};
-        roles.forEach(r => roleCounters[r.id] = 0);
+        // 3. Helper to get Score (Lower is better)
+        const getUsageScore = (uid) => {
+            let currentMonthCount = 0;
+            Object.values(newRoster).forEach(day => {
+                Object.values(day).forEach(assignedUid => {
+                    if (assignedUid === uid) currentMonthCount++;
+                });
+            });
+            // Total Score = Current Month Assignments + (Previous Month / 2)
+            // Weighting current month more heavily to balance *now*, but using history as tie-breaker.
+            return currentMonthCount + ((historyUsage[uid] || 0) * 0.5);
+        };
 
+        // 4. Round-Robin / Load Balanced Assignment
         sundays.forEach(sunday => {
             const dateKey = sunday.toISOString().split('T')[0];
-            if (newRoster[dateKey]) return; // Skip currently filled days to avoid overwriting manual work? Or maybe just empty ones. 
-            // Let's only fill empty slots.
-
-            const dayAssignments = {};
+            const dayAssignments = { ...(newRoster[dateKey] || {}) }; // Preserve existing manual edits
 
             roles.forEach(role => {
-                // Filter eligible members (simulated: anyone can be 'usher', others need specific role check)
-                // In a real app, `member.roles` array.
-                // Here we'll randomly pick from active members who are NOT unavailable.
+                // Skip if manually assigned already
+                if (dayAssignments[role.id]) return;
 
                 const eligible = members.filter(m => {
-                    // Check availability
-                    // The AvailabilityCalendar stores keys as YYYY-MM-DD
-                    if (memberAvailabilities[m.id]?.[dateKey]) return false; // User marked this date as unavailable
+                    // Availability Check
+                    if (memberAvailabilities[m.id]?.[dateKey]) return false;
 
-                    // Role check
-                    if (role.id === 'presider') return m.roles?.includes('presbyter') || m.role === 'admin' || m.role === 'presbyter';
-                    if (role.id === 'preacher') return m.roles?.includes('preacher') || m.roles?.includes('presbyter') || m.role === 'admin' || m.role === 'presbyter';
-                    if (role.id === 'acolyte') return m.roles?.includes('acolyte') || m.role === 'acolyte' || m.role === 'admin' || m.role === 'sacristan';
-                    if (role.id === 'lector') return m.roles?.includes('lector') || m.role === 'lector' || m.role === 'admin' || m.role === 'presbyter';
-                    if (role.id === 'musician') return m.roles?.includes('musician') || m.role === 'musician' || m.role === 'admin';
-                    if (role.id === 'usher') return true; // Anyone can be an usher
+                    // Role Check (Simplified for boilerplate)
+                    const roleList = m.roles || [m.role];
+                    if (role.id === 'presider') return roleList.includes('presbyter') || roleList.includes('admin');
+                    if (role.id === 'preacher') return roleList.includes('presbyter') || roleList.includes('preacher') || roleList.includes('admin');
+                    if (role.id === 'acolyte') return roleList.includes('acolyte') || roleList.includes('admin') || roleList.includes('sacristan');
+                    if (role.id === 'lector') return roleList.includes('lector') || roleList.includes('admin') || roleList.includes('presbyter');
+                    if (role.id === 'musician') return roleList.includes('musician') || roleList.includes('admin');
+                    if (role.id === 'usher') return true;
                     return true;
                 });
 
                 if (eligible.length > 0) {
-                    // Basic rotation logic could go here. Random for now.
-                    const picked = eligible[Math.floor(Math.random() * eligible.length)];
-                    dayAssignments[role.id] = picked.id;
+                    // SORT BY SCORE (ASC) -> Least used first
+                    eligible.sort((a, b) => {
+                        const scoreA = getUsageScore(a.id);
+                        const scoreB = getUsageScore(b.id);
+                        return scoreA - scoreB;
+                    });
+
+                    // TIE BREAKING: Get all candidates with the same lowest score
+                    const lowestScore = getUsageScore(eligible[0].id);
+                    const bestCandidates = eligible.filter(m => getUsageScore(m.id) === lowestScore);
+
+                    // Randomly pick from best candidates to avoid deterministic same-order
+                    const picked = bestCandidates[Math.floor(Math.random() * bestCandidates.length)];
+
+                    if (picked) {
+                        dayAssignments[role.id] = picked.id;
+                    }
                 }
             });
 
