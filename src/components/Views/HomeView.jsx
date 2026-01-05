@@ -101,22 +101,22 @@ export default function HomeView({ onNavigate, date, docContent, season, calcula
 
     // 2. TREASURER
     if (userRole === 'treasurer') {
-        return <TreasurerDashboard onNavigate={onNavigate} docContent={docContent} />;
+        return <TreasurerDashboard onNavigate={onNavigate} docContent={docContent} pinnedLiturgy={pinnedLiturgy} />;
     }
 
     // 3. SACRISTAN
     if (userRole === 'sacristan') {
-        return <SacristanDashboard onNavigate={onNavigate} date={date} docContent={docContent} season={season} />;
+        return <SacristanDashboard onNavigate={onNavigate} date={date} docContent={docContent} season={season} pinnedLiturgy={pinnedLiturgy} />;
     }
 
     // 4. SECRETARY
     if (userRole === 'secretary') {
-        return <SecretaryDashboard onNavigate={onNavigate} date={date} docContent={docContent} />;
+        return <SecretaryDashboard onNavigate={onNavigate} date={date} docContent={docContent} pinnedLiturgy={pinnedLiturgy} />;
     }
 
     // 5. MUSICIAN
     if (userRole === 'musician') {
-        return <MusicianDashboard onNavigate={onNavigate} docContent={docContent} calculatedFeast={calculatedFeast} />;
+        return <MusicianDashboard onNavigate={onNavigate} docContent={docContent} calculatedFeast={calculatedFeast} pinnedLiturgy={pinnedLiturgy} />;
     }
 
     // 6. GUEST / FAITHFUL (Devotional View)

@@ -1,30 +1,9 @@
-import React, { useState } from 'react';
-import { extractSection } from '../../utils/liturgyParser';
+import MinistersOnDutyCard from './MinistersOnDutyCard';
 
-// Re-using existing cards
-import FinanceCard from './FinanceCard';
-import SacristyStatusCard from './SacristyStatusCard';
-import IntentionsCard from './IntentionsCard';
-import NextLiturgyCard from './NextLiturgyCard';
-import Preview from '../Liturgy/Preview';
-import QuickCertCard from './QuickCertCard';
-import DutiesModal from './DutiesModal';
-import CommunicationCenter from './CommunicationCenter';
-import NoticesCard from './NoticesCard';
-
-// Helper for persistent modal state
-const shouldShowDuties = (role) => {
-    const lastSeen = localStorage.getItem(`duties_seen_${role}`);
-    const today = new Date().toDateString();
-    return lastSeen !== today;
-};
-
-const markDutiesSeen = (role) => {
-    localStorage.setItem(`duties_seen_${role}`, new Date().toDateString());
-};
+// ... (existing imports)
 
 // --- 1. TREASURER DASHBOARD ---
-export function TreasurerDashboard({ onNavigate, docContent }) {
+export function TreasurerDashboard({ onNavigate, docContent, pinnedLiturgy }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('treasurer'));
     const [isCommOpen, setIsCommOpen] = useState(false);
 
@@ -33,6 +12,8 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
         markDutiesSeen('treasurer');
     };
 
+    const displayDate = pinnedLiturgy?.date ? new Date(pinnedLiturgy.date.seconds * 1000) : new Date();
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="treasurer" isOpen={showDuties} onClose={handleCloseDuties} />
@@ -40,6 +21,11 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
 
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Tesorería Parroquial</h2>
+                {pinnedLiturgy && (
+                    <p className="text-red-600 dark:text-red-400 font-bold text-sm mt-1">
+                        Liturgia Activa: {pinnedLiturgy.title}
+                    </p>
+                )}
                 <p className="text-gray-500">Gestión de recursos y ofrendas</p>
 
                 {/* Quick Actions Chips */}
@@ -111,7 +97,7 @@ export function TreasurerDashboard({ onNavigate, docContent }) {
 }
 
 // --- 2. SACRISTAN DASHBOARD ---
-export function SacristanDashboard({ onNavigate, date, docContent, season }) {
+export function SacristanDashboard({ onNavigate, date, docContent, season, pinnedLiturgy }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('sacristan'));
     const [isCommOpen, setIsCommOpen] = useState(false);
 
@@ -120,6 +106,8 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
         markDutiesSeen('sacristan');
     };
 
+    const displayDate = pinnedLiturgy?.date ? new Date(pinnedLiturgy.date.seconds * 1000) : date;
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="sacristan" isOpen={showDuties} onClose={handleCloseDuties} />
@@ -127,9 +115,14 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
 
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Sacristía Virtual</h2>
-                <div className="flex items-center justify-center gap-2 mt-2">
+                <div className="flex flex-col items-center justify-center gap-2 mt-2">
                     <p className="text-gray-500">Todo listo para el altar</p>
-                    {/* UNIFICATION: Show Liturgical Color if known */}
+                    {/* Active Liturgy Badge */}
+                    {pinnedLiturgy && (
+                        <div className="px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded-full text-xs font-bold border border-red-100 dark:border-red-800/30">
+                            Liturgia Activa: {pinnedLiturgy.title}
+                        </div>
+                    )}
                     {season && (
                         <span className={`px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border ${season.color === 'morado' ? 'bg-purple-100 text-purple-800 border-purple-200' :
                             season.color === 'rojo' ? 'bg-red-100 text-red-800 border-red-200' :
@@ -170,6 +163,12 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Roster - Now visible to Sacristan using Pinned Date */}
+                <div className="md:col-span-2">
+                    <MinistersOnDutyCard date={displayDate} />
+                </div>
+
                 {/* Notices - High Priority */}
                 <div className="md:col-span-2 h-64">
                     <NoticesCard />
@@ -230,7 +229,7 @@ export function SacristanDashboard({ onNavigate, date, docContent, season }) {
 }
 
 // --- 3. SECRETARY DASHBOARD ---
-export function SecretaryDashboard({ onNavigate, date, docContent }) {
+export function SecretaryDashboard({ onNavigate, date, docContent, pinnedLiturgy }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('secretary'));
     const [isCommOpen, setIsCommOpen] = useState(false);
 
@@ -238,6 +237,8 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
         setShowDuties(false);
         markDutiesSeen('secretary');
     };
+
+    const displayDate = pinnedLiturgy?.date ? new Date(pinnedLiturgy.date.seconds * 1000) : date;
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
@@ -247,6 +248,11 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Secretaría</h2>
                 <p className="text-gray-500">Agenda, Certificados y Feligresía</p>
+                {pinnedLiturgy && (
+                    <p className="text-red-600 dark:text-red-400 font-bold text-sm mt-1">
+                        Próxima Celebración: {pinnedLiturgy.title}
+                    </p>
+                )}
             </header>
 
             {/* Comm Button */}
@@ -265,6 +271,12 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
             </button>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                {/* Secretary needs roster to contact people */}
+                <div className="lg:col-span-3">
+                    <MinistersOnDutyCard date={displayDate} />
+                </div>
+
                 {/* Col 1: Intentions (Priority for Secretary) */}
                 <div className="lg:col-span-2 flex flex-col gap-6">
                     <div className="h-96 lg:h-auto">
@@ -319,7 +331,7 @@ export function SecretaryDashboard({ onNavigate, date, docContent }) {
 }
 
 // --- 4. MUSICIAN DASHBOARD ---
-export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
+export function MusicianDashboard({ onNavigate, docContent, calculatedFeast, pinnedLiturgy }) {
     const [showDuties, setShowDuties] = useState(() => shouldShowDuties('musician'));
     const [isCommOpen, setIsCommOpen] = useState(false);
 
@@ -328,6 +340,8 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
         markDutiesSeen('musician');
     };
 
+    const displayDate = pinnedLiturgy?.date ? new Date(pinnedLiturgy.date.seconds * 1000) : new Date();
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6 animate-fade-in relative">
             <DutiesModal role="musician" isOpen={showDuties} onClose={handleCloseDuties} />
@@ -335,7 +349,14 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
 
             <header className="mb-8 text-center">
                 <h2 className="text-3xl font-display font-bold text-gray-800 dark:text-gray-100">Ministerio de Canto</h2>
-                <p className="text-gray-500">Preparación musical para la liturgia</p>
+                {pinnedLiturgy && (
+                    <div className="inline-block mt-2 px-3 py-1 bg-red-50 dark:bg-red-900/20 rounded-full border border-red-100 dark:border-red-800/30">
+                        <p className="text-red-600 dark:text-red-300 font-bold text-xs uppercase tracking-wide">
+                            Guion Activo: {pinnedLiturgy.title}
+                        </p>
+                    </div>
+                )}
+                <p className="text-gray-500 mt-2">Preparación musical para la liturgia</p>
             </header>
 
             {/* Quick Actions Chips - MUSICIAN */}
@@ -367,6 +388,12 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
             </button>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                {/* Roster for Musicians - See other ministers */}
+                <div className="md:col-span-2">
+                    <MinistersOnDutyCard date={displayDate} />
+                </div>
+
                 <div className="md:col-span-2 h-64">
                     <NoticesCard />
                 </div>
@@ -426,6 +453,8 @@ export function MusicianDashboard({ onNavigate, docContent, calculatedFeast }) {
         </div>
     );
 }
+
+// ... (AcolyteDashboard)
 
 // --- 5. ACOLYTE DASHBOARD ---
 export function AcolyteDashboard({ pinnedLiturgy }) {
