@@ -37,7 +37,7 @@ export default function ProfileModal({ isOpen, onClose, rubricLevel, onRubricCha
     const getMinistries = (role) => {
         const common = [
             { id: 'bible', icon: 'menu_book', label: 'Lectura', color: 'text-blue-600', onClick: () => handleNavigate('dashboard') },
-            { id: 'service', icon: 'volunteer_activism', label: 'Servicio', color: 'text-green-600', onClick: () => handleNavigate('roster') }
+            { id: 'service', icon: 'assignment_ind', label: 'Servicio', color: 'text-green-600', onClick: () => handleNavigate('roster') }
         ];
 
         if (role === 'admin' || role === 'presbyter') {
