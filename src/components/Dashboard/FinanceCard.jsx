@@ -76,7 +76,7 @@ export default function FinanceCard() {
                     {userRole === 'admin' && (
                         <button
                             onClick={handleRecalibrate}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-primary"
+                            className="text-gray-400 hover:text-primary transition-colors"
                             title="Recalibrar Balance (Admin)"
                         >
                             <span className="material-symbols-outlined text-sm">build</span>
