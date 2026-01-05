@@ -69,9 +69,8 @@ const Preview = forwardRef(({ content, season, rubricLevel }, ref) => {
                     }
                 `}</style>
                 {/* Liturgy Header Icon */}
-                <div className="flex justify-center mb-8 text-primary opacity-80"
+                <div className="flex justify-center mb-8 text-primary opacity-80 w-12 h-12 mx-auto"
                     dangerouslySetInnerHTML={{ __html: iconHtml }}
-                    style={{ width: '48px', height: '48px', margin: '0 auto 2rem auto' }}
                 />
 
                 {/* Main Content */}

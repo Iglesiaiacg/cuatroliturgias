@@ -123,8 +123,7 @@ export default function SongDetail({ song, onClose, onAddToSetlist, activeListNa
 
                                 {showChords && (
                                     <div
-                                        className={`font-bold text-base mb-1 whitespace-pre select-none leading-none ${displayChord ? 'text-primary dark:text-primary-light' : 'invisible h-5'}`}
-                                        style={{ fontFamily: 'monospace' }} // Monospace for chords helps alignment
+                                        className={`font-bold text-base mb-1 whitespace-pre select-none leading-none font-mono ${displayChord ? 'text-primary dark:text-primary-light' : 'invisible h-5'}`}
                                     >
                                         {displayChord || ' '}
                                     </div>

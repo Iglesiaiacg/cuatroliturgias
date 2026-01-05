@@ -36,9 +36,8 @@ export default function ChatWidget() {
                 <>
                     {/* BACKDROP for Mobile/Desktop to click-outside-close */}
                     <div
-                        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px] md:bg-transparent md:backdrop-blur-none"
+                        className="fixed inset-0 z-40 bg-black/30 backdrop-blur-[1px] md:bg-transparent md:backdrop-blur-none pointer-events-auto"
                         onClick={toggleChat}
-                        style={{ pointerEvents: 'auto' }}
                     />
 
                     <div className="bg-white dark:bg-surface-dark w-[90vw] md:w-96 h-[80vh] md:h-[500px] rounded-2xl shadow-2xl border border-gray-100 dark:border-white/10 mb-4 flex flex-col overflow-hidden pointer-events-auto animate-fade-in-up z-50 relative">

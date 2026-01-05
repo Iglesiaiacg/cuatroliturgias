@@ -38,8 +38,8 @@ export default function SacristyChecklist({ date }) {
                         <div className="w-12 bg-gray-200 dark:bg-white/10 rounded-full h-1 overflow-hidden">
                             <div className="h-full bg-primary transition-all duration-500" style={{ width: `${progress}%` }}></div>
                         </div>
+                        <span className={`material-symbols-outlined text-gray-400 text-lg transform transition-transform duration-300 ${isCollapsed ? 'rotate-180' : ''}`}>expand_less</span>
                     </div>
-                    <span className="material-symbols-outlined text-gray-400 text-lg transform transition-transform duration-300" style={{ rotate: isCollapsed ? '180deg' : '0deg' }}>expand_less</span>
                 </div>
             </div>
 

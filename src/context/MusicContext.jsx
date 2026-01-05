@@ -48,7 +48,7 @@ export function MusicProvider({ children }) {
                     try {
                         const localSongs = JSON.parse(stored);
                         if (localSongs.length > 0) {
-                            // console.log("Migrating local songs to cloud...", localSongs.length);
+
                             migrateSongs(localSongs);
                         }
                     } catch (e) {
