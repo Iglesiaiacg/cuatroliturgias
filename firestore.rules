@@ -50,6 +50,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+
+    // --- MISSING COLLECTIONS FIX ---
+    match /settings/{settingId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /stats/{statId} {
+      allow read: if isAuthenticated();
+      allow write: if isSacristan() || isAdmin();
+    }
     
     // Contenido General (Notices, etc)
     match /content/{docId} {
