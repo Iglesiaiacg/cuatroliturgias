@@ -216,6 +216,21 @@ export function AuthProvider({ children }) {
     // Derived effective role for UI
     const effectiveRole = previewRole || userRole;
 
+    // START: Dynamic Permissions Loading
+    const [customPermissions, setCustomPermissions] = useState({});
+
+    useEffect(() => {
+        // Listen to global permissions changes
+        const unsubscribePerms = onSnapshot(doc(db, 'settings', 'permissions'), (docSnap) => {
+            if (docSnap.exists()) {
+                setCustomPermissions(docSnap.data());
+            }
+        }, (error) => {
+            console.error("Error loading global permissions:", error);
+        });
+        return () => unsubscribePerms();
+    }, []);
+
     const checkPermission = useCallback((permissionId) => {
         if (!effectiveRole) return false;
 
@@ -229,11 +244,11 @@ export function AuthProvider({ children }) {
         // IF acting as preview (e.g. sacristan) -> Only that role's access
         if (effectiveRole === 'admin') return true;
 
-        // In a real app, we'd load these from DB. For now, use the constant map.
-        // We could also allow passing overrides via props if needed, but Context is best.
-        const rolePerms = DEFAULT_PERMISSIONS[effectiveRole] || [];
+        // Use saved Custom Permissions if valid, otherwise fallback to Default
+        const source = (Object.keys(customPermissions).length > 0) ? customPermissions : DEFAULT_PERMISSIONS;
+        const rolePerms = source[effectiveRole] || [];
         return rolePerms.includes(permissionId);
-    }, [effectiveRole, currentUser]);
+    }, [effectiveRole, currentUser, customPermissions]);
 
     const value = {
         currentUser,

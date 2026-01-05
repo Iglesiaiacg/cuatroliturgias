@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { collection, onSnapshot, deleteDoc, doc, writeBatch } from 'firebase/firestore'; // Added writeBatch
+import { collection, onSnapshot, deleteDoc, doc, writeBatch, getDoc, setDoc } from 'firebase/firestore'; // Added writeBatch, getDoc, setDoc
 import { db } from '../../services/firebase';
 
 export default function UserManagement() {
@@ -76,22 +76,24 @@ export default function UserManagement() {
         });
 
         // Load Permissions (or set defaults)
+        // Load Permissions (or set defaults)
         const loadPermissions = async () => {
             setLoadingPermissions(true);
             try {
-                // We'll store permissions in a doc: settings/permissions
-                // If it doesn't exist, we use defaults (and maybe save them?)
-                // For MVP without reading DB repeatedly, we can just hardcode defaults for now 
-                // OR actually try to read 'settings/permissions'
-                // Let's implement dynamic reading from existing code structure if possible
-                // ... Assuming getDoc imported
+                const docRef = doc(db, 'settings', 'permissions');
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    setPermissions(docSnap.data());
+                } else {
+                    // Initialize DB with defaults if first run
+                    setPermissions(DEFAULT_PERMISSIONS);
+                    await setDoc(docRef, DEFAULT_PERMISSIONS);
+                }
             } catch (e) {
                 console.error("Error loading permissions", e);
+                setPermissions(DEFAULT_PERMISSIONS); // Fallback
             }
-            // For now, initialize with defaults + overrides if we implement storage later
-            // To make this TRULY dynamic, we need to save/load from Firestore.
-            // Let's defer Firestore persistence for permissions to the next step and strictly use state here.
-            setPermissions(DEFAULT_PERMISSIONS);
             setLoadingPermissions(false);
         };
         loadPermissions();
@@ -192,11 +194,8 @@ export default function UserManagement() {
         setLoading(true);
         try {
             // Save to Firestore: settings/permissions
-            // await setDoc(doc(db, 'settings', 'permissions'), permissions);
-            // We need to import setDoc and db. 
-            // IMPORTANT: We need to update AuthContext to READ this. 
-            // For this step, I'll just mock the save toast.
-            setMessage('Permisos guardados (Simulación - falta conectar AuthContext)');
+            await setDoc(doc(db, 'settings', 'permissions'), permissions);
+            setMessage('Permisos guardados y aplicados globalmente.');
         } catch (e) {
             setMessage('Error al guardar permisos: ' + e.message);
         }
