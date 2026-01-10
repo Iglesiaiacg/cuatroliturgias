@@ -140,12 +140,12 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                        - Ej:
                          > Oh Dios, que... (Texto de la oración) ... Por Jesucristo nuestro Señor.
                     
-                    INSTRUCCIONES DE EMERGENCIA (MODO "CREATIVO / SIN COPYRIGHT"):
-                    1. Genera TODA la estructura.
+                    INSTRUCCIONES DE EMERGENCIA (MODO "ESQUELETO LITÚRGICO"):
+                    1. Genera SOLO LA ESTRUCTURA sin textos bíblicos.
                     2. LECTURAS:
                        - USA MARCADOR: [[LECTURA_1]], [[LECTURA_2]], [[EVANGELIO]].
-                       - ⛔ PROHIBIDO CITAR TEXTO BÍBLICO.
-                       - Escribe: "Resumen: [Parafrasea la idea central en 2 líneas con tus propias palabras]".
+                       - ⛔ NO ESCRIBAS NADA DEL TEXTO BÍBLICO.
+                       - Escribe SOLO: "Lectura tomada del Leccionario correspondiente al día." (Evita cualquier resumen que pise copyright).
 
                     3. PARA EL SALMO (OBLIGATORIO: ESTRUCTURA RESPONSORIAL):
                        - [[SALMO]]

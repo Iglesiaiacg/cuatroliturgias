@@ -902,17 +902,17 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
         II. LITURGIA DE LA PALABRA (LITURGIA VERBI)
         5. LECTIO I (Primera Lectura):
-           ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ NO ESCRIBAS EL TEXTO BÍBLICO (COPYRIGHT). Escribe un RESUMEN de 2 líneas.'}
+           ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat 1825).'}
         
         6. PSALMUS RESPONSORIALIS (Salmo Responsorial):
            ⚠️ FORMATO RESPONSORIAL OBLIGATORIO:
-           - R. [Escribe la Antífona completa]
-           - V. [Escribe un resumen de la Estrofa 1]
-           - R. [Repetir Antífona]
-           ${isStructureOnly ? '[[SALMO]]' : '(NO escribas el salmo completo).'}
+           - R. [Antífona]
+           - V. [Estrofa]
+           - R. [Antífona]
+           ${isStructureOnly ? '[[SALMO]]' : '(Usa Biblia Torres Amat 1825).'}
         
         7. LECTIO II (Segunda Lectura):
-           ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ NO ESCRIBAS EL TEXTO BÍBLICO (COPYRIGHT). Escribe un RESUMEN de 2 líneas.'}
+           ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat 1825).'}
         
         8. ALLELUIA (o Tractus):
            - [[Aleluya de pie]]
@@ -920,7 +920,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         
         9. EVANGELIUM (Santo Evangelio):
            - [[Lectura del Santo Evangelio]]
-           ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ NO ESCRIBAS EL TEXTO BÍBLICO (COPYRIGHT). Escribe un RESUMEN del Evangelio (3-4 líneas) explicando el mensaje central.'}
+           ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat 1825).'}
         
         III. HOMILÍA Y CREDO (CREDO IN UNUM DEUM)
         10. Homilía: [[Breve momento de silencio]]
