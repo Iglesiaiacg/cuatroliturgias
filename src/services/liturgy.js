@@ -389,30 +389,22 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         2. Si el usuario te da una FECHA del futuro, NO uses el ciclo del año actual. USA EL CICLO QUE TE HE CALCULADO ARRIBA: **${cycle.cicloDom}**.
         3. Si hay contradicción, EL CICLO CALCULADO GANA.
         
-        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-COPYRIGHT):
+        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-BLOQUEO / COPYRIGHT):
         NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
-        Queremos el TEXTO COMPLETO, pero evitando el bloqueo por Copyright.
         
-        ESTRATEGIA DE SEGURIDAD (TORRES AMAT OBLIGATORIO):
-        1. USA SIEMPRE Y EXCLUSIVAMENTE LA BIBLIA "TORRES AMAT" (1825).
-        2. Es de DOMINIO PÚBLICO y GARANTIZA que Google no bloqueará la respuesta.
-        3. SI ES UNA ORACIÓN FIJA ANTIGUA (Canon Romano, Pater Noster): Escribe el texto tradicional completo.
-        4. NUNCA DEJES SOLO EL TÍTULO.
-
-        ⚠️ REGLA DE VERSIONES BÍBLICAS(CRÍTICO - ANTI COPYRIGTH):
-        NUNCA USES EL NOMBRE "JEHOVÁ".ES PROHIBIDO EN ESTA LITURGIA.
-        Usa siempre "EL SEÑOR" o "DIOS".
-        PARA EVITAR BLOQUEOS DE COPYRIGHT Y GARANTIZAR TEXTO COMPLETO:
-        USA ÚNICAMENTE VERSIONES DE DOMINIO PÚBLICO:
-- "Torres Amat"(Católica Antigua).
-        - "Vulgata Traducida".
-        NO USES "Biblia de Jerusalén" ni "Latinoamericana"(Tienen Copyright estricto).
-        NUNCA USES REINA VALERA(Protestante).
+        ESTRATEGIA SMART PARA LECTURAS BÍBLICAS:
+        1. **PRIORIDAD ABSOLUTA:** USA EL TEXTO EXACTO DE LA BIBLIA "TORRES AMAT" (1825).
+           - Al ser de 1825, es de DOMINIO PÚBLICO. NO la resumas si puedes citarla textual.
+           - Copia el texto íntegro de la versión Torres Amat.
         
-        ⚠️ ESTRATEGIA DE EMERGENCIA (SI NO ENCUENTRAS TORRES AMAT):
-        - TRADUCE TÚ MISMO DEL LATÍN (Vulgata) O DEL INGLÉS (Douay-Rheims/RSV).
-        - EL OBJETIVO ES EVITAR TEXTO IDÉNTICO AL LECCIONARIO MODERNO (CEM/CEE) QUE TIENE COPYRIGHT.
-        - Prefiero un lenguaje "arcaico" (vuestro, sois) a un error de bloqueo.
+        2. **SOLO EN CASO DE EMERGENCIA (Si no la encuentras):**
+           - Si Google te impide generar el texto exacto por considerarlo Copyright (falso positivo)...
+           - EN ESE CASO ÚNICO: Escribe la CITA y un RESUMEN PARAFRASEADO para evitar el error.
+           
+        3. TU META: Texto Exacto (Torres Amat) > Resumen Parafraseado > Error.
+        
+        ⚠️ REGLA DE ORACIONES FIJAS (Pater Noster, Credo):
+        Esas SÍ escríbelas completas (son patrimonio universal).
         
         ⚠️ REGLA DE FORMATO "VOX SECRETA":
         Para las oraciones que el sacerdote dice en secreto(Secreto, Ofertorio, Canon bajo), usa el formato de CITA(Blockquote con >).
