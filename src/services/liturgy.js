@@ -458,6 +458,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-BLOQUEO / COPYRIGHT):
         NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
         
+        ${!isStructureOnly ? `
         ESTRATEGIA SMART PARA LECTURAS BÍBLICAS:
         1. **PRIORIDAD ABSOLUTA:** USA EL TEXTO EXACTO DE LA BIBLIA "TORRES AMAT" (1825).
            - Al ser de 1825, es de DOMINIO PÚBLICO. NO la resumas si puedes citarla textual.
@@ -468,6 +469,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
            - EN ESE CASO ÚNICO: Escribe la CITA y un RESUMEN PARAFRASEADO para evitar el error.
            
         3. TU META: Texto Exacto (Torres Amat) > Resumen Parafraseado > Error.
+        ` : ''}
         
         ⚠️ REGLA DE ORACIONES FIJAS (Pater Noster, Credo):
         Esas SÍ escríbelas completas (son patrimonio universal).
@@ -877,13 +879,16 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         - [[INSERTAR_PADRE_NUESTRO]]
         - [[INSERTAR_CORDERO]]
 
-        ESTRUCTURA OBLIGATORIA:
+        ESTRUCTURA OBLIGATORIA (FORMATO GUIÓN - NO ESQUEMA):
+        Genera el TEXTO COMPLETO de todo lo que se dice y hace.
+
         1. RITOS INICIALES:
-           - Rúbrica de entrada y Saludo.
-           - Acto Penitencial: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`.
-           - Kyrie (Señor ten piedad).
-           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
-           - Oración Colecta (Propia del día).
+           - Rúbrica de entrada (Procesión).
+           - SALUDO INICIAL: Escribe el diálogo completo ("En el nombre del Padre...", "El Señor esté con vosotros...").
+           - ACTO PENITENCIAL: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`.
+           - KYRIE: Escribe las invocaciones completas ("Señor, ten piedad...").
+           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
+           - ORACIÓN COLECTA: ⚠️ ESCRIBE EL TEXTO COMPLETO DE LA ORACIÓN PROPIA DEL DÍA (No pongas solo el título).
 
         2. LITURGIA DE LA PALABRA:
            - 1ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
@@ -893,41 +898,44 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
            - Evangelio [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
         
         3. HOMILÍA Y CREDO:
-           - Homilía (Reflexión breve).
+           - Homilía (Indica solo el momento).
            ${isAshWednesday ? `
            ⚠ **MIÉRCOLES DE CENIZA**
            **BENDICIÓN E IMPOSICIÓN DE LA CENIZA**
            - Rúbrica: Después de la homilía, el sacerdote de pie dice la oración de bendición.
-           - Oración: "Oh Dios, que te dejas vencer..."
+           - Oración: ESCRIBE EL TEXTO COMPLETO ("Oh Dios, que te dejas vencer...").
            - Rúbrica: Imposición con la fórmula "Conviértete y cree en el Evangelio" o "Acuérdate de que eres polvo...".
            - Mientras se impone la ceniza se canta: (Sugerir canto o salmo penitencial).
-           - Terminada la imposición, el sacerdote se lava las manos.
            
            (OMITIR ACTO PENITENCIAL DE RITOS INICIALES CUANDO HAY CENIZA).
            (NO HAY CREDO).
            ` : `- Credo: ${rubrics.credo ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
 
         4. ORACIÓN UNIVERSAL:
-           - Redacta peticiones adaptadas a las lecturas de hoy.
+           - Redacta 5-6 PETICIONES COMPLETAS adaptadas a las lecturas de hoy. (No pongas solo títulos).
 
         5. LITURGIA EUCARÍSTICA:
-           - Ofertorio y Oración sobre las ofrendas.
+           - Ofertorio: Escribe las oraciones de presentación del pan y el vino ("Bendito seas, Señor...").
+           - Oración sobre las ofrendas: ESCRIBE EL TEXTO COMPLETO.
            - PLEGARIA EUCARÍSTICA:
-             - Prefacio OBLIGATORIO: "${rubrics.preface}" (Si no es fijo, usa el más apropiado para este día).
+             - Prefacio: ESCRIBE EL TEXTO COMPLETO del Prefacio "${rubrics.preface}" (o el propio del día).
              - Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-             - Plegaria Eucarística I (Canon Romano) o II.
-             - Escribe la Consagración de forma solemne (Texto universal).
-             - Doxología final.
+             - CONSAGRACIÓN: Escribe el RELATO DE LA INSTITUCIÓN COMPLETO (Palabras sobre el Pan y el Cáliz).
+             - Aclamación ("Este es el Sacramento...").
+             - Doxología final ("Por Cristo, con Él...").
 
         6. RITO DE COMUNIÓN:
            - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-           - Embolismo.
-           ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '- (RITO DE LA PAZ OMITIDO por Jueves Santo).' : '- Rito de la Paz.'}
+           - Embolismo ("Líbranos de todos los males...").
+           ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '- (RITO DE LA PAZ OMITIDO por Jueves Santo).' : '- Rito de la Paz ("La paz del Señor...").'}
            - Cordero: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-           - Comunión y Oración Post-comunión.
+           - Comunión: Antífona de comunión.
+           - Oración Post-comunión: ESCRIBE EL TEXTO COMPLETO.
 
         7. RITO DE CONCLUSIÓN:
-           - Avisos y Bendición final.
+           - Avisos.
+           - Bendición Final: ESCRIBE LA FÓRMULA COMPLETA ("El Señor esté con vosotros... La bendición...").
+           - Despedida ("Podéis ir en paz").
            - ${marianAntiphonText}
     `;
 };
