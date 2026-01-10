@@ -886,11 +886,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
            - Oración Colecta (Propia del día).
 
         2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
+           - 1ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
            - Salmo Responsorial [SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Respuesta y estrofas completas)'}.
-           - 2ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
+           - 2ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
            ${(season === 'cuaresma') ? '- TRACTO / VERSO (Sin Aleluya).' : '- ALELUYA: Verso propio.'}
-           - Evangelio [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
+           - Evangelio [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
