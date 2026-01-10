@@ -82,19 +82,53 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
                 console.warn("⚠️ RECITATION DETECTED. Retrying with NUCLEAR Rescue Mode...");
-                const safePrompt = prompt + `
+
+                // CRITICAL FIX: Do NOT append to the old prompt. The old prompt likely contains the "poison" words.
+                // We must construct a FRESH, clean prompt that explicitly forbids the problematic content.
+                const cleanRescuePrompt = `
+                ACTUAR COMO: Editor Litúrgico de Emergencia.
+                OBJETIVO: Rescatar una liturgia bloqueada por Copyright.
                 
-                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO POR COPYRIGHT DETECTADO (INTENTO 2/2) ⚠️
-                Google ha bloqueado la respuesta anterior por "Recitation".
+                INSTRUCCIÓN ÚNICA Y ABSOLUTA:
+                Genera la liturgia solicitada anteriormente PERO CON ESTOS CAMBIOS OBLIGATORIOS:
+                1. ⛔ NO ESCRIBAS NINGUNA LECTURA BÍBLICA. (Cero texto bíblico).
+                2. ✅ En lugar de las lecturas, escribe SOLO:
+                   "**PRIMERA LECTURA:** (Cita Bíblica Referencial)
+                    > [Resumen del contenido en 2 líneas]"
+                3. ✅ Haz lo mismo para Salmo, Segunda Lectura y Evangelio. SOLO RESÚMENES.
+                4. ✅ MANTÉN LA ESTRUCTURA DE LA MISA (Ritos, Títulos, Rúbricas).
+                5. ✅ ORACIONES (Colecta, etc): Escríbelas o parfraséalas ligeramente.
                 
-                NUEVAS INSTRUCCIONES OBLIGATORIAS:
-                1. ⛔ NO COPIES NINGÚN TEXTO BÍBLICO LITERALMENTE.
-                2. ✅ ESCRIBE SOLO: "Lectura del Santo Evangelio... (Cita)" y un BREVE RESUMEN de 2-3 líneas parafraseado.
-                3. ✅ Para el resto (Oraciones, Saludos), usa tus propias palabras o textos de dominio público modificados ligeramente.
-                4. ¡TU PRIORIDAD ES ENTREGAR LA ESTRUCTURA COMPLETA, AUNQUE LOS TEXTOS SEAN RESUMIDOS!
+                TU META ES QUE GOOGLE NO BLOQUEE LA RESPUESTA. SI DUDAS, RESUME.
                 
-                REPITO: NO ESCRIBAS LOS TEXTOS COMPLETOS DE LAS LECTURAS. SOLO RESÚMENES.
+                RECUPERA LA ÚLTIMA SOLICITUD DEL USUARIO (Contexto implícito) Y GENERA ESTA VERSIÓN SEGURA AHORA.
                 `;
+
+                // Note: We're taking a risk here by discarding the explicit 'prompt' variable content 
+                // effectively relying on the AI to "know" what we wanted or simply appending the rescue instructions 
+                // in a way that overrides the previous ones definitively. 
+                // BETTER STRATEGY: Take the original prompt but PREPEND/APPEND a massive override 
+                // that says "IGNORE PREVIOUS INSTRUCTIONS ABOUT FULL TEXT".
+
+                const safePrompt = `
+                ${prompt}
+                
+                🛑🛑🛑 STOP / ALTO / ARRET 🛑🛑🛑
+                
+                INSTRUCCIÓN DE SOBRE-ESCRITURA DE EMERGENCIA (OVERRIDE):
+                Google ha bloqueado tu respuesta anterior por "RECITATION" (Copia de libros).
+                
+                PARA ESTE SEGUNDO INTENTO:
+                1. ¡OLVIDA la orden de escribir textos bíblicos completos!
+                2. CAMBIA AL MODO "SOLO ESTRUCTURA Y CITA".
+                3. Para CADA LECTURA o SALMO, escribe UNICAMENTE:
+                   - El Título (ej. "Evangelio").
+                   - La Cita (ej. "Juan 3, 16").
+                   - Un breve resumen parafraseado por ti.
+                
+                ⛔ BAJO NINGUNA CIRCUNSTANCIA INTENTES CITAR EL TEXTO LITERALMENTE. ES TU ÚLTIMA OPORTUNIDAD.
+                `;
+
                 return generateLiturgy(safePrompt, true);
             }
 
