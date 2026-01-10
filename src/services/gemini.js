@@ -84,38 +84,63 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
                 console.warn("⚠️ RECITATION DETECTED. Retrying with CLEAN SLATE Strategy...");
 
-                // STRATEGY CHANGE: The original prompt is chemically toxic to the model at this point.
-                // We cannot fix it by replacing strings. We must ABANDON it.
-                // We will extract basic metadata if possible, or just ask for a generic structure.
+                // STRATEGY CHANGE: Context-Aware Rescue
+                const isReadingsMode = prompt.includes("Experto Biblista");
 
-                // Extract minimal context from original prompt to keep continuity if possible
+                // Extract minimal context
                 const dateMatch = prompt.match(/FECHA: (.*?)\n/);
-                const seasonMatch = prompt.match(/TIEMPO: (.*?)\n/);
-                const celebrationMatch = prompt.match(/CELEBRACIÓN: (.*?)\n/);
-
                 const safeDate = dateMatch ? dateMatch[1] : "Fecha solicitada";
-                const safeSeason = seasonMatch ? seasonMatch[1] : "Tiempo Ordinario";
-                const safeCelebration = celebrationMatch ? celebrationMatch[1] : "Feria";
 
-                // Construct a BRAND NEW, STERILE PROMPT
-                const cleanSlatePrompt = `
-                ACTUAR COMO: Asistente Litúrgico.
-                CONTEXTO: ${safeDate} - ${safeSeason} - ${safeCelebration}.
-                
-                OBJETIVO:
-                Generar el esquema de la Santa Misa para este día, PERO SIN INCLUIR NINGÚN TEXTO BÍBLICO (para evitar problemas de Copyright).
-                
-                INSTRUCCIONES DE SEGURIDAD:
-                1. Genera TODA la estructura de la Misa (Ritos Iniciales, Liturgia de la Palabra, Eucaristía, Conclusión).
-                2. EN LUGAR DE LAS LECTURAS (Primera, Salmo, Evangelio), escribe SOLAMENTE:
-                   - El Título de la lectura.
-                   - La Cita Bíblica (ej. Juan 1, 1-18).
-                   - Un breve resumen de 2 líneas sobre qué trata.
-                3. NO INTENTES ESCRIBIR EL TEXTO DE LA LECTURA.
-                4. Las oraciones (Colecta, ofrendas) pueden ser parafraseadas o genéricas.
-                
-                FORMATO: HTML simple con títulos en <h3> y rúbricas en <em>.
-                `;
+                let cleanSlatePrompt = "";
+
+                if (isReadingsMode) {
+                    console.warn("⚠️ RECITATION in READINGS MODE. Falling back to Summaries.");
+                    cleanSlatePrompt = `
+                    ACTUAR COMO: Experto Biblista.
+                    OBJETIVO: Resumir lecturas bloqueadas por Copyright.
+                    FECHA: ${safeDate}.
+                    
+                    INSTRUCCIONES DE EMERGENCIA:
+                    Google ha bloqueado el texto exacto.
+                    Genera SOLO la estructura de marcadores con RESÚMENES BREVES.
+                    
+                    FORMATO OBLIGATORIO:
+                    [[LECTURA_1]]
+                    (Cita)
+                    > (Resumen breve del contenido...)
+
+                    [[SALMO]]
+                    (Cita)
+                    > (Resumen breve...)
+
+                    [[LECTURA_2]]
+                    (Cita)
+                    > (Resumen breve...)
+
+                    [[EVANGELIO]]
+                    (Cita)
+                    > (Resumen breve...)
+                    `;
+                } else {
+                    // Default Structure Rescue (Clean Slate)
+                    cleanSlatePrompt = `
+                    ACTUAR COMO: Asistente Litúrgico.
+                    CONTEXTO: ${safeDate}.
+                    OBJETIVO: Generar el esquema de la Santa Misa SIN TEXTOS BÍBLICOS.
+                    
+                    INSTRUCCIONES:
+                    1. Genera TODA la estructura de la Misa (Ritos, Oraciones, Eucaristía).
+                    2. USA MARCADORES para las lecturas:
+                       - [[LECTURA_1]]
+                       - [[SALMO]]
+                       - [[LECTURA_2]]
+                       - [[EVANGELIO]]
+                    3. No intentes escribir lecturas, solo los marcadores.
+                    4. Las oraciones (Colecta, ofrendas) pueden ser parafraseadas.
+                    
+                    FORMATO: HTML simple con títulos en <h3> y rúbricas en <em>.
+                    `;
+                }
 
                 try {
                     return await generateLiturgy(cleanSlatePrompt, true);

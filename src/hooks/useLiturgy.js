@@ -38,7 +38,6 @@ export const useLiturgy = () => {
 
     }, [selectedDate, tradition]);
 
-    // Handle Generation
     const generate = async () => {
         setLoading(true);
         setError(null);
@@ -53,60 +52,109 @@ export const useLiturgy = () => {
         try {
             // Get label for prompt directly from calculation
             const label = identifyFeast(selectedDate);
+            const cycle = getLiturgicalCycle(selectedDate);
 
-            const prompt = buildPrompt({
+            // 1. BUILD DUAL PROMPTS (Surgical Split)
+            const promptStructure = buildPrompt({
                 selectedDate,
                 tradition,
-                celebrationLabel: label
+                celebrationLabel: label,
+                mode: 'structure' // Asking for placeholders [[LECTURA_1]]...
             });
 
-            let markdown = await generateLiturgy(prompt);
+            const promptReadings = buildPrompt({
+                selectedDate,
+                tradition,
+                celebrationLabel: label,
+                mode: 'readings' // Asking for pure text
+            });
 
-            // ⚠️ HYBRID INJECTION: Replace placeholders with constant texts
-            // This happens BEFORE markdown parsing to ensure the injected text is formatted correctly
+            // 2. PARALLEL EXECUTION
+            // Only split for 'romana' or generally for all? Let's apply to ALL to be consistent and safe.
+            // Actually, if tradition is 'tridentina', the structure prompt handles everything differently.
+            // But let's assume the new split logic is robust enough for all if configured.
+            // For now, let's try the split strategy primarily, as it isolates failures.
+
+            console.log("🚀 Starting Surgical Liturgy Generation...");
+            const [structureRes, readingsRes] = await Promise.all([
+                generateLiturgy(promptStructure),
+                generateLiturgy(promptReadings)
+            ]);
+
+            console.log("✅ Generation Complete. Merging...");
+
+            let finalMarkdown = structureRes;
+
+            // 3. MERGE LOGIC (Inject Readings into Structure)
+            // Helper to extract reading text
+            const extractReading = (text, marker) => {
+                const regex = new RegExp(`\\[\\[${marker}\\]\\]([\\s\\S]*?)(?=\\[\\[|$)`, 'i');
+                const match = text.match(regex);
+                return match ? match[1].trim() : null;
+            };
+
+            const markers = ['LECTURA_1', 'SALMO', 'LECTURA_2', 'EVANGELIO'];
+
+            markers.forEach((marker) => {
+                const content = extractReading(readingsRes, marker);
+                if (content && content.length > 20) { // Basic sanity check
+                    // Inject content
+                    finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `\n${content}\n`);
+                } else {
+                    // Fallback if reading missing
+                    // Don't replace with empty, maybe keep marker or put a note?
+                    // Better to put a note.
+                    // finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `*(Texto de ${marker} no disponible - Ver Leccionario)*`);
+                    // Actually, if we leave [[MARKER]], the rubric styling might pick it up?
+                    // Let's replace with a placeholder text to look clean.
+                    finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `\n> *(Texto bíblico de ${marker} pendiente. Consulte su leccionario).*`);
+                }
+            });
+
+            // 4. INSERT FIXED PRAYERS (Hybrid Injection)
+            // This happens on the Combined Text
             Object.keys(LITURGIA_FIJA).forEach((key) => {
-                // Global replace of the placeholder with the constant text
-                markdown = markdown.split(key).join(LITURGIA_FIJA[key]);
+                finalMarkdown = finalMarkdown.split(key).join(LITURGIA_FIJA[key]);
             });
 
-            // CLEANUP: If Gemini returns a full HTML document or code block, strip it.
-            markdown = markdown
+            // 5. CLEANUP & PARSE
+            // Strip HTML/Codes
+            finalMarkdown = finalMarkdown
                 .replace(/```html/g, '')
                 .replace(/```/g, '')
                 .replace(/<!DOCTYPE html>/gi, '')
                 .replace(/<html>/gi, '')
                 .replace(/<\/html>/gi, '')
-                .replace(/<head>[\s\S]*?<\/head>/gi, '') // Remove head completely
+                .replace(/<head>[\s\S]*?<\/head>/gi, '')
                 .replace(/<body>/gi, '')
                 .replace(/<\/body>/gi, '');
 
-            // 1. Convert Markdown to HTML
-            const htmlContent = marked.parse(markdown);
+            // Convert Markdown to HTML
+            const htmlContent = marked.parse(finalMarkdown);
 
-            // 2. Clean specific markers (Post-processing on HTML)
+            // Clean specific parsing markers
             let cleanText = htmlContent
                 .replace(/\$\\dagger\$/g, '†')
                 .replace(/\[\[(.*?)\]\]/g, '<span class="rubric">$1</span>');
 
             setDocContent(cleanText);
 
-            // Save to history (Local + Cloud)
+            // Save to history
             addToHistory(cleanText, label, tradition);
 
-            // SAVE TO FIREBASE IF LOGGED IN
+            // SAVE TO FIREBASE
             if (auth.currentUser) {
                 try {
                     await addDoc(collection(db, 'liturgies'), {
                         userId: auth.currentUser.uid,
                         title: label,
-                        date: selectedDate, // Save as Date object or Timestamp
-                        content: cleanText,
+                        date: selectedDate,
+                        content: cleanText, // Storing HTML for now as per design
                         tradition: tradition,
                         createdAt: serverTimestamp()
                     });
                 } catch (e) {
-                    console.warn("Cloud backup skipped (offline or permissions):", e.code);
-                    // Do NOT set UI error, just warn silently
+                    console.warn("Cloud backup skipped:", e.code);
                 }
             }
 

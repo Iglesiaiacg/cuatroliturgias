@@ -352,10 +352,67 @@ export const getMarianAntiphon = (date) => {
     return { name: "Salve Regina", text: "Salve, Regina, mater misericordiae..." };
 };
 
-export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
+export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 'full' }) => {
     const cycle = getLiturgicalCycle(selectedDate);
     const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const marianAntiphon = getMarianAntiphon(selectedDate);
+
+    // --- MODE: READINGS ONLY (Ultra-Focused) ---
+    if (mode === 'readings') {
+        return `
+            ACTUAR COMO: Experto Biblista y Lector.
+            OBJETIVO: Extraer las lecturas litúrgicas EXACTAS para esta fecha.
+            FECHA: ${dateStr}.
+            CICLO: ${cycle.cicloDom} | Año ${cycle.cicloFerial}.
+            FIESTA: ${celebrationLabel}.
+            
+            ⚠️ INSTRUCCIONES DE EXTRACCIÓN (CRÍTICO - ANTI-COPYRIGHT):
+            1. Necesito el TEXTO BÍBLICO para la Misa.
+            2. FUENTE: Usa la versión "TORRES AMAT" (1825, Dominio Público) o "Biblia de Jerusalén" (si es posible).
+            3. NO incluyas ritos, ni saludos, ni oraciones. SOLO LAS LECTURAS.
+            4. FORMATO DE SALIDA (Usa estos marcadores EXACTOS):
+            
+            [[LECTURA_1]]
+            (Título de la lectura)
+            (Cita Bíblica)
+            (Texto completo...)
+
+            [[SALMO]]
+            (Antífona)
+            (Texto completo del Salmo o Estrofas...)
+
+            [[LECTURA_2]]
+            (Título)
+            (Cita)
+            (Texto completo...)
+            (Si no hay segunda lectura hoy, escribe "OMITIDO").
+
+            [[EVANGELIO]]
+            (Cita)
+            (Texto completo del Evangelio...)
+            
+            5. Si Google bloquea el texto exacto, escribe un RESUMEN DETALLADO bajo cada marcador.
+        `;
+    }
+
+    // --- MODE: STRUCTURE ONLY (Safe Skeleton) ---
+    // If mode is 'structure', we explicitly instruct NOT to generate readings, but placeholders.
+    const isStructureOnly = mode === 'structure';
+    const readingInstruction = isStructureOnly
+        ? `
+        ⚠️ INSTRUCCIÓN DE MARCADORES DE LECTURAS (MODO ESTRUCTURA):
+        NO generes el texto de las lecturas bíblicas.
+        EN SU LUGAR, escribe ÚNICAMENTE estos marcadores donde corresponda:
+        - [[LECTURA_1]]
+        - [[SALMO]]
+        - [[LECTURA_2]]
+        - [[EVANGELIO]]
+        (Yo inyectaré los textos después).
+        `
+        : `
+        ⚠️ REGLA DE LECTURAS:
+        Genera el TEXTO COMPLETO usando Torres Amat.
+        `;
 
     // --- DETECTION OF EXCEPTIONS ---
     const isGoodFriday = celebrationLabel.toLowerCase().includes("viernes santo");
@@ -370,6 +427,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
     ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
+        
+        ${readingInstruction}
         
         ⚠️ REGLA DE ORO DE LECTURAS (NO ALUCINAR):
         - EL CICLO LITÚRGICO VIGENTE PARA ESTA FECHA ES: **${cycle.cicloDom}** y **Año ${cycle.cicloFerial}**.
