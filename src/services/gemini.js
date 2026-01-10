@@ -128,11 +128,16 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     cleanSlatePrompt = `
                     ACTUAR COMO: Asistente Litúrgico.
                     CONTEXTO: ${safeDate}.
-                    OBJETIVO: Generar el esquema de la Santa Misa SIN TEXTOS BÍBLICOS, pero con ORACIONES COMPLETAS.
-                    
+                    OBJETIVO: Generar el esquema de la Santa Misa.
+                    CRÍTICO: Google ha bloqueado los textos bíblicos por Copyright. NO LOS ESCRIBAS LITERALMENTE.
+
                     INSTRUCCIONES DE EMERGENCIA:
                     1. Genera TODA la estructura (Ritos, Eucaristía) formato GUIÓN CON DIÁLOGOS COMPLETOS.
-                    2. USA MARCADORES para lecturas: [[LECTURA_1]], [[SALMO]], [[LECTURA_2]], [[EVANGELIO]].
+                    2. PARA LECTURAS Y SALMOS:
+                       - USA MARCADOR: [[LECTURA_1]] o [[SALMO]].
+                       - ABAJO Escribe un RESUMEN o PARÁFRASIS del contenido (Ej: "San Pablo exhorta a la comunidad a...").
+                       - ⛔ NO INTENTES CITAR EL TEXTO BÍBLICO EXACTO.
+
                     3. USA MARCADORES para oraciones fijas (OBLIGATORIO):
                        - [[INSERTAR_YO_CONFIESO]]
                        - [[INSERTAR_GLORIA]] (Si es Festivo/Domingo)
