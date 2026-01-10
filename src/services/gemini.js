@@ -156,6 +156,7 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     4. USA MARCADORES para oraciones fijas:
                        - [[INSERTAR_YO_CONFIESO]]
                        - [[INSERTAR_GLORIA]] (Si es Festivo/Domingo)
+                       - [[HOMILÍA]] (⛔ NO ESCRIBAS TEXTO DE LA HOMILÍA).
                        - [[INSERTAR_CREDO]] (Si es Festivo/Domingo)
                        - [[INSERTAR_SANTO]]
                        - [[INSERTAR_PADRE_NUESTRO]]
