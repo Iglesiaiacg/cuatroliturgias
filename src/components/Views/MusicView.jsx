@@ -22,7 +22,7 @@ const CATEGORIES = [
     { id: 'salida', label: 'Salida' }
 ];
 
-export default function MusicView() {
+export default function MusicView({ currentSeason: propSeason }) {
     const { songs, addSong, notationSystem, toggleNotation } = useMusic();
     const { userRole, checkPermission } = useAuth();
     const { activeSetlistId, addSongToSetlist, setlists } = useSetlists();
@@ -44,7 +44,8 @@ export default function MusicView() {
 
     // Liturgical Context for Suggestions
     const today = new Date();
-    const currentSeason = getSeason(today);
+    // Use prop if available, otherwise calculate from today
+    const currentSeason = propSeason || getSeason(today);
     const seasonLabel = currentSeason.charAt(0).toUpperCase() + currentSeason.slice(1);
 
     const handleWebSearch = () => {

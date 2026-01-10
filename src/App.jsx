@@ -670,7 +670,7 @@ function MainLayout() {
             {activeTab === 'music' && (
               (checkPermission && checkPermission('view_music')) ? (
                 <div className="flex-1 flex flex-col w-full overflow-y-auto pb-24 md:pb-40">
-                  <MusicView />
+                  <MusicView currentSeason={season} />
                 </div>
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-400 flex-col">
