@@ -126,19 +126,25 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     cleanSlatePrompt = `
                     ACTUAR COMO: Asistente Litúrgico.
                     CONTEXTO: ${safeDate}.
-                    OBJETIVO: Generar el esquema de la Santa Misa SIN TEXTOS BÍBLICOS.
+                    OBJETIVO: Generar el esquema de la Santa Misa SIN TEXTOS BÍBLICOS, pero con ORACIONES COMPLETAS.
                     
-                    INSTRUCCIONES:
-                    1. Genera TODA la estructura de la Misa (Ritos, Oraciones, Eucaristía).
-                    2. USA MARCADORES para las lecturas:
-                       - [[LECTURA_1]]
-                       - [[SALMO]]
-                       - [[LECTURA_2]]
-                       - [[EVANGELIO]]
-                    3. No intentes escribir lecturas, solo los marcadores.
-                    4. Las oraciones (Colecta, ofrendas) pueden ser parafraseadas.
+                    INSTRUCCIONES DE EMERGENCIA:
+                    1. Genera TODA la estructura (Ritos, Eucaristía) formato GUIÓN CON DIÁLOGOS COMPLETOS.
+                    2. USA MARCADORES para lecturas: [[LECTURA_1]], [[SALMO]], [[LECTURA_2]], [[EVANGELIO]].
+                    3. USA MARCADORES para oraciones fijas (OBLIGATORIO):
+                       - [[INSERTAR_YO_CONFIESO]]
+                       - [[INSERTAR_GLORIA]] (Si es Festivo/Domingo)
+                       - [[INSERTAR_CREDO]] (Si es Festivo/Domingo)
+                       - [[INSERTAR_SANTO]]
+                       - [[INSERTAR_PADRE_NUESTRO]]
+                       - [[INSERTAR_CORDERO]]
                     
-                    FORMATO: HTML simple con títulos en <h3> y rúbricas en <em>.
+                    4. ORACIONES VARIABLES (Colecta, Ofrendas, Post-comunión):
+                       ⚠️ ¡ESCRIBE UN TEXTO COMPLETO Y SOLEMNE!
+                       - NO pongas "(Parafraseada)" ni resúmenes.
+                       - Si no puedes usar el texto oficial por Copyright, COMPÓN UNA ORACIÓN TOTALMENTE NUEVA y adecuada al tema del día.
+                       
+                    FORMATO: HTML simple.
                     `;
                 }
 
