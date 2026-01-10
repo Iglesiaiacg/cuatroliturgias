@@ -11,7 +11,7 @@ const Receipt = forwardRef(({ data }, ref) => {
     const currentCategories = FINANCE_CATEGORIES[data.type] || [];
 
     return (
-        <div ref={ref} className="bg-white p-8 w-[800px] h-[500px] flex items-center justify-center relative overflow-hidden">
+        <div ref={ref} className="bg-white p-8 w-[800px] min-h-[500px] flex flex-col justify-between relative overflow-hidden">
             {/* Background Texture/Watermark */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.03] flex items-center justify-center">
                 <span className="material-symbols-outlined text-[400px]">church</span>

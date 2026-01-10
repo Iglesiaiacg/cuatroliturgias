@@ -140,12 +140,22 @@ export default function OfferingsView() {
                     });
 
                     const imgProps = pdf.getImageProperties(dataUrl);
-                    const pdfWidth = pdf.internal.pageSize.getWidth();
-                    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-                    const y = (pdf.internal.pageSize.getHeight() - pdfHeight) / 2;
+                    const pageWidth = pdf.internal.pageSize.getWidth();
+                    const pageHeight = pdf.internal.pageSize.getHeight();
 
-                    pdf.addImage(dataUrl, 'PNG', 0, y > 0 ? y : 0, pdfWidth, pdfHeight);
+                    // Scale to fit (contain)
+                    const widthRatio = pageWidth / imgProps.width;
+                    const heightRatio = pageHeight / imgProps.height;
+                    const ratio = Math.min(widthRatio, heightRatio) * 0.95; // 95% to leave a small margin
+
+                    const finalWidth = imgProps.width * ratio;
+                    const finalHeight = imgProps.height * ratio;
+
+                    const x = (pageWidth - finalWidth) / 2;
+                    const y = (pageHeight - finalHeight) / 2;
+
+                    pdf.addImage(dataUrl, 'PNG', x, y, finalWidth, finalHeight);
                     pdf.save(`Recibo_${transaction.id}.pdf`);
 
                 } catch (err) {
