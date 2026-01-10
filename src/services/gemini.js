@@ -81,52 +81,27 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with NUCLEAR Rescue Mode...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with SANITIZED Rescue Mode...");
 
-                // CRITICAL FIX: Do NOT append to the old prompt. The old prompt likely contains the "poison" words.
-                // We must construct a FRESH, clean prompt that explicitly forbids the problematic content.
-                const cleanRescuePrompt = `
-                ACTUAR COMO: Editor Litúrgico de Emergencia.
-                OBJETIVO: Rescatar una liturgia bloqueada por Copyright.
-                
-                INSTRUCCIÓN ÚNICA Y ABSOLUTA:
-                Genera la liturgia solicitada anteriormente PERO CON ESTOS CAMBIOS OBLIGATORIOS:
-                1. ⛔ NO ESCRIBAS NINGUNA LECTURA BÍBLICA. (Cero texto bíblico).
-                2. ✅ En lugar de las lecturas, escribe SOLO:
-                   "**PRIMERA LECTURA:** (Cita Bíblica Referencial)
-                    > [Resumen del contenido en 2 líneas]"
-                3. ✅ Haz lo mismo para Salmo, Segunda Lectura y Evangelio. SOLO RESÚMENES.
-                4. ✅ MANTÉN LA ESTRUCTURA DE LA MISA (Ritos, Títulos, Rúbricas).
-                5. ✅ ORACIONES (Colecta, etc): Escríbelas o parfraséalas ligeramente.
-                
-                TU META ES QUE GOOGLE NO BLOQUEE LA RESPUESTA. SI DUDAS, RESUME.
-                
-                RECUPERA LA ÚLTIMA SOLICITUD DEL USUARIO (Contexto implícito) Y GENERA ESTA VERSIÓN SEGURA AHORA.
-                `;
+                // SMART FIX: Physically REMOVE the "Full Text" commands from the prompt string.
+                // We replace the strict instructions with "Summary" instructions.
+                let safePrompt = prompt
+                    .replace(/TEXTO BÍBLICO COMPLETO/g, "RESUMEN BREVE (NO USAR TEXTO REAL)")
+                    .replace(/TEXTO COMPLETO/g, "RESUMEN BREVE")
+                    .replace(/USA TEXTO DE "TORRES AMAT"/g, "USA RESUMEN PARAFRASEADO")
+                    .replace(/Copia el texto íntegro/g, "Haz un resumen")
+                    .replace(/NO la resumas/g, "RESÚMELA SIEMPRE");
 
-                // Note: We're taking a risk here by discarding the explicit 'prompt' variable content 
-                // effectively relying on the AI to "know" what we wanted or simply appending the rescue instructions 
-                // in a way that overrides the previous ones definitively. 
-                // BETTER STRATEGY: Take the original prompt but PREPEND/APPEND a massive override 
-                // that says "IGNORE PREVIOUS INSTRUCTIONS ABOUT FULL TEXT".
-
-                const safePrompt = `
-                ${prompt}
+                // Add the Nuclear Override at the end just in case
+                safePrompt += `
                 
-                🛑🛑🛑 STOP / ALTO / ARRET 🛑🛑🛑
+                🛑 OVERRIDE DE SEGURIDAD (ANTI-COPYRIGHT) 🛑
                 
-                INSTRUCCIÓN DE SOBRE-ESCRITURA DE EMERGENCIA (OVERRIDE):
-                Google ha bloqueado tu respuesta anterior por "RECITATION" (Copia de libros).
-                
-                PARA ESTE SEGUNDO INTENTO:
-                1. ¡OLVIDA la orden de escribir textos bíblicos completos!
-                2. CAMBIA AL MODO "SOLO ESTRUCTURA Y CITA".
-                3. Para CADA LECTURA o SALMO, escribe UNICAMENTE:
-                   - El Título (ej. "Evangelio").
-                   - La Cita (ej. "Juan 3, 16").
-                   - Un breve resumen parafraseado por ti.
-                
-                ⛔ BAJO NINGUNA CIRCUNSTANCIA INTENTES CITAR EL TEXTO LITERALMENTE. ES TU ÚLTIMA OPORTUNIDAD.
+                ATENCIÓN: Se eliminaron las instrucciones de "Texto Completo".
+                NUEVA ORDEN:
+                1. PARA TODAS LAS LECTURAS Y SALMOS: Escribe SOLO la CITA y un RESUMEN DE 2 LÍNEAS.
+                2. PROHIBIDO generar textos bíblicos literales.
+                3. Mantén la estructura litúrgica intacta (Ritos, Títulos, Oraciones).
                 `;
 
                 return generateLiturgy(safePrompt, true);
