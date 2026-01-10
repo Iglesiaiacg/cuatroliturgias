@@ -126,8 +126,10 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                 } else {
                     // Default Structure Rescue (Clean Slate)
                     cleanSlatePrompt = `
-                    ACTUAR COMO: Asistente Litúrgico.
-                    CONTEXTO: ${safeDate}.
+                    ACTUAR COMO: Asistente Litúrgico Experto.
+                    CONTEXTO: LITURGIA PARA EL DÍA ${safeDate}.
+                    ⚠️ IMPORTANTE: SI ES DOMINGO O FIESTA, CELEBRA EL MISTERIO CORRESPONDIENTE A ESTA FECHA EXACTA.
+                    (No Inventes festividades de otra época del año).
                     OBJETIVO: Generar el esquema de la Santa Misa.
                     CRÍTICO: Google ha bloqueado los textos bíblicos por Copyright. NO LOS ESCRIBAS LITERALMENTE.
 
