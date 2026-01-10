@@ -55,8 +55,9 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
                     { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
                 ],
+                // On RETRY, we use VERY HIGH temperature to force deviation from copyrighted text
                 generationConfig: {
-                    temperature: isRetry ? 0.9 : 0.4, // Higher temp on retry to avoid recitation
+                    temperature: isRetry ? 1.3 : 0.4,
                     topK: 40,
                     topP: 0.95,
                     maxOutputTokens: 8192,
@@ -81,29 +82,34 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with SANITIZED Rescue Mode...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with ULTIMATE Rescue Mode (Temp 1.3)...");
 
-                // SMART FIX: Physically REMOVE the "Full Text" commands from the prompt string.
-                // We replace the strict instructions with "Summary" instructions.
+                // ULTIMATE FIX: Regex Nuke on all "Copy" commands.
                 let safePrompt = prompt
-                    .replace(/TEXTO BÍBLICO COMPLETO/g, "RESUMEN BREVE (NO USAR TEXTO REAL)")
-                    .replace(/TEXTO COMPLETO/g, "RESUMEN BREVE")
-                    .replace(/USA TEXTO DE "TORRES AMAT"/g, "USA RESUMEN PARAFRASEADO")
-                    .replace(/Copia el texto íntegro/g, "Haz un resumen")
-                    .replace(/NO la resumas/g, "RESÚMELA SIEMPRE");
+                    .replace(/TEXTO BÍBLICO COMPLETO/gi, "SOLO RESUMEN")
+                    .replace(/TEXTO COMPLETO/gi, "SOLO RESUMEN")
+                    .replace(/TEXTO EXACTO/gi, "SOLO RESUMEN")
+                    .replace(/Copia el texto/gi, "Resume el texto")
+                    .replace(/Escribe el texto/gi, "Resume el texto")
+                    .replace(/Usa Biblia Torres Amat/gi, "Usa tus propias palabras");
 
-                // Add the Nuclear Override at the end just in case
                 safePrompt += `
                 
-                🛑 OVERRIDE DE SEGURIDAD (ANTI-COPYRIGHT) 🛑
+                🛑 CIERRE DE EMERGENCIA: BLOQUEO POR COPYRIGHT ACTIVO 🛑
                 
-                ATENCIÓN: Se eliminaron las instrucciones de "Texto Completo".
-                NUEVA ORDEN:
-                1. PARA TODAS LAS LECTURAS Y SALMOS: Escribe SOLO la CITA y un RESUMEN DE 2 LÍNEAS.
-                2. PROHIBIDO generar textos bíblicos literales.
-                3. Mantén la estructura litúrgica intacta (Ritos, Títulos, Oraciones).
+                CAMBIO DE ESTRATEGIA INMEDIATO:
+                1. EL USUARIO YA NO QUIERE LOS TEXTOS BÍBLICOS.
+                2. SÓLO QUIERE LA ESTRUCTURA DE LA MISA.
+                3. EN LUGAR DE LAS LECTURAS, escribe UNICAMENTE:
+                   "[AQUÍ IRÍA LA LECTURA DE (Cita)]"
+                   > (Escribe aquí un pensamiento espiritual breve de 1 línea sobre el tema).
+                
+                4. PROHIBIDO CITAR LA BIBLIA DIRECTAMENTE. 
+                5. USA TUS PROPIAS PALABRAS PARA TODO.
+                6. SÉ CREATIVO/ESPIRITUAL, PERO NO LITERAL.
                 `;
 
+                // Recursive call with HIGH TEMPERATURE to force creativity/paraphrasing
                 return generateLiturgy(safePrompt, true);
             }
 
