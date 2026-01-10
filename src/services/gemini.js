@@ -54,7 +54,13 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
                     { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
                     { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
-                ]
+                ],
+                generationConfig: {
+                    temperature: isRetry ? 0.9 : 0.4, // Higher temp on retry to avoid recitation
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 8192,
+                }
             })
         });
         const data = await response.json();
@@ -78,20 +84,16 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                 console.warn("⚠️ RECITATION DETECTED. Retrying with NUCLEAR Rescue Mode...");
                 const safePrompt = prompt + `
                 
-                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO PERSISTENTE POR COPYRIGHT (INTENTO 2/2) ⚠️
+                ⚠️ EMERGENCIA CRÍTICA: BLOQUEO POR COPYRIGHT DETECTADO (INTENTO 2/2) ⚠️
+                Google ha bloqueado la respuesta anterior por "Recitation".
                 
-                Google sigue bloqueando la respuesta. NO INTENTES COPIAR NINGÚN TEXTO BÍBLICO LITERAL.
+                NUEVAS INSTRUCCIONES OBLIGATORIAS:
+                1. ⛔ NO COPIES NINGÚN TEXTO BÍBLICO LITERALMENTE.
+                2. ✅ ESCRIBE SOLO: "Lectura del Santo Evangelio... (Cita)" y un BREVE RESUMEN de 2-3 líneas parafraseado.
+                3. ✅ Para el resto (Oraciones, Saludos), usa tus propias palabras o textos de dominio público modificados ligeramente.
+                4. ¡TU PRIORIDAD ES ENTREGAR LA ESTRUCTURA COMPLETA, AUNQUE LOS TEXTOS SEAN RESUMIDOS!
                 
-                INSTRUCCIONES DE SUPERVIVENCIA:
-                1. ⛔ NO ESCRIBAS LOS TEXTOS DE LAS LECTURAS BÍBLICAS NI DEL EVANGELIO.
-                2. ✅ EN SU LUGAR, escribe SOLO la Cita Bíblica (ej. "Mateo 2, 1-12") y un BREVE RESUMEN de 2 líneas.
-                3. Usa el formato: 
-                   "**EVANGELIO:** (Mateo X, Y-Z)
-                   > [Resumen: Jesús nació en Belén y llegaron unos magos...]"
-                4. PARAFASEA TODAS LAS ORACIONES.
-                
-                ¡TU META ES ENTREGAR LA ESTRUCTURA DEL MISAL SIN ERRORES!
-                Es preferible entregar el esqueleto con resúmenes que fallar por completo.
+                REPITO: NO ESCRIBAS LOS TEXTOS COMPLETOS DE LAS LECTURAS. SOLO RESÚMENES.
                 `;
                 return generateLiturgy(safePrompt, true);
             }
