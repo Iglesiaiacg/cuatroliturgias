@@ -69,6 +69,17 @@ export const useLiturgy = () => {
                 markdown = markdown.split(key).join(LITURGIA_FIJA[key]);
             });
 
+            // CLEANUP: If Gemini returns a full HTML document or code block, strip it.
+            markdown = markdown
+                .replace(/```html/g, '')
+                .replace(/```/g, '')
+                .replace(/<!DOCTYPE html>/gi, '')
+                .replace(/<html>/gi, '')
+                .replace(/<\/html>/gi, '')
+                .replace(/<head>[\s\S]*?<\/head>/gi, '') // Remove head completely
+                .replace(/<body>/gi, '')
+                .replace(/<\/body>/gi, '');
+
             // 1. Convert Markdown to HTML
             const htmlContent = marked.parse(markdown);
 
