@@ -351,7 +351,8 @@ export default function OfferingsView() {
             </div>
 
             {/* Hidden Receipt Generator */}
-            <div className="absolute top-0 left-[-9999px] invisible">
+            {/* Hidden Receipt Generator - Removed 'invisible' as it breaks html-to-image */}
+            <div className="fixed top-0 left-[-9999px] opacity-0 z-[-50] pointer-events-none">
                 {receiptData && (
                     <Receipt
                         ref={receiptRef}
