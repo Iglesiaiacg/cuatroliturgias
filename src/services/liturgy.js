@@ -794,7 +794,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
 
     return `
         ${basePrompt}
-        FUENTE: Misal Romano (3ª Edición).
+        FUENTE: Misal Romano (Uso Litúrgico General / Textos Universales).
         IDIOMA: Español.
         ${omissionRules}
         
@@ -815,17 +815,17 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
         ESTRUCTURA OBLIGATORIA:
         1. RITOS INICIALES:
            - Rúbrica de entrada y Saludo.
-           - Acto Penitencial: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`. ¡NO escribas la oración manualmente!
+           - Acto Penitencial: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`.
            - Kyrie (Señor ten piedad).
            ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
            - Oración Colecta (Propia del día).
 
         2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
+           - 1ª Lectura [LECTOR]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
            - Salmo Responsorial [SALMISTA]: (Respuesta y estrofas completas).
-           - 2ª Lectura [LECTOR]: ⚠️ TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
+           - 2ª Lectura [LECTOR]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
            ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: Verso propio.'}
-           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
+           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
@@ -850,7 +850,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel }) => {
            - PLEGARIA EUCARÍSTICA:
              - Prefacio OBLIGATORIO: "${rubrics.preface}" (Si no es fijo, usa el más apropiado para este día).
              - Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-             - Plegaria Eucarística II (Texto completo, usa una versión libre o antigua si la moderna tiene copyright).
+             - Plegaria Eucarística I (Canon Romano) o II.
+             - Escribe la Consagración de forma solemne (Texto universal).
              - Doxología final.
 
         6. RITO DE COMUNIÓN:
