@@ -357,14 +357,23 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
     const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const marianAntiphon = getMarianAntiphon(selectedDate);
 
-    // --- MODE: READINGS ONLY (Ultra-Focused) ---
+    // --- MODE: READINGS ONLY (Ultra-Focused & Tradition Aware) ---
     if (mode === 'readings') {
+        let traditionNote = "";
+        if (tradition === 'tridentina') {
+            traditionNote = "⚠️ ATENCIÓN: Esta es una MISA TRIDENTINA (1962). Usa el Calendario y Leccionario de 1962 (Pre-Vaticano II). NO USES EL LECCIONARIO MODERNO.";
+        } else {
+            traditionNote = "Usa el Leccionario Romano/Jerusalén moderno según el ciclo calculado.";
+        }
+
         return `
             ACTUAR COMO: Experto Biblista y Lector.
             OBJETIVO: Extraer las lecturas litúrgicas EXACTAS para esta fecha.
             FECHA: ${dateStr}.
             CICLO: ${cycle.cicloDom} | Año ${cycle.cicloFerial}.
             FIESTA: ${celebrationLabel}.
+            TRADICIÓN: ${tradition.toUpperCase()}.
+            ${traditionNote}
             
             ⚠️ INSTRUCCIONES DE EXTRACCIÓN (CRÍTICO - ANTI-COPYRIGHT):
             1. Necesito el TEXTO BÍBLICO para la Misa.
@@ -383,9 +392,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
             [[LECTURA_2]]
             (Título)
-            (Cita)
-            (Texto completo...)
-            (Si no hay segunda lectura hoy, escribe "OMITIDO").
+            (Texto completo... Si no hay, escribe "OMITIDO")
 
             [[EVANGELIO]]
             (Cita)
@@ -733,13 +740,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             4. COLECTA DEL DÍA (Propia).
                ⚠️ OBLIGATORIO: Incluir el SALUDO ("El Señor esté con ustedes...") antes del Oremos y la Colecta.
             5. LITURGIA DE LA PALABRA:
-               - Primera Lectura (Antiguo Testamento) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
-               - SALMO RESPONSORIAL [SALMISTA o LECTOR]: (Indica la Antífona y las Estrofas COMPLETAS).
-               - Segunda Lectura (Epístola) [LECTOR]: ⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat).
-               ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: (Incluye el VERSO propio antes del Evangelio).'}
-               - Evangelio [DIÁCONO o SACERDOTE]:
-                 ⚠️ Incluir SALUDO ("El Señor esté con ustedes...") y Anuncio del Evangelio.
-                 ⚠️ LUEGO: ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat).
+               - Primera Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
+               - SALMO RESPONSORIAL [SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Indica la Antífona y las Estrofas COMPLETAS)'}.
+               - Segunda Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
+               ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA).' : '- ALELUYA [CORO]: (Incluye el VERSO).'}
+               - Evangelio [DIÁCONO]:
+                 ⚠️ Incluir SALUDO y Anuncio.
+                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
             6. HOMILÍA y CREDO NICENO.
                ${isAshWednesday ? `
                ⚠ **MIÉRCOLES DE CENIZA**
@@ -809,12 +816,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
-               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: (¡OBLIGATORIO RESPONSORIAL! NO GRADUAL).
-                 * Escribe la RESPUESTA (R.) y las ESTROFAS claramente. 
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
-               ${(season === 'cuaresma') ? '- TRACTUS (Aclamación antes del Evangelio sin Aleluya).' : '- ALELUYA [CORO]: (Incluye el texto del VERSO propio).'}
-               - EVANGELIUM [DIÁCONO]: ⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat).
+               - LECTIO / PRIMERA LECTURA [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
+               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: ${isStructureOnly ? '[[SALMO]]' : '(¡OBLIGATORIO RESPONSORIAL! Respuesta y Estrofas)'}.
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
+               ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO).'}
+               - EVANGELIUM [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
@@ -880,11 +886,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
            - Oración Colecta (Propia del día).
 
         2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura [LECTOR]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
-           - Salmo Responsorial [SALMISTA]: (Respuesta y estrofas completas).
-           - 2ª Lectura [LECTOR]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
-           ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA. Usa el verso antes del Evangelio propio de Cuaresma).' : '- ALELUYA [CORO]: Verso propio.'}
-           - Evangelio [DIÁCONO/SACERDOTE]: ⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.
+           - 1ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
+           - Salmo Responsorial [SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Respuesta y estrofas completas)'}.
+           - 2ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
+           ${(season === 'cuaresma') ? '- TRACTO / VERSO (Sin Aleluya).' : '- ALELUYA: Verso propio.'}
+           - Evangelio [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ USA TEXTO DE "TORRES AMAT" (Exacto). Si hay bloqueo, usa RESUMEN.'}.
         
         3. HOMILÍA Y CREDO:
            - Homilía (Reflexión breve).
