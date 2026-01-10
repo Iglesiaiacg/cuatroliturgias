@@ -138,18 +138,18 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                        - Ej:
                          > Oh Dios, que... (Texto de la oración) ... Por Jesucristo nuestro Señor.
                     
-                    INSTRUCCIONES DE EMERGENCIA:
-                    1. Genera TODA la estructura (Ritos, Eucaristía, Despedida).
-                    2. PARA LECTURAS:
-                       - USA MARCADOR: [[LECTURA_1]] o [[LECTURA_2]] o [[EVANGELIO]].
-                       - ABAJO Escribe un RESUMEN o PARÁFRASIS (Ej: "San Pablo exhorta...").
-                       - ⛔ NO INTENTES CITAR EL TEXTO BÍBLICO EXACTO.
+                    INSTRUCCIONES DE EMERGENCIA (MODO "CREATIVO / SIN COPYRIGHT"):
+                    1. Genera TODA la estructura.
+                    2. LECTURAS:
+                       - USA MARCADOR: [[LECTURA_1]], [[LECTURA_2]], [[EVANGELIO]].
+                       - ⛔ PROHIBIDO CITAR TEXTO BÍBLICO.
+                       - Escribe: "Resumen: [Parafrasea la idea central en 2 líneas con tus propias palabras]".
 
                     3. PARA EL SALMO (OBLIGATORIO: ESTRUCTURA RESPONSORIAL):
                        - [[SALMO]]
-                       - R. [Escribe la Antífona completa]
-                       - V. [Escribe un resumen de la 1ª Estrofa]
-                       - R. [Repetir la Antífona]
+                       - R. [Antífona breve]
+                       - V. [Resumen de la estrofa]
+                       - R. [Antífona]
 
                     4. USA MARCADORES para oraciones fijas:
                        - [[INSERTAR_YO_CONFIESO]]
