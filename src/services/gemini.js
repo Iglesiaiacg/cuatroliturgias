@@ -131,25 +131,50 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     OBJETIVO: Generar el esquema de la Santa Misa.
                     CRÍTICO: Google ha bloqueado los textos bíblicos por Copyright. NO LOS ESCRIBAS LITERALMENTE.
 
+                    INSTRUCCIONES DE ESTILO "HIGH CHURCH" (OBLIGATORIO):
+                    1. TITULACIÓN: Usa Títulos en LATÍN y ESPAÑOL (Ej: RITUS INITIALES / Ritos Iniciales).
+                    2. ORACIONES DEL SACERDOTE (Colecta, Ofertorio, Post-comunión):
+                       - DEBEN estar dentro de un BLOQUE DE CITA (Markdown '>') para que salgan con borde rojo.
+                       - Ej:
+                         > Oh Dios, que... (Texto de la oración) ... Por Jesucristo nuestro Señor.
+                    
                     INSTRUCCIONES DE EMERGENCIA:
-                    1. Genera TODA la estructura (Ritos, Eucaristía) formato GUIÓN CON DIÁLOGOS COMPLETOS.
-                    2. PARA LECTURAS Y SALMOS:
-                       - USA MARCADOR: [[LECTURA_1]] o [[SALMO]].
-                       - ABAJO Escribe un RESUMEN o PARÁFRASIS del contenido (Ej: "San Pablo exhorta a la comunidad a...").
+                    1. Genera TODA la estructura (Ritos, Eucaristía, Despedida).
+                    2. PARA LECTURAS:
+                       - USA MARCADOR: [[LECTURA_1]] o [[LECTURA_2]] o [[EVANGELIO]].
+                       - ABAJO Escribe un RESUMEN o PARÁFRASIS (Ej: "San Pablo exhorta...").
                        - ⛔ NO INTENTES CITAR EL TEXTO BÍBLICO EXACTO.
 
-                    3. USA MARCADORES para oraciones fijas (OBLIGATORIO):
+                    3. PARA EL SALMO (OBLIGATORIO: ESTRUCTURA RESPONSORIAL):
+                       - [[SALMO]]
+                       - R. [Escribe la Antífona completa]
+                       - V. [Escribe un resumen de la 1ª Estrofa]
+                       - R. [Repetir la Antífona]
+
+                    4. USA MARCADORES para oraciones fijas:
                        - [[INSERTAR_YO_CONFIESO]]
                        - [[INSERTAR_GLORIA]] (Si es Festivo/Domingo)
                        - [[INSERTAR_CREDO]] (Si es Festivo/Domingo)
                        - [[INSERTAR_SANTO]]
                        - [[INSERTAR_PADRE_NUESTRO]]
+                       - ESCRIBE: "Líbranos de todos los males, Señor..." (Embolismo completo)
+                       - ESCRIBE: "Tuyo es el reino, tuyo el poder..." (Doxología completa)
                        - [[INSERTAR_CORDERO]]
+
+                    5. ORACIÓN DE LOS FIELES (TEMA OBLIGATORIO):
+                       - Deben estar basadas en las LECTURAS del día (NO GENÉRICAS).
+                       - Estructura: "Por..., para que... roguemos al Señor."
+
+                    6. ORACIONES VARIABLES:
+                       ⚠️ ¡ESCRIBE UN TEXTO COMPLETO Y SOLEMNE DENTRO DE '>' (Bloque)!
+                       - Si no puedes usar el texto oficial, COMPÓN UNA ORACIÓN NUEVA SOLEMNE.
                     
-                    4. ORACIONES VARIABLES (Colecta, Ofrendas, Post-comunión):
-                       ⚠️ ¡ESCRIBE UN TEXTO COMPLETO Y SOLEMNE!
-                       - NO pongas "(Parafraseada)" ni resúmenes.
-                       - Si no puedes usar el texto oficial por Copyright, COMPÓN UNA ORACIÓN TOTALMENTE NUEVA y adecuada al tema del día.
+                    7. FINAL:
+                       - Incluye la Bendición y Despedida.
+                       - [[Antífona Mariana]]: "Bajo tu amparo..." o "Salve Regina".
+                    
+                    8. EXTRA (TÍTULO EXACTO):
+                       CITA_PATRISTICA: "Escribe una frase breve de un Santo sobre el Evangelio hoy" - Autor.
                        
                     FORMATO: HTML simple.
                     `;

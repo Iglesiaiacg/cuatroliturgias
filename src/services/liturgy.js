@@ -975,5 +975,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         VII. RITOS DE CONCLUSIÓN (RITUS CONCLUSIONIS)
         20. Bendición Final y Despedida.
         21. ${marianAntiphonText}
+
+        VIII. EXTRAS (CRÍTICO PARA PORTADA)
+        22. CITA_PATRISTICA: "Escribe aquí una frase breve y profunda de un Padre de la Iglesia (San Agustín, San Juan Crisóstomo, etc.) relacionada con las lecturas de hoy" - Nombre del Santo.
     `;
 };
