@@ -195,6 +195,10 @@ export const getSeason = (date) => {
     const year = normalizeDate(date).getFullYear();
     const easter = getEasterDate(year);
     const ashWed = new Date(easter); ashWed.setDate(easter.getDate() - 46);
+
+    const adventStart = getAdventStart(year);
+    const christmas = new Date(year, 11, 25);
+
     // Calculate Baptism of the Lord (End of Christmas Season)
     // Sunday after Jan 6.
     const jan6 = new Date(year, 0, 6);
