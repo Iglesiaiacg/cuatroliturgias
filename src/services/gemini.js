@@ -117,7 +117,52 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                 FORMATO: HTML simple con títulos en <h3> y rúbricas en <em>.
                 `;
 
-                return generateLiturgy(cleanSlatePrompt, true);
+                try {
+                    return await generateLiturgy(cleanSlatePrompt, true);
+                } catch (retryError) {
+                    console.error("⚠️ RETRY FAILED. USING STATIC FALLBACK.", retryError);
+                    // FALLBACK SKELETON: If even the "Clean Slate" fails, return a safe, static HTML skeleton.
+                    return `
+                    <h3>RITOS INICIALES</h3>
+                    <em>(Generación automática bloqueada. Use este esquema manual).</em>
+                    <p><strong>Antífona de Entrada:</strong> (Ver Misal).</p>
+                    <p><strong>Acto Penitencial:</strong> Yo confieso...</p>
+                    <p><strong>Oración Colecta:</strong> (Ver Misal).</p>
+
+                    <hr />
+
+                    <h3>LITURGIA DE LA PALABRA</h3>
+                    <em>Nota: Google ha bloqueado los textos por Copyright. Por favor, lea desde su leccionario.</em>
+                    
+                    <p><strong>PRIMERA LECTURA</strong><br/>
+                    <em>Lectura del Antiguo Testamento.</em></p>
+
+                    <p><strong>SALMO RESPONSORIAL</strong><br/>
+                    <em>(Salmo del día).</em></p>
+
+                    <p><strong>SEGUNDA LECTURA</strong><br/>
+                    <em>Lectura del Nuevo Testamento.</em></p>
+
+                    <p><strong>EVANGELIO</strong><br/>
+                    <em>Lectura del Santo Evangelio.</em></p>
+
+                    <hr />
+
+                    <h3>LITURGIA EUCARÍSTICA</h3>
+                    <p><strong>Ofertorio:</strong> Bendito seas, Señor...</p>
+                    <p><strong>Oración sobre las ofrendas:</strong> (Ver Misal).</p>
+                    <p><strong>Prefacio y Santo:</strong> Santo, Santo, Santo...</p>
+                    <p><strong>Consagración y Plegaria Eucarística.</strong></p>
+
+                    <hr />
+
+                    <h3>RITO DE COMUNIÓN</h3>
+                    <p><strong>Padre Nuestro.</strong></p>
+                    <p><strong>Cordero de Dios.</strong></p>
+                    <p><strong>Comunión.</strong></p>
+                    <p><strong>Oración post-comunión:</strong> (Ver Misal).</p>
+                    `;
+                }
             }
 
             throw new Error(`Respuesta incompleta de Google. Razón: ${candidate?.finishReason || 'Desconocida'}. Revisa la consola.`);
