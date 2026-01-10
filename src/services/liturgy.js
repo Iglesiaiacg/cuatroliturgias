@@ -879,63 +879,93 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         - [[INSERTAR_PADRE_NUESTRO]]
         - [[INSERTAR_CORDERO]]
 
-        ESTRUCTURA OBLIGATORIA (FORMATO GUIÓN - NO ESQUEMA):
-        Genera el TEXTO COMPLETO de todo lo que se dice y hace.
+        ESTRUCTURA OBLIGATORIA (FORMATO GUIÓN - TEXTO COMPLETO):
+        Genera el GUIÓN LITÚRGICO con todos los diálogos y oraciones escritas.
 
         1. RITOS INICIALES:
-           - Rúbrica de entrada (Procesión).
-           - SALUDO INICIAL: Escribe el diálogo completo ("En el nombre del Padre...", "El Señor esté con vosotros...").
+           - Rúbrica de procesión de entrada.
+           - SALUDO INICIAL:
+             **SACERDOTE:** En el nombre del Padre, y del Hijo, y del Espíritu Santo.
+             **PUEBLO:** Amén.
+             **SACERDOTE:** El Señor esté con vosotros (o fórmula similar).
+             **PUEBLO:** Y con tu espíritu.
            - ACTO PENITENCIAL: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`.
-           - KYRIE: Escribe las invocaciones completas ("Señor, ten piedad...").
-           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
-           - ORACIÓN COLECTA: ⚠️ ESCRIBE EL TEXTO COMPLETO DE LA ORACIÓN PROPIA DEL DÍA (No pongas solo el título).
+           - KYRIE: 
+             **SACERDOTE:** Señor, ten piedad. **PUEBLO:** Señor, ten piedad.
+             **SACERDOTE:** Cristo, ten piedad. **PUEBLO:** Cristo, ten piedad.
+             **SACERDOTE:** Señor, ten piedad. **PUEBLO:** Señor, ten piedad.
+           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA).' : '- GLORIA: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
+           - ORACIÓN COLECTA:
+             **SACERDOTE:** Oremos. (ESCRIBE AQUÍ EL TEXTO COMPLETO DE LA ORACIÓN PROPIA DEL DÍA).
+             **PUEBLO:** Amén.
 
         2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
-           - Salmo Responsorial [SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Respuesta y estrofas completas)'}.
-           - 2ª Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
-           ${(season === 'cuaresma') ? '- TRACTO / VERSO (Sin Aleluya).' : '- ALELUYA: Verso propio.'}
-           - Evangelio [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
+           - 1ª Lectura: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
+           - Salmo: ${isStructureOnly ? '[[SALMO]]' : '(Respuesta y estrofas completas).'}.
+           - 2ª Lectura: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
+           - Aleluya/Tracto: (Escribe el verso completo).
+           - Evangelio: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
         
         3. HOMILÍA Y CREDO:
-           - Homilía (Indica solo el momento).
+           - Título: **HOMILÍA** (Momento de silencio o reflexión).
            ${isAshWednesday ? `
            ⚠ **MIÉRCOLES DE CENIZA**
            **BENDICIÓN E IMPOSICIÓN DE LA CENIZA**
-           - Rúbrica: Después de la homilía, el sacerdote de pie dice la oración de bendición.
-           - Oración: ESCRIBE EL TEXTO COMPLETO ("Oh Dios, que te dejas vencer...").
-           - Rúbrica: Imposición con la fórmula "Conviértete y cree en el Evangelio" o "Acuérdate de que eres polvo...".
-           - Mientras se impone la ceniza se canta: (Sugerir canto o salmo penitencial).
-           
-           (OMITIR ACTO PENITENCIAL DE RITOS INICIALES CUANDO HAY CENIZA).
-           (NO HAY CREDO).
-           ` : `- Credo: ${rubrics.credo ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
+           - Oración de Bendición: "Oh Dios, que te dejas vencer..." (TEXTO COMPLETO).
+           - Imposición: "Conviértete y cree en el Evangelio".
+           (SIN CREDO NI ACTO PENITENCIAL).
+           ` : `- Credo: ${rubrics.credo ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO).'}`}
 
         4. ORACIÓN UNIVERSAL:
-           - Redacta 5-6 PETICIONES COMPLETAS adaptadas a las lecturas de hoy. (No pongas solo títulos).
+           **SACERDOTE:** Oremos a Dios Padre... (Breve invitación).
+           (Redacta 5 peticiones completas con respuesta del pueblo).
+           **SACERDOTE:** (Oración conclusiva completa).
 
         5. LITURGIA EUCARÍSTICA:
-           - Ofertorio: Escribe las oraciones de presentación del pan y el vino ("Bendito seas, Señor...").
-           - Oración sobre las ofrendas: ESCRIBE EL TEXTO COMPLETO.
+           - OFERTORIO:
+             **SACERDOTE:** Bendito seas, Señor, Dios del universo, por este pan...
+             **PUEBLO:** Bendito seas por siempre, Señor.
+             (Idem para el vino).
+             **SACERDOTE:** Orad, hermanos, para que este sacrificio...
+             **PUEBLO:** El Señor reciba de tus manos...
+           - ORACIÓN SOBRE LAS OFRENDAS: (Texto completo de la oración propia).
+           
            - PLEGARIA EUCARÍSTICA:
-             - Prefacio: ESCRIBE EL TEXTO COMPLETO del Prefacio "${rubrics.preface}" (o el propio del día).
-             - Santo: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-             - CONSAGRACIÓN: Escribe el RELATO DE LA INSTITUCIÓN COMPLETO (Palabras sobre el Pan y el Cáliz).
-             - Aclamación ("Este es el Sacramento...").
-             - Doxología final ("Por Cristo, con Él...").
+             **SACERDOTE:** El Señor esté con vosotros. **PUEBLO:** Y con tu espíritu.
+             **SACERDOTE:** Levantemos el corazón. **PUEBLO:** Lo tenemos levantado hacia el Señor.
+             **SACERDOTE:** Demos gracias al Señor, nuestro Dios. **PUEBLO:** Es justo y necesario.
+             
+             - PREFACIO: (Escribe el texto completo del Prefacio: "En verdad es justo y necesario...").
+             - SANTO: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+             
+             - CONSAGRACIÓN (Escribe el texto solemne de la Plegaria Eucarística II o la que elijas):
+               > "Santo eres en verdad, Señor, fuente de toda santidad..."
+               > (Incluye las palabras de la Institución sobre el Pan y el Vino).
+               > "Este es el Misterio de la fe."
+               > **PUEBLO:** Anunciamos tu muerte, proclamamos tu resurrección...
+             
+             - DOXOLOGÍA FINAL:
+               **SACERDOTE:** Por Cristo, con Él y en Él...
+               **PUEBLO:** Amén.
 
         6. RITO DE COMUNIÓN:
-           - Padre Nuestro: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-           - Embolismo ("Líbranos de todos los males...").
-           ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '- (RITO DE LA PAZ OMITIDO por Jueves Santo).' : '- Rito de la Paz ("La paz del Señor...").'}
-           - Cordero: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-           - Comunión: Antífona de comunión.
-           - Oración Post-comunión: ESCRIBE EL TEXTO COMPLETO.
+           - PADRE NUESTRO: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
+           - EMBOLISMO: "Líbranos de todos los males, Señor...".
+           - RITO DE LA PAZ: "La paz del Señor esté siempre con vosotros."
+           - CORDERO: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
+           - COMUNIÓN: (Escribe la antífona de comunión).
+           - ORACIÓN POST-COMUNIÓN:
+             **SACERDOTE:** Oremos. (Texto completo de la oración propia).
+             **PUEBLO:** Amén.
 
         7. RITO DE CONCLUSIÓN:
-           - Avisos.
-           - Bendición Final: ESCRIBE LA FÓRMULA COMPLETA ("El Señor esté con vosotros... La bendición...").
-           - Despedida ("Podéis ir en paz").
+           - BENDICIÓN FINAL:
+             **SACERDOTE:** El Señor esté con vosotros.
+             **SACERDOTE:** La bendición de Dios todopoderoso... descienda sobre vosotros.
+             **PUEBLO:** Amén.
+           - DESPEDIDA:
+             **DIÁCONO/SACERDOTE:** Podéis ir en paz.
+             **PUEBLO:** Demos gracias a Dios.
            - ${marianAntiphonText}
     `;
 };
