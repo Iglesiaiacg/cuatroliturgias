@@ -96,30 +96,32 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                 if (isReadingsMode) {
                     console.warn("⚠️ RECITATION in READINGS MODE. Falling back to Summaries.");
                     cleanSlatePrompt = `
-                    ACTUAR COMO: Experto Biblista.
-                    OBJETIVO: Resumir lecturas bloqueadas por Copyright.
+                    ACTUAR COMO: Asistente de Referencias Bíblicas.
+                    OBJETIVO: Extraer SOLO LAS CITAS de las lecturas (Copyright Bypass).
                     FECHA: ${safeDate}.
                     
                     INSTRUCCIONES DE EMERGENCIA:
-                    Google ha bloqueado el texto exacto.
-                    Genera SOLO la estructura de marcadores con RESÚMENES BREVES.
+                    GOOGLE HA BLOQUEADO EL TEXTO.
+                    SOLUCIÓN: PARAFRASEA EL TEXTO BÍBLICO (Explica el contenido con tus propias palabras).
+                    NO uses citas textuales directas si eso dispara el filtro.
+                    Usa como base mental la versión TORRES AMAT (1825).
                     
-                    FORMATO OBLIGATORIO:
+                    FORMATO OBLIGATORIO (PARÁFRASIS):
                     [[LECTURA_1]]
-                    (Cita)
-                    > (Resumen breve del contenido...)
+                    (Cita Exacta: Libro Cap, vers-vers)
+                    > (Parafraseo fiel del contenido...)
 
                     [[SALMO]]
-                    (Cita)
-                    > (Resumen breve...)
+                    (Cita Exacta)
+                    > (Parafraseo fiel del Salmo...)
 
                     [[LECTURA_2]]
-                    (Cita)
-                    > (Resumen breve...)
+                    (Cita Exacta)
+                    > (Parafraseo fiel del contenido...)
 
                     [[EVANGELIO]]
-                    (Cita)
-                    > (Resumen breve...)
+                    (Cita Exacta)
+                    > (Parafraseo fiel del Evangelio...)
                     `;
                 } else {
                     // Default Structure Rescue (Clean Slate)
@@ -152,7 +154,28 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
                     return await generateLiturgy(cleanSlatePrompt, true);
                 } catch (retryError) {
                     console.error("⚠️ RETRY FAILED. USING STATIC FALLBACK.", retryError);
-                    // FALLBACK SKELETON: If even the "Clean Slate" fails, return a safe, static HTML skeleton.
+
+                    if (isReadingsMode) {
+                        return `
+                        [[LECTURA_1]]
+                        (Lectura no disponible)
+                        > (Error de generación. Por favor, lea directamente de la Biblia Torres Amat o su Leccionario).
+
+                        [[SALMO]]
+                        (Salmo no disponible)
+                        > (Error de generación. Consulte el Salmo del día).
+
+                        [[LECTURA_2]]
+                        (Lectura no disponible)
+                        > (Error de generación. Consulte su Leccionario).
+
+                        [[EVANGELIO]]
+                        (Evangelio no disponible)
+                        > (Error de generación. Consulte el Evangelio del día).
+                        `;
+                    }
+
+                    // FALLBACK SKELETON (Full Mass Structure)
                     return `
                     <h3>RITOS INICIALES</h3>
                     <em>(Generación automática bloqueada. Use este esquema manual).</em>

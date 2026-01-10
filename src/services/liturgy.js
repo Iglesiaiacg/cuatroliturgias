@@ -60,11 +60,23 @@ export const identifyFeast = (date) => {
 
         if (weekDay === 0) return `${sundayNum}º Domingo de Adviento`;
         return `Feria de Adviento (${sundayNum}ª Semana)`;
-    }
+        // 2. CHRISTMAS SEASON & BAPTISM
+        // Epiphany: Jan 6.
+        if (month === 0 && day === 6) return "Epifanía del Señor";
 
-    // 2. CHRISTMAS SEASON (Simplified)
-    // Note: Epiphany range logic might need tuning but basics here
-    if (d >= christmas || (month === 0 && day <= 13 && diffEaster < -60)) {
+        // Baptism of the Lord: Sunday after Jan 6.
+        const jan6 = new Date(year, 0, 6);
+        let baptismDate = new Date(year, 0, 6);
+        // Find next Sunday
+        baptismDate.setDate(jan6.getDate() + (7 - jan6.getDay()));
+        // If Jan 6 is Sunday, Baptism is strictly the NEXT Sunday (not same day, usually transferred to Mon is different issue, but standard is Sunday after).
+        // Wait, in many places if Epiphany is Sunday Jan 7 or 8 (transferred), Baptism is Monday. 
+        // Standard Roman Calendar: Baptism is Sunday after Jan 6.
+
+        // Correction: normalizing baptismDate to noon for Comparison
+        baptismDate = normalizeDate(baptismDate);
+
+        if (d.getTime() === baptismDate.getTime()) return "Fiesta del Bautismo del Señor";
         return "Tiempo de Navidad";
     }
 
@@ -183,11 +195,16 @@ export const getSeason = (date) => {
     const year = normalizeDate(date).getFullYear();
     const easter = getEasterDate(year);
     const ashWed = new Date(easter); ashWed.setDate(easter.getDate() - 46);
-    const adventStart = getAdventStart(year);
-    const christmas = new Date(year, 11, 25);
+    // Calculate Baptism of the Lord (End of Christmas Season)
+    // Sunday after Jan 6.
+    const jan6 = new Date(year, 0, 6);
+    const baptism = new Date(year, 0, 6);
+    baptism.setDate(jan6.getDate() + (7 - jan6.getDay()));
+    const baptismEnd = normalizeDate(baptism);
 
     if (date >= adventStart && date < christmas) return 'adviento';
-    if (date >= christmas || (date.getMonth() === 0 && date.getDate() <= 13)) return 'navidad';
+    // Christmas is from Dec 25 until Baptism (inclusive)
+    if (date >= christmas || (date.getMonth() === 0 && date <= baptismEnd)) return 'navidad';
     if (date >= ashWed && date < easter) {
         const diff = (easter - date) / OneDay;
         return diff <= 7 ? 'semana_santa' : 'cuaresma';
@@ -260,9 +277,13 @@ export const getLiturgicalRubrics = (date, tradition) => {
     }
 
     if (season === 'navidad') {
-        rubrics.gloria = true;
-        rubrics.credo = true; // Even weekdays in Octave? Simplified: Yes for season.
-        rubrics.preface = 'Navidad';
+        // Gloria: Only on Sundays OR during the Octave (Dec 25 - Jan 1) OR Epiphany
+        const isOctave = date.getMonth() === 11 && date.getDate() >= 25 || (date.getMonth() === 0 && date.getDate() <= 1);
+        const isEpiphany = date.getMonth() === 0 && date.getDate() === 6; // Or calculated Sunday
+
+        rubrics.gloria = day === 0 || isOctave || isEpiphany;
+        rubrics.credo = day === 0 || isEpiphany || (date.getMonth() === 11 && date.getDate() === 25) || (date.getMonth() === 0 && date.getDate() === 1);
+        rubrics.preface = isEpiphany ? 'Epifanía' : 'Navidad';
     }
 
     if (season === 'cuaresma') {
@@ -363,42 +384,29 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         if (tradition === 'tridentina') {
             traditionNote = "⚠️ ATENCIÓN: Esta es una MISA TRIDENTINA (1962). Usa el Calendario y Leccionario de 1962 (Pre-Vaticano II). NO USES EL LECCIONARIO MODERNO.";
         } else {
-            traditionNote = "Usa el Leccionario Romano/Jerusalén moderno según el ciclo calculado.";
+            traditionNote = "Usa el Leccionario Romano moderno según el ciclo calculado.";
         }
 
         return `
-            ACTUAR COMO: Experto Biblista y Lector.
-            OBJETIVO: Extraer las lecturas litúrgicas EXACTAS para esta fecha.
-            FECHA: ${dateStr}.
-            CICLO: ${cycle.cicloDom} | Año ${cycle.cicloFerial}.
-            FIESTA: ${celebrationLabel}.
-            TRADICIÓN: ${tradition.toUpperCase()}.
-            ${traditionNote}
+            INSTRUCCIÓN DE DATOS PUROS:
+            Genera el TEXTO COMPLETO de las siguientes lecturas bíblicas para ${dateStr} (${celebrationLabel}).
             
-            ⚠️ INSTRUCCIONES DE EXTRACCIÓN (CRÍTICO - ANTI-COPYRIGHT):
-            1. Necesito el TEXTO BÍBLICO para la Misa.
-            2. FUENTE: Usa la versión "TORRES AMAT" (1825, Dominio Público) o "Biblia de Jerusalén" (si es posible).
-            3. NO incluyas ritos, ni saludos, ni oraciones. SOLO LAS LECTURAS.
-            4. FORMATO DE SALIDA (Usa estos marcadores EXACTOS):
+            FUENTE: Biblia Torres Amat (1825).
+            FORMATO OBLIGATORIO (COPIA ESTOS MARCADORES):
             
             [[LECTURA_1]]
-            (Título de la lectura)
-            (Cita Bíblica)
-            (Texto completo...)
+            (Escribe aquí el texto completo de la 1ª Lectura)
 
             [[SALMO]]
-            (Antífona)
-            (Texto completo del Salmo o Estrofas...)
+            (Escribe aquí el texto completo del Salmo)
 
             [[LECTURA_2]]
-            (Título)
-            (Texto completo... Si no hay, escribe "OMITIDO")
+            (Escribe aquí el texto completo de la 2ª Lectura)
 
             [[EVANGELIO]]
-            (Cita)
-            (Texto completo del Evangelio...)
+            (Escribe aquí el texto completo del Evangelio)
             
-            5. Si Google bloquea el texto exacto, escribe un RESUMEN DETALLADO bajo cada marcador.
+            IMPORTANTE: SOLO el texto bíblico. No incluyas explicaciones.
         `;
     }
 
@@ -455,21 +463,15 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         2. Si el usuario te da una FECHA del futuro, NO uses el ciclo del año actual. USA EL CICLO QUE TE HE CALCULADO ARRIBA: **${cycle.cicloDom}**.
         3. Si hay contradicción, EL CICLO CALCULADO GANA.
         
-        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-BLOQUEO / COPYRIGHT):
-        NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto".
+        ⚠️ REGLA DE CONTENIDO (ANTI-BLOQUEO / COPYRIGHT):
+        NO intentes generar las oraciones oficiales del Misal Romano actual (Colecta, Ofrendas, Postcomunión) si tienen copyright.
         
-        ${!isStructureOnly ? `
-        ESTRATEGIA SMART PARA LECTURAS BÍBLICAS:
-        1. **PRIORIDAD ABSOLUTA:** USA EL TEXTO EXACTO DE LA BIBLIA "TORRES AMAT" (1825).
-           - Al ser de 1825, es de DOMINIO PÚBLICO. NO la resumas si puedes citarla textual.
-           - Copia el texto íntegro de la versión Torres Amat.
+        EN SU LUGAR:
+        1. Genera una ORACIÓN ORIGINAL Y DEVOTA basada en el tema del día.
+        2. O usa una fórmula clásica genérica.
+        3. LO IMPORTANTE ES QUE EL DOCUMENTO TENGA TEXTO COMPLETO Y NO SE QUEDE EN BLANCO.
         
-        2. **SOLO EN CASO DE EMERGENCIA (Si no la encuentras):**
-           - Si Google te impide generar el texto exacto por considerarlo Copyright (falso positivo)...
-           - EN ESE CASO ÚNICO: Escribe la CITA y un RESUMEN PARAFRASEADO para evitar el error.
-           
-        3. TU META: Texto Exacto (Torres Amat) > Resumen Parafraseado > Error.
-        ` : ''}
+        NO escribas "Aquí va el Canon". NO escribas "Recitación en secreto". Genera el texto completo de lo que se dice en voz alta.
         
         ⚠️ REGLA DE ORACIONES FIJAS (Pater Noster, Credo):
         Esas SÍ escríbelas completas (son patrimonio universal).
@@ -493,9 +495,9 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         El usuario exige un documento "LUCIDO", "ELEGANTE" y "CUIDADO".
         
         1. ESTRUCTURA VISUAL DE LUJO:
-- Usa Markdown \`# TÍTULO DE LA FIESTA\` al inicio (Se renderizará centrado y grande).
-           - Usa Markdown \`## GRANDES PARTES\` para secciones (RITOS INICIALES, LITURGIA DE LA PALABRA...).
-           - Usa separadores \`---\` para dividir momentos clave.
+           - OBLIGATORIO: Empieza con \`# FECHA Y TÍTULO DE LA FIESTA\` (Ej: # Domingo 12 de Enero - Bautismo del Señor).
+           - Usa Markdown \`## GRANDES PARTES\` para secciones.
+           - Usa separadores \`---\`.
 
         2. RÚBRICAS (ROJAS):
            - TODA instrucción (sentarse, de pie, hacer la señal de la cruz) DEBE ir entre DOBLES CORCHETES: \`[[Todos hacen la señal de la cruz]]\`.
@@ -505,14 +507,15 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
            - Usa SIEMPRE negrita y mayúsculas para el que habla: \`**SACERDOTE:**\`, \`**LECTOR:**\`, \`**TODOS:**\`.
            - Alinea los diálogos para que sean fáciles de leer en voz alta.
 
-        4. CALIDAD DEL TEXTO:
-           - Evita textos "burdos" o telegráficos. Usa un lenguaje solemne.
-           - Deja líneas en blanco entre rúbricas y oraciones para que respire el texto.
+        4. CALIDAD DEL TEXTO (ANTÍFONAS):
+           - ¡NO DEJES TÍTULOS SIN TEXTO!
+           - Para "Canto de Entrada", "Ofertorio" y "Comunión": SIEMPRE escribe una Antífona completa basada en un Salmo o frase bíblica.
+           - Ejemplo: "**Antífona de Entrada:** Un niño nos ha nacido, un hijo se nos ha dado..."
+           - Si no hay canto específico, GENERA UNA ANTÍFONA BÍBLICA ADECUADA al día.
 
         5. TÍTULOS DE SECCIONES:
            - Para Misa TRIDENTINA y ORDINARIATO: Genera TÍTULOS BILINGÜES (Latín / Español).
            - Para Misa ROMANA y ANGLICANA: Usa TÍTULOS EN ESPAÑOL SOLAMENTE (salvo 'Kyrie' o 'Agnus Dei' si es uso común).
-           
            - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato):
              * "INTROITUS (Canto de Entrada)"
              * "KYRIE ELEISON"
@@ -861,13 +864,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
     return `
         ${basePrompt}
-        FUENTE: Misal Romano (Uso Litúrgico General / Textos Universales).
-        IDIOMA: Español.
+        FUENTE: Misal Romano (Tercera Edición).
+        ESTILO OBLIGATORIO: "HIGH CHURCH" (Solemne y Tradicional).
+        TITULACIÓN: Usa Títulos en LATÍN y ESPAÑOL (Ej: RITUS INITIALES / Ritos Iniciales).
         ${omissionRules}
-        
-        ⚠️ RÚBRICA DE PREFACIO (CRÍTICO):
-        EL USUARIO REQUIERE EXACTAMENTE ESTE PREFACIO (Si es posible): "${rubrics.preface}".
-        SI EL MISAL LO PERMITE, USA ESE TEMA.
         
         ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
         NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
@@ -879,90 +879,97 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         - [[INSERTAR_PADRE_NUESTRO]]
         - [[INSERTAR_CORDERO]]
 
-        ESTRUCTURA OBLIGATORIA (FORMATO GUIÓN - TEXTO COMPLETO):
-        Genera el GUIÓN LITÚRGICO con todos los diálogos y oraciones escritas.
+        ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - CON TÍTULOS BILINGÜES):
 
-        1. RITOS INICIALES:
-           - Rúbrica de procesión de entrada.
-           - SALUDO INICIAL:
-             **SACERDOTE:** En el nombre del Padre, y del Hijo, y del Espíritu Santo.
-             **PUEBLO:** Amén.
-             **SACERDOTE:** El Señor esté con vosotros (o fórmula similar).
-             **PUEBLO:** Y con tu espíritu.
-           - ACTO PENITENCIAL: Escribe ÚNICAMENTE el marcador \`[[INSERTAR_YO_CONFIESO]]\`.
-           - KYRIE: 
-             **SACERDOTE:** Señor, ten piedad. **PUEBLO:** Señor, ten piedad.
-             **SACERDOTE:** Cristo, ten piedad. **PUEBLO:** Cristo, ten piedad.
-             **SACERDOTE:** Señor, ten piedad. **PUEBLO:** Señor, ten piedad.
-           ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA).' : '- GLORIA: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
-           - ORACIÓN COLECTA:
-             **SACERDOTE:** Oremos. (ESCRIBE AQUÍ EL TEXTO COMPLETO DE LA ORACIÓN PROPIA DEL DÍA).
-             **PUEBLO:** Amén.
+        I. RITOS INICIALES (RITUS INITIALES)
+        0. [[Procesión de Entrada]]
+        1. INTROITUS (Canto de Entrada):
+           - ${isStructureOnly ? '[[Momento del Canto]]' : '⚠️ OBLIGATORIO: GENERA UNA ANTÍFONA BÍBLICA COMPLETA.'}
+        2. SALUDO Y ACTO PENITENCIAL:
+           - [[Saludo del Celebrante]]
+           - Acto Penitencial: USA EL MARCADOR \`[[INSERTAR_YO_CONFIESO]]\`.
+           - KYRIE ELEISON: (Escribe el diálogo Señor, ten piedad completo).
+        3. GLORIA IN EXCELSIS:
+           ${(season === 'adviento' || season === 'cuaresma') ? '- [[OMITIR GLORIA: Tiempo Penitencial]]' : '- USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
+        4. COLLECTA (Oración Colecta):
+           - [[Oremos]]
+           - ⚠️ IMPORTANTE: Genera la Oración Colecta en BLOQUE DE CITA (Markdown > ) para que se vea solemne.
+           > "Dios todopoderoso..." (Escribe una oración propia y completa).
 
-        2. LITURGIA DE LA PALABRA:
-           - 1ª Lectura: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
-           - Salmo: ${isStructureOnly ? '[[SALMO]]' : '(Respuesta y estrofas completas).'}.
-           - 2ª Lectura: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
-           - Aleluya/Tracto: (Escribe el verso completo).
-           - Evangelio: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Torres Amat).'}.
+        II. LITURGIA DE LA PALABRA (LITURGIA VERBI)
+        5. LECTIO I (Primera Lectura):
+           ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Fuente: Biblia Torres Amat - Dominio Público).'}
         
-        3. HOMILÍA Y CREDO:
-           - Título: **HOMILÍA** (Momento de silencio o reflexión).
-           ${isAshWednesday ? `
-           ⚠ **MIÉRCOLES DE CENIZA**
-           **BENDICIÓN E IMPOSICIÓN DE LA CENIZA**
-           - Oración de Bendición: "Oh Dios, que te dejas vencer..." (TEXTO COMPLETO).
-           - Imposición: "Conviértete y cree en el Evangelio".
-           (SIN CREDO NI ACTO PENITENCIAL).
-           ` : `- Credo: ${rubrics.credo ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO).'}`}
+        6. PSALMUS RESPONSORIALIS (Salmo Responsorial):
+           ⚠️ FORMATO RESPONSORIAL OBLIGATORIO:
+           > R. [Escribe la Antífona completa]
+           > V. [Escribe la Estrofa 1]
+           > R. [Repetir Antífona]
+           ${isStructureOnly ? '[[SALMO]]' : '(Usa textos de Torres Amat).'}
+        
+        7. LECTIO II (Segunda Lectura):
+           ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Fuente: Biblia Torres Amat - Dominio Público).'}
+        
+        8. ALLELUIA (o Tractus):
+           - [[Aleluya de pie]]
+           > Aleluya, aleluya. [Verso completo]. Aleluya.
+        
+        9. EVANGELIUM (Santo Evangelio):
+           - [[Lectura del Santo Evangelio]]
+           ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE TEXTO COMPLETO (Fuente: Biblia Torres Amat - Dominio Público).'}
+        
+        III. HOMILÍA Y CREDO (CREDO IN UNUM DEUM)
+        10. Homilía: [[Breve momento de silencio]]
+        11. Credo:
+            ${rubrics.credo ? '- USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '- [[Omitir Credo en ferias]]'}
 
-        4. ORACIÓN UNIVERSAL:
-           **SACERDOTE:** Oremos a Dios Padre... (Breve invitación).
-           (Redacta 5 peticiones completas con respuesta del pueblo).
-           **SACERDOTE:** (Oración conclusiva completa).
+        IV. ORACIÓN DE LOS FIELES (ORATIO FIDELIUM)
+        12. Oración Universal:
+            ⚠️ TEMA OBLIGATORIO: Peticiones basadas en el Evangelio.
+            - Redacta 5-6 peticiones específicas.
+            > V. Roguemos al Señor.
+            > R. Te rogamos, óyenos.
 
-        5. LITURGIA EUCARÍSTICA:
-           - OFERTORIO:
-             **SACERDOTE:** Bendito seas, Señor, Dios del universo, por este pan...
-             **PUEBLO:** Bendito seas por siempre, Señor.
-             (Idem para el vino).
-             **SACERDOTE:** Orad, hermanos, para que este sacrificio...
-             **PUEBLO:** El Señor reciba de tus manos...
-           - ORACIÓN SOBRE LAS OFRENDAS: (Texto completo de la oración propia).
-           
-           - PLEGARIA EUCARÍSTICA:
-             **SACERDOTE:** El Señor esté con vosotros. **PUEBLO:** Y con tu espíritu.
-             **SACERDOTE:** Levantemos el corazón. **PUEBLO:** Lo tenemos levantado hacia el Señor.
-             **SACERDOTE:** Demos gracias al Señor, nuestro Dios. **PUEBLO:** Es justo y necesario.
-             
-             - PREFACIO: (Escribe el texto completo del Prefacio: "En verdad es justo y necesario...").
-             - SANTO: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-             
-             - CONSAGRACIÓN: USA EL MARCADOR \`[[INSERTAR_CONSAGRACION]]\`.
-               (NO escribas el texto de la consagración, solo el marcador).
-             
-             - DOXOLOGÍA FINAL:
-               **SACERDOTE:** Por Cristo, con Él y en Él...
-               **PUEBLO:** Amén.
+        V. LITURGIA EUCARÍSTICA (LITURGIA EUCHARISTICA)
+        13. OFFERTORIUM (Rito de Ofertorio):
+            - [[Presentación de Ofrendas]]
+            - Antífona: > [Texto de la Antífona de Ofertorio]
+            - Sacerdote: > "Bendito seas, Señor... por este pan..."
+            - [[Lavabo]]: > "Lava del todo mi delito, Señor..."
+            - Orate Fratres.
+            - ORATIO SUPER OBLATA (Oración sobre las Ofrendas):
+            > (Escribe la oración completa en bloque de cita).
+        
+        14. PREX EUCHARISTICA (Plegaria Eucarística):
+            - PRAEFATIO: > (Escribe el texto del Prefacio).
+            - SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+            - CONSAGRACIÓN Y ANAMNESIS:
+              [[El Sacerdote extiende las manos sobre las ofrendas]]
+              > "TOMAD Y COMED TODOS DE ÉL..." (Mayúsculas solemnes).
+              [[Elevación del Cuerpo]]
+              > "TOMAD Y BEBED TODOS DE ÉL..." (Mayúsculas solemnes).
+              [[Elevación de la Sangre]]
+              > "Este es el Sacramento de nuestra fe."
+            - DOXOLOGÍA FINAL:
+              > "Por Cristo, con Él y en Él..."
 
-        6. RITO DE COMUNIÓN:
-           - PADRE NUESTRO: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-           - EMBOLISMO: "Líbranos de todos los males, Señor...".
-           - RITO DE LA PAZ: "La paz del Señor esté siempre con vosotros."
-           - CORDERO: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-           - COMUNIÓN: (Escribe la antífona de comunión).
-           - ORACIÓN POST-COMUNIÓN:
-             **SACERDOTE:** Oremos. (Texto completo de la oración propia).
-             **PUEBLO:** Amén.
+        VI. RITO DE COMUNIÓN (RITUS COMMUNIONIS)
+        15. PATER NOSTER: 
+            - USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
+            - EMBOLISMO (Sacerdote): 
+              > "Líbranos de todos los males, Señor... esperamos la venida gloriosa de nuestro Salvador Jesucristo."
+            - DOXOLOGÍA (Pueblo): 
+              > "Tuyo es el reino, tuyo el poder y la gloria, por siempre, Señor."
+        16. Rito de la Paz: [[Intercambio de la Paz]]
+        17. AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
+        18. COMMUNIO (Antífona de Comunión):
+            - Antífona: > [Escribe la Antífona Bíblica Completa]
+        19. ORATIO POST COMMUNIO (Oración Post-comunión):
+            - [[Oremos]]
+            > (Escribe la oración completa en bloque de cita).
 
-        7. RITO DE CONCLUSIÓN:
-           - BENDICIÓN FINAL:
-             **SACERDOTE:** El Señor esté con vosotros.
-             **SACERDOTE:** La bendición de Dios todopoderoso... descienda sobre vosotros.
-             **PUEBLO:** Amén.
-           - DESPEDIDA:
-             **DIÁCONO/SACERDOTE:** Podéis ir en paz.
-             **PUEBLO:** Demos gracias a Dios.
-           - ${marianAntiphonText}
+        VII. RITOS DE CONCLUSIÓN (RITUS CONCLUSIONIS)
+        20. Bendición Final y Despedida.
+        21. ${marianAntiphonText}
     `;
 };

@@ -20,7 +20,7 @@ const Preview = forwardRef(({ content, season, rubricLevel }, ref) => {
     };
 
     return (
-        <div className={`w-full max-w-4xl animate-slide-in relative ${rubricLevel === 'solemn' ? 'mode-solemn' : ''}`}>
+        <div className={`w-full max-w-4xl animate-slide-in relative ${rubricLevel === 'solemn' ? 'mode-solemn' : 'rubrics-simple'}`}>
             {/* Annotation Popover */}
             {activeNote && (
                 <div className="fixed bottom-8 right-8 z-50 w-72 bg-white dark:bg-surface-dark p-4 rounded-xl shadow-2xl border-l-4 border-primary animate-slide-up">

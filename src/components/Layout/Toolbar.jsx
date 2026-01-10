@@ -5,7 +5,7 @@ export default function Toolbar({ onPrint, onDownloadFull, onDownloadBulletin, o
             {/* Rubric Level Toggle (Now inside Liturgy Toolbar) */}
             <button
                 onClick={onToggleRubric}
-                className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold text-gray-600 hover:text-primary transition-colors uppercase tracking-wider"
+                className={`flex items-center gap-2 px-3 py-1.5 text-xs font-bold transition-all uppercase tracking-wider rounded-lg border ${rubricLevel === 'solemn' ? 'text-red-700 border-red-300 bg-red-50 shadow-sm' : 'text-gray-500 border-transparent hover:bg-gray-50'}`}
                 title={`Nivel de Rúbricas: ${rubricLevel === 'solemn' ? 'Solemne' : 'Simple'}`}
             >
                 <span>{rubricLevel === 'solemn' ? '🔴' : '⭕'}</span> {rubricLevel === 'solemn' ? 'Rúbricas' : 'Simple'}
