@@ -95,20 +95,22 @@ const Receipt = forwardRef(({ data }, ref) => {
                 </div>
 
                 {/* Footer / Signature using grid */}
-                <div className="grid grid-cols-2 gap-12 mt-auto items-end">
-                    <div className="text-[10px] text-gray-500 text-justify leading-tight">
-                        Este documento es un comprobante interno de la Iglesia Anglicana Comunidad de Gracia.
-                        Cualquier duda o aclaración favor de contactar a la tesorería.
-                        <br />Xalapa, Veracruz.
-                    </div>
-                    <div className="flex flex-col items-center">
-                        <div className="w-full border-b border-gray-900 mb-2 relative h-12">
-                            {/* Fake Signature */}
-                            <div className="absolute bottom-1 left-10 font-handwriting text-3xl text-blue-900 -rotate-2 opacity-60">
-                                Tesorería IACG
+                {/* Footer / Signatures */}
+                <div className="mt-auto">
+                    <div className="grid grid-cols-2 gap-16 mb-6">
+                        <div className="flex flex-col items-center">
+                            <div className="w-full border-b border-gray-900 mb-2 h-12 relative">
+                                {/* Optional: Keep seal/stamp on Treasurer side if desired, or leave blank for manual sign */}
                             </div>
+                            <span className="text-xs font-bold uppercase tracking-wider">Firma del Tesorero</span>
                         </div>
-                        <span className="text-xs font-bold uppercase tracking-wider">Firma Autorizada</span>
+                        <div className="flex flex-col items-center">
+                            <div className="w-full border-b border-gray-900 mb-2 h-12"></div>
+                            <span className="text-xs font-bold uppercase tracking-wider">Firma del Revisor</span>
+                        </div>
+                    </div>
+                    <div className="text-[9px] text-gray-400 text-center uppercase tracking-widest">
+                        Comprobante Interno • Iglesia Anglicana Comunidad de Gracia • Xalapa, Ver.
                     </div>
                 </div>
 
