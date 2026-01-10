@@ -82,35 +82,42 @@ export const generateLiturgy = async (prompt, isRetry = false) => {
 
             // SAFETY FILTER BYPASS: Auto-Retry on RECITATION
             if (candidate?.finishReason === 'RECITATION' && !isRetry) {
-                console.warn("⚠️ RECITATION DETECTED. Retrying with ULTIMATE Rescue Mode (Temp 1.3)...");
+                console.warn("⚠️ RECITATION DETECTED. Retrying with CLEAN SLATE Strategy...");
 
-                // ULTIMATE FIX: Regex Nuke on all "Copy" commands.
-                let safePrompt = prompt
-                    .replace(/TEXTO BÍBLICO COMPLETO/gi, "SOLO RESUMEN")
-                    .replace(/TEXTO COMPLETO/gi, "SOLO RESUMEN")
-                    .replace(/TEXTO EXACTO/gi, "SOLO RESUMEN")
-                    .replace(/Copia el texto/gi, "Resume el texto")
-                    .replace(/Escribe el texto/gi, "Resume el texto")
-                    .replace(/Usa Biblia Torres Amat/gi, "Usa tus propias palabras");
+                // STRATEGY CHANGE: The original prompt is chemically toxic to the model at this point.
+                // We cannot fix it by replacing strings. We must ABANDON it.
+                // We will extract basic metadata if possible, or just ask for a generic structure.
 
-                safePrompt += `
+                // Extract minimal context from original prompt to keep continuity if possible
+                const dateMatch = prompt.match(/FECHA: (.*?)\n/);
+                const seasonMatch = prompt.match(/TIEMPO: (.*?)\n/);
+                const celebrationMatch = prompt.match(/CELEBRACIÓN: (.*?)\n/);
+
+                const safeDate = dateMatch ? dateMatch[1] : "Fecha solicitada";
+                const safeSeason = seasonMatch ? seasonMatch[1] : "Tiempo Ordinario";
+                const safeCelebration = celebrationMatch ? celebrationMatch[1] : "Feria";
+
+                // Construct a BRAND NEW, STERILE PROMPT
+                const cleanSlatePrompt = `
+                ACTUAR COMO: Asistente Litúrgico.
+                CONTEXTO: ${safeDate} - ${safeSeason} - ${safeCelebration}.
                 
-                🛑 CIERRE DE EMERGENCIA: BLOQUEO POR COPYRIGHT ACTIVO 🛑
+                OBJETIVO:
+                Generar el esquema de la Santa Misa para este día, PERO SIN INCLUIR NINGÚN TEXTO BÍBLICO (para evitar problemas de Copyright).
                 
-                CAMBIO DE ESTRATEGIA INMEDIATO:
-                1. EL USUARIO YA NO QUIERE LOS TEXTOS BÍBLICOS.
-                2. SÓLO QUIERE LA ESTRUCTURA DE LA MISA.
-                3. EN LUGAR DE LAS LECTURAS, escribe UNICAMENTE:
-                   "[AQUÍ IRÍA LA LECTURA DE (Cita)]"
-                   > (Escribe aquí un pensamiento espiritual breve de 1 línea sobre el tema).
+                INSTRUCCIONES DE SEGURIDAD:
+                1. Genera TODA la estructura de la Misa (Ritos Iniciales, Liturgia de la Palabra, Eucaristía, Conclusión).
+                2. EN LUGAR DE LAS LECTURAS (Primera, Salmo, Evangelio), escribe SOLAMENTE:
+                   - El Título de la lectura.
+                   - La Cita Bíblica (ej. Juan 1, 1-18).
+                   - Un breve resumen de 2 líneas sobre qué trata.
+                3. NO INTENTES ESCRIBIR EL TEXTO DE LA LECTURA.
+                4. Las oraciones (Colecta, ofrendas) pueden ser parafraseadas o genéricas.
                 
-                4. PROHIBIDO CITAR LA BIBLIA DIRECTAMENTE. 
-                5. USA TUS PROPIAS PALABRAS PARA TODO.
-                6. SÉ CREATIVO/ESPIRITUAL, PERO NO LITERAL.
+                FORMATO: HTML simple con títulos en <h3> y rúbricas en <em>.
                 `;
 
-                // Recursive call with HIGH TEMPERATURE to force creativity/paraphrasing
-                return generateLiturgy(safePrompt, true);
+                return generateLiturgy(cleanSlatePrompt, true);
             }
 
             throw new Error(`Respuesta incompleta de Google. Razón: ${candidate?.finishReason || 'Desconocida'}. Revisa la consola.`);
