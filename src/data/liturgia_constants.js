@@ -86,5 +86,32 @@ y líbranos del mal.`,
     "[[INSERTAR_CORDERO]]": `**TODOS:**
 Cordero de Dios, que quitas el pecado del mundo, ten piedad de nosotros.
 Cordero de Dios, que quitas el pecado del mundo, ten piedad de nosotros.
-Cordero de Dios, que quitas el pecado del mundo, danos la paz.`
+Cordero de Dios, que quitas el pecado del mundo, danos la paz.`,
+
+    "[[INSERTAR_CONSAGRACION]]": `**SACERDOTE:**
+El cual, cuando iba a ser entregado a su Pasión,
+voluntariamente aceptada,
+tomó pan, dándote gracias, lo partió
+y lo dio a sus discípulos, diciendo:
+
+> **TOMAD Y COMED TODOS DE ÉL,**
+> **PORQUE ESTO ES MI CUERPO,**
+> **QUE SERÁ ENTREGADO POR VOSOTROS.**
+
+Del mismo modo, acabada la cena,
+tomó el cáliz,
+y, dándote gracias de nuevo,
+lo pasó a sus discípulos, diciendo:
+
+> **TOMAD Y BEBED TODOS DE ÉL,**
+> **PORQUE ÉSTE ES EL CÁLIZ DE MI SANGRE,**
+> **SANGRE DE LA ALIANZA NUEVA Y ETERNA,**
+> **QUE SERÁ DERRAMADA POR VOSOTROS**
+> **Y POR MUCHOS PARA EL PERDÓN DE LOS PECADOS.**
+> **HACED ESTO EN CONMEMORACIÓN MÍA.**
+
+**SACERDOTE:** Éste es el Sacramento de nuestra fe.
+
+**TODOS:** Anunciamos tu muerte, proclamamos tu resurrección.
+¡Ven, Señor Jesús!`
 };

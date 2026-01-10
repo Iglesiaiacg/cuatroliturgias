@@ -938,11 +938,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
              - PREFACIO: (Escribe el texto completo del Prefacio: "En verdad es justo y necesario...").
              - SANTO: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
              
-             - CONSAGRACIÓN (Escribe el texto solemne de la Plegaria Eucarística II o la que elijas):
-               > "Santo eres en verdad, Señor, fuente de toda santidad..."
-               > (Incluye las palabras de la Institución sobre el Pan y el Vino).
-               > "Este es el Misterio de la fe."
-               > **PUEBLO:** Anunciamos tu muerte, proclamamos tu resurrección...
+             - CONSAGRACIÓN: USA EL MARCADOR \`[[INSERTAR_CONSAGRACION]]\`.
+               (NO escribas el texto de la consagración, solo el marcador).
              
              - DOXOLOGÍA FINAL:
                **SACERDOTE:** Por Cristo, con Él y en Él...
