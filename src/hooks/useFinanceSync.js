@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc, query, orderBy, limit, increment, setDoc, getDocs } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, doc, deleteDoc, updateDoc, query, orderBy, limit, increment, setDoc, getDocs, where } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
 export function useFinanceSync(limitCount = 100) {
@@ -93,7 +93,12 @@ export function useFinanceSync(limitCount = 100) {
                 type = transactionData.type;
             } else {
                 // Fetch if not provided (safety)
-                // ... skipped for brevity, assuming UI passes it or we accept slight risk (UI should pass it)
+                const docSnap = await getDocs(query(collection(db, 'transactions'), where('__name__', '==', id)));
+                if (!docSnap.empty) {
+                    const data = docSnap.docs[0].data();
+                    amountVal = parseFloat(data.amount);
+                    type = data.type;
+                }
             }
 
             const reverseAmount = type === 'income' ? -amountVal : amountVal;

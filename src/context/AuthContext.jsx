@@ -104,9 +104,9 @@ export function AuthProvider({ children }) {
                 setUserRole('guest');
 
                 // SUPER ADMIN HARDCHECK (Case Insensitive)
-                const SUPER_ADMINS = ['alexveo855@gmail.com'];
+                const superAdmins = (import.meta.env.VITE_SUPER_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
                 const normalizedEmail = user.email.toLowerCase();
-                const isSuperAdmin = SUPER_ADMINS.includes(normalizedEmail);
+                const isSuperAdmin = superAdmins.includes(normalizedEmail);
 
                 // PRE-EMPTIVE ROLE ASSIGNMENT
                 // If Super Admin, grant access immediately so UI works even if Firestore permissions fail
@@ -218,8 +218,8 @@ export function AuthProvider({ children }) {
 
         // SUPER ADMIN EXCLUSIVE: Only specific emails can generate liturgy
         if (permissionId === 'generate_liturgy') {
-            const SUPER_ADMINS = ['alexveo855@gmail.com'];
-            return currentUser && SUPER_ADMINS.includes(currentUser.email.toLowerCase());
+            const superAdmins = (import.meta.env.VITE_SUPER_ADMIN_EMAILS || '').split(',').map(e => e.trim().toLowerCase());
+            return currentUser && superAdmins.includes(currentUser.email.toLowerCase());
         }
 
         // ADMIN Override: IF acting as admin (no preview) -> ALL Access (except generate_liturgy which is restricted above)
