@@ -60,23 +60,25 @@ export const identifyFeast = (date) => {
 
         if (weekDay === 0) return `${sundayNum}º Domingo de Adviento`;
         return `Feria de Adviento (${sundayNum}ª Semana)`;
-        // 2. CHRISTMAS SEASON & BAPTISM
-        // Epiphany: Jan 6.
-        if (month === 0 && day === 6) return "Epifanía del Señor";
+    }
 
-        // Baptism of the Lord: Sunday after Jan 6.
+    // 2. CHRISTMAS SEASON & BAPTISM
+    // Note: This covers Dec 25 to Baptism (Jan)
+    const baptism = () => {
         const jan6 = new Date(year, 0, 6);
-        let baptismDate = new Date(year, 0, 6);
-        // Find next Sunday
-        baptismDate.setDate(jan6.getDate() + (7 - jan6.getDay()));
-        // If Jan 6 is Sunday, Baptism is strictly the NEXT Sunday (not same day, usually transferred to Mon is different issue, but standard is Sunday after).
-        // Wait, in many places if Epiphany is Sunday Jan 7 or 8 (transferred), Baptism is Monday. 
-        // Standard Roman Calendar: Baptism is Sunday after Jan 6.
+        let bDay = new Date(year, 0, 6);
+        bDay.setDate(jan6.getDate() + (7 - jan6.getDay()));
+        return normalizeDate(bDay);
+    };
 
-        // Correction: normalizing baptismDate to noon for Comparison
-        baptismDate = normalizeDate(baptismDate);
+    const baptismDate = baptism();
+    const prevYearChristmas = normalizeDate(new Date(year - 1, 11, 25));
+    const nextYearBaptism = baptismDate; // Already for current year
 
-        if (d.getTime() === baptismDate.getTime()) return "Fiesta del Bautismo del Señor";
+    // If Jan 1-Baptism or Dec 25-31
+    if ((d >= prevYearChristmas && d <= nextYearBaptism) || (d >= christmas)) {
+        if (month === 0 && day === 6) return "Epifanía del Señor";
+        if (d.getTime() === nextYearBaptism.getTime()) return "Fiesta del Bautismo del Señor";
         return "Tiempo de Navidad";
     }
 
@@ -392,25 +394,32 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         }
 
         return `
-            INSTRUCCIÓN DE DATOS PUROS:
-            Genera el TEXTO COMPLETO de las siguientes lecturas bíblicas para ${dateStr} (${celebrationLabel}).
+            INSTRUCCIÓN DE DATOS PUROS (MODO LECTURAS):
+            Genera el TEXTO COMPLETO de las lecturas para ${dateStr} (${celebrationLabel}).
             
-            FUENTE: Biblia Torres Amat (1825).
+            ${traditionNote}
+
             FORMATO OBLIGATORIO (COPIA ESTOS MARCADORES):
             
             [[LECTURA_1]]
-            (Escribe aquí el texto completo de la 1ª Lectura)
+            (Incipit: "Lectura del Libro de...")
+            **[Cita Bíblica]**
+            (Texto completo según Torres Amat 1825)
 
             [[SALMO]]
-            (Escribe aquí el texto completo del Salmo)
+            (Respuesta: ...)
+            **[Cita del Salmo]**
+            (Texto completo)
 
             [[LECTURA_2]]
-            (Escribe aquí el texto completo de la 2ª Lectura)
+            (Incipit: "Lectura de la carta de...")
+            **[Cita Bíblica]**
+            (Texto completo)
 
             [[EVANGELIO]]
-            (Escribe aquí el texto completo del Evangelio)
-            
-            IMPORTANTE: SOLO el texto bíblico. No incluyas explicaciones.
+            (Incipit: "En aquel tiempo...")
+            **[Cita del Evangelio]**
+            (Texto completo)
         `;
     }
 
@@ -459,6 +468,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         - PROHIBIDO CAMBIAR EL CICLO. Si generas lecturas de otro ciclo, FALLARÁS LA MISIÓN.
         
         - CASO CRÍTICO 28 DIC 2025: Es Domingo de la Sagrada Familia (CICLO A). El Evangelio OBLIGATORIO es MATEO 2, 13-15. 19-23 (Huida a Egipto).
+        - CASO CRÍTICO 11 ENE 2026: Fiesta del Bautismo del Señor (CICLO A). El Evangelio OBLIGATORIO es MATEO 3, 13-17.
         - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
         - Si es una FIESTA (San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
 
@@ -945,15 +955,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             > (Escribe la oración completa en bloque de cita).
         
         14. PREX EUCHARISTICA (Plegaria Eucarística):
-            - PRAEFATIO: > (Escribe el texto del Prefacio).
+            - PRAEFATIO: > (Escribe el texto del Prefacio con cloaking ~).
             - SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
             - CONSAGRACIÓN Y ANAMNESIS:
-              [[El Sacerdote extiende las manos sobre las ofrendas]]
-              > "TOMAD Y COMED TODOS DE ÉL..." (Mayúsculas solemnes).
-              [[Elevación del Cuerpo]]
-              > "TOMAD Y BEBED TODOS DE ÉL..." (Mayúsculas solemnes).
-              [[Elevación de la Sangre]]
-              > "Este es el Sacramento de nuestra fe."
+              USA EL MARCADOR \`[[INSERTAR_CONSAGRACION]]\`.
+              (No escribas el texto de la consagración, usa el marcador).
             - DOXOLOGÍA FINAL:
               > "Por Cristo, con Él y en Él..."
 

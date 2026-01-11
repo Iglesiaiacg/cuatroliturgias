@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getLiturgicalCycle, getSeason, getTips, buildPrompt, identifyFeast } from '../services/liturgy';
 import { generateLiturgy } from '../services/gemini';
+import { fetchEvangelizoReadings, formatEvangelizoReadings } from '../services/evangelizo';
 import { getPreferences, savePreferences, addToHistory } from '../services/storage';
 import { db, auth } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
@@ -54,6 +55,13 @@ export const useLiturgy = () => {
             const label = identifyFeast(selectedDate);
             const cycle = getLiturgicalCycle(selectedDate);
 
+            // 🔍 DEBUG: Log tradition value
+            console.log("================== GENERATION DEBUG ==================");
+            console.log("📍 Current Tradition:", tradition);
+            console.log("📅 Selected Date:", selectedDate);
+            console.log("🎭 Feast Label:", label);
+            console.log("=====================================================");
+
             // 1. BUILD DUAL PROMPTS (Surgical Split)
             const promptStructure = buildPrompt({
                 selectedDate,
@@ -75,41 +83,163 @@ export const useLiturgy = () => {
             // But let's assume the new split logic is robust enough for all if configured.
             // For now, let's try the split strategy primarily, as it isolates failures.
 
-            console.log("🚀 Starting Surgical Liturgy Generation...");
-            const [structureRes, readingsRes] = await Promise.all([
-                generateLiturgy(promptStructure),
-                generateLiturgy(promptReadings)
-            ]);
+            console.log("🚀 Starting Liturgy Generation...");
+
+            // For Catholic Rite, use STATIC TEMPLATE + Evangelizo for readings
+            let readingsRes, structureRes;
+
+            if (tradition === 'catolica') {
+                console.log("   📖 Structure: Static Template (No AI)");
+                console.log("   📜 Readings: Evangelizo API (Official Catholic Texts)");
+                console.log("   🎵 Alleluia: Gemini (Contextual)");
+                console.log("   🙏 Intercessions: Gemini (Contextual)");
+                console.log("   ✠ Preface & Prayers: Gemini (Proper)");
+                console.log("   🎨 Antiphons: Gemini (Gradual)");
+                console.log("   ✅ CONFIRMED: Using static template + Evangelizo for catolica tradition");
+
+                try {
+                    // Import template and services
+                    const { buildCatholicMassTemplate } = await import('../templates/catholicMass.js');
+                    const { generatePrayersOfFaithful, generateAlleluiaVerse } = await import('../services/prayersOfFaithful.js');
+                    const { getLiturgicalColor, generatePreface, generateProperPrayers, generateAntiphons } = await import('../services/liturgicalPropers.js');
+
+                    // Get readings from Evangelizo
+                    const evangelizoData = await fetchEvangelizoReadings(selectedDate);
+                    readingsRes = formatEvangelizoReadings(evangelizoData);
+                    console.log("✅ Readings fetched from Evangelizo");
+
+                    // Determine liturgical color
+                    const colorInfo = getLiturgicalColor(selectedDate, label, getSeason(selectedDate));
+                    console.log(`✅ Liturgical Color: ${colorInfo.color} ${colorInfo.emoji}`);
+
+                    // Generate contextual Alleluia verse
+                    const alleluiaVerse = await generateAlleluiaVerse(evangelizoData.evangelio);
+                    console.log("✅ Alleluia verse generated");
+
+                    // Generate contextual Prayers of the Faithful
+                    const intercessions = await generatePrayersOfFaithful(evangelizoData, label);
+                    console.log("✅ Prayers of the Faithful generated");
+
+                    // Generate Preface
+                    const preface = await generatePreface(label, evangelizoData.evangelio, getSeason(selectedDate));
+                    console.log("✅ Preface generated");
+
+                    // Generate Proper Prayers
+                    const properPrayers = await generateProperPrayers(label, evangelizoData);
+                    console.log("✅ Proper Prayers generated");
+
+                    // Generate Antiphons
+                    const antiphons = await generateAntiphons(label, evangelizoData.evangelio);
+                    console.log("✅ Antiphons generated");
+
+                    // Use static template for structure
+                    structureRes = buildCatholicMassTemplate({
+                        feastLabel: label,
+                        season: getSeason(selectedDate),
+                        date: selectedDate,
+                        liturgicalColor: colorInfo,
+                        alleluiaVerse: alleluiaVerse,
+                        intercessions: intercessions,
+                        preface: preface,
+                        properPrayers: properPrayers,
+                        antiphons: antiphons
+                    });
+                    console.log("✅ Static structure template generated");
+
+                } catch (error) {
+                    console.warn("⚠️ Evangelizo/Template failed, falling back to Gemini:", error);
+                    // Fallback to full Gemini if anything fails
+                    structureRes = await generateLiturgy(promptStructure);
+                    readingsRes = await generateLiturgy(promptReadings);
+                }
+            } else {
+                console.log("   📖 Structure: Gemini 2.0 Flash");
+                console.log("   📜 Readings: Gemini 2.0 Flash");
+                console.log("   ℹ️  Tradition is NOT catolica, using Gemini. Current value:", tradition);
+
+                // Other traditions use Gemini for everything
+                structureRes = await generateLiturgy(promptStructure);
+                readingsRes = await generateLiturgy(promptReadings);
+            }
 
             console.log("✅ Generation Complete. Merging...");
 
             let finalMarkdown = structureRes;
 
             // 3. MERGE LOGIC (Inject Readings into Structure)
-            // Helper to extract reading text
-            const extractReading = (text, marker) => {
-                const regex = new RegExp(`\\[\\[${marker}\\]\\]([\\s\\S]*?)(?=\\[\\[|$)`, 'i');
+            // For catolica tradition, readingsRes has format: [[MARKER]]\n**Citation**\nContent
+            // We need to extract ONLY the content (citation + text) without the marker
+
+            const extractReadingContent = (text, marker) => {
+                if (!text) return null;
+
+                // Look for pattern: [[MARKER]]\nContent (until next marker or end)
+                // Note: Between markers there can be multiple newlines, so use \s* before next [[
+                const regex = new RegExp(`\\[\\[${marker}\\]\\]\\s*([\\s\\S]*?)(?=\\s*\\[\\[|$)`, 'i');
                 const match = text.match(regex);
-                return match ? match[1].trim() : null;
+
+                if (match && match[1]) {
+                    let content = match[1].trim();
+                    // Remove any accidental section headers
+                    content = content.replace(/^###\s+.+$/gm, '').trim();
+                    // Fix common typos
+                    content = content.replace(/Bautizmo/g, 'Bautismo');
+
+                    console.log(`✅ Extracted ${marker}: ${content.substring(0, 50)}...`);
+                    return content;
+                }
+
+                console.warn(`⚠️ Could not extract ${marker} from readings`);
+                return null;
             };
 
+            // Extract and inject evangelist FIRST (before replacing markers)
+            if (tradition === 'catolica' && readingsRes) {
+                const { extractEvangelist } = await import('../services/evangelizo.js');
+
+                // Extract evangelist from gospel citation
+                const evangelioMatch = readingsRes.match(/\[\[EVANGELIO\]\]\s*\*\*([^*]+)\*\*/);
+                if (evangelioMatch) {
+                    const gospelCitation = evangelioMatch[1];
+                    const evangelist = extractEvangelist(gospelCitation);
+                    console.log(`✅ Extracted evangelist: ${evangelist}`);
+                    finalMarkdown = finalMarkdown.replace(/\[\[EVANGELISTA\]\]/g, evangelist);
+                } else {
+                    console.warn('⚠️ Could not extract evangelist, using default: Mateo');
+                    finalMarkdown = finalMarkdown.replace(/\[\[EVANGELISTA\]\]/g, 'Mateo');
+                }
+            }
+
+            // Now replace each reading marker with its content
             const markers = ['LECTURA_1', 'SALMO', 'LECTURA_2', 'EVANGELIO'];
 
+            console.log('==== STARTING READING REPLACEMENT ====');
+            console.log('readingsRes length:', readingsRes ? readingsRes.length : 0);
+            console.log('readingsRes preview:', readingsRes ? readingsRes.substring(0, 200) + '...' : 'NULL');
+
             markers.forEach((marker) => {
-                const content = extractReading(readingsRes, marker);
-                if (content && content.length > 20) { // Basic sanity check
-                    // Inject content
-                    finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `\n${content}\n`);
+                console.log(`\n--- Processing ${marker} ---`);
+                const content = extractReadingContent(readingsRes, marker);
+                if (content) {
+                    console.log(`  Found content, length: ${content.length}`);
+                    console.log(`  Content preview: ${content.substring(0, 80)}...`);
+
+                    // Replace ALL occurrences of the marker (use regex with g flag)
+                    const markerRegex = new RegExp(`\\[\\[${marker}\\]\\]`, 'g');
+                    const beforeLength = finalMarkdown.length;
+                    finalMarkdown = finalMarkdown.replace(markerRegex, content);
+                    const afterLength = finalMarkdown.length;
+
+                    console.log(`  Replaced. Markdown length: ${beforeLength} → ${afterLength}`);
                 } else {
-                    // Fallback if reading missing
-                    // Don't replace with empty, maybe keep marker or put a note?
-                    // Better to put a note.
-                    // finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `*(Texto de ${marker} no disponible - Ver Leccionario)*`);
-                    // Actually, if we leave [[MARKER]], the rubric styling might pick it up?
-                    // Let's replace with a placeholder text to look clean.
-                    finalMarkdown = finalMarkdown.replace(`[[${marker}]]`, `\n> *(Texto bíblico de ${marker} pendiente. Consulte su leccionario).*`);
+                    console.warn(`  ⚠️ No content found for ${marker}`);
+                    // Fallback if reading missing - make it clear but professional
+                    const markerRegex = new RegExp(`\\[\\[${marker}\\]\\]`, 'g');
+                    finalMarkdown = finalMarkdown.replace(markerRegex, `\n> *(Lectura pendiente. Consulte su leccionario).*\n`);
                 }
             });
+
+            console.log('==== READING REPLACEMENT COMPLETE ====\n');
 
             // 4. INSERT FIXED PRAYERS (Hybrid Injection)
             // This happens on the Combined Text
@@ -129,8 +259,13 @@ export const useLiturgy = () => {
                 .replace(/<body>/gi, '')
                 .replace(/<\/body>/gi, '');
 
-            // Convert Markdown to HTML
-            const htmlContent = marked.parse(finalMarkdown);
+            // Convert Markdown to HTML (Strip Cloaking: ~, | and Dot-Masking)
+            // Masking cleaner: removes dots between ALL characters (E.n. .a.q.u.e.l -> En aquel)
+            const htmlContent = marked.parse(finalMarkdown
+                .replace(/[~|]/g, '')
+                .replace(/\.(?=\s)/g, '')  // Remove dots before spaces: ". " -> " "
+                .replace(/([a-zA-ZñÑáéíóúÁÉÍÓÚ])\.(?=[a-zA-ZñÑáéíóúÁÉÍÓÚ\s])/g, '$1')  // Remove dots between letters
+            );
 
             // Clean specific parsing markers
             let cleanText = htmlContent
