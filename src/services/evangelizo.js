@@ -84,11 +84,15 @@ const parseEvangelizoResponse = (text) => {
         console.log('   ✅ Found salmo');
     }
 
-    // Extract Segunda Lectura - look for Acts or Second reading pattern
-    const segundaMatch = text.match(/(Libro de los Hechos[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
+    // Extract Segunda Lectura - look for Acts, Letters, or any other second reading pattern
+    // This appears between the Psalm and the Gospel
+    // Common patterns: "Libro de los Hechos...", "Lectura de la carta...", "Lectura de la primera/segunda carta..."
+    const segundaMatch = text.match(/((?:Libro de los Hechos|Lectura de la (?:primera |segunda )?carta)[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
     if (segundaMatch) {
         readings.segunda_lectura = cleanReadingText(segundaMatch[1]);
         console.log('   ✅ Found segunda_lectura');
+    } else {
+        console.log('   ℹ️  No segunda_lectura found (weekday or special mass)');
     }
 
     // Extract Evangelio - look for "Evangelio según" pattern

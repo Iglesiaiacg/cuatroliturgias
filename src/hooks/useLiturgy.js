@@ -233,9 +233,21 @@ export const useLiturgy = () => {
                     console.log(`  Replaced. Markdown length: ${beforeLength} → ${afterLength}`);
                 } else {
                     console.warn(`  ⚠️ No content found for ${marker}`);
-                    // Fallback if reading missing - make it clear but professional
-                    const markerRegex = new RegExp(`\\[\\[${marker}\\]\\]`, 'g');
-                    finalMarkdown = finalMarkdown.replace(markerRegex, `\n> *(Lectura pendiente. Consulte su leccionario).*\n`);
+
+                    // Special handling for LECTURA_2 (Segunda Lectura)
+                    // On weekdays, there is no Second Reading, so we remove the entire section
+                    if (marker === 'LECTURA_2') {
+                        console.log('  Removing entire Segunda Lectura section (weekday mass)');
+                        // Remove the entire Segunda Lectura section including header and responses
+                        // Pattern: ### Segunda Lectura ... [[LECTURA_2]] ... Palabra de Dios ... Te alabamos, Señor ... ---
+                        const sectionRegex = /###\s+Segunda Lectura[\s\S]*?\[\[LECTURA_2\]\][\s\S]*?Te alabamos, Señor\.[\s\S]*?---/;
+                        finalMarkdown = finalMarkdown.replace(sectionRegex, '');
+                    } else {
+                        // For other readings (LECTURA_1, SALMO, EVANGELIO), show placeholder
+                        // These MUST always exist, so if missing it's an error
+                        const markerRegex = new RegExp(`\\[\\[${marker}\\]\\]`, 'g');
+                        finalMarkdown = finalMarkdown.replace(markerRegex, `\n> *(Lectura pendiente. Consulte su leccionario).*\n`);
+                    }
                 }
             });
 
