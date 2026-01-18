@@ -86,8 +86,12 @@ const parseEvangelizoResponse = (text) => {
 
     // Extract Segunda Lectura - look for Acts, Letters, or any other second reading pattern
     // This appears between the Psalm and the Gospel
-    // Common patterns: "Libro de los Hechos...", "Lectura de la carta...", "Lectura de la primera/segunda carta..."
-    const segundaMatch = text.match(/((?:Libro de los Hechos|Lectura de la (?:primera |segunda )?carta)[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
+    // Common patterns from Evangelizo API:
+    // - "Carta I de San Pablo a los Corintios..."
+    // - "Carta de San Pablo a los..."
+    // - "Lectura de la carta..."
+    // - "Libro de los Hechos de los Apóstoles..."
+    const segundaMatch = text.match(/((?:Carta (?:I|II|primera|segunda)? ?de San Pablo|Carta de San|Libro de los Hechos|Lectura de la (?:primera |segunda )?carta)[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
     if (segundaMatch) {
         readings.segunda_lectura = cleanReadingText(segundaMatch[1]);
         console.log('   ✅ Found segunda_lectura');
