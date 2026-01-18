@@ -455,9 +455,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
 
-        ⚠️ CONFIGURACIÓN OBLIGATORIA DEL PREFACIO:
-        EL PREFACIO A USAR ES: **${prefacioObligatorio.toUpperCase()}**.
-        (No inventes otro prefacio. Usa el texto oficial correspondiente a este título).
+
 
     ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
@@ -514,55 +512,60 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         ⚠️ REGLA DE ESTILO Y FORMATO(ELEGANCIA VISUAL - IMPORTANTÍSIMO):
         El usuario exige un documento "LUCIDO", "ELEGANTE" y "CUIDADO".
         
-        ➤ PAUTA 1: ESTRUCTURA VISUAL DE LUJO:
+        1. ESTRUCTURA VISUAL DE LUJO:
            - OBLIGATORIO: Empieza con \`# FECHA Y TÍTULO DE LA FIESTA\` (Ej: # Domingo 12 de Enero - Bautismo del Señor).
            - Usa Markdown \`## GRANDES PARTES\` para secciones.
            - Usa separadores \`---\`.
 
-        ➤ PAUTA 2: RÚBRICAS (ROJAS):
+        2. RÚBRICAS (ROJAS):
            - TODA instrucción (sentarse, de pie, hacer la señal de la cruz) DEBE ir entre DOBLES CORCHETES: \`[[Todos hacen la señal de la cruz]]\`.
            - NO uses paréntesis normales para las rúbricas. Usa \`[[...]]\`.
 
-        ➤ PAUTA 3: ROLES (CLARIDAD ABSOLUTA):
+        3. ROLES (CLARIDAD ABSOLUTA):
            - Usa SIEMPRE negrita y mayúsculas para el que habla: \`**SACERDOTE:**\`, \`**LECTOR:**\`, \`**TODOS:**\`.
            - Alinea los diálogos para que sean fáciles de leer en voz alta.
 
-        ➤ PAUTA 4: CALIDAD DEL TEXTO (ANTÍFONAS):
+        4. CALIDAD DEL TEXTO (ANTÍFONAS):
            - ¡NO DEJES TÍTULOS SIN TEXTO!
            - Para "Canto de Entrada", "Ofertorio" y "Comunión": SIEMPRE escribe una Antífona completa basada en un Salmo o frase bíblica.
            - Ejemplo: "**Antífona de Entrada:** Un niño nos ha nacido, un hijo se nos ha dado..."
            - Si no hay canto específico, GENERA UNA ANTÍFONA BÍBLICA ADECUADA al día.
 
-        ➤ PAUTA 5: TÍTULOS DE SECCIONES:
+        5. TÍTULOS DE SECCIONES:
            - Para Misa TRIDENTINA y ORDINARIATO: Genera TÍTULOS BILINGÜES (Latín / Español).
            - Para Misa ROMANA y ANGLICANA: Usa TÍTULOS EN ESPAÑOL SOLAMENTE (salvo 'Kyrie' o 'Agnus Dei' si es uso común).
-           - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato): "INTROITUS", "KYRIE", "GLORIA", "COLLECTA", "OFFERTORIUM", "SANCTUS", "AGNUS DEI", "COMMUNIO".
+           - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato):
+             * "INTROITUS (Canto de Entrada)"
+             * "KYRIE ELEISON"
+             * "GLORIA IN EXCELSIS"
+             * "COLLECTA"
+             * "OFFERTORIUM"
+             * "SANCTUS"
+             * "AGNUS DEI"
+             * "COMMUNIO"
 
-        ➤ PAUTA 6: ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
+
+        6. ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
            - ¡PROHIBIDO USAR PETICIONES GENÉRICAS O PREFABRICADAS!
            - Tienes la OBLIGACIÓN de componer las peticiones basándote EXPLICITAMENTE en el Evangelio y las Lecturas de hoy.
-           - CHECKLIST PRE-GENERACIÓN:
-             * ¿Mencionan las peticiones detalles concretos del Evangelio? (Ej: "Por los que sufren ceguera..." si el Evangelio es el ciego).
-             * ¿Conectan con el mensaje central de la Primera Lectura?
+           - EJEMPLO: Si el Evangelio habla de 'la curación de un ciego', la petición por los enfermos debe decir "Por los que sufren ceguera espiritual o física, como el ciego del Evangelio...".
+           - EJEMPLO: Si es Domingo de Ramos, pide "Para que podamos acompañar al Señor en su Pasión...".
            - Menciona personajes, parábolas o acciones específicas del texto bíblico del día dentro de las peticiones.
+           - Esto es vital para conectar la homilía con la oración.
 
-        ➤ PAUTA 7: RITO DE COMUNIÓN - EMBOLISMO (OBLIGATORIO):
-           - Después del Padre Nuestro, DEBES generar el EMBOLISMO completo:
-             > Líbranos de todos los males, Señor...
-           - Y la respuesta del pueblo: "Tuyo es el reino, tuyo el poder..."
-           - NO omitas esta parte. Es obligatoria en la estructura.
-
-        ➤ PAUTA 8: CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
+        7. CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
            - AL FINAL DEL DOCUMENTO (después de la procesión de salida), OBLIGATORIAMENTE incluye una línea con una frase MEMORABLE de un Padre de la Iglesia.
            - Formato EXACTO:
              > CITA_PATRISTICA: "La medida del amor es amar sin medida." - San Agustín
+           - Elige una frase que tenga que ver con la liturgia de hoy o el tiempo litúrgico.
 
-        ➤ PAUTA 9: REGLA DEL SALMO (CRÍTICA):
-           - Para Misa ROMANA y ANGLICANA: EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
-           - Para ORDINARIATO y TRIDENTINA: Seguir la estructura propia (puede incluir Gradual/Tracto).
+        8. REGLA DEL SALMO (CRÍTICA - NO GRADUAL):
+           - Para Misa ROMANA, ANGLICANA y ORDINARIATO:
+           - EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
+           - ¡PROHIBIDO USAR "GRADUAL" O "TRACTO" en estas tradiciones! (Eso es solo para Tridentina).
            - Debes escribir explícitamente la RESPUESTA ("R.") y las ESTROFAS.
 
-        ➤ PAUTA 10: REGLA ANTI-BLOQUEO (CRÍTICA):
+        9. REGLA ANTI-BLOQUEO (CRÍTICA):
            - ¡NO escribas letras de canciones o himnos modernos (ej. 'Pescador de hombres', 'Vienen con Alegría')! Google bloqueará tu respuesta por Copyright.
            - USA EXCLUSIVAMENTE LAS ANTÍFONAS BÍBLICAS DEL MISAL (Introito, Ofertorio, Comunión).
            - Si no tienes la antífona exacta, genera una frase bíblica genérica basada en el Salmo del día.
@@ -607,44 +610,44 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
     if (isGoodFriday) {
         return `
             ${basePrompt}
-            ⚠️⚠️⚠️ **CELEBRACIÓN ESPECIAL DETECTADA: VIERNES SANTO** ⚠️⚠️⚠️
+            ⚠️⚠️⚠️ ** CELEBRACIÓN ESPECIAL DETECTADA: VIERNES SANTO ** ⚠️⚠️⚠️
             
-            ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR (NO ES UNA MISA).
-            COLOR: ROJO.
-            NO HAY RITOS INICIALES (Entrada en silencio y postración). NO HAY CONSAGRACIÓN.
+            ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR(NO ES UNA MISA).
+    COLOR: ROJO.
+            NO HAY RITOS INICIALES(Entrada en silencio y postración).NO HAY CONSAGRACIÓN.
             
             ESTRUCTURA OBLIGATORIA:
-            1. RITOS INICIALES:
-               - Entrada en silencio absoluto.
-               - Rúbrica: Sacerdote se postra en tierra. Fieles de rodillas.
-               - Oración Colecta (Sin "Oremos" ni saludo).
+1. RITOS INICIALES:
+- Entrada en silencio absoluto.
+               - Rúbrica: Sacerdote se postra en tierra.Fieles de rodillas.
+               - Oración Colecta(Sin "Oremos" ni saludo).
             
             2. LITURGIA DE LA PALABRA:
-               - 1ª Lectura: Isaías 52, 13 – 53, 12 (El siervo sufriente).
+- 1ª Lectura: Isaías 52, 13 – 53, 12(El siervo sufriente).
                - Salmo 30: "Padre, a tus manos encomiendo mi espíritu".
-               - 2ª Lectura: Hebreos 4, 14-16; 5, 7-9.
-               - TRACTO (Cristo se humilló a sí mismo...).
-               - PASIÓN DE NUESTRO SEÑOR JESUCRISTO SEGÚN SAN JUAN (Jn 18, 1 – 19, 42). 
+               - 2ª Lectura: Hebreos 4, 14 - 16; 5, 7 - 9.
+    - TRACTO(Cristo se humilló a sí mismo...).
+               - PASIÓN DE NUESTRO SEÑOR JESUCRISTO SEGÚN SAN JUAN(Jn 18, 1 – 19, 42). 
                  (Indica rúbrica para que la LEAN 3 PERSONAS: CRONISTA, SINAGOGA, JESÚS).
                - HOMILÍA BREVE.
-               - ORACIÓN UNIVERSAL SOLEMNE (10 intenciones: Por la Iglesia, el Papa, los ministros, catecúmenos, unidad de los cristianos, judíos, no creyentes, gobernantes, tribulados).
+               - ORACIÓN UNIVERSAL SOLEMNE(10 intenciones: Por la Iglesia, el Papa, los ministros, catecúmenos, unidad de los cristianos, judíos, no creyentes, gobernantes, tribulados).
                  (Escribe SOLO los títulos de las 10 intenciones, no todo el texto largo).
 
             3. ADORACIÓN DE LA SANTA CRUZ:
-               - Rúbrica de presentación ("Mirad el árbol de la Cruz...").
+- Rúbrica de presentación("Mirad el árbol de la Cruz...").
                - Respuesta: "Venid y adoremos".
-               - Cantos de adoración (Improperios).
+               - Cantos de adoración(Improperios).
             
             4. SAGRADA COMUNIÓN:
-               - Rúbrica: Altar cubierto con mantel, corporal y misal.
+- Rúbrica: Altar cubierto con mantel, corporal y misal.
                - Padre Nuestro.
-               - Comunión de los fieles (con Pan consagrado el Jueves).
+               - Comunión de los fieles(con Pan consagrado el Jueves).
                - Oración después de la comunión.
-               - ORACIÓN SOBRE EL PUEBLO (Sin bendición formal).
+               - ORACIÓN SOBRE EL PUEBLO(Sin bendición formal).
                - SALIDA EN SILENCIO.
 
-             **NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
-        `;
+             ** NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
+    `;
     }
 
     // --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
@@ -653,54 +656,55 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
         return `
             ${basePrompt}
-            FUENTE: Missale Romanum 1962.
-            IDIOMA: LATÍN (Texto Principal) y ESPAÑOL (Rúbricas).
-            ${omissionRules}
+FUENTE: Missale Romanum 1962.
+IDIOMA: LATÍN(Texto Principal) y ESPAÑOL(Rúbricas).
+    ${omissionRules}
             
-            ESTRUCTURA OBLIGATORIA (DEBES ESCRIBIR CADA TEXTO COMPLETO CON SU TÍTULO):
-            
-            I. RITOS INICIALES Y ANTEPREPARACIÓN
-            0. PROCESIÓN DE ENTRADA (Rúbrica de revestimiento y procesión al altar).
-            1. Asperges Me (o Vidi Aquam). Antífona y Oración completas.
-            2. Salmo 42 (Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote/Ministro).
-            3. Aufer a nobis y Oramus te (Oraciones de subida al altar - VOX SECRETA >).
-            4. Introito (Texto propio completo). Kyrie (Griego). Gloria (Completo, si aplica).
-            
-            II. INSTRUCCIÓN (MISA DE LOS CATECÚMENOS)
-            5. Colecta (Propia del día). 
-            6. Epístola [SUBDIÁCONO/LECTOR]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO LATINO/ESPAÑOL COMPLETO).
-            7. Gradual y Aleluya [CORO/SCHOLA]: (o Tracto en Cuaresma).
-               ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo ("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
-            8. Evangelio [DIÁCONO/SACERDOTE]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO COMPLETO - Rúbrica: CANTADO hacia el norte).
+            ESTRUCTURA OBLIGATORIA(DEBES ESCRIBIR CADA TEXTO COMPLETO CON SU TÍTULO):
+
+I.RITOS INICIALES Y ANTEPREPARACIÓN
+0. PROCESIÓN DE ENTRADA(Rúbrica de revestimiento y procesión al altar).
+            1. Asperges Me(o Vidi Aquam).Antífona y Oración completas.
+            2. Salmo 42(Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote / Ministro).
+            3. Aufer a nobis y Oramus te(Oraciones de subida al altar - VOX SECRETA >).
+            4. Introito(Texto propio completo).Kyrie(Griego).Gloria(Completo, si aplica).
+
+    II.INSTRUCCIÓN(MISA DE LOS CATECÚMENOS)
+5. Colecta(Propia del día). 
+            6. Epístola[SUBDIÁCONO / LECTOR]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO LATINO / ESPAÑOL COMPLETO).
+7. Gradual y Aleluya[CORO / SCHOLA]: (o Tracto en Cuaresma).
+               ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
+            8. Evangelio[DIÁCONO / SACERDOTE]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO COMPLETO - Rúbrica: CANTADO hacia el norte).
                ${isAshWednesday ? `
                ⚠ **MIÉRCOLES DE CENIZA - BENDICIÓN E IMPOSICIÓN DE CENIZAS**
                (Insertar aquí el rito completo de bendición e imposición de cenizas ANTES del Ofertorio).
                - Antífona: Exaudi nos, Domine...
                - 4 Oraciones de bendición.
                - Rúbrica: Imposición con la fórmula "Memento, homo, quia pulvis es...".
-               ` : ''}
-            9. Credo (Texto latino completo, si aplica).
-            
-            III. OFERTORIO (TEXTOS COMPLETOS OBLIGATORIOS)
-            10. Antífona de Ofertorio.
-            11. ORACIONES SECRETAS (Usar >):
+               ` : ''
+            }
+9. Credo(Texto latino completo, si aplica).
+
+    III.OFERTORIO(TEXTOS COMPLETOS OBLIGATORIOS)
+10. Antífona de Ofertorio.
+            11. ORACIONES SECRETAS(Usar >):
                > Suscipe, Sancte Pater...
                > Offerimus tibi, Domine, calicem...
                > In spiritu humilitatis...
                > Veni, sanctificator...
-            12. Incienso (si aplica) y Lavabo (Salmo 25 completo).
-            13. Suscipe Sancta Trinitas (>). Orate Fratres. Secreta (Propia).
-            
-            IV. CANON MISSAE (LO MÁS IMPORTANTE - TODO TEXTO LATINO COMPLETO)
-            14. PREFACIO PROPIO (Del Tiempo o Fiesta) y Sanctus.
+12. Incienso(si aplica) y Lavabo(Salmo 25 completo).
+            13. Suscipe Sancta Trinitas(>).Orate Fratres.Secreta(Propia).
+
+    IV.CANON MISSAE(LO MÁS IMPORTANTE - TODO TEXTO LATINO COMPLETO)
+14. PREFACIO PROPIO(Del Tiempo o Fiesta) y Sanctus.
             15. TE IGITUR:
                > Te igitur, clementissime Pater... (hasta el final).
-            16. MEMENTO VIVORUM:
+16. MEMENTO VIVORUM:
                > Memento, Domine, famulorum famularumque...
-            17. COMMUNICANTES:
+17. COMMUNICANTES:
                > Communicantes, et memoriam venerantes...
-            18. CONSAGRACIÓN (Rúbricas de elevación y campanillas detalladas):
-               > Hanc igitur (Manos sobre las ofrendas).
+18. CONSAGRACIÓN(Rúbricas de elevación y campanillas detalladas):
+               > Hanc igitur(Manos sobre las ofrendas).
                > Quam oblationem...
                > Qui pridie... HOC EST ENIM CORPUS MEUM. (Adoración).
                > Simili modo... HIC EST ENIM CALIX SANGUINIS MEI... (Adoración).
@@ -710,21 +714,21 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
                > Supplices te rogamus...
                > Memento etiam, Domine...
                > Nobis quoque peccatoribus...
-            
-            V. COMUNIÓN Y RITOS FINALES
-            20. Pater Noster (Completo). 
-            21. EMBOLISMO ("Libera nos, quaesumus..." - VOX SECRETA > Completo - NO OMITIR).
-            22. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
-            23. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
-            24. Post-Comunión (Propia). 
-            25. AVISOS PARROQUIALES (Rubrica breve).
+
+V.COMUNIÓN Y RITOS FINALES
+20. Pater Noster(Completo). 
+            21. EMBOLISMO("Libera nos, quaesumus..." - VOX SECRETA > Completo - NO OMITIR).
+            22. Agnus Dei.Oraciones privadas antes de la comunión(> Domine Jesu Christe...).
+            23. Domine, non sum dignus(x3).Comunión del Sacerdote y Fieles.Antífona de Comunión.
+            24. Post - Comunión(Propia). 
+            25. AVISOS PARROQUIALES(Rubrica breve).
             26. Ite Missa est.
-            27. PLACEAT TIBI (Oración final secreta ante el altar >):
+            27. PLACEAT TIBI(Oración final secreta ante el altar >):
                > Placeat tibi, sancta Trinitas, obsequium servitutis meae...
-            28. BENDICIÓN FINAL (Benedicat vos omnipotens Deus...).
-            29. Último Evangelio (Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
+28. BENDICIÓN FINAL(Benedicat vos omnipotens Deus...).
+            29. Último Evangelio(Initium sancti Evangelii secundum Ioannem - TEXTO COMPLETO).
             30. ${marianAntiphonText}
-            31. PROCESIÓN DE SALIDA (Rúbrica).
+31. PROCESIÓN DE SALIDA(Rúbrica).
         `;
     }
 
@@ -734,41 +738,41 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
         return `
             ${basePrompt}
-            FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
-            ESTILO: Español Moderno Solemne ("Tú/Usted"). 
-            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
+FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
+    ESTILO: Español Moderno Solemne("Tú/Usted"). 
+            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros"(Arcaísmos).Usa lenguaje actual y fiel al BCP 2019.
             ${omissionRules}
 
-            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
+            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS(CRÍTICO):
             NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
-            EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
-            - [[INSERTAR_GLORIA]]
-            - [[INSERTAR_CREDO]]
-            - [[INSERTAR_SANTO]]
-            - [[INSERTAR_PADRE_NUESTRO]]
-            - [[INSERTAR_CORDERO]]
-            (Nota: Para el "Kyrie" o "Decálogo" usa texto propio si varía del romano, pero para lo demás usa marcadores).
+            EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS(Yo los reemplazaré por el texto oficial):
+-[[INSERTAR_GLORIA]]
+    - [[INSERTAR_CREDO]]
+    - [[INSERTAR_SANTO]]
+    - [[INSERTAR_PADRE_NUESTRO]]
+    - [[INSERTAR_CORDERO]]
+        (Nota: Para el "Kyrie" o "Decálogo" usa texto propio si varía del romano, pero para lo demás usa marcadores).
 
-            ESTRUCTURA OBLIGATORIA (TEXTOS COMPLETOS - CON TÍTULOS CLAROS):
-            0. PROCESIÓN DE ENTRADA (Himno, Rúbrica de ingreso y Veneración del Altar).
+            ESTRUCTURA OBLIGATORIA(TEXTOS COMPLETOS - CON TÍTULOS CLAROS):
+0. PROCESIÓN DE ENTRADA(Himno, Rúbrica de ingreso y Veneración del Altar).
             1. RITOS INICIALES:
-               - Aclamación Inicial ("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
-               - Colecta de Pureza ("Omnipotente Dios, para quien todos los corazones...").
-            2. EL DECÁLOGO o EL SUMARIO DE LA LEY (Leído completo).
-            3. KYRIE ELEISON (Señor, ten piedad).
-               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
-            4. COLECTA DEL DÍA (Propia).
-               ⚠️ OBLIGATORIO: Incluir el SALUDO ("El Señor esté con ustedes...") antes del Oremos y la Colecta.
+- Aclamación Inicial("Bendito sea Dios: Padre, Hijo y Espíritu Santo...").
+               - Colecta de Pureza("Omnipotente Dios, para quien todos los corazones...").
+            2. EL DECÁLOGO o EL SUMARIO DE LA LEY(Leído completo).
+            3. KYRIE ELEISON(Señor, ten piedad).
+    ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- Gloria: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\` (Solo si es Domingo/Solemnidad).'}
+4. COLECTA DEL DÍA(Propia).
+               ⚠️ OBLIGATORIO: Incluir el SALUDO("El Señor esté con ustedes...") antes del Oremos y la Colecta.
             5. LITURGIA DE LA PALABRA:
-               - Primera Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
-               - SALMO RESPONSORIAL [SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Indica la Antífona y las Estrofas COMPLETAS)'}.
-               - Segunda Lectura [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
+- Primera Lectura[LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
+- SALMO RESPONSORIAL[SALMISTA]: ${isStructureOnly ? '[[SALMO]]' : '(Indica la Antífona y las Estrofas COMPLETAS)'}.
+- Segunda Lectura[LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ ESCRIBE EL TEXTO BÍBLICO COMPLETO (Usa Biblia Torres Amat)'}.
                ${(season === 'cuaresma') ? '- TRACTO / VERSO [CORO]: (NO PONGAS ALELUYA).' : '- ALELUYA [CORO]: (Incluye el VERSO).'}
-               - Evangelio [DIÁCONO]:
+- Evangelio[DIÁCONO]:
                  ⚠️ Incluir SALUDO y Anuncio.
-                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
-            6. HOMILÍA y CREDO NICENO.
-               ${isAshWednesday ? `
+    ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ ESCRIBE EL TEXTO DEL EVANGELIO COMPLETO (Usa Biblia Torres Amat)'}.
+6. HOMILÍA y CREDO NICENO.
+    ${isAshWednesday ? `
                ⚠ **MIÉRCOLES DE CENIZA**
                **INVITACIÓN A UNA CUARESMA SANTA** (Texto BCP: "Hermanos y hermanas en Cristo...").
                **IMPOSICIÓN DE LA CENIZA**
@@ -777,22 +781,23 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
                - Imposición: "Acuérdate de que eres povo y al polvo volverás".
                - Salmo 51 (Miserere mei, Deus) recitado durante la imposición.
                (Omitir Credo si así lo indica la rúbrica BCP, o ponerlo después).
-               ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`}
-            7. ORACIÓN DE LOS FIELES:
-               ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio/Lecturas de hoy.
+               ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`
+            }
+7. ORACIÓN DE LOS FIELES:
+               ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio / Lecturas de hoy.
                (Formato BCP completo).
             8. CONFESIÓN Y ABSOLUCIÓN:
-               - Exhortación breve.
-               - Confesión General ("Omnipotente y misericordiosísimo Padre...").
+- Exhortación breve.
+               - Confesión General("Omnipotente y misericordiosísimo Padre...").
                - Absolución y Palabras de Consuelo.
             9. LA PAZ.
-               ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
-            10. LITURGIA EUCARÍSTICA:
-               - Ofertorio.
+    ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
+10. LITURGIA EUCARÍSTICA:
+- Ofertorio.
                - Doxología.
-               - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística):
-                 - Sursum Corda ("El Señor esté con ustedes...").
-                 - PREFACIO PROPIO (Estacional o de Fiesta) y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+               - GRAN ACCIÓN DE GRACIAS(Plegaria Eucarística):
+- Sursum Corda("El Señor esté con ustedes...").
+                 - PREFACIO PROPIO(Estacional o de Fiesta) y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
                  - Oración de Consagración (Texto completo BCP 2019 Estándar).
                  - Aclamación Memorial.
                  - Epíclesis y Doxología Final.
@@ -854,8 +859,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             6. OFFERTORIUM (Antífona) y Orate Fratres.
             7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
                - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-               - CANON ROMANO (Oración Eucarística I).
-               - (Incluye las oraciones del Canon: "Te Igitur", "Memento", "Communicantes", etc.).
+               - CANON ROMANO COMPLETO (Oración Eucarística I).
+               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
             8. Rito de Comunión:
                - PATER NOSTER: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
                - EMBOLISMO ("Líbranos Señor...").
