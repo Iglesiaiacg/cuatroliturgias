@@ -381,8 +381,10 @@ export const getMarianAntiphon = (date) => {
 
 export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 'full' }) => {
     const cycle = getLiturgicalCycle(selectedDate);
+    const rubrics = getLiturgicalRubrics(selectedDate, tradition);
     const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
     const marianAntiphon = getMarianAntiphon(selectedDate);
+    const prefacioObligatorio = rubrics.preface || 'Común / Dominical';
 
     // --- MODE: READINGS ONLY (Ultra-Focused & Tradition Aware) ---
     if (mode === 'readings') {
@@ -452,6 +454,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         CICLO FERIAL: Año ${cycle.cicloFerial}.
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
+
+        ⚠️ CONFIGURACIÓN OBLIGATORIA DEL PREFACIO:
+        EL PREFACIO A USAR ES: **${prefacioObligatorio.toUpperCase()}**.
+        (No inventes otro prefacio. Usa el texto oficial correspondiente a este título).
 
     ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
@@ -544,10 +550,18 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         6. ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
            - ¡PROHIBIDO USAR PETICIONES GENÉRICAS O PREFABRICADAS!
            - Tienes la OBLIGACIÓN de componer las peticiones basándote EXPLICITAMENTE en el Evangelio y las Lecturas de hoy.
-           - EJEMPLO: Si el Evangelio habla de 'la curación de un ciego', la petición por los enfermos debe decir "Por los que sufren ceguera espiritual o física, como el ciego del Evangelio...".
+           - CHECKLIST PRE-GENERACIÓN:
+             * ¿Mencionan las peticiones detalles concretos del Evangelio? (Ej: "Por los que sufren ceguera..." si el Evangelio es el ciego).
+             * ¿Conectan con el mensaje central de la Primera Lectura?
            - EJEMPLO: Si es Domingo de Ramos, pide "Para que podamos acompañar al Señor en su Pasión...".
            - Menciona personajes, parábolas o acciones específicas del texto bíblico del día dentro de las peticiones.
            - Esto es vital para conectar la homilía con la oración.
+
+        7. RITO DE COMUNIÓN - EMBOLISMO (OBLIGATORIO):
+           - Después del Padre Nuestro, DEBES generar el EMBOLISMO completo:
+             > Líbranos de todos los males, Señor...
+           - Y la respuesta del pueblo: "Tuyo es el reino, tuyo el poder..."
+           - NO omitas esta parte. Es obligatoria en la estructura.
 
         7. CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
            - AL FINAL DEL DOCUMENTO (después de la procesión de salida), OBLIGATORIAMENTE incluye una línea con una frase MEMORABLE de un Padre de la Iglesia.
@@ -712,7 +726,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             
             V. COMUNIÓN Y RITOS FINALES
             20. Pater Noster (Completo). 
-            21. EMBOLISMO ("Libera nos, quaesumus..." - VOX SECRETA > Completo).
+            21. EMBOLISMO ("Libera nos, quaesumus..." - VOX SECRETA > Completo - NO OMITIR).
             22. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
             23. Domine, non sum dignus (x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
             24. Post-Comunión (Propia). 
@@ -797,7 +811,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
                  - Epíclesis y Doxología Final.
             11. RITO DE COMUNIÓN:
                - PADRE NUESTRO: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-               - DOXOLOGÍA O EMBOLISMO (Según uso BCP).
+               - DOXOLOGÍA O EMBOLISMO (Según uso BCP - Generar texto completo si aplica "Líbranos Señor...").
                - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
                - Agnus Dei: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
                - Comunión de los fieles.
@@ -874,7 +888,6 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
     const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
 
     // SENIOR LITURGIST ENFORCEMENT:
-    const rubrics = getLiturgicalRubrics(selectedDate, 'romana');
 
     return `
         ${basePrompt}
