@@ -514,68 +514,55 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         ⚠️ REGLA DE ESTILO Y FORMATO(ELEGANCIA VISUAL - IMPORTANTÍSIMO):
         El usuario exige un documento "LUCIDO", "ELEGANTE" y "CUIDADO".
         
-        1. ESTRUCTURA VISUAL DE LUJO:
+        ➤ PAUTA 1: ESTRUCTURA VISUAL DE LUJO:
            - OBLIGATORIO: Empieza con \`# FECHA Y TÍTULO DE LA FIESTA\` (Ej: # Domingo 12 de Enero - Bautismo del Señor).
            - Usa Markdown \`## GRANDES PARTES\` para secciones.
            - Usa separadores \`---\`.
 
-        2. RÚBRICAS (ROJAS):
+        ➤ PAUTA 2: RÚBRICAS (ROJAS):
            - TODA instrucción (sentarse, de pie, hacer la señal de la cruz) DEBE ir entre DOBLES CORCHETES: \`[[Todos hacen la señal de la cruz]]\`.
            - NO uses paréntesis normales para las rúbricas. Usa \`[[...]]\`.
 
-        3. ROLES (CLARIDAD ABSOLUTA):
+        ➤ PAUTA 3: ROLES (CLARIDAD ABSOLUTA):
            - Usa SIEMPRE negrita y mayúsculas para el que habla: \`**SACERDOTE:**\`, \`**LECTOR:**\`, \`**TODOS:**\`.
            - Alinea los diálogos para que sean fáciles de leer en voz alta.
 
-        4. CALIDAD DEL TEXTO (ANTÍFONAS):
+        ➤ PAUTA 4: CALIDAD DEL TEXTO (ANTÍFONAS):
            - ¡NO DEJES TÍTULOS SIN TEXTO!
            - Para "Canto de Entrada", "Ofertorio" y "Comunión": SIEMPRE escribe una Antífona completa basada en un Salmo o frase bíblica.
            - Ejemplo: "**Antífona de Entrada:** Un niño nos ha nacido, un hijo se nos ha dado..."
            - Si no hay canto específico, GENERA UNA ANTÍFONA BÍBLICA ADECUADA al día.
 
-        5. TÍTULOS DE SECCIONES:
+        ➤ PAUTA 5: TÍTULOS DE SECCIONES:
            - Para Misa TRIDENTINA y ORDINARIATO: Genera TÍTULOS BILINGÜES (Latín / Español).
            - Para Misa ROMANA y ANGLICANA: Usa TÍTULOS EN ESPAÑOL SOLAMENTE (salvo 'Kyrie' o 'Agnus Dei' si es uso común).
-           - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato):
-             * "INTROITUS (Canto de Entrada)"
-             * "KYRIE ELEISON"
-             * "GLORIA IN EXCELSIS"
-             * "COLLECTA"
-             * "OFFERTORIUM"
-             * "SANCTUS"
-             * "AGNUS DEI"
-             * "COMMUNIO"
+           - NOMBRES EN LATÍN (Solo para Tridentina/Ordinariato): "INTROITUS", "KYRIE", "GLORIA", "COLLECTA", "OFFERTORIUM", "SANCTUS", "AGNUS DEI", "COMMUNIO".
 
-
-        6. ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
+        ➤ PAUTA 6: ORATIO FIDELIUM (Oración de los Fieles) - REGLA DE ORO DE COMPOSICIÓN (CRÍTICA):
            - ¡PROHIBIDO USAR PETICIONES GENÉRICAS O PREFABRICADAS!
            - Tienes la OBLIGACIÓN de componer las peticiones basándote EXPLICITAMENTE en el Evangelio y las Lecturas de hoy.
            - CHECKLIST PRE-GENERACIÓN:
              * ¿Mencionan las peticiones detalles concretos del Evangelio? (Ej: "Por los que sufren ceguera..." si el Evangelio es el ciego).
              * ¿Conectan con el mensaje central de la Primera Lectura?
-           - EJEMPLO: Si es Domingo de Ramos, pide "Para que podamos acompañar al Señor en su Pasión...".
            - Menciona personajes, parábolas o acciones específicas del texto bíblico del día dentro de las peticiones.
-           - Esto es vital para conectar la homilía con la oración.
 
-        7. RITO DE COMUNIÓN - EMBOLISMO (OBLIGATORIO):
+        ➤ PAUTA 7: RITO DE COMUNIÓN - EMBOLISMO (OBLIGATORIO):
            - Después del Padre Nuestro, DEBES generar el EMBOLISMO completo:
              > Líbranos de todos los males, Señor...
            - Y la respuesta del pueblo: "Tuyo es el reino, tuyo el poder..."
            - NO omitas esta parte. Es obligatoria en la estructura.
 
-        7. CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
+        ➤ PAUTA 8: CITA PATRÍSTICA PARA PORTADA (ALEATORIA):
            - AL FINAL DEL DOCUMENTO (después de la procesión de salida), OBLIGATORIAMENTE incluye una línea con una frase MEMORABLE de un Padre de la Iglesia.
            - Formato EXACTO:
              > CITA_PATRISTICA: "La medida del amor es amar sin medida." - San Agustín
-           - Elige una frase que tenga que ver con la liturgia de hoy o el tiempo litúrgico.
 
-        8. REGLA DEL SALMO (CRÍTICA - NO GRADUAL):
-           - Para Misa ROMANA, ANGLICANA y ORDINARIATO:
-           - EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
-           - ¡PROHIBIDO USAR "GRADUAL" O "TRACTO" en estas tradiciones! (Eso es solo para Tridentina).
+        ➤ PAUTA 9: REGLA DEL SALMO (CRÍTICA):
+           - Para Misa ROMANA y ANGLICANA: EL SALMO DEBE SER SIEMPRE RESPONSORIAL (Diálogo Lector/Pueblo).
+           - Para ORDINARIATO y TRIDENTINA: Seguir la estructura propia (puede incluir Gradual/Tracto).
            - Debes escribir explícitamente la RESPUESTA ("R.") y las ESTROFAS.
 
-        9. REGLA ANTI-BLOQUEO (CRÍTICA):
+        ➤ PAUTA 10: REGLA ANTI-BLOQUEO (CRÍTICA):
            - ¡NO escribas letras de canciones o himnos modernos (ej. 'Pescador de hombres', 'Vienen con Alegría')! Google bloqueará tu respuesta por Copyright.
            - USA EXCLUSIVAMENTE LAS ANTÍFONAS BÍBLICAS DEL MISAL (Introito, Ofertorio, Comunión).
            - Si no tienes la antífona exacta, genera una frase bíblica genérica basada en el Salmo del día.
