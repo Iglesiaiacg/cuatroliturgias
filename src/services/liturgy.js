@@ -854,8 +854,8 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             6. OFFERTORIUM (Antífona) y Orate Fratres.
             7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
                - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-               - CANON ROMANO COMPLETO (Oración Eucarística I).
-               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
+               - CANON ROMANO (Oración Eucarística I).
+               - (Incluye las oraciones del Canon: "Te Igitur", "Memento", "Communicantes", etc.).
             8. Rito de Comunión:
                - PATER NOSTER: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
                - EMBOLISMO ("Líbranos Señor...").
