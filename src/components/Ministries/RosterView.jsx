@@ -15,7 +15,10 @@ export default function RosterView() {
     const roles = [
         { id: 'presider', label: 'Preside' },
         { id: 'preacher', label: 'Predica' },
-        { id: 'lector', label: 'Lector' },
+        { id: 'first_reading', label: '1ª Lectura' },
+        { id: 'psalm', label: 'Salmo' },
+        { id: 'second_reading', label: 'Epístola/2ª Lectura' },
+        { id: 'gospel', label: 'Evangelio' },
         { id: 'acolyte', label: 'Acólito' },
         { id: 'musician', label: 'Música' },
         { id: 'usher', label: 'Ujier' }
@@ -138,7 +141,13 @@ export default function RosterView() {
                     if (role.id === 'presider') return roleList.includes('presbyter') || roleList.includes('admin');
                     if (role.id === 'preacher') return roleList.includes('presbyter') || roleList.includes('preacher') || roleList.includes('admin');
                     if (role.id === 'acolyte') return roleList.includes('acolyte') || roleList.includes('admin') || roleList.includes('sacristan');
-                    if (role.id === 'lector') return roleList.includes('lector') || roleList.includes('admin') || roleList.includes('presbyter');
+
+                    // All reading roles can be done by lectors or presbyters
+                    if (role.id === 'first_reading') return roleList.includes('lector') || roleList.includes('admin') || roleList.includes('presbyter');
+                    if (role.id === 'psalm') return roleList.includes('lector') || roleList.includes('admin') || roleList.includes('presbyter') || roleList.includes('musician');
+                    if (role.id === 'second_reading') return roleList.includes('lector') || roleList.includes('admin') || roleList.includes('presbyter');
+                    if (role.id === 'gospel') return roleList.includes('deacon') || roleList.includes('presbyter') || roleList.includes('admin');
+
                     if (role.id === 'musician') return roleList.includes('musician') || roleList.includes('admin');
                     if (role.id === 'usher') return true;
                     return true;
