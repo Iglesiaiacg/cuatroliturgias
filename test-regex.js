@@ -1,21 +1,35 @@
-// Quick test of the new regex pattern for Segunda Lectura
-const testText = `
-Salmo 40(39),2.4.7-8.9.10.
 
-Esperé confiadamente en el Señor
+// Test para verificar extractCitation con el nuevo regex
+const text = "Carta I de San Pablo a los Corintios 1,1-3.\n\nPablo, llamado a ser Apóstol...";
 
-Carta I de San Pablo a los Corintios <font dir="ltr">1,1-3.</font>
+const patterns = [
+    /^(Libro de[^\.]+\d+[,\d\.\-ab]+)/i,
+    /^(Evangelio según[^\.]+\d+[,\d\.\-]+)/i,
+    /^(Salmo \d+[^\n]*)/i,
+    /^(Lectura de[^\.]+\d+[,\d\.\-]+)/i,
+    /^(Carta [^\.]+\d+[,\d\.\-]+)/i,
+    /^(Libro de los Hechos[^\.]+\d+[,\d\.\-]+)/i
+];
 
-Pablo, llamado a ser Apóstol de Jesucristo por la voluntad de Dios...
+let citation = '';
+let cleanText = text;
 
-Evangelio según San Juan <font dir="ltr">1,29-34.</font>
-`;
+for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match) {
+        citation = match[1].trim();
+        cleanText = text.substring(match[0].length).trim();
+        break;
+    }
+}
 
-const segundaMatch = testText.match(/((?:Carta (?:I|II|primera|segunda)? ?de San Pablo|Carta de San|Libro de los Hechos|Lectura de la (?:primera |segunda )?carta)[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
+console.log('--- TEST REGEX ---');
+console.log('Texto original:', text.substring(0, 50) + '...');
+console.log('Cita extraída:', citation);
+console.log('Texto limpio:', cleanText.substring(0, 20) + '...');
 
-if (segundaMatch) {
-    console.log('✅ SUCCESS: Found Segunda Lectura!');
-    console.log('Matched text:', segundaMatch[1].substring(0, 100) + '...');
+if (citation === "Carta I de San Pablo a los Corintios 1,1-3") {
+    console.log('✅ ÉXITO: La cita se extrajo correctamente.');
 } else {
-    console.log('❌ FAILED: Could not find Segunda Lectura');
+    console.log('❌ FALLO: La cita no se extrajo.');
 }

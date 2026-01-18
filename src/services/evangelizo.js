@@ -153,10 +153,12 @@ const extractCitation = (text) => {
     //           "Salmo 29(28),1a.2.3ac-4.3b.9b-10."
 
     const patterns = [
-        /^(Libro de[^\.]+\d+[,\d\.\-ab]+)/i,
-        /^(Evangelio según[^\.]+\d+[,\d\.\-]+)/i,
+        /^(Libro de.*?\d+[,\d\.\-ab]*)/i,
+        /^(Evangelio según.*?\d+[,\d\.\-ab]*)/i,
         /^(Salmo \d+[^\n]*)/i,
-        /^(Lectura de[^\.]+\d+[,\d\.\-]+)/i
+        /^(Lectura de.*?\d+[,\d\.\-ab]*)/i,
+        /^(Carta .*?\d+[,\d\.\-ab]*)/i,
+        /^(Libro de los Hechos.*?\d+[,\d\.\-ab]*)/i
     ];
 
     for (const pattern of patterns) {
