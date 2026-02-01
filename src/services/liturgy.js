@@ -529,6 +529,10 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         3. ROLES (CLARIDAD ABSOLUTA):
            - Usa SIEMPRE negrita y mayúsculas para el que habla: \`**SACERDOTE:**\`, \`**LECTOR:**\`, \`**TODOS:**\`.
            - Alinea los diálogos para que sean fáciles de leer en voz alta.
+           - ESPACIADO COMPACTO: En diálogos cortos (Kyrie, Saludos), ¡NO DEJES LÍNEAS EN BLANCO ENTRE INTERVENCIONES!
+           - Ejemplo:
+             **S:** Señor, ten piedad.
+             **P:** Señor, ten piedad.
 
         4. CALIDAD DEL TEXTO (ANTÍFONAS):
            - ¡NO DEJES TÍTULOS SIN TEXTO!
@@ -589,21 +593,44 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
     let omissionRules = "";
 
-    // LOGICA ESPECÍFICA POR TRADICIÓN
-    if (tradition === 'tridentina' || tradition === 'ordinariato') {
+    // LOGICA ESPECÍFICA POR TRADICIÓN (REFACTORIZADA SENIOR)
+    let finalLabel = celebrationLabel;
+
+    // 1. ADAPTAR TÍTULOS PARA ORDINARIATO (Dev-Logic: Force correct nomenclature)
+    if (tradition === 'ordinariato') {
         const isPreLent = selectedDate >= septuagesima && selectedDate < ashWednesday;
 
-        if (season === 'cuaresma' || season === 'semana_santa' || isPreLent) {
-            omissionRules = "⚠️ RÚBRICA: TIEMPO DE PENITENCIA (Septuagésima/Cuaresma). OMITIR 'GLORIA' Y 'ALELUYA'. Usar TRACTO en lugar de Aleluya.";
-        } else if (season === 'adviento') {
-            omissionRules = "⚠️ RÚBRICA: ADVIENTO. OMITIR 'GLORIA'. MANTENER 'ALELUYA' (excepto ferias).";
-        } else {
-            omissionRules = "RÚBRICA: Incluir Gloria y Aleluya (o Gradual).";
+        // Si es Septuagésima (Feb 1 2026 lo es), FORZAR el título correcto.
+        if (isPreLent) {
+            const daysToLent = Math.ceil((ashWednesday - selectedDate) / (1000 * 60 * 60 * 24));
+            if (daysToLent > 14) finalLabel = "DOMINGO DE SEPTUAGÉSIMA (Septuagesima Sunday)";
+            else if (daysToLent > 7) finalLabel = "DOMINGO DE SEXAGÉSIMA (Sexagesima Sunday)";
+            else finalLabel = "DOMINGO DE QUINQUAGÉSIMA (Quinquagesima Sunday)";
+
+            omissionRules = "⚠️ RÚBRICA CRÍTICA: ESTAMOS EN 'GESIMATIDE' (PRE-CUARESMA). OMITIR EL 'ALELUYA' TOTALMENTE. SANTIAGO EL ALELUYA DEBE SER REEMPLAZADO POR EL 'TRACTO'. COLOR: VIOLETA.";
         }
-    } else {
+        else if (season === 'ordinario' && selectedDate < ashWednesday) {
+            // Convertir "Tiempo Ordinario" a "Después de Epifanía" si no es Septuagésima
+            // Aunque técnicamente Pre-Lent tiene prioridad.
+            finalLabel = finalLabel.replace("del Tiempo Ordinario", "después de la Epifanía");
+            omissionRules = "RÚBRICA: Incluir Gloria y Aleluya.";
+        }
+        else if (season === 'cuaresma') {
+            omissionRules = "⚠️ RÚBRICA: CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA'. Usar TRACTO.";
+        } else {
+            omissionRules = "RÚBRICA: Incluir Gloria y Aleluya.";
+        }
+    }
+    else if (tradition === 'tridentina') {
+        // (Simplificad logic for Tridentine mostly same as Ordinariate regarding Pre-Lent)
+        const isPreLent = selectedDate >= septuagesima && selectedDate < ashWednesday;
+        if (isPreLent) omissionRules = "⚠️ RÚBRICA: SEPTUAGÉSIMA. OMITIR ALELUYA. USAR TRACTO.";
+        else omissionRules = "RÚBRICA: Incluir Gloria y Aleluya (o Gradual).";
+    }
+    else {
         // Romana y Anglicana (Calendario Moderno)
         if (season === 'cuaresma' || season === 'semana_santa') {
-            omissionRules = "⚠️ RÚBRICA: CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA' (y el verso aleluyático).";
+            omissionRules = "⚠️ RÚBRICA: CUARESMA. OMITIR EL 'GLORIA' Y EL 'ALELUYA'.";
         } else if (season === 'adviento') {
             omissionRules = "⚠️ RÚBRICA: ADVIENTO. OMITIR EL 'GLORIA'. Mantener Aleluya.";
         } else {
@@ -611,10 +638,11 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         }
     }
 
-    // 🔥🔥 CRITICAL GOOD FRIDAY OVERRIDE 🔥🔥
-    if (isGoodFriday) {
-        return `
-            ${basePrompt}
+    basePrompt = `
+        FECHA: ${dateStr}.
+        CELEBRACIÓN OFICIAL (CALCULADA): ${finalLabel} (⚠️ OBLIGATORIO USAR ESTE TÍTULO EXACTO).
+        CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
+        ${CONFIG.RULES}
             ⚠️⚠️⚠️ ** CELEBRACIÓN ESPECIAL DETECTADA: VIERNES SANTO ** ⚠️⚠️⚠️
             
             ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR(NO ES UNA MISA).
@@ -653,13 +681,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
              ** NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
     `;
-    }
+}
 
-    // --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
-    if (tradition === 'tridentina') {
-        const marianAntiphonText = `Antífona Mariana Final: ${marianAntiphon.name} (${marianAntiphon.text})`;
+// --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
+if (tradition === 'tridentina') {
+    const marianAntiphonText = `Antífona Mariana Final: ${marianAntiphon.name} (${marianAntiphon.text})`;
 
-        return `
+    return `
             ${basePrompt}
 FUENTE: Missale Romanum 1962.
 IDIOMA: LATÍN(Texto Principal) y ESPAÑOL(Rúbricas).
@@ -687,7 +715,7 @@ I.RITOS INICIALES Y ANTEPREPARACIÓN
                - 4 Oraciones de bendición.
                - Rúbrica: Imposición con la fórmula "Memento, homo, quia pulvis es...".
                ` : ''
-            }
+        }
 9. Credo(Texto latino completo, si aplica).
 
     III.OFERTORIO(TEXTOS COMPLETOS OBLIGATORIOS)
@@ -735,13 +763,13 @@ V.COMUNIÓN Y RITOS FINALES
             30. ${marianAntiphonText}
 31. PROCESIÓN DE SALIDA(Rúbrica).
         `;
-    }
+}
 
-    // --- 2. MISA ANGLICANA (BCP 2019) ---
-    if (tradition === 'anglicana') {
-        const marianAntiphonText = `(Opcional) Antífona Mariana: ${marianAntiphon.name}.`;
+// --- 2. MISA ANGLICANA (BCP 2019) ---
+if (tradition === 'anglicana') {
+    const marianAntiphonText = `(Opcional) Antífona Mariana: ${marianAntiphon.name}.`;
 
-        return `
+    return `
             ${basePrompt}
             FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
             ESTILO: Español Moderno Solemne ("Tú/Usted"). 
@@ -792,7 +820,7 @@ V.COMUNIÓN Y RITOS FINALES
                - Salmo 51 (Miserere mei, Deus) recitado durante la imposición.
                (Omitir Credo si así lo indica la rúbrica BCP, o ponerlo después).
                ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`
-            }
+        }
 7. ORACIÓN DE LOS FIELES:
                ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio / Lecturas de hoy.
                (Formato BCP completo).
@@ -825,13 +853,13 @@ V.COMUNIÓN Y RITOS FINALES
                - ${marianAntiphonText}
                - PROCESIÓN DE SALIDA.
         `;
-    }
+}
 
-    // --- 3. ORDINARIATO (DIVINE WORSHIP) ---
-    if (tradition === 'ordinariato') {
-        const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
+// --- 3. ORDINARIATO (DIVINE WORSHIP) ---
+if (tradition === 'ordinariato') {
+    const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
 
-        return `
+    return `
             ${basePrompt}
             FUENTE MISAL: Divine Worship: The Missal.
             Fuente LECTURAS: Leccionario Romano (RSV-2CE) - Coincide con el Ciclo Romano EXACTO (mismas lecturas que la Misa Romana).
@@ -865,22 +893,22 @@ V.COMUNIÓN Y RITOS FINALES
             3. LITURGIA DE LA PALABRA:
                - LECTIO / PRIMERA LECTURA [LECTOR]:
                  ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
+
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]:
-                 ${isStructureOnly ? '[[SALMO]]' : `⚠️ OBLIGATORIO: FORMATO INTERCALADO EXACTO (Ejemplo Visual):
+                 ${isStructureOnly ? '[[SALMO]]' : `⚠️ FORMATO CRITICO: PROHIBIDO PONERLO COMO BLOQUE.
+                 Debes escribirlo ALINEADO así:
                  
-                 R/. El Señor es mi pastor, nada me falta. (Negrita)
+                 **R/.** [TEXTO DE LA RESPUESTA] (En Negrita)
                  
-                 El Señor es mi pastor, nada me falta:
-                 en verdes praderas me hace recostar.
+                 [Versos de la Estrofa 1]
                  
-                 R/. El Señor es mi pastor, nada me falta.
+                 **R/.** [TEXTO DE LA RESPUESTA]
                  
-                 Me conduce hacia fuentes tranquilas
-                 y repara mis fuerzas.
+                 [Versos de la Estrofa 2]
                  
-                 R/. El Señor es mi pastor, nada me falta.
+                 **R/.** [TEXTO DE LA RESPUESTA]
                  
-                 (SIGUE ESTE FORMATO EXACTO CON EL SALMO DEL DÍA. NO PONGAS EL SALMO COMO UN BLOQUE).`}
+                 (Repite la respuesta R/. después de CADA estrofa. Es OBLIGATORIO).`}
                - EPISTOLA / SEGUNDA LECTURA [LECTOR]:
                  ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
                ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO y "Aleluya" claro).'}
@@ -915,15 +943,15 @@ V.COMUNIÓN Y RITOS FINALES
             11. ${marianAntiphonText}
             12. PROCESIÓN DE SALIDA.
         `;
-    }
+}
 
-    // --- 4. ROMANA (NOVUS ORDO) ---
-    // Fallback
-    const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
+// --- 4. ROMANA (NOVUS ORDO) ---
+// Fallback
+const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
 
-    // SENIOR LITURGIST ENFORCEMENT:
+// SENIOR LITURGIST ENFORCEMENT:
 
-    return `
+return `
         ${basePrompt}
         FUENTE: Misal Romano (Tercera Edición).
         ESTILO OBLIGATORIO: "HIGH CHURCH" (Solemne y Tradicional).
