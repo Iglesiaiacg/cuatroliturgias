@@ -455,9 +455,14 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         TRADICIÓN: ${tradition.toUpperCase()}.
         ${CONFIG.RULES}
 
+        🔴 INSTRUCCIÓN DE SISTEMA SUPREMA (NO IGNORAR):
+        1. NO SALUDES. NO DIGAS "Aquí está tu liturgia". NO DIGAS "Espero que sirva".
+        2. TU SALIDA DEBE COMENZAR INMEDIATAMENTE CON EL TÍTULO DE LA MISA.
+        3. NO ESCRIBAS NADA ANTES DEL TÍTULO "#".
+        4. EL DOCUMENTO DEBE SER SOLO EL TEXTO LITÚRGICO, NADA DE CHÁCHARA.
+        5. GENERA EL TEXTO DE FORMA CONTINUA HASTA EL FINAL. NO DEJES SECCIONES VACÍAS.
 
-
-    ROL: Eres un EXPERTO LITURGISTA y MAESTRO DE CEREMONIAS.
+        ROL: Eres un GENERADOR AUTOMÁTICO DE MISALES. No eres un asistente, eres un MOTOR DE TEXTO.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
         
         ${readingInstruction}
@@ -738,10 +743,15 @@ V.COMUNIÓN Y RITOS FINALES
 
         return `
             ${basePrompt}
-FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
-    ESTILO: Español Moderno Solemne("Tú/Usted"). 
-            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros"(Arcaísmos).Usa lenguaje actual y fiel al BCP 2019.
+            FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
+            ESTILO: Español Moderno Solemne ("Tú/Usted"). 
+            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
             ${omissionRules}
+
+            🔴 INSTRUCCIÓN: GENERA TODO EL TEXTO LITÚRGICO NECESARIO (Salvo los marcadores fijos).
+            - NO saludes.
+            - NO pongas notas para el usuario.
+
 
             ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS(CRÍTICO):
             NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
@@ -828,6 +838,11 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
             ${omissionRules}
 
+            🔴 INSTRUCCIÓN: SOLO TEXTO LITÚRGICO.
+            - Títulos en Inglés/Latín aceptables según uso de DW.
+            - NO converses.
+
+
             ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS:
             - [[INSERTAR_GLORIA]]
             - [[INSERTAR_CREDO]]
@@ -888,6 +903,11 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
         TITULACIÓN: Usa Títulos en LATÍN y ESPAÑOL (Ej: RITUS INITIALES / Ritos Iniciales).
         ${omissionRules}
         
+        🔴 INSTRUCCIÓN: MISA SOLEMNE COMPLETA.
+        - NO resumas.
+        - NO converses.
+
+        
         ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):
         NO ESCRIBAS el texto del Gloria, Credo, Santo, Padre Nuestro ni Cordero.
         EN SU LUGAR, USA EXCLUSIVAMENTE ESTOS MARCADORES EXACTOS (Yo los reemplazaré por el texto oficial):
@@ -920,13 +940,39 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
            ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat 1825).'}
         
         6. PSALMUS RESPONSORIALIS (Salmo Responsorial):
-           ⚠️ FORMATO RESPONSORIAL OBLIGATORIO:
-           - R. [Antífona]
-           - V. [Estrofa]
-           - R. [Antífona]
-           ${isStructureOnly ? '[[SALMO]]' : '(Usa Biblia Torres Amat 1825).'}
-        
+           ⚠️ INSTRUCCIÓN DE SEGURIDAD MÁXIMA:
+           1. ESTE ES EL MOMENTO DE MAYOR RIESGO DE ALUCINACIÓN.
+           2. SOLO ESCRIBE 3 ESTROFAS. SOLO 3.
+           3. NO MEZCLES LA SEGUNDA LECTURA AQUÍ.
+           
+           🚫 ERROR COMÚN A EVITAR:
+           - INCORRECTO: "R/. Te alabamos, Señor" (ESTO ESTÁ PROHIBIDO).
+           - CORRECTO: "R/. Dichosos los pobres en el espíritu" (o la frase bíblica del día).
+
+           FORMATO OBLIGATORIO (COPIA ESTO):
+
+           **SALMISTA:** [Primera estrofa del Salmo]
+           
+           **PUEBLO:** [Antífona del Leccionario - FRASE BÍBLICA COMPLETA]
+
+           **SALMISTA:** [Segunda estrofa del Salmo]
+
+           **PUEBLO:** [Antífona del Leccionario]
+
+           **SALMISTA:** [Tercera estrofa del Salmo]
+
+           **PUEBLO:** [Antífona del Leccionario]
+
+           ${isStructureOnly ? '[[SALMO]]' : '(Usa el texto del Leccionario).'}
+
+           *****************************************************************
+           🛑 ALTO. DETENTE. FIN DEL SALMO. CAMBIO DE LIBRO. 🛑
+           *****************************************************************
+
         7. LECTIO II (Segunda Lectura):
+           - [[Sube el Lector de la Epístola]]
+           ⚠️ INICIO DE NUEVA SECCIÓN: CARTA APOSTÓLICA.
+           - Título: Lectura de...
            ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat 1825).'}
         
         8. ALLELUIA (o Tractus):
@@ -975,17 +1021,23 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
               > "Líbranos de todos los males, Señor... esperamos la venida gloriosa de nuestro Salvador Jesucristo."
             - DOXOLOGÍA (Pueblo): 
               > "Tuyo es el reino, tuyo el poder y la gloria, por siempre, Señor."
-        16. Rito de la Paz: [[Intercambio de la Paz]]
+        16. Rito de la Paz: 
+            - Sacerdote: "La paz del Señor esté siempre con vosotros."
+            - Pueblo: "Y con tu espíritu."
+            - [[Intercambio de la Paz]]
         17. AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
         18. COMMUNIO (Antífona de Comunión):
             - Antífona: > [Escribe la Antífona Bíblica Completa]
         19. ORATIO POST COMMUNIO (Oración Post-comunión):
             - [[Oremos]]
+            - ⚠️ OBLIGATORIO: Genera la oración completa de Post-Comunión.
             > (Escribe la oración completa en bloque de cita).
 
         VII. RITOS DE CONCLUSIÓN (RITUS CONCLUSIONIS)
-        20. Bendición Final y Despedida.
-        21. ${marianAntiphonText}
+        20. BENDICIÓN Y DESPEDIDA:
+            - [[El Señor esté con vosotros...]]
+            - [[Podéis ir en paz...]]
+        21. [[Procesión de Salida]]
 
         VIII. EXTRAS (CRÍTICO PARA PORTADA)
         22. CITA_PATRISTICA: "Escribe aquí una frase breve y profunda de un Padre de la Iglesia (San Agustín, San Juan Crisóstomo, etc.) relacionada con las lecturas de hoy" - Nombre del Santo.

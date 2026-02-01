@@ -56,9 +56,7 @@ export const fetchEvangelizoReadings = async (date) => {
  * @returns {Object} - Structured readings
  */
 const parseEvangelizoResponse = (text) => {
-    console.log('🔍 Parsing Evangelizo response...');
-    console.log('   Raw text length:', text.length);
-    console.log('   Raw text preview:', text.substring(0, 300));
+    console.log('🔍 Parsing Evangelizo response (Sequential Mode)...');
 
     const readings = {
         primera_lectura: null,
@@ -67,51 +65,60 @@ const parseEvangelizoResponse = (text) => {
         evangelio: null
     };
 
-    // The Evangelizo API returns everything in one big HTML block
-    // We need to extract each section by finding its header and capturing until the next header or end
+    let remainingText = text;
 
-    // Extract Primera Lectura - look for biblical book name pattern
-    const primeraMatch = text.match(/(Libro de [^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Salmo|Libro de los Hechos|Lectura de la carta|Evangelio según|$)/i);
+    // 1. EXTRACT PRIMERA LECTURA
+    // Look for generic book header
+    const primeraMatch = remainingText.match(/(Libro de [^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Salmo|Libro de los Hechos|Lectura de la carta|Evangelio según|$)/i);
     if (primeraMatch) {
         readings.primera_lectura = cleanReadingText(primeraMatch[1]);
         console.log('   ✅ Found primera_lectura');
+
+        // Advance cursor: remove everything up to end of this match
+        const splitIndex = remainingText.indexOf(primeraMatch[0]) + primeraMatch[0].length;
+        remainingText = remainingText.substring(splitIndex);
     }
 
-    // Extract Salmo - look for "Salmo" pattern
-    const salmoMatch = text.match(/(Salmo[^<]*<[^>]+>[\s\S]*?)(?=Libro de los Hechos|Lectura de la carta|Segunda lectura|Evangelio según|$)/i);
+    // 2. EXTRACT SALMO
+    // Look for "Salmo" pattern in what's left
+    const salmoMatch = remainingText.match(/(Salmo[^<]*<[^>]+>[\s\S]*?)(?=Libro de|Lectura de|Segunda lectura|Carta|Evangelio según|$)/i);
     if (salmoMatch) {
         readings.salmo = cleanReadingText(salmoMatch[1]);
         console.log('   ✅ Found salmo');
+
+        // Advance cursor
+        const splitIndex = remainingText.indexOf(salmoMatch[0]) + salmoMatch[0].length;
+        remainingText = remainingText.substring(splitIndex);
     }
 
-    // Extract Segunda Lectura - look for Acts, Letters, or any other second reading pattern
-    // This appears between the Psalm and the Gospel
-    // Common patterns from Evangelizo API:
-    // - "Carta I de San Pablo a los Corintios..."
-    // - "Carta de San Pablo a los..."
-    // - "Lectura de la carta..."
-    // - "Libro de los Hechos de los Apóstoles..."
-    const segundaMatch = text.match(/((?:Carta (?:I|II|primera|segunda)? ?de San Pablo|Carta de San|Libro de los Hechos|Lectura de la (?:primera |segunda )?carta)[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|$)/i);
-    if (segundaMatch) {
-        readings.segunda_lectura = cleanReadingText(segundaMatch[1]);
-        console.log('   ✅ Found segunda_lectura');
-    } else {
-        console.log('   ℹ️  No segunda_lectura found (weekday or special mass)');
+    // 3. EXTRACT SEGUNDA LECTURA
+    // Now look for the next reading in the remaining text.
+    // It could be 'Carta...', 'Libro de...' (Apocalypse), 'Lectura of...'
+    // BUT since we already consumed First Reading and Psalm, the next "Libro de" HAS to be Second Reading.
+
+    // Check if we are already at Gospel (Weekdays often have no 2nd reading)
+    const evangelioCheck = remainingText.match(/^\s*(<[^>]+>)*\s*Evangelio según/i);
+
+    if (!evangelioCheck) {
+        const segundaMatch = remainingText.match(/((?:Carta |Libro |Lectura |Hechos )[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*?)(?=Evangelio según|Aclamación|$)/i);
+        if (segundaMatch) {
+            readings.segunda_lectura = cleanReadingText(segundaMatch[1]);
+            console.log('   ✅ Found segunda_lectura');
+
+            // Advance cursor
+            const splitIndex = remainingText.indexOf(segundaMatch[0]) + segundaMatch[0].length;
+            remainingText = remainingText.substring(splitIndex);
+        } else {
+            console.log('   ℹ️  No segunda_lectura found (or regex failed)');
+        }
     }
 
-    // Extract Evangelio - look for "Evangelio según" pattern
-    const evangelioMatch = text.match(/(Evangelio según[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*$)/i);
+    // 4. EXTRACT EVANGELIO
+    const evangelioMatch = remainingText.match(/(Evangelio según[^<]+<[^>]+>[\d,\.\-]+[^<]*<\/[^>]+>[\s\S]*$)/i);
     if (evangelioMatch) {
         readings.evangelio = cleanReadingText(evangelioMatch[1]);
         console.log('   ✅ Found evangelio');
     }
-
-    console.log('📋 Parsed readings:', {
-        primera_lectura: readings.primera_lectura ? readings.primera_lectura.substring(0, 100) + '...' : 'NULL',
-        salmo: readings.salmo ? readings.salmo.substring(0, 100) + '...' : 'NULL',
-        segunda_lectura: readings.segunda_lectura ? readings.segunda_lectura.substring(0, 100) + '...' : 'NULL',
-        evangelio: readings.evangelio ? readings.evangelio.substring(0, 100) + '...' : 'NULL'
-    });
 
     return readings;
 };
@@ -182,36 +189,60 @@ const extractCitation = (text) => {
 export const formatResponsorialPsalm = (psalmText) => {
     if (!psalmText) return '';
 
-    // Use standard liturgical response
-    const response = 'Te alabamos, Señor.';
-
-    // Split into lines and clean
-    const lines = psalmText
+    // Clean initial whitespace
+    let lines = psalmText
         .split('\n')
         .map(line => line.trim())
         .filter(line => line.length > 0);
 
+    // 1. EXTRACT ANTIPHON (RESPONSE)
+    // Look for line starting with R. R/. or just the first logical line if it looks short
+    let response = '';
+    let startLineIndex = 0;
+
+    // Try to find explicit Response marker
+    const responseIndex = lines.findIndex(line => line.match(/^(R\.?\/|Respuesta|Antífona)[:\.]?\s*/i));
+
+    if (responseIndex !== -1) {
+        // Extract content after marker
+        response = lines[responseIndex].replace(/^(R\.?\/|Respuesta|Antífona)[:\.]?\s*/i, '').trim();
+        // Remove this line from verses
+        lines.splice(responseIndex, 1);
+    } else {
+        // Fallback: Use the very first line if it looks like an antiphon (short, no numbers)
+        // Only if it doesn't start with "Salmo"
+        if (lines.length > 0 && !lines[0].match(/^Salmo/i)) {
+            response = lines[0];
+            lines.shift();
+        } else {
+            response = "R. (Antífon del día)";
+        }
+    }
+
+    // Default clean (remove "Salmo X" header if present remaining)
+    lines = lines.filter(line => !line.match(/^Salmo \d/i));
+
     let formatted = `**R/.** ${response}\n\n`;
 
-    // Group verses - typically 2-3 lines per group
+    // 2. FORMAT VERSES
+    // Group roughly by 2-3 lines to simulate stanzas
     let verseGroup = [];
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        // Skip lines that look like headers or responses
-        if (line.match(/^R[\\/\.]?/i) || line.match(/^Salmo/i)) {
-            continue;
-        }
+        // Skip any leftover markers
+        if (line.match(/^(R\.?\/|Respuesta)[:\.]?$/i)) continue;
 
-        // Add to current group
         verseGroup.push(line);
 
-        // Every 2-3 lines, or at the end, add the group with response
-        if (verseGroup.length >= 2 || i === lines.length - 1) {
+        // Logic: End group if line ends with period/colon, or max 3 lines
+        const endsSentence = line.match(/[.:!?]$/);
+
+        if ((verseGroup.length >= 2 && endsSentence) || verseGroup.length >= 4 || i === lines.length - 1) {
             if (verseGroup.length > 0) {
                 formatted += `**Salmista:** ${verseGroup.join(' ')}\n\n`;
-                formatted += `**Pueblo:** R/.\n\n`;
+                formatted += `**Pueblo:** R/. ${response}\n\n`;
                 verseGroup = [];
             }
         }

@@ -113,15 +113,12 @@ ${finalAntiphons.entrance ? `**Antífona de Entrada:** ${finalAntiphons.entrance
 [[Puede ser cantado o recitado]]
 
 **Sacerdote:** Señor, ten piedad.
-
 **Pueblo:** Señor, ten piedad.
 
 **Sacerdote:** Cristo, ten piedad.
-
 **Pueblo:** Cristo, ten piedad.
 
 **Sacerdote:** Señor, ten piedad.
-
 **Pueblo:** Señor, ten piedad.
 
 ---
@@ -343,15 +340,12 @@ ${finalIntercessions}
 [[El Sacerdote comienza el Prefacio con las manos extendidas]]
 
 **Sacerdote:** El Señor esté con vosotros.
-
 **Pueblo:** Y con tu espíritu.
 
 **Sacerdote:** Levantemos el corazón.
-
 **Pueblo:** Lo tenemos levantado hacia el Señor.
 
 **Sacerdote:** Demos gracias al Señor, nuestro Dios.
-
 **Pueblo:** Es justo y necesario.
 
 **Sacerdote:** ${finalPreface}
@@ -445,7 +439,6 @@ Tú que vives y reinas por los siglos de los siglos.
 [[El Sacerdote, extendiendo y juntando las manos, saluda]]
 
 **Sacerdote:** La paz del Señor esté siempre con vosotros.
-
 **Pueblo:** Y con tu espíritu.
 
 [[El Diácono o el Sacerdote puede añadir]]
@@ -555,7 +548,6 @@ Por Jesucristo nuestro Señor.`}
 [[El Diácono o el Sacerdote despide al pueblo]]
 
 **Diácono/Sacerdote:** Podéis ir en paz.
-
 **Pueblo:** Demos gracias a Dios.
 
 [[El Sacerdote venera el altar con un beso]]

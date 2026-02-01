@@ -153,8 +153,8 @@ export const useLiturgy = () => {
                     readingsRes = await generateLiturgy(promptReadings);
                 }
             } else {
-                console.log("   📖 Structure: Gemini 2.0 Flash");
-                console.log("   📜 Readings: Gemini 2.0 Flash");
+                console.log("   📖 Structure: Gemini 2.0 Flash (v1)");
+                console.log("   📜 Readings: Gemini 2.0 Flash (v1)");
                 console.log("   ℹ️  Tradition is NOT catolica, using Gemini. Current value:", tradition);
 
                 // Other traditions use Gemini for everything
