@@ -866,7 +866,21 @@ V.COMUNIÓN Y RITOS FINALES
                - LECTIO / PRIMERA LECTURA [LECTOR]:
                  ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]:
-                 ${isStructureOnly ? '[[SALMO]]' : '⚠️ OBLIGATORIO: FORMATO INTERCALADO EXACTO:\n                 R/. [Texto Respuesta] (Negrita)\n                 [Estrofa 1]\n                 R/. [Texto Respuesta]\n                 [Estrofa 2]\n                 R/. [Texto Respuesta]'}
+                 ${isStructureOnly ? '[[SALMO]]' : `⚠️ OBLIGATORIO: FORMATO INTERCALADO EXACTO (Ejemplo Visual):
+                 
+                 R/. El Señor es mi pastor, nada me falta. (Negrita)
+                 
+                 El Señor es mi pastor, nada me falta:
+                 en verdes praderas me hace recostar.
+                 
+                 R/. El Señor es mi pastor, nada me falta.
+                 
+                 Me conduce hacia fuentes tranquilas
+                 y repara mis fuerzas.
+                 
+                 R/. El Señor es mi pastor, nada me falta.
+                 
+                 (SIGUE ESTE FORMATO EXACTO CON EL SALMO DEL DÍA. NO PONGAS EL SALMO COMO UN BLOQUE).`}
                - EPISTOLA / SEGUNDA LECTURA [LECTOR]:
                  ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
                ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO y "Aleluya" claro).'}
@@ -893,7 +907,9 @@ V.COMUNIÓN Y RITOS FINALES
                - Rito de la Paz.
                ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
                - AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-               - Oración de Humilde Acceso (Prayer of Humble Access).
+               - Oración de Humilde Acceso (PRAYER OF HUMBLE ACCESS).
+               ⚠️ COPIA ESTE TEXTO LITERALMENTE (NO LO INVENTES NI OMITAS):
+               "No nos atrevemos a venir a esta tu Mesa, oh Señor misericordioso, confiando en nuestra propia justicia, sino en tus abundantes y grandes misericordias. No somos dignos ni siquiera de recoger las migajas que caen de tu mesa. Pero tú eres el mismo Señor, cuya propiedad es tener siempre compasión. Concédenos, por tanto, Señor misericordioso, comer de tal modo la carne de tu amado Hijo Jesucristo y beber su sangre, que nuestros cuerpos sean limpiados por su Cuerpo y nuestras almas lavadas por su preciosísima Sangre, y que habitemos siempre en él, y él en nosotros. Amén."
             9. COMMUNIO y Oración de Acción de Gracias.
             10. AVISOS, BENEDICTIO y Despedida.
             11. ${marianAntiphonText}
