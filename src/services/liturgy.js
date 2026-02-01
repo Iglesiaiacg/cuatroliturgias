@@ -448,11 +448,7 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
     const isGoodFriday = celebrationLabel.toLowerCase().includes("viernes santo");
     const isAshWednesday = celebrationLabel.toLowerCase().includes("ceniza");
 
-    let basePrompt = `
-        FECHA: ${dateStr}.
-        CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
-        CICLO FERIAL: Año ${cycle.cicloFerial}.
-        TRADICIÓN: ${tradition.toUpperCase()}.
+    const coreRules = `
         ${CONFIG.RULES}
 
         🔴 INSTRUCCIÓN DE SISTEMA SUPREMA (NO IGNORAR):
@@ -638,48 +634,54 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         }
     }
 
-    basePrompt = `
-        FECHA: ${dateStr}.
-        CELEBRACIÓN OFICIAL (CALCULADA): ${finalLabel} (⚠️ OBLIGATORIO USAR ESTE TÍTULO EXACTO).
-        CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
-        ${CONFIG.RULES}
+    const goodFridayInstruction = isGoodFriday ? `
             ⚠️⚠️⚠️ ** CELEBRACIÓN ESPECIAL DETECTADA: VIERNES SANTO ** ⚠️⚠️⚠️
             
-            ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR(NO ES UNA MISA).
-    COLOR: ROJO.
-            NO HAY RITOS INICIALES(Entrada en silencio y postración).NO HAY CONSAGRACIÓN.
+            ESTRUCTURA DE LA CELEBRACIÓN DE LA PASIÓN DEL SEÑOR (NO ES UNA MISA).
+            COLOR: ROJO.
+            NO HAY RITOS INICIALES (Entrada en silencio y postración). NO HAY CONSAGRACIÓN.
             
             ESTRUCTURA OBLIGATORIA:
-1. RITOS INICIALES:
-- Entrada en silencio absoluto.
-               - Rúbrica: Sacerdote se postra en tierra.Fieles de rodillas.
-               - Oración Colecta(Sin "Oremos" ni saludo).
+            1. RITOS INICIALES:
+               - Entrada en silencio absoluto.
+               - Rúbrica: Sacerdote se postra en tierra. Fieles de rodillas.
+               - Oración Colecta (Sin "Oremos" ni saludo).
             
             2. LITURGIA DE LA PALABRA:
-- 1ª Lectura: Isaías 52, 13 – 53, 12(El siervo sufriente).
+               - 1ª Lectura: Isaías 52, 13 – 53, 12 (El siervo sufriente).
                - Salmo 30: "Padre, a tus manos encomiendo mi espíritu".
                - 2ª Lectura: Hebreos 4, 14 - 16; 5, 7 - 9.
-    - TRACTO(Cristo se humilló a sí mismo...).
-               - PASIÓN DE NUESTRO SEÑOR JESUCRISTO SEGÚN SAN JUAN(Jn 18, 1 – 19, 42). 
+               - TRACTO (Cristo se humilló a sí mismo...).
+               - PASIÓN DE NUESTRO SEÑOR JESUCRISTO SEGÚN SAN JUAN (Jn 18, 1 – 19, 42). 
                  (Indica rúbrica para que la LEAN 3 PERSONAS: CRONISTA, SINAGOGA, JESÚS).
                - HOMILÍA BREVE.
-               - ORACIÓN UNIVERSAL SOLEMNE(10 intenciones: Por la Iglesia, el Papa, los ministros, catecúmenos, unidad de los cristianos, judíos, no creyentes, gobernantes, tribulados).
+               - ORACIÓN UNIVERSAL SOLEMNE (10 intenciones: Por la Iglesia, el Papa, los ministros, catecúmenos, unidad de los cristianos, judíos, no creyentes, gobernantes, tribulados).
                  (Escribe SOLO los títulos de las 10 intenciones, no todo el texto largo).
 
             3. ADORACIÓN DE LA SANTA CRUZ:
-- Rúbrica de presentación("Mirad el árbol de la Cruz...").
+               - Rúbrica de presentación ("Mirad el árbol de la Cruz...").
                - Respuesta: "Venid y adoremos".
-               - Cantos de adoración(Improperios).
+               - Cantos de adoración (Improperios).
             
             4. SAGRADA COMUNIÓN:
-- Rúbrica: Altar cubierto con mantel, corporal y misal.
+               - Rúbrica: Altar cubierto con mantel, corporal y misal.
                - Padre Nuestro.
-               - Comunión de los fieles(con Pan consagrado el Jueves).
+               - Comunión de los fieles (con Pan consagrado el Jueves).
                - Oración después de la comunión.
-               - ORACIÓN SOBRE EL PUEBLO(Sin bendición formal).
+               - ORACIÓN SOBRE EL PUEBLO (Sin bendición formal).
                - SALIDA EN SILENCIO.
 
              ** NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
+    ` : '';
+
+    const basePrompt = `
+        FECHA: ${dateStr}.
+        CELEBRACIÓN OFICIAL (CALCULADA): ${finalLabel} (⚠️ OBLIGATORIO USAR ESTE TÍTULO EXACTO).
+        CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
+        CICLO FERIAL: Año ${cycle.cicloFerial}.
+        TRADICIÓN: ${tradition.toUpperCase()}.
+        ${coreRules}
+        ${goodFridayInstruction}
     `;
 
 
