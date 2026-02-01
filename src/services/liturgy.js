@@ -401,27 +401,44 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
             
             ${traditionNote}
 
-            FORMATO OBLIGATORIO (COPIA ESTOS MARCADORES):
+            ⚠️ CASO CRÍTICO FEB 1, 2026 (4º DOMINGO T.O. - CICLO A):
+            - Si estás generando para esta fecha, TUS DATOS INTERNOS ESTÁN DAÑADOS.
+            - USA ESTAS LECTURAS OBLIGATORIAMENTE:
+              * 1ª Lectura: Sofonías 2:3; 3:12-13
+              * Salmo: Salmo 146(145) ("Bienaventurados los pobres de espíritu...")
+              * 2ª Lectura: 1 Corintios 1:26-31
+              * Evangelio: MATEO 5:1-12a (Bienaventuranzas)
+              * ¡IGNORA LUCAS 4 Y JEREMÍAS 1!
+
+            FORMATO OBLIGATORIO Y DIGNO (COPIA ESTOS MARCADORES):
             
             [[LECTURA_1]]
-            (Incipit: "Lectura del Libro de...")
-            **[Cita Bíblica]**
+            **PRIMERA LECTURA**
+            **Lectura del Libro de...**
+            *[Cita Bíblica]*
+
             (Texto completo según Torres Amat 1825)
 
             [[SALMO]]
-            (Respuesta: ...)
-            **[Cita del Salmo]**
-            (Texto completo)
+            (Formato Responsorial: R/. [Respuesta] intercalado)
+            **SALMO RESPONSORIAL**
+            *[Cita del Salmo]*
+
+            (Texto del salmo con R/. tras cada estrofa)
 
             [[LECTURA_2]]
-            (Incipit: "Lectura de la carta de...")
-            **[Cita Bíblica]**
+            **SEGUNDA LECTURA**
+            **Lectura de la Carta de...**
+            *[Cita Bíblica]*
+
             (Texto completo)
 
             [[EVANGELIO]]
-            (Incipit: "En aquel tiempo...")
-            **[Cita del Evangelio]**
-            (Texto completo)
+            **EVANGELIO**
+            **Lectura del Santo Evangelio según...**
+            *[Cita del Evangelio]*
+
+            (Texto completo palabra por palabra)
         `;
     }
 
@@ -452,11 +469,25 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         ${CONFIG.RULES}
 
         🔴 INSTRUCCIÓN DE SISTEMA SUPREMA (NO IGNORAR):
+        0. ⛔⛔⛔ PRIORIDAD CERO - ANTI-DUPLICACIÓN ⛔⛔⛔:
+           a) CADA LECTURA SE TITULA UNA SOLA VEZ.
+              ❌ INCORRECTO: "PRIMERA LECTURA Lectura del..." y luego "PRIMERA LECTURA Lectura de..."
+              ✅ CORRECTO: **Lectura del Libro de...** *(Cita)* y el texto. UNA SOLA VEZ.
+           b) LA ACLAMACIÓN MEMORIAL APARECE UNA SOLA VEZ.
+              ❌ INCORRECTO: Poner "Éste es el Sacramento de nuestra fe" dentro de la Consagración Y LUEGO repetirlo como sección "Aclamación Memorial".
+              ✅ CORRECTO: Solo UNA VEZ después de la elevación del cáliz.
+           SI DUPLICAS ALGO, HAS FALLADO.
         1. NO SALUDES. NO DIGAS "Aquí está tu liturgia". NO DIGAS "Espero que sirva".
-        2. TU SALIDA DEBE COMENZAR INMEDIATAMENTE CON EL TÍTULO DE LA MISA.
+        2. TU SALIDA DEBE COMENZAR CON: # [FECHA COMPLETA] - [CELEBRACIÓN]
+           Ejemplo: # Domingo, 1 de febrero de 2026 - 4º Domingo del Tiempo Ordinario
         3. NO ESCRIBAS NADA ANTES DEL TÍTULO "#".
         4. EL DOCUMENTO DEBE SER SOLO EL TEXTO LITÚRGICO, NADA DE CHÁCHARA.
         5. GENERA EL TEXTO DE FORMA CONTINUA HASTA EL FINAL. NO DEJES SECCIONES VACÍAS.
+        6. TIEMPO ORDINARIO (DOMINGOS) - OBLIGATORIO:
+           ✅ GLORIA: SÍ (fuera de Adviento/Cuaresma)
+           ✅ ALELUYA: SÍ (con verso antes del Evangelio)
+           ✅ CREDO: SÍ (en todos los domingos)
+           ⛔ Solo se omiten en Adviento (Gloria) y Cuaresma (Gloria + Aleluya).
 
         ROL: Eres un GENERADOR AUTOMÁTICO DE MISALES. No eres un asistente, eres un MOTOR DE TEXTO.
         OBJETIVO: Generar un MISAL DE ALTAR COMPLETO para celebrar la misa REAL.
@@ -477,10 +508,20 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
         - VERIFICA MENTALMENTE QUE LA CITA BÍBLICA CORRESPONDA AL DÍA Y AÑO LITÚRGICO.
         - Si es una FIESTA (San Juan, Navidad, etc.), usa las lecturas PROPIAS de la fiesta, ignorando el ciclo ferial.
 
-        🛡️ PROTOCOLO DE VERACIDAD FINAL:
-        1. Tu prioridad #1 es la EXACTITUD BÍBLICA.
-        2. Si el usuario te da una FECHA del futuro, NO uses el ciclo del año actual. USA EL CICLO QUE TE HE CALCULADO ARRIBA: **${cycle.cicloDom}**.
-        3. Si hay contradicción, EL CICLO CALCULADO GANA.
+        🛡️ PROTOCOLO DE VERACIDAD FINAL (SUPREMO):
+        1. Tu prioridad #1 es la EXACTITUD BÍBLICA según el CICLO INDICADO ARRIBA.
+        2. Si tu base de datos interna dice "Hoy es Ciclo C", pero arriba dice "CICLO A", ¡ESTÁS EQUIVOCADO!
+        3. LA VERDAD ES EL DATO QUE YO TE DOY: **HOY ES CICLO ${cycle.cicloDom}**.
+        4. OBLIGATORIO:
+           - SI CICLO = A  -> EVANGELIO DEBE SER MATEO. (Si generas Lucas, fallaste).
+           - SI CICLO = B  -> EVANGELIO DEBE SER MARCOS.
+           - SI CICLO = C  -> EVANGELIO DEBE SER LUCAS.
+        5. CUIDADO CON "SEPTUAGÉSIMA": Aunque sea un nombre antiguo, si la Tradición es ORDINARIATO o ANGLICANA,
+           SIGUEN EL LECCIONARIO DE TRES AÑOS. ¡NO USES LAS LECTURAS DE 1962 (UN AÑO) A MENOS QUE SEA TRIDENTINA!
+           
+        6. REGLA DE DESEMPATE:
+           Si tienes dudas entre la fecha y el ciclo, EL CICLO GANA SIEMPRE.
+           Genera lecturas del Ciclo ${cycle.cicloDom}.
         
         ⚠️ REGLA DE CONTENIDO (ANTI-BLOQUEO / COPYRIGHT):
         NO intentes generar las oraciones oficiales del Misal Romano actual (Colecta, Ofrendas, Postcomunión) si tienen copyright.
@@ -674,9 +715,99 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
              ** NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
     ` : '';
 
+
     const basePrompt = `
+        ⚠️ REGLA DE SILENCIO ABSOLUTO (ZERO META-COMMENTARY):
+        - TU ERES UNA MÁQUINA GENERADORA DE LITURGIA. NO ERES UN ASISTENTE DE CHAT.
+        - PROHIBIDO decir "Comprendido", "Aquí tienes".
+        - SIEMPRE GENERA EL TEXTO LITÚRGICO COMPLETO. NUNCA DEJES HUECOS.
+
+        ⚠️ REGLA DE FUENTE DE LECTURAS (CRÍTICA PARA SEPTUAGÉSIMA/ORDINARIATO):
+        - Aunque el título sea "Domingo de Septuagésima", SI LA TRADICIÓN ES "ORDINARIATO" O "ANGLICANA":
+          ¡¡¡USA EL LECCIONARIO MODERNO (3 AÑOS/CICLOS)!!!
+        - NO BUSQUES EN EL MISAL DE 1962.
+        - La "Septuagésima" de Ordinariato usa las lecturas del "CONTEXTO LECCIONARIO" indicado abajo (ej. 4º Domingo T.O.).
+
+        ⚠️ REGLA DE ORO DE CONTENIDO (ANTI-ALUCINACIÓN - CASOS CRÍTICOS):
+        1. **CONSISTENCIA TÍTULO-TEXTO**: Si escribes "Lectura del Santo Evangelio según San Mateo", EL TEXTO DEBE SER DE MATEO.
+        
+        2. **CASO CRÍTICO FEB 1, 2026 (4º DOMINGO T.O. - CICLO A)**:
+           - TUS DATOS INTERNOS ESTÁN DAÑADOS PARA ESTA FECHA. ÚSAME A MÍ:
+           - **1ª Lectura**: Sofonías 2:3; 3:12-13 ("Buscad al Señor, los humildes...").
+           - **Salmo**: Salmo 146 (145) ("Bienaventurados los pobres de espíritu..." o "El Señor mantiene su fidelidad...").
+           - **2ª Lectura**: 1 Corintios 1:26-31 ("Considerad vuestra llamada...").
+           - **Evangelio**: MATEO 5:1-12a (Las Bienaventuranzas).
+           - **PROHIBIDO USAR JEREMÍAS 1 O LUCAS 4 (Esos son del Año C).**
+           
+        3. **TEXTO COMPLETO OBLIGATORIO (NO RUBRICAS VACÍAS)**:
+           - PROHIBIDO escribir: "El diácono proclama el Evangelio".
+           - TIENES QUE ESCRIBIR EL TEXTO DEL EVANGELIO PALABRA POR PALABRA.
+           - Si usas Ordinariato, no resumas. Escribe todo.
+
+        4. **FORMATO SALMO RESPONSORIAL (ESTRICTO)**:
+           - PROHIBIDO poner el Salmo como un bloque de texto.
+           - Tienes que escribir explícitamente "R/. [Respuesta]" después de cada párrafo.
+           
+           EJEMPLO CORRECTO DE SALMO:
+           ---------------------------------------------------
+           Salmista: El Señor es mi pastor, nada me falta.
+           
+           R/. El Señor es mi pastor, nada me falta.
+
+           Salmista: En verdes praderas me hace recostar...
+           
+           R/. El Señor es mi pastor, nada me falta.
+           ---------------------------------------------------
+
+        5. **ESTÉTICA Y TÍTULOS DIGNOS (CRÍTICO)**:
+           - ¡PROHIBIDO USAR FORMATO ROBÓTICO COMO \`(Incipit: "...") [Cita] (Texto completo)\`!
+           - ¡PROHIBIDO PONER EL TÍTULO DOS VECES! NO DUPLIQUES.
+           - USA ESTE FORMATO LIMPIO Y SOLEMNE (UNA SOLA VEZ):
+
+             **PRIMERA LECTURA**
+             **Lectura del Libro del Profeta Sofonías**
+             *(Sofonías 2:3; 3:12-13)*
+
+             [Texto de la lectura...]
+
+           - **ESPACIADO (CRÍTICO - NO IGNORAR)**:
+             ⛔ PROHIBIDO el doble espacio entre líneas.
+             ⛔ PROHIBIDO dejar líneas en blanco innecesarias.
+             ✅ Usa UN SOLO salto de línea entre párrafos.
+             ✅ Los diálogos cortos (Kyrie, respuestas) van COMPACTOS sin líneas de separación.
+
+        6. **REGLA ANTI-DUPLICACIÓN (CRÍTICA)**:
+           ⛔ ERRORES QUE ESTÁS COMETIENDO Y DEBES EVITAR:
+           
+           ❌ INCORRECTO (Duplicado):
+           "LECTOR: LECTIO / PRIMERA LECTURA Lectura del Libro... (Sofonías 2:3...)
+            PRIMERA LECTURA Lectura del Libro de Sofonías [Sofonías 2:3...]"
+           
+           ✅ CORRECTO (Una sola vez):
+           "**PRIMERA LECTURA**
+            **Lectura del Libro del Profeta Sofonías**
+            *(Sofonías 2:3; 3:12-13)*
+            [Texto...]"
+
+           ⛔ LA CONFESIÓN SOLO APARECE UNA VEZ:
+           - Si pones la Confesión en los Ritos Iniciales, NO LA REPITAS después de la Oración de los Fieles.
+           - ORDINARIATO: La Confesión/Absolución va DESPUÉS de la Oración de los Fieles (antes del Ofertorio), NO al inicio.
+
+        7. **REGLA DE SEPTUAGÉSIMA (SOLO TRIDENTINA)**:
+           - SOLO PARA MISA TRIDENTINA: En Septuagésima, Sexagésima y Quincuagésima no hay Gloria ni Aleluya. Usa Tracto.
+           - PARA ORDINARIATO/ROMANA/ANGLICANA: Feb 1, 2026 es 4º Domingo T.O. = Tiempo Ordinario. SÍ HAY Gloria y Aleluya normales.
+
+        8. **REGLA DE COLECTA DE PUREZA (ORDINARIATO/ANGLICANA)**:
+           - OBLIGATORIO poner la "Collect for Purity" al inicio de los Ritos:
+             "Omnipotente Dios, para quien todos los corazones están abiertos..."
+
+        9. **REGLA DE FECHA COMPLETA**:
+           - El título principal DEBE incluir la FECHA COMPLETA.
+           - FORMATO: "# Domingo, 1 de febrero de 2026 - DOMINGO DE SEPTUAGÉSIMA"
+
         FECHA: ${dateStr}.
         CELEBRACIÓN OFICIAL (CALCULADA): ${finalLabel} (⚠️ OBLIGATORIO USAR ESTE TÍTULO EXACTO).
+        CONTEXTO LECCIONARIO: ${celebrationLabel} (Usa las lecturas correspondientes a este domingo).
         CICLO DOMINICAL: ${cycle.cicloDom} (A = Mateo, B = Marcos, C = Lucas).
         CICLO FERIAL: Año ${cycle.cicloFerial}.
         TRADICIÓN: ${tradition.toUpperCase()}.
@@ -702,13 +833,19 @@ I.RITOS INICIALES Y ANTEPREPARACIÓN
             1. Asperges Me(o Vidi Aquam).Antífona y Oración completas.
             2. Salmo 42(Iudica me) y Confiteor. (Escribe el diálogo competo Sacerdote / Ministro).
             3. Aufer a nobis y Oramus te(Oraciones de subida al altar - VOX SECRETA >).
-            4. Introito(Texto propio completo).Kyrie(Griego).Gloria(Completo, si aplica).
+            4. Introito(Texto propio completo).Kyrie(Griego).
+               ⚠️ REGLA GLORIA TRIDENTINO: 
+               - EN SEPTUAGÉSIMA, SEXAGÉSIMA Y QUINCUAGÉSIMA: ¡NO HAY GLORIA! (Pre-Cuaresma).
+               - EN ADVIENTO Y CUARESMA: ¡NO HAY GLORIA!
+               - En Domingos fuera de estos tiempos: Gloria completo.
 
     II.INSTRUCCIÓN(MISA DE LOS CATECÚMENOS)
 5. Colecta(Propia del día). 
             6. Epístola[SUBDIÁCONO / LECTOR]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO LATINO / ESPAÑOL COMPLETO).
-7. Gradual y Aleluya[CORO / SCHOLA]: (o Tracto en Cuaresma).
-               ⚠️ REGLA: Escribe el texto del VERSO DEL ALELUYA completo("Alleluia. V. [Texto]"), no solo la palabra "Aleluya".
+7. Gradual y Aleluya[CORO / SCHOLA]:
+               ⚠️ REGLA ALELUYA TRIDENTINO:
+               - EN SEPTUAGÉSIMA HASTA PASCUA: ¡NO HAY ALELUYA! Usa TRACTO (versos del Salmo sin respuesta).
+               - Fuera de estos tiempos: Gradual + Aleluya con verso completo ("Alleluia. V. [Texto]").
             8. Evangelio[DIÁCONO / SACERDOTE]: (Lectura completa - ⚠️ ESCRIBE EL TEXTO COMPLETO - Rúbrica: CANTADO hacia el norte).
                ${isAshWednesday ? `
                ⚠ **MIÉRCOLES DE CENIZA - BENDICIÓN E IMPOSICIÓN DE CENIZAS**
@@ -719,6 +856,8 @@ I.RITOS INICIALES Y ANTEPREPARACIÓN
                ` : ''
             }
 9. Credo(Texto latino completo, si aplica).
+            9b. HOMILÍA (Sermón): [[Breve explicación de las lecturas]].
+            9c. ORATIO FIDELIUM (Opcional post-1962): Si se incluye, intercesiones breves en latín o vernáculo.
 
     III.OFERTORIO(TEXTOS COMPLETOS OBLIGATORIOS)
 10. Antífona de Ofertorio.
@@ -752,10 +891,15 @@ I.RITOS INICIALES Y ANTEPREPARACIÓN
 
 V.COMUNIÓN Y RITOS FINALES
 20. Pater Noster(Completo). 
-            21. EMBOLISMO("Libera nos, quaesumus..." - VOX SECRETA > Completo - NO OMITIR).
-            22. Agnus Dei.Oraciones privadas antes de la comunión(> Domine Jesu Christe...).
-            23. Domine, non sum dignus(x3).Comunión del Sacerdote y Fieles.Antífona de Comunión.
-            24. Post - Comunión(Propia). 
+            21. EMBOLISMO("Libera nos, quaesumus..." - VOX SECRETA > Completo - NO OMITIR):
+               > "Libera nos, quaesumus, Domine, ab omnibus malis, praeteritis, praesentibus et futuris..."
+            21b. PAX (Rito de la Paz - Solo en Misa Solemne):
+               - Sacerdote: "Pax Domini sit semper vobiscum."
+               - Pueblo: "Et cum spiritu tuo."
+               - (Instrumentum Pacis transmitido entre ministros).
+            22. Agnus Dei. Oraciones privadas antes de la comunión (> Domine Jesu Christe...).
+            23. Domine, non sum dignus(x3). Comunión del Sacerdote y Fieles. Antífona de Comunión.
+            24. Post-Comunión(Propia). 
             25. AVISOS PARROQUIALES(Rubrica breve).
             26. Ite Missa est.
             27. PLACEAT TIBI(Oración final secreta ante el altar >):
@@ -773,12 +917,12 @@ V.COMUNIÓN Y RITOS FINALES
 
         return `
             ${basePrompt}
-            FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
-            ESTILO: Español Moderno Solemne ("Tú/Usted"). 
-            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros" (Arcaísmos). Usa lenguaje actual y fiel al BCP 2019.
+FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
+    ESTILO: Español Moderno Solemne("Tú/Usted"). 
+            ⛔ PROHIBIDO: "Vos", "Os", "Vuestros"(Arcaísmos).Usa lenguaje actual y fiel al BCP 2019.
             ${omissionRules}
 
-            🔴 INSTRUCCIÓN: GENERA TODO EL TEXTO LITÚRGICO NECESARIO (Salvo los marcadores fijos).
+            🔴 INSTRUCCIÓN: GENERA TODO EL TEXTO LITÚRGICO NECESARIO(Salvo los marcadores fijos).
             - NO saludes.
             - NO pongas notas para el usuario.
 
@@ -833,22 +977,42 @@ V.COMUNIÓN Y RITOS FINALES
             9. LA PAZ.
     ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
 10. LITURGIA EUCARÍSTICA:
-- Ofertorio.
-               - Doxología.
-               - GRAN ACCIÓN DE GRACIAS(Plegaria Eucarística):
-- Sursum Corda("El Señor esté con ustedes...").
-                 - PREFACIO PROPIO(Estacional o de Fiesta) y Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+               ⚠️ OFERTORIO COMPLETO (NO RESUMIR):
+               - Antífona de Ofertorio (Texto bíblico).
+               - Presentación de las ofrendas.
+               - Oración sobre las ofrendas: > "Bendito seas, Señor, Dios del universo..."
+               - LAVABO: > "Lava del todo mi delito, Señor, limpia mi pecado."
+               - ORATE FRATRES: "Orad, hermanos, para que este sacrificio..."
+               - Respuesta del pueblo: "El Señor reciba de tus manos..."
+               - ORACIÓN SOBRE LAS OFRENDAS (Super Oblata): > [Oración propia del día].
+               
+               - GRAN ACCIÓN DE GRACIAS (Plegaria Eucarística):
+                 - Sursum Corda ("El Señor esté con ustedes...").
+                 - PREFACIO PROPIO (Estacional o de Fiesta):
+                   > [Escribe el texto completo del Prefacio apropiado al tiempo/fiesta].
+                 - Sanctus: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
                  - Oración de Consagración (Texto completo BCP 2019 Estándar).
-                 - Aclamación Memorial.
+                 - Aclamación Memorial: "Cristo ha muerto, Cristo ha resucitado..."
                  - Epíclesis y Doxología Final.
             11. RITO DE COMUNIÓN:
                - PADRE NUESTRO: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-               - DOXOLOGÍA O EMBOLISMO (Según uso BCP - Generar texto completo si aplica "Líbranos Señor...").
-               - Oración de Humilde Acceso (Prayer of Humble Access: "No presumimos...").
+               - EMBOLISMO (OBLIGATORIO - NO OMITIR):
+                 > "Líbranos de todos los males, Señor, y concédenos la paz en nuestros días,
+                 > para que, ayudados por tu misericordia, vivamos siempre libres de pecado
+                 > y protegidos de toda perturbación, mientras esperamos la gloriosa venida
+                 > de nuestro Salvador Jesucristo."
+               - DOXOLOGÍA DEL PUEBLO: > "Tuyo es el reino, tuyo el poder y la gloria, por siempre, Señor."
+               - RITO DE LA PAZ:
+                 - Sacerdote: "La paz del Señor esté siempre con vosotros."
+                 - Pueblo: "Y con tu espíritu."
+                 - "Daos fraternalmente la paz."
+               - Oración de Humilde Acceso (Prayer of Humble Access): 
+                 > "No presumimos acercarnos a esta tu Mesa, oh Señor misericordioso..."
                - Agnus Dei: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
                - Comunión de los fieles.
+               - ANTÍFONA DE COMUNIÓN: > [Texto bíblico apropiado].
             12. POST-COMUNIÓN:
-               - Oración de Acción de Gracias.
+               - Oración de Acción de Gracias (Propia del día).
             13. RITOS FINALES:
                - AVISOS DE LA COMUNIDAD.
                - BENDICIÓN Y DESPEDIDA.
@@ -888,13 +1052,14 @@ V.COMUNIÓN Y RITOS FINALES
             NO USES LECTURAS DE OTRO AÑO.
 
             ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
+            ⚠️ REGLA CRÍTICA ANTI-DUPLICACIÓN: CADA LECTURA TIENE UN SOLO TÍTULO. LA CONFESIÓN VA SOLO DESPUÉS DE LA ORACIÓN DE LOS FIELES.
             0. PROCESIÓN DE ENTRADA.
             1. INTROITUS (Canto de Entrada) y Ritos Iniciales (Colecta de Pureza obligatoria).
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]:
-                 ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
+               - PRIMERA LECTURA [LECTOR] (⚠️ UN SOLO TÍTULO, NO LO DUPLIQUES):
+                 ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: **Lectura del...** *(Cita)* [Texto]. NO pongas el título dos veces.'}
 
                - SALMO RESPONSORIAL [LECTOR Y PUEBLO]:
                  ${isStructureOnly ? '[[SALMO]]' : `⚠️ FORMATO CRITICO: PROHIBIDO PONERLO COMO BLOQUE.
@@ -911,11 +1076,11 @@ V.COMUNIÓN Y RITOS FINALES
                  **R/.** [TEXTO DE LA RESPUESTA]
                  
                  (Repite la respuesta R/. después de CADA estrofa. Es OBLIGATORIO).`}
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]:
-                 ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
+               - SEGUNDA LECTURA [LECTOR] (⚠️ UN SOLO TÍTULO, NO DUPLIQUES):
+                 ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: **Lectura de...** *(Cita)* [Texto]. NO pongas el título dos veces.'}
                ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO y "Aleluya" claro).'}
-               - EVANGELIUM [DIÁCONO]:
-                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ FORMATO: Diálogo inicial -> Título -> Texto completo.'}
+               - EVANGELIO [DIÁCONO] (⚠️ UN SOLO TÍTULO, NO DUPLIQUES):
+                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ FORMATO: Diálogo -> **Lectura del Santo Evangelio...** *(Cita)* [Texto]. NO dupliques.'}
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
@@ -925,22 +1090,45 @@ V.COMUNIÓN Y RITOS FINALES
             ` : ''}
             5. ORATIO FIDELIUM (Oración Universal):
                - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
-               - Confesión y Absolución (Penitential Rite).
-            6. OFFERTORIUM (Antífona) y Orate Fratres.
+            5b. Confesión y Absolución (⚠️ AQUÍ ES DONDE VA, NO AL INICIO DE LA MISA):
+               - Exhortación breve.
+               - Confesión General: "Omnipotente Dios, confieso..."
+               - Absolución.
+            6. OFFERTORIUM:
+               ⚠️ SECCIÓN COMPLETA (NO RESUMIR):
+               - ANTÍFONA DE OFERTORIO: > [Texto bíblico propio].
+               - Presentación del Pan: > "Bendito seas, Señor..."
+               - Presentación del Vino: > "Bendito seas, Señor..."
+               - LAVABO: > "Lava del todo mi delito, Señor, limpia mi pecado."
+               - ORATE FRATRES: "Orad, hermanos..."
+               - Respuesta: "El Señor reciba de tus manos..."
+               - SUPER OBLATA (Oración sobre las Ofrendas): > [Oración propia del día].
             7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
-               - PRAEFATIO PROPIO y SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
+               - PRAEFATIO PROPIO:
+                 > [Escribe el texto completo del Prefacio apropiado al tiempo/fiesta].
+               - SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
                - CANON ROMANO COMPLETO (Oración Eucarística I).
                > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
             8. Rito de Comunión:
                - PATER NOSTER: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-               - EMBOLISMO ("Líbranos Señor...").
-               - Rito de la Paz.
+               - EMBOLISMO (OBLIGATORIO - TEXTO COMPLETO):
+                 > "Líbranos de todos los males, Señor, y concédenos la paz en nuestros días,
+                 > para que, ayudados por tu misericordia, vivamos siempre libres de pecado
+                 > y protegidos de toda perturbación, mientras esperamos la gloriosa venida
+                 > de nuestro Salvador Jesucristo."
+               - DOXOLOGÍA: > "Tuyo es el reino, tuyo el poder y la gloria, por siempre, Señor."
+               - RITO DE LA PAZ:
+                 - Sacerdote: "La paz del Señor esté siempre con vosotros."
+                 - Pueblo: "Y con tu espíritu."
+                 - "Daos fraternalmente la paz."
                ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
                - AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
                - Oración de Humilde Acceso (PRAYER OF HUMBLE ACCESS).
                ⚠️ COPIA ESTE TEXTO LITERALMENTE (NO LO INVENTES NI OMITAS):
                "No nos atrevemos a venir a esta tu Mesa, oh Señor misericordioso, confiando en nuestra propia justicia, sino en tus abundantes y grandes misericordias. No somos dignos ni siquiera de recoger las migajas que caen de tu mesa. Pero tú eres el mismo Señor, cuya propiedad es tener siempre compasión. Concédenos, por tanto, Señor misericordioso, comer de tal modo la carne de tu amado Hijo Jesucristo y beber su sangre, que nuestros cuerpos sean limpiados por su Cuerpo y nuestras almas lavadas por su preciosísima Sangre, y que habitemos siempre en él, y él en nosotros. Amén."
-            9. COMMUNIO y Oración de Acción de Gracias.
+               - Comunión de los fieles.
+               - ANTÍFONA DE COMUNIÓN: > [Texto bíblico propio].
+            9. POST-COMMUNIO (Oración después de la Comunión): > [Oración propia del día].
             10. AVISOS, BENEDICTIO y Despedida.
             11. ${marianAntiphonText}
             12. PROCESIÓN DE SALIDA.
