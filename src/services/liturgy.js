@@ -850,17 +850,28 @@ V.COMUNIÓN Y RITOS FINALES
             - [[INSERTAR_PADRE_NUESTRO]]
             - [[INSERTAR_CORDERO]]
 
+            ⚠️ INSTRUCCIÓN CRÍTICA DE LECCIONARIO:
+            Debes respetar estricta y obligatoriamente el CICLO LITÚRGICO indicado arriba (${cycle.cicloDom}).
+            - Si es CICLO A: Evangelio principal de San Mateo.
+            - Si es CICLO B: Evangelio principal de San Marcos.
+            - Si es CICLO C: Evangelio principal de San Lucas.
+            NO USES LECTURAS DE OTRO AÑO.
+
             ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
             0. PROCESIÓN DE ENTRADA.
             1. INTROITUS (Canto de Entrada) y Ritos Iniciales (Colecta de Pureza obligatoria).
                ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
             2. COLLECTA (Oración Colecta).
             3. LITURGIA DE LA PALABRA:
-               - LECTIO / PRIMERA LECTURA [LECTOR]: ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
-               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]: ${isStructureOnly ? '[[SALMO]]' : '(¡OBLIGATORIO RESPONSORIAL! Respuesta y Estrofas)'}.
-               - EPISTOLA / SEGUNDA LECTURA [LECTOR]: ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
-               ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO).'}
-               - EVANGELIUM [DIÁCONO]: ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ TEXTO COMPLETO (Usa Biblia Torres Amat)'}.
+               - LECTIO / PRIMERA LECTURA [LECTOR]:
+                 ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
+               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]:
+                 ${isStructureOnly ? '[[SALMO]]' : '⚠️ OBLIGATORIO: FORMATO INTERCALADO EXACTO:\n                 R/. [Texto Respuesta] (Negrita)\n                 [Estrofa 1]\n                 R/. [Texto Respuesta]\n                 [Estrofa 2]\n                 R/. [Texto Respuesta]'}
+               - EPISTOLA / SEGUNDA LECTURA [LECTOR]:
+                 ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: Título en Negrita -> Cita -> Salto de línea -> Texto completo (Biblia Torres Amat).'}
+               ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO y "Aleluya" claro).'}
+               - EVANGELIUM [DIÁCONO]:
+                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ FORMATO: Diálogo inicial -> Título -> Texto completo.'}
             4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
             ${isAshWednesday ? `
             ⚠ **MIÉRCOLES DE CENIZA**
