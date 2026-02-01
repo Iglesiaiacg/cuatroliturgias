@@ -102,10 +102,6 @@ ${finalAntiphons.entrance ? `**Antífona de Entrada:** ${finalAntiphons.entrance
 
 [[INSERTAR_YO_CONFIESO]]
 
-**Sacerdote:** Dios todopoderoso tenga misericordia de nosotros, perdone nuestros pecados y nos lleve a la vida eterna.
-
-**Pueblo:** Amén.
-
 ---
 
 ### Señor, Ten Piedad (Kyrie)

@@ -89,6 +89,14 @@ Cordero de Dios, que quitas el pecado del mundo, ten piedad de nosotros.
 Cordero de Dios, que quitas el pecado del mundo, danos la paz.`,
 
     "[[INSERTAR_CONSAGRACION]]": `**SACERDOTE:**
+Santo eres en verdad, Señor, fuente de toda santidad;
+por eso te pedimos que santifiques estos dones
+con la efusión de tu Espíritu,
+de manera que sean para nosotros
+Cuerpo y ✠ Sangre de Jesucristo, nuestro Señor.
+
+[[El Sacerdote junta las manos y extiende las manos sobre las ofrendas]]
+
 El cual, cuando iba a ser entregado a su Pasión,
 voluntariamente aceptada,
 tomó pan, dándote gracias, lo partió
