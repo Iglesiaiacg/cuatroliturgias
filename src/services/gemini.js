@@ -21,7 +21,7 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     }
 };
 
-export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2.0-flash') => {
+export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1.5-flash') => {
     try {
         let userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
 
