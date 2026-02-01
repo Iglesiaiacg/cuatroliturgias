@@ -234,6 +234,9 @@ export const formatResponsorialPsalm = (psalmText) => {
         // Skip any leftover markers
         if (line.match(/^(R\.?\/|Respuesta)[:\.]?$/i)) continue;
 
+        // CRITICAL: Stop if we hit the Alleluia (it's the next section)
+        if (line.match(/Aleluya/i)) break;
+
         verseGroup.push(line);
 
         // Logic: End group if line ends with period/colon, or max 3 lines
