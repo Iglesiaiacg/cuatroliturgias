@@ -681,13 +681,13 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
              ** NO INCLUYAS PLEGARIA EUCARÍSTICA NI CONSAGRACIÓN BAJO NINGUNA CIRCUNSTANCIA.**
     `;
-}
 
-// --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
-if (tradition === 'tridentina') {
-    const marianAntiphonText = `Antífona Mariana Final: ${marianAntiphon.name} (${marianAntiphon.text})`;
 
-    return `
+    // --- 1. MISA TRIDENTINA (EXHAUSTIVA CON LATÍN) ---
+    if (tradition === 'tridentina') {
+        const marianAntiphonText = `Antífona Mariana Final: ${marianAntiphon.name} (${marianAntiphon.text})`;
+
+        return `
             ${basePrompt}
 FUENTE: Missale Romanum 1962.
 IDIOMA: LATÍN(Texto Principal) y ESPAÑOL(Rúbricas).
@@ -715,7 +715,7 @@ I.RITOS INICIALES Y ANTEPREPARACIÓN
                - 4 Oraciones de bendición.
                - Rúbrica: Imposición con la fórmula "Memento, homo, quia pulvis es...".
                ` : ''
-        }
+            }
 9. Credo(Texto latino completo, si aplica).
 
     III.OFERTORIO(TEXTOS COMPLETOS OBLIGATORIOS)
@@ -763,13 +763,13 @@ V.COMUNIÓN Y RITOS FINALES
             30. ${marianAntiphonText}
 31. PROCESIÓN DE SALIDA(Rúbrica).
         `;
-}
+    }
 
-// --- 2. MISA ANGLICANA (BCP 2019) ---
-if (tradition === 'anglicana') {
-    const marianAntiphonText = `(Opcional) Antífona Mariana: ${marianAntiphon.name}.`;
+    // --- 2. MISA ANGLICANA (BCP 2019) ---
+    if (tradition === 'anglicana') {
+        const marianAntiphonText = `(Opcional) Antífona Mariana: ${marianAntiphon.name}.`;
 
-    return `
+        return `
             ${basePrompt}
             FUENTE: Libro de Oración Común (ACNA 2019 - Edición en Español).
             ESTILO: Español Moderno Solemne ("Tú/Usted"). 
@@ -820,7 +820,7 @@ if (tradition === 'anglicana') {
                - Salmo 51 (Miserere mei, Deus) recitado durante la imposición.
                (Omitir Credo si así lo indica la rúbrica BCP, o ponerlo después).
                ` : `- Credo: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}`
-        }
+            }
 7. ORACIÓN DE LOS FIELES:
                ⚠️ ADAPTADA A LAS LECTURAS: Redacta peticiones específicas basadas en el Evangelio / Lecturas de hoy.
                (Formato BCP completo).
@@ -853,13 +853,13 @@ if (tradition === 'anglicana') {
                - ${marianAntiphonText}
                - PROCESIÓN DE SALIDA.
         `;
-}
+    }
 
-// --- 3. ORDINARIATO (DIVINE WORSHIP) ---
-if (tradition === 'ordinariato') {
-    const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
+    // --- 3. ORDINARIATO (DIVINE WORSHIP) ---
+    if (tradition === 'ordinariato') {
+        const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
 
-    return `
+        return `
             ${basePrompt}
             FUENTE MISAL: Divine Worship: The Missal.
             Fuente LECTURAS: Leccionario Romano (RSV-2CE) - Coincide con el Ciclo Romano EXACTO (mismas lecturas que la Misa Romana).
@@ -943,15 +943,15 @@ if (tradition === 'ordinariato') {
             11. ${marianAntiphonText}
             12. PROCESIÓN DE SALIDA.
         `;
-}
+    }
 
-// --- 4. ROMANA (NOVUS ORDO) ---
-// Fallback
-const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
+    // --- 4. ROMANA (NOVUS ORDO) ---
+    // Fallback
+    const marianAntiphonText = `Saludo a la Virgen: ${marianAntiphon.name}.`;
 
-// SENIOR LITURGIST ENFORCEMENT:
+    // SENIOR LITURGIST ENFORCEMENT:
 
-return `
+    return `
         ${basePrompt}
         FUENTE: Misal Romano (Tercera Edición).
         ESTILO OBLIGATORIO: "HIGH CHURCH" (Solemne y Tradicional).
