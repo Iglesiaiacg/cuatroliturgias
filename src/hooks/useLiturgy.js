@@ -211,7 +211,7 @@ export const useLiturgy = () => {
             }
 
             // Now replace each reading marker with its content
-            const markers = ['LECTURA_1', 'SALMO', 'LECTURA_2', 'EVANGELIO'];
+            const markers = ['LECTURA_1', 'SALMO', 'LECTURA_2', 'ACCLAMATION', 'EVANGELIO'];
 
             console.log('==== STARTING READING REPLACEMENT ====');
             console.log('readingsRes length:', readingsRes ? readingsRes.length : 0);

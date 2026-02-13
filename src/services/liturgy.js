@@ -1023,116 +1023,221 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
 
     // --- 3. ORDINARIATO (DIVINE WORSHIP) ---
     if (tradition === 'ordinariato') {
-        const marianAntiphonText = `Antífona Final a la Virgen: ${marianAntiphon.name}.`;
+        // --- RUBRICISTA MAYOR 2026 LOGIC (STRICT DWM) ---
+        // FORCE 2026 CYCLE A
+        const currentYear = selectedDate.getFullYear();
+        let cycleText = cycle.text;
+        if (currentYear === 2026) {
+            cycleText = "CICLO A (Mateo)";
+        }
 
-        return `
-            ${basePrompt}
-            FUENTE MISAL: Divine Worship: The Missal.
-            Fuente LECTURAS: Leccionario Romano (RSV-2CE) - Coincide con el Ciclo Romano EXACTO (mismas lecturas que la Misa Romana).
-            ESTILO: Español Sacro Elevado (Patrimonio Anglicano).
-            ${omissionRules}
+        // 1. ZONA LITÚRGICA (GESIMAS & LENT)
+        let liturgicalZone = "ORDINARY";
+        let zoneRules = "Reglas estándar del tiempo litúrgico.";
 
-            🔴 INSTRUCCIÓN: SOLO TEXTO LITÚRGICO.
-            - Títulos en Inglés/Latín aceptables según uso de DW.
-            - NO converses.
+        // FECHAS CLAVE 2026
+        const dateTime = selectedDate.getTime();
+        const septuagesima = new Date(2026, 1, 1).getTime(); // 1 Feb
+        const ashWednesday = new Date(2026, 1, 18).getTime(); // 18 Feb
+        const easterSunday = new Date(2026, 3, 5).getTime(); // 5 Abr (Approx)
 
+        if (currentYear === 2026) {
+            if (dateTime >= septuagesima && dateTime < ashWednesday) {
+                liturgicalZone = "GESIMATIDE";
+                zoneRules = "Zona 2 (Gesimatide): Morado. GLORIA: NO. ALELUYA: NO (Tracto).";
+            } else if (dateTime >= ashWednesday && dateTime < easterSunday) {
+                liturgicalZone = "LENT";
+                zoneRules = "Zona 3 (Cuaresma): Morado. GLORIA: NO. ALELUYA: NO (Tracto).";
+            } else if (dateTime >= easterSunday) {
+                liturgicalZone = "EASTER";
+                zoneRules = "Zona 4 (Pascua): Blanco. GLORIA: SÍ. ALELUYA: SÍ.";
+            }
+        }
 
-            ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS:
-            - [[INSERTAR_GLORIA]]
-            - [[INSERTAR_CREDO]]
-            - [[INSERTAR_SANTO]]
-            - [[INSERTAR_PADRE_NUESTRO]]
-            - [[INSERTAR_CORDERO]]
+        // Alias para compatibilidad
+        let specificLabel2026 = finalLabel;
 
-            ⚠️ INSTRUCCIÓN CRÍTICA DE LECCIONARIO:
-            Debes respetar estricta y obligatoriamente el CICLO LITÚRGICO indicado arriba (${cycle.cicloDom}).
-            - Si es CICLO A: Evangelio principal de San Mateo.
-            - Si es CICLO B: Evangelio principal de San Marcos.
-            - Si es CICLO C: Evangelio principal de San Lucas.
-            NO USES LECTURAS DE OTRO AÑO.
+        // Override Label for Quinquagesima
+        if (dateTime === new Date(2026, 1, 15).getTime()) {
+            specificLabel2026 = "DOMINGO DE QUINQUAGÉSIMA (DOMINICA QUINQUAGESIMAE)";
+        }
 
-            ESTRUCTURA OBLIGATORIA (CON TÍTULOS BILINGÜES):
-            ⚠️ REGLA CRÍTICA ANTI-DUPLICACIÓN: CADA LECTURA TIENE UN SOLO TÍTULO. LA CONFESIÓN VA SOLO DESPUÉS DE LA ORACIÓN DE LOS FIELES.
-            0. PROCESIÓN DE ENTRADA.
-            1. INTROITUS (Canto de Entrada) y Ritos Iniciales (Colecta de Pureza obligatoria).
-               ${(season === 'adviento' || season === 'cuaresma') ? '- (NO PONGAS GLORIA: Tiempo Penitencial).' : '- GLORIA IN EXCELSIS: USA EL MARCADOR \`[[INSERTAR_GLORIA]]\`.'}
-            2. COLLECTA (Oración Colecta).
-            3. LITURGIA DE LA PALABRA:
-               - PRIMERA LECTURA [LECTOR] (⚠️ UN SOLO TÍTULO, NO LO DUPLIQUES):
-                 ${isStructureOnly ? '[[LECTURA_1]]' : '⚠️ FORMATO: **Lectura del...** *(Cita)* [Texto]. NO pongas el título dos veces.'}
+        // LÓGICA DE INSTRUCCIONES ESPECÍFICAS
+        let readingsInstruction = "";
+        let collectInstruction = "Texto propio del día. Si es Quinquagésima, menciona la CARIDAD.";
 
-               - SALMO RESPONSORIAL [LECTOR Y PUEBLO]:
-                 ${isStructureOnly ? '[[SALMO]]' : `⚠️ FORMATO CRITICO: PROHIBIDO PONERLO COMO BLOQUE.
-                 Debes escribirlo ALINEADO así:
-                 
-                 **R/.** [TEXTO DE LA RESPUESTA] (En Negrita)
-                 
-                 [Versos de la Estrofa 1]
-                 
-                 **R/.** [TEXTO DE LA RESPUESTA]
-                 
-                 [Versos de la Estrofa 2]
-                 
-                 **R/.** [TEXTO DE LA RESPUESTA]
-                 
-                 (Repite la respuesta R/. después de CADA estrofa. Es OBLIGATORIO).`}
-               - SEGUNDA LECTURA [LECTOR] (⚠️ UN SOLO TÍTULO, NO DUPLIQUES):
-                 ${isStructureOnly ? '[[LECTURA_2]]' : '⚠️ FORMATO: **Lectura de...** *(Cita)* [Texto]. NO pongas el título dos veces.'}
-               ${(season === 'cuaresma') ? '- TRACTUS (Sin Aleluya).' : '- ALELUYA [CORO]: (Incluye VERSO y "Aleluya" claro).'}
-               - EVANGELIO [DIÁCONO] (⚠️ UN SOLO TÍTULO, NO DUPLIQUES):
-                 ${isStructureOnly ? '[[EVANGELIO]]' : '⚠️ FORMATO: Diálogo -> **Lectura del Santo Evangelio...** *(Cita)* [Texto]. NO dupliques.'}
-            4. Sermón y CREDO: ${selectedDate.getDay() === 0 ? 'USA EL MARCADOR \`[[INSERTAR_CREDO]]\`.' : '(NO PONGAS CREDO: Es día ferial).'}
-            ${isAshWednesday ? `
-            ⚠ **MIÉRCOLES DE CENIZA**
-            - BENDICIÓN E IMPOSICIÓN DE CENIZA.
-            - Salmo 50 (Miserere mei, Deus).
-            - Oración Final de las Cenizas.
-            ` : ''}
-            5. ORATIO FIDELIUM (Oración Universal):
-               - Intercesiones (ADAPTADAS AL TEMA DE LAS LECTURAS).
-            5b. Confesión y Absolución (⚠️ AQUÍ ES DONDE VA, NO AL INICIO DE LA MISA):
-               - Exhortación breve.
-               - Confesión General: "Omnipotente Dios, confieso..."
-               - Absolución.
-            6. OFFERTORIUM:
-               ⚠️ SECCIÓN COMPLETA (NO RESUMIR):
-               - ANTÍFONA DE OFERTORIO: > [Texto bíblico propio].
-               - Presentación del Pan: > "Bendito seas, Señor..."
-               - Presentación del Vino: > "Bendito seas, Señor..."
-               - LAVABO: > "Lava del todo mi delito, Señor, limpia mi pecado."
-               - ORATE FRATRES: "Orad, hermanos..."
-               - Respuesta: "El Señor reciba de tus manos..."
-               - SUPER OBLATA (Oración sobre las Ofrendas): > [Oración propia del día].
-            7. CANON MISSAE (VERSIÓN PATRIMONIAL EN ESPAÑOL):
-               - PRAEFATIO PROPIO:
-                 > [Escribe el texto completo del Prefacio apropiado al tiempo/fiesta].
-               - SANCTUS: USA EL MARCADOR \`[[INSERTAR_SANTO]]\`.
-               - CANON ROMANO COMPLETO (Oración Eucarística I).
-               > "Te rogamos pues, clementísimo Padre..." (Todo el texto verbatim en ESPAÑOL).
-            8. Rito de Comunión:
-               - PATER NOSTER: USA EL MARCADOR \`[[INSERTAR_PADRE_NUESTRO]]\`.
-               - EMBOLISMO (OBLIGATORIO - TEXTO COMPLETO):
-                 > "Líbranos de todos los males, Señor, y concédenos la paz en nuestros días,
-                 > para que, ayudados por tu misericordia, vivamos siempre libres de pecado
-                 > y protegidos de toda perturbación, mientras esperamos la gloriosa venida
-                 > de nuestro Salvador Jesucristo."
-               - DOXOLOGÍA: > "Tuyo es el reino, tuyo el poder y la gloria, por siempre, Señor."
-               - RITO DE LA PAZ:
-                 - Sacerdote: "La paz del Señor esté siempre con vosotros."
-                 - Pueblo: "Y con tu espíritu."
-                 - "Daos fraternalmente la paz."
-               ${(celebrationLabel && celebrationLabel.toLowerCase().includes('jueves santo')) ? '(OMITIR RITO DE LA PAZ por Jueves Santo).' : ''}
-               - AGNUS DEI: USA EL MARCADOR \`[[INSERTAR_CORDERO]]\`.
-               - Oración de Humilde Acceso (PRAYER OF HUMBLE ACCESS).
-               ⚠️ COPIA ESTE TEXTO LITERALMENTE (NO LO INVENTES NI OMITAS):
-               "No nos atrevemos a venir a esta tu Mesa, oh Señor misericordioso, confiando en nuestra propia justicia, sino en tus abundantes y grandes misericordias. No somos dignos ni siquiera de recoger las migajas que caen de tu mesa. Pero tú eres el mismo Señor, cuya propiedad es tener siempre compasión. Concédenos, por tanto, Señor misericordioso, comer de tal modo la carne de tu amado Hijo Jesucristo y beber su sangre, que nuestros cuerpos sean limpiados por su Cuerpo y nuestras almas lavadas por su preciosísima Sangre, y que habitemos siempre en él, y él en nosotros. Amén."
-               - Comunión de los fieles.
-               - ANTÍFONA DE COMUNIÓN: > [Texto bíblico propio].
-            9. POST-COMMUNIO (Oración después de la Comunión): > [Oración propia del día].
-            10. AVISOS, BENEDICTIO y Despedida.
-            11. ${marianAntiphonText}
-            12. PROCESIÓN DE SALIDA.
+        if (specificLabel2026.toUpperCase().includes("QUINQUAGÉSIMA")) {
+            readingsInstruction = `
+                LECTURAS PROPIAS DE QUINQUAGÉSIMA (Ciclo A 2026):
+                - Epístola: 1 Corintios 13:1-13 (El himno a la caridad).
+                - Evangelio: Lucas 18:31-43 (Jesús predice su pasión / Ciego de Jericó).
+                - TRACTO: Jubilate Deo (Salmo 99) - NO Aleluya.
+            `;
+        }
+
+        const ordinariatoPrompt = `
+            INSTRUCCIÓN: Actúa como el **RUBRICISTA MAYOR DEL ORDINARIATO**.
+            Genera la Santa Misa según el *Divine Worship: The Missal* (DWM).
+
+            FECHA: **${dateStr}**
+            CELEBRACIÓN: **${specificLabel2026}**
+            CICLO: **${cycleText}**
+            ZONA LITÚRGICA: **${liturgicalZone}**
+
+            REGLAS DE LA ZONA (${currentYear}):
+            ${zoneRules}
+
+            IDIOMA: **ESPAÑOL SACRO SOLEMNE** ("Vosotros", "Tu bondad").
+            - TODO el texto hablado (Canon, Colectas, Evangelio) en ESPAÑOL.
+            - Títulos pueden ir en Inglés/Latín.
+
+            PROTOCOLO VISUAL "RED & BLACK" (STRICT):
+            1. REGLA DEL RENGLÓN ÚNICO (AIRE):
+               - CADA intervención (**S:** o **P:**) DEBE ir en SU PROPIA LÍNEA.
+               - JAMÁS juntes S y P en el mismo párrafo.
+               - DEJA UNA LÍNEA EN BLANCO entre cada intervención.
+            
+            2. REGLA DE LA RÚBRICA ROJA (ACCIONES ESPECÍFICAS):
+               - ***[Rúbricas en Negrita Cursiva]*** SIEMPRE en línea separada.
+               - NO USES "Rúbrica" genérica. USA LA ACCIÓN: ***[Se arrodillan]***, ***[Genuflexión]***, ***[Se signan]***.
+            
+            3. VOZ DEL PUEBLO:
+               - Texto del Pueblo (**P:**) SIEMPRE EN NEGRITA.
+
+            ${readingsInstruction}
+
+            ---
+            ### ESTRUCTURA DE SALIDA (MISSAL FORMAT):
+
+            # ${specificLabel2026.toUpperCase()}
+            ## ${dateStr}
+
+            ---
+
+            ## I. RITOS INICIALES (INTRODUCTORY RITES)
+            ***[Procesión de entrada. El pueblo se pone de pie.]***
+            
+            1. **Introito:** (Texto completo del Salmo propio).
+            
+            2. **S:** En el nombre del Padre... 
+            **P: Amén.**
+            
+            3. **Colecta de la Pureza:** "Dios todopoderoso, para quien todos los corazones están manifiestos..." (Solo Sacerdote).
+            
+            4. **Sumario de la Ley:** (O Decálogo si es Zona 2 o 3).
+            
+            5. **Kyrie:** (En Griego - Alternado S/P).
+            
+            6. **Gloria:** ${liturgicalZone === 'GESIMATIDE' || liturgicalZone === 'LENT' ? '***[Se omite el Gloria.]***' : '(Texto completo)'}.
+            
+            7. **Colecta del Día:** ${collectInstruction}
+
+            ---
+
+            ## II. LITURGIA DE LA PALABRA (${cycleText})
+            ***[El pueblo se sienta.]***
+            
+            1. **Primera Lectura:** [[LECTURA_1]] (Texto completo).
+            
+            2. **Salmo Gradual:** [[SALMO]] (Texto completo).
+            
+            3. **Segunda Lectura:** [[LECTURA_2]] (Texto completo).
+            
+            ***[El pueblo se pone de pie.]***
+            
+            4. **${liturgicalZone === 'GESIMATIDE' || liturgicalZone === 'LENT' ? 'TRACTO' : 'ALELUYA'}:** [[ACCLAMATION]] (Texto completo).
+            
+            5. **Santo Evangelio:** 
+               ***[El Sacerdote signa el libro y se signa a sí mismo +.]***
+               **S:** El Señor esté con vosotros. 
+               **P: Y con tu espíritu.**
+               
+               **S:** Lectura del Santo Evangelio... 
+               **P: Gloria a ti, Señor.**
+               
+               [[EVANGELIO]] (Mateo).
+               
+               **S:** El Evangelio del Señor. 
+               **P: Te alabamos, Señor.**
+            
+            6. **Homilía:** ***[Se sienta el pueblo.]***
+            
+            7. **Credo Niceno:** 
+               ***[El pueblo se pone de pie.]***
+               "Creo en un solo Dios..." (Texto completo en Español).
+               ***[Todos se inclinan en "Y por obra del Espíritu Santo..."]***
+            
+            8. **Oración de los Fieles:** (Estilo DWM. **P: Te rogamos, óyenos**).
+
+            ---
+
+            ## III. RITO PENITENCIAL (PENITENTIAL RITE)
+            ***[El pueblo se arrodilla.]***
+            
+            1. **Invitación:** **S:** Vosotros que os arrepentís...
+            
+            2. **Confesión General:** **S y P:** "Dios todopoderoso, Padre de nuestro Señor Jesucristo..." (Texto completo).
+            
+            3. **Absolución:** ***[El Sacerdote se pone de pie y da la absolución +.]***
+            
+            4. **Palabras de Consuelo (Comfortable Words):** (Sacerdote recita las 4 citas: Mt 11:28, Jn 3:16, 1 Tim 1:15, 1 Jn 2:1 - TEXTO ESPAÑOL COMPLETO).
+
+            ---
+
+            ## IV. LITURGIA EUCARÍSTICA (LITURGY OF THE EUCHARIST)
+            ***[Ofertorio. El pueblo se sienta.]***
+            
+            1. **Antífona de Ofertorio:** (Texto completo).
+            
+            2. **Oración sobre las Ofrendas.**
+            
+            ***[El pueblo se pone de pie.]***
+
+             ---
+            ## V. PLEGARIA EUCARÍSTICA (CANON ROMANO)
+            ***[El pueblo se arrodilla para el Canon.]***
+
+            1. **Prefacio:** (Propio del tiempo).
+            **S:** El Señor esté con vosotros... Levantemos el corazón...
+            **P: Santo, Santo, Santo...**
+
+            2. **Te Igitur:** (Primera parte del Canon).
+            
+            3. **Consagración:** 
+               ***[El Sacerdote pronuncia las palabras sobre el Pan.]***
+               HOC EST ENIM CORPUS MEUM.
+               ***[Genuflexión. Elevación de la Hostia. Campanillas.]***
+               
+               ***[El Sacerdote pronuncia las palabras sobre el Vino.]***
+               HIC EST ENIM CALIX SANGUINIS MEI...
+               ***[Genuflexión. Elevación del Cáliz. Campanillas.]***
+            
+            4. **Mysterium Fidei:**
+               **P: Anunciamos tu muerte, Señor, proclamamos tu resurrección...**
+            
+            5. **Padre Nuestro:** (S y P recitan juntos).
+            
+            6. **La Paz:** (Rito de la Paz).
+            
+            7. **Agnus Dei:** (Cordero de Dios...).
+            
+            8. **Oración de Humilde Acceso:**
+               **P: No presumimos venir a esta tu Mesa...**
+
+            ---
+
+            ## VI. RITOS FINALES
+            1. **Comunión.**
+            2. **Oración Post-Comunión.**
+            3. **Bendición.**
+            
+            4. **Último Evangelio (Last Gospel):**
+               ***[El Sacerdote lee Juan 1:1-14.]***
+               (Texto completo en Español).
+               ***[Genuflexión a las palabras "Y EL VERBO SE HIZO CARNE".]***
+               **P: Demos gracias a Dios.**
         `;
+        return ordinariatoPrompt;
     }
 
     // --- 4. ROMANA (NOVUS ORDO) ---
