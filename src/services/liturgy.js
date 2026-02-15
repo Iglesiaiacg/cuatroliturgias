@@ -1615,6 +1615,13 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
         - **Léxico Rico:** En lugar de 'ofrenda', usa 'oblación inmaculada'; en lugar de 'rezar', usa 'elevar la plegaria'.
         - **Estructura Orgánica:** Presenta la misa como un flujo sagrado, no como una lista de supermercado.
         - **Humanización:** Incluye rúbricas en cursiva que denoten belleza (ej. *'El sacerdote se inclina profundamente'*).
+
+        REGLAS CRÍTICAS DE ORACIÓN:
+        1. **COLECTA ÚNICA:** JAMÁS uses una Colecta genérica. Debe ser la oración específica del Misal Romano para este Domingo/Fiesta exacto. Si no la conoces, GENERA una nueva basada profundamente en las lecturas, pero NUNCA repitas una fórmula estándar.
+        2. **ORACIÓN DE LOS FIELES:** Las peticiones deben estar *inspiradas directamente en el Evangelio del día*.
+           - Si el Evangelio es sobre la luz, pide por los que viven en tinieblas.
+           - Si es sobre la Ley (Mateo 5), pide por la justicia verdadera y la conversión del corazón.
+           - PROHIBIDO usar peticiones genéricas ("Por los gobernantes...") sin conectarlas con el Evangelio.
         
         TITULACIÓN: Usa Títulos en LATÍN y ESPAÑOL (Ej: RITUS INITIALES / Ritos Iniciales).
         ${omissionRules}

@@ -178,7 +178,7 @@ const cleanReadingText = (text) => {
  * @param {string} text - Reading text with citation
  * @returns {Object} - {citation: string, cleanText: string}
  */
-const extractCitation = (text) => {
+export const extractCitation = (text) => {
     if (!text) return { citation: '', cleanText: '' };
 
     // Patterns for citations

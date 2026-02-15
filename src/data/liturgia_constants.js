@@ -429,7 +429,7 @@ export const PLANTILLA_SEXTO_DOMINGO_ORDINARIO_A = `
 **S:** En el nombre del Padre, y del Hijo, y del Espíritu Santo.
 **P:** Amén.
 
-**S:** La gracia de nuestro Señor Jesucristo...
+**S:** La gracia de nuestro Señor Jesucristo, el amor del Padre y la comunión del Espíritu Santo estén con todos vosotros.
 **P:** Y con tu espíritu.
 
 **ACTO PENITENCIAL:**
@@ -453,22 +453,80 @@ S: Señor, ten piedad. | P: Señor, ten piedad.
 
 **PRIMERA LECTURA (LECTIO I):**
 *Lectura del libro del Eclesiástico (Sirácida 15, 15-20).*
-[[LECTURA_1]]
+
+Si quieres, puedes guardar los mandamientos; permanecer fiel es obra de tu elección. Él ha puesto delante de ti fuego y agua; a lo que quieras extenderás la mano. Ante los hombres están la vida y la muerte; y a cada uno se le dará lo que hubiere escogido. Porque grande es la sabiduría del Señor; es fuerte su poder y todo lo ve. Sus ojos miran a los que le temen, y conoce todas las obras del hombre. A nadie mandó ser impío, ni dio a nadie licencia para pecar.
+
+**Palabra de Dios.**
+**R:** Te alabamos, Señor.
 
 **SALMO RESPONSORIAL (PSALMUS RESPONSORIALIS):**
 *Salmo 118, 1-2. 4-5. 17-18. 33-34 (R.: 1b)*
-[[SALMO]]
+
+**R/. Dichosos los que caminan en la voluntad del Señor.**
+
+Dichosos los que caminan rectamente,
+los que proceden en la ley del Señor.
+Dichosos los que guardan sus preceptos,
+y lo buscan de todo corazón.
+
+**R/. Dichosos los que caminan en la voluntad del Señor.**
+
+Tú promulgaste tus decretos
+para que se observen con exactitud.
+¡Ojalá se mantengan firmes mis caminos
+para guardar tus mandatos!
+
+**R/. Dichosos los que caminan en la voluntad del Señor.**
+
+Haz bien a tu siervo: viviré
+y cumpliré tus palabras.
+Ábreme los ojos y contemplaré
+las maravillas de tu voluntad.
+
+**R/. Dichosos los que caminan en la voluntad del Señor.**
+
+Muéstrame, Señor, el camino de tus leyes,
+y lo seguiré puntualmente.
+Enséñame a cumplir tu voluntad
+y a guardarla de todo corazón.
+
+**R/. Dichosos los que caminan en la voluntad del Señor.**
 
 **SEGUNDA LECTURA (LECTIO II):**
 *Lectura de la primera carta del apóstol san Pablo a los Corintios (1 Cor 2, 6-10).*
-[[LECTURA_2]]
+
+Hermanos: Hablamos de sabiduría entre los perfectos, pero no de una sabiduría de este mundo ni de los príncipes de este mundo, abocados a la ruina; sino que hablamos de una sabiduría de Dios, misteriosa, escondida, destinada por Dios desde antes de los siglos para gloria nuestra, desconocida de todos los príncipes de este mundo —pues de haberla conocido no hubieran crucificado al Señor de la gloria—. Más bien, como está escrito: «Ni el ojo vio, ni el oído oyó, ni el hombre puede pensar lo que Dios ha preparado para los que lo aman». Y Dios nos lo ha revelado por el Espíritu; pues el Espíritu lo sondea todo, incluso lo profundo de Dios.
+
+**Palabra de Dios.**
+**R:** Te alabamos, Señor.
 
 **ALELUYA (ALLELUIA):**
 *Te doy gracias, Padre, Señor de cielo y tierra, porque has revelado los misterios del Reino a la gente sencilla.* (Cf. Mt 11, 25).
 
 **EVANGELIO (EVANGELIUM):**
 *Lectura del santo Evangelio según san Mateo (5, 17-37).*
-[[EVANGELIO]]
+
+En aquel tiempo, dijo Jesús a sus discípulos:
+«No creáis que he venido a abolir la Ley y los Profetas: no he venido a abolir, sino a dar plenitud. En verdad os digo que antes pasarán el cielo y la tierra que deje de cumplirse hasta la última letra o tilde de la ley. El que se salte uno solo de los preceptos menos importantes, y se lo enseñe así a los hombres, será el menos importante en el reino de los cielos. Pero quien los cumpla y enseñe, será grande en el reino de los cielos.
+
+Porque os digo que si vuestra justicia no es mayor que la de los escribas y fariseos, no entraréis en el reino de los cielos.
+
+Habéis oído que se dijo a los antiguos: "No matarás", y el que mate será reo de juicio. Pero yo os digo: todo el que se deja llevar de la cólera contra su hermano será procesado. Y si uno llama a su hermano "imbécil", tendrá que comparecer ante el Sanedrín, y si lo llama "necio", merece la condena de la Gehena del fuego.
+
+Por tanto, si cuando vas a presentar tu ofrenda sobre el altar, te acuerdas allí mismo de que tu hermano tiene quejas contra ti, deja allí tu ofrenda ante el altar y vete primero a reconciliarte con tu hermano, y entonces vuelve a presentar tu ofrenda.
+
+Con tu adversario ponte a buenas enseguida, mientras vais de camino, no sea que te entregue al juez, y el juez al alguacil, y te metan en la cárcel. Te aseguro que no saldrás de allí hasta que hayas pagado el último céntimo.
+
+Habéis oído que se dijo: "No cometerás adulterio". Pero yo os digo: todo el que mira a una mujer deseándola, ya ha cometido adulterio con ella en su corazón.
+Si tu ojo derecho te induce a pecar, sácatelo y tíralo. Más te vale perder un miembro que ser echado entero en la Gehena.
+Si tu mano derecha te induce a pecar, córtatela y tírala, porque más te vale perder un miembro que ir a parar entero a la Gehena.
+
+Se dijo: "El que repudie a su mujer, que le dé acta de repudio". Pero yo os digo que si uno repudia a su mujer —no hablo de unión ilegítima— la induce a cometer adulterio, y el que se casa con la repudiada comete adulterio.
+
+También habéis oído que se dijo a los antiguos: "No jurarás en falso" y "Cumplirás tus juramentos al Señor". Pero yo os digo que no juréis en absoluto: ni por el cielo, que es el trono de Dios; ni por la tierra, que es estrado de sus pies; ni por Jerusalén, que es la ciudad del Gran Rey. Ni jures por tu cabeza, pues no puedes volver blanco o negro un solo pelo. A vosotros os basta decir "sí" o "no". Lo que pasa de ahí viene del Maligno».
+
+**Palabra del Señor.**
+**R:** Gloria a ti, Señor Jesús.
 
 **HOMILÍA:**
 (Vínculo teológico: La libertad del Sirácida y la plenitud de la Ley en Cristo. La libertad cristiana no es libertinaje, sino elección del Bien).
@@ -477,7 +535,19 @@ S: Señor, ten piedad. | P: Señor, ten piedad.
 [[INSERTAR_CREDO]]
 
 **ORACIÓN DE LOS FIELES:**
-[[Generar 5 peticiones solemnes estilo "High Church". Respuesta: Te rogamos, óyenos.]]
+**S:** Oremos, hermanos, a Dios Padre, que nos ha llamado a la libertad de los hijos de Dios, para que nos conceda vivir en la plenitud del amor y la justicia.
+
+1. Por la Santa Iglesia: para que, guiada por el Espíritu, anuncie al mundo la sabiduría de Dios y sea testigo fiel de la Ley del Amor. **R/. Te rogamos, óyenos.**
+
+2. Por los gobernantes y legisladores: para que promuevan leyes justas que protejan la vida y la dignidad de cada persona, desde su concepción hasta su fin natural. **R/. Te rogamos, óyenos.**
+
+3. Por aquellos que viven atrapados en el rencor o la ira: para que la gracia de Cristo toque sus corazones, les conceda el don del perdón y la reconciliación con sus hermanos. **R/. Te rogamos, óyenos.**
+
+4. Por los matrimonios y las familias: para que vivan su amor con fidelidad y pureza de corazón, siendo reflejo del amor de Cristo por su Iglesia. **R/. Te rogamos, óyenos.**
+
+5. Por nosotros, aquí reunidos: para que nuestra justicia no sea apariencia, sino vida en el Espíritu, y sepamos cumplir la voluntad del Padre con un corazón sincero. **R/. Te rogamos, óyenos.**
+
+**S:** Escucha, Padre, las oraciones que te dirigimos con fe, y concédenos que nuestra vida sea una continua alabanza a tu gloria. Por Jesucristo, nuestro Señor. **Amén.**
 
 ---
 

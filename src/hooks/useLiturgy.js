@@ -116,9 +116,9 @@ export const useLiturgy = () => {
             } else if (isSextoDomingoOrdinario) {
                 console.log("   🛡️ BYPASS: Usando Plantilla Estática para 6º Domingo Ordinario (Católica)");
                 structureRes = PLANTILLA_SEXTO_DOMINGO_ORDINARIO_A;
-                // For Catholic, we still need basic reading structure from AI or Evangelizo
-                // But since the template has [[LECTURA_1]] placeholders, standard AI readings flow works better
-                readingsRes = await generateLiturgy(promptReadings);
+                // Template now has HARDCODED readings to avoid "Jehová" / wrong Sunday issues from API.
+                // So we do NOT need to fetch readings.
+                readingsRes = "";
             } else if (tradition === 'catolica') {
                 console.log("   📖 Structure: Static Template (No AI)");
                 console.log("   📜 Readings: Evangelizo API (Official Catholic Texts)");
