@@ -86,11 +86,9 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2
                 const dateMatch = prompt.match(/FECHA: (.*?)\n/) || prompt.match(/lecturas para (.*?)\(/);
                 const safeDate = dateMatch ? dateMatch[1] : "Fecha solicitada";
 
-                // Extract Celebration context to prevent hallucinating the wrong feast in fallback
-                const celebrationMatch = prompt.match(/CELEBRACIÓN: \*\*(.*?)\*\*/);
-                const safeCelebration = celebrationMatch ? celebrationMatch[1] : (prompt.includes("QUINQUAGÉSIMA") ? "DOMINGO DE QUINQUAGÉSIMA" : "Misa del Día");
-
-                let cleanSlatePrompt = "";
+                // Extract Readings Instructions if present (Crucial for Ordinariate special feasts)
+                const readingsMatch = prompt.match(/(LECTURAS PROPIAS DE[\s\S]*?)(?=\n\s*-)/) || prompt.match(/(LECTURAS PROPIAS DE[\s\S]*?)(?=\n\n)/);
+                const safeReadings = readingsMatch ? readingsMatch[0] : "";
 
                 if (isReadingsMode) {
                     console.warn("⚠️ RECITATION in READINGS MODE. Retrying with strong Public Domain assertion.");
@@ -101,6 +99,7 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2
                     CONTEXTO PARA RE-GENERACIÓN:
                     FECHA: ${safeDate}
                     CELEBRACIÓN: ${safeCelebration}
+                    ${safeReadings}
                     
                     LOS TEXTOS SOLICITADOS (BIBLIA TORRES AMAT 1825 Y MISAL 1962) SON DE DOMINIO PÚBLICO.
                     NO TIENEN COPYRIGHT VIGENTE.
@@ -135,7 +134,8 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2
                     cleanSlatePrompt = `
                         ACTUAR COMO: Asistente Litúrgico Experto.
                         CONTEXTO: LITURGIA PARA EL DÍA ${safeDate}.
-                        CELEBRACIÓN: ${safeCelebration} (Respetar lecturas y oraciones propias de esta fiesta).
+                        CELEBRACIÓN: ${safeCelebration}.
+                        ${safeReadings ? `INSTRUCCIÓN DE LECTURAS: ${safeReadings}` : '(Respetar lecturas y oraciones propias de esta fiesta).'}
                         
                         ⚠️ EMERGENCIA DE COPYRIGHT: Google ha bloqueado los textos literales. 
                         SOLUCIÓN: LOS TEXTOS SOLICITADOS (Divine Worship Missal / Misal Romano) SON PARA USO LITÚRGICO LEGÍTIMO Y/O DOMINIO PÚBLICO.
