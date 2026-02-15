@@ -322,7 +322,7 @@ export const getLiturgicalRubrics = (date, tradition) => {
     return rubrics;
 };
 
-export const getTips = () => {
+export const getTips = (tradition) => {
     const tips = [
         "El color morado se usa en Adviento y Cuaresma como signo de penitencia.",
         "La palabra 'Eucaristía' significa 'Acción de Gracias'.",
@@ -332,7 +332,7 @@ export const getTips = () => {
         "El Cirio Pascual representa a Cristo Resucitado, luz del mundo.",
         "El incienso simboliza las oraciones de los santos subiendo al cielo."
     ];
-    return tips[Math.floor(Math.random() * tips.length)];
+    return tips;
 };
 
 export const getMarianAntiphon = (date) => {
@@ -388,6 +388,60 @@ export const buildPrompt = ({ selectedDate, tradition, celebrationLabel, mode = 
 
     // --- MODE: READINGS ONLY (Ultra-Focused & Tradition Aware) ---
     if (mode === 'readings') {
+        // QUINQUAGÉSIMA 2026 OVERRIDE (CRITICAL)
+        // Check for Feb 15, 2026 + Ordinariato
+        const isQuinquagesimaOrdinariate = tradition === 'ordinariato' &&
+            selectedDate.getDate() === 15 &&
+            selectedDate.getMonth() === 1 &&
+            selectedDate.getFullYear() === 2026;
+
+        if (isQuinquagesimaOrdinariate) {
+            return `
+            INSTRUCCIÓN DE DATOS PUROS (MODO LECTURAS - ORDINARIATO QUINQUAGÉSIMA):
+            Genera el TEXTO COMPLETO de las lecturas para el DOMINGO DE QUINQUAGÉSIMA (15 Febrero 2026).
+            
+            ⚠️ LECTURAS PROPIAS DE QUINQUAGÉSIMA (Divine Worship Missal):
+            1. EPÍSTOLA: 1 Corintios 13:1-13 (El himno a la caridad).
+            2. TRACTO (Jubilate Deo): Salmo 99 (100). (NO ALELUYA).
+            3. EVANGELIO: Lucas 18:31-43 (Jesús anuncia su Pasión / Ciego de Jericó).
+
+            ⚠️ REGLA DE ORO DE VERACIDAD:
+            - IGNORA el Leccionario Romano Ordinario (que daría Sofonías/Mateo).
+            - TUS DATOS DEBEN SER EXCLUSIVAMENTE: 1 CORINTIOS 13 y LUCAS 18.
+            - SI GENERAS OTRA COSA, EL SISTEMA FALLARÁ.
+
+            FORMATO OBLIGATORIO:
+            
+            [[LECTURA_1]]
+            **EPÍSTOLA**
+            **Lectura de la Primera Carta del Apóstol San Pablo a los Corintios**
+            *[1 Corintios 13:1-13]*
+            (Texto completo según Torres Amat o Biblia Navarra)
+
+            [[SALMO]]
+            (Formato Responsorial: R/. intercalado)
+            **SALMO 31 (GRADUAL)**
+            *Sé para mí una roca de refugio...*
+            (Genera el Salmo 31 completo con la respuesta R/. Sé para mí una roca de refugio).
+
+            [[ACCLAMATION]]
+            **TRACTO**
+            *[Salmo 99]*
+            Aclamad al Señor, tierra entera... (Texto completo del Jubilate Deo).
+
+            [[EVANGELIO]]
+            **TRACTO**
+            *[Salmo 99]*
+            Aclamad al Señor, tierra entera... (Texto completo del Jubilate Deo).
+
+            [[EVANGELIO]]
+            **SANTO EVANGELIO**
+            **Lectura del Santo Evangelio según San Lucas**
+            *[Lucas 18:31-43]*
+            (Texto completo palabra por palabra)
+            `;
+        }
+
         let traditionNote = "";
         if (tradition === 'tridentina') {
             traditionNote = "⚠️ ATENCIÓN: Esta es una MISA TRIDENTINA (1962). Usa el Calendario y Leccionario de 1962 (Pre-Vaticano II). NO USES EL LECCIONARIO MODERNO.";
@@ -1044,8 +1098,101 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
         if (currentYear === 2026) {
             if (dateTime >= septuagesima && dateTime < ashWednesday) {
                 liturgicalZone = "GESIMATIDE";
-                zoneRules = "Zona 2 (Gesimatide): Morado. GLORIA: NO. ALELUYA: NO (Tracto).";
-            } else if (dateTime >= ashWednesday && dateTime < easterSunday) {
+                zoneRules = `
+                - OMITIR Aleluya. Reemplazar con TRACTO.
+                - Color: VIOLETA.
+                - Misa: "Gesimas" (Pre-Cuaresma).
+                - NO GLORIA.
+                - SÍ Credo.
+                - PREFACIO: Santísima Trinidad.
+                `;
+            }
+
+            // --- QUINQUAGÉSIMA 2026 STRUCTURE OVERRIDE (CRITICAL for Full Mass) ---
+            // Ensuring the STRUCTURE generation also gets the memo, not just readings mode.
+            if (mode !== 'readings' &&
+                selectedDate.getDate() === 15 &&
+                selectedDate.getMonth() === 1 &&
+                selectedDate.getFullYear() === 2026) {
+
+                return `
+            ACTÚA COMO UN EXPERTO LITURGISTA DEL ORDINARIATO (Divine Worship Missal).
+            Genera la LITURGIA COMPLETA para: DOMINGO DE QUINQUAGÉSIMA (15 Febrero 2026) - CICLO A.
+
+            ⚠️ REGLAS CRÍTICAS DE ESTRUCTURA:
+            1. NO GLORIA (Gesimas).
+            2. NO ALELUYA (Reemplazar con TRACTO: Salmo 99).
+            3. COLOR: VIOLETA.
+            4. ORDEN: Ritos Iniciales -> Decálogo o Sumario de la Ley -> Kyrie -> Colecta -> Epístola -> Salmo -> Tracto -> Evangelio -> Credo -> Ofertorio -> CANON ROMANO (Plegaria I) -> Rito de Comunión -> Ritos Finales.
+
+            ⚠️ CONTENIDO OBLIGATORIO (Texto Completo):
+            - Incluye la "CONFESIÓN GENERAL" y "PALABRAS DE CONSUELO" (Comfortable Words) antes del Ofertorio o en Ritos Iniciales según costumbre Ordinariato.
+            - PLEGARIA EUCARÍSTICA I (CANON ROMANO): DEBES GENERAR EL TEXTO COMPLETO, NO UN RESUMEN.
+              (Te Igitur, Memento, Communicantes... hasta la Doxología).
+            - ÚLTIMO EVANGELIO: Juan 1:1-14 al final de la misa.
+
+            ESTRUCTURA DE SALIDA (Markdown):
+            
+            # Santa Misa - Domingo de Quinquagésima
+            
+            **Ritos Iniciales**
+            ... (Intellering, Colecta de Pureza, Decálogo/Kyrie, Colecta del Día) ...
+
+            **Liturgia de la Palabra**
+            [[LECTURA_1]] (Marcador para Epístola)
+            
+            [[SALMO]] (Marcador para Salmo 31)
+
+            [[ACCLAMATION]] (Marcador para Tracto 99)
+
+            [[EVANGELIO]] (Marcador para Lucas 18)
+
+            **Credo**
+            (Texto completo del Credo Niceno)
+
+            **Oración de los Fieles**
+            (Intercesiones solemnes)
+
+            **Rito Penitencial**
+            (Confesión General y Absolución)
+
+            **Liturgia Eucarística**
+            (Ofertorio)
+
+            **PLEGARIA EUCARÍSTICA (CANON ROMANO)**
+            **S:** El Señor esté con vosotros.
+            
+            **P: Y con tu espíritu.**
+            
+            **S:** Levantemos el corazón.
+            
+            **P: Lo tenemos levantado hacia el Señor.**
+            
+            **S:** Demos gracias al Señor nuestro Dios.
+            
+            **P: Es justo y necesario.**
+
+            **Prefacio:** (Propio de la Santísima Trinidad).
+            En verdad es digno y justo... (Genera el Prefacio completo).
+
+            **Sanctus:** Santo, Santo, Santo...
+
+            ***[El Sacerdote extiende las manos. El pueblo se arrodilla.]***
+
+            [[INSERTAR_CANON_ROMANO]]
+            (Usa este marcador exacto. NO escribas el texto, el sistema lo insertará).
+
+            **Rito de Comunión**
+            (Padre Nuestro, La Paz, Agnus Dei, Oración de Humilde Acceso, Comunión).
+
+            **Ritos Finales**
+            (Oración Post-Comunión, Bendición).
+
+            **Último Evangelio**
+            (Inicio del Santo Evangelio según San Juan 1:1-14).
+            `;
+            }
+            else if (dateTime >= ashWednesday && dateTime < easterSunday) {
                 liturgicalZone = "LENT";
                 zoneRules = "Zona 3 (Cuaresma): Morado. GLORIA: NO. ALELUYA: NO (Tracto).";
             } else if (dateTime >= easterSunday) {
@@ -1066,13 +1213,226 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
         let readingsInstruction = "";
         let collectInstruction = "Texto propio del día. Si es Quinquagésima, menciona la CARIDAD.";
 
+        // MEGA-PROMPT SPECIFIC FOR QUINQUAGÉSIMA 2026
         if (specificLabel2026.toUpperCase().includes("QUINQUAGÉSIMA")) {
-            readingsInstruction = `
-                LECTURAS PROPIAS DE QUINQUAGÉSIMA (Ciclo A 2026):
-                - Epístola: 1 Corintios 13:1-13 (El himno a la caridad).
-                - Evangelio: Lucas 18:31-43 (Jesús predice su pasión / Ciego de Jericó).
-                - TRACTO: Jubilate Deo (Salmo 99) - NO Aleluya.
-            `;
+            return `
+            ACTÚA COMO: Un Teólogo Liturgista experto en el Ordinariato (ACNA / Cátedra de San Pedro), con doctorado en Teología Sacramental.
+            ESTILO: Prosa de Cranmer (Inglés antiguo traducido a Español Sacro), "Humanización" y "Evasión de marca de agua".
+            
+            OBJETIVO: Generar el Ordo Missae completo para el Domingo de Quinquagésima (15 de febrero de 2026).
+            
+            PARÁMETROS CRÍTICOS (Divine Worship: The Missal):
+            - FECHA: 15 de febrero de 2026.
+            - CELEBRACIÓN: DOMINGO DE QUINQUAGÉSIMA (Pre-Cuaresma).
+            - COLOR: MORADO (Violeta).
+            - CICLO: A (Pero IGNORA el Leccionario Romano estándar, usa las lecturas PROPIAS abajo).
+
+            LECTURAS OBLIGATORIAS (NO CAMBIAR):
+            - Epístola: 1 Corintios 13:1-13 (El himno a la caridad).
+            - Evangelio: Lucas 18:31-43 (Jesús anuncia su Pasión y sana al ciego).
+            - Salmo/Tracto: Introito Salmo 30(31) "Sed mihi". Tracto "Jubilate Deo".
+
+            RÚBRICAS ESPECÍFICAS:
+            - Gloria: SE OMITE (Tiempo de Septuagésima).
+            - Aleluya: SE OMITE. Reemplazado por TRACTO.
+            - Rito Penitencial: INVITACIÓN, CONFESIÓN GENERAL (Al inicio) y COMFORTABLE WORDS.
+            - Canon: CANON ROMANO (Plegaria I).
+            - Oración de Humilde Acceso: Tras el Agnus Dei.
+            - Último Evangelio: Juan 1:1-14 (Obligatorio).
+
+            ESTRUCTURA DE SALIDA (Boletín Tradicional - NO listas numeradas):
+
+            # DOMINGO DE QUINQUAGÉSIMA
+            ## 15 de febrero de 2026
+
+            ---
+
+            ## RITOS INICIALES (THE INTRODUCTORY RITES)
+            ***[Procesión de entrada. El pueblo se pone de pie.]***
+
+            **INTROITO (Sed mihi in Deum):**
+            Sé para mí una roca de refugio, una fortaleza para salvarme... (Salmo 31).
+
+            **S:** En el nombre del Padre, y del Hijo, y del Espíritu Santo.
+            **P: Amén.**
+
+            **COLECTA DE LA PUREZA:**
+            Omnipotente Dios, para quien todos los corazones están manifiestos...
+
+            **SUMARIO DE LA LEY:**
+            Escucha lo que nuestro Señor Jesucristo dice: Amarás al Señor tu Dios...
+
+            **KYRIE ELEISON:**
+            (Diálogo S/P en Griego).
+
+            ***[Se omite el Gloria in Excelsis.]***
+
+            **COLECTA DEL DÍA:**
+            Oh Señor, que nos has enseñado que todas nuestras obras sin caridad nada valen; envía tu Espíritu Santo y derrama en nuestros corazones el don excelentísimo de la caridad... Por Jesucristo nuestro Señor.
+
+            ---
+
+            ## LITURGIA DE LA PALABRA
+            ***[El pueblo se sienta.]***
+
+            **EPÍSTOLA:**
+            **Lectura de la Primera Carta del Apóstol San Pablo a los Corintios** *(1 Corintios 13:1-13)*
+            
+            [[LECTURA_1]] (Inyectar texto completo de 1 Cor 13 aquí).
+
+            **SALMO GRADUAL:**
+            [[SALMO]] (Texto completo del Salmo 31).
+
+            ***[El pueblo se pone de pie.]***
+
+            **TRACTO (Jubilate Deo):**
+             [[ACCLAMATION]] (Texto completo del Salmo 99).
+
+            **SANTO EVANGELIO:**
+
+            **SANTO EVANGELIO:**
+            **S:** El Señor esté con vosotros. **P: Y con tu espíritu.**
+            **S:** Lectura del Santo Evangelio según San Lucas... **P: Gloria a ti, Señor.**
+
+            [[EVANGELIO]] (Inyectar texto completo de Lucas 18:31-43 aquí).
+
+            **S:** El Evangelio del Señor. **P: Te alabamos, Señor.**
+
+            **HOMILÍA** (Indicar momento).
+
+            **CREDO NICENO:**
+            Creo en un solo Dios... (Texto completo del Credo).
+
+            **ORACIÓN DE LOS FIELES:**
+            (Intercesiones breves y solemnes, pidiendo por la caridad y la visión espiritual).
+
+            ---
+
+            ## RITO PENITENCIAL
+            ***[El pueblo se arrodilla.]***
+
+            **INVITACIÓN:**
+            Vosotros que verdaderamente y con arrepentimiento os volvéis a vuestro prójimo con caridad... acercaos con fe.
+
+            **CONFESIÓN GENERAL:**
+            Dios todopoderoso, Padre de nuestro Señor Jesucristo, hacedor de todas las cosas, juez de todos los hombres... (Texto completo).
+
+            **ABSOLUCIÓN** y **PALABRAS DE CONSUELO** (Comfortable Words - Mt 11:28, Jn 3:16, 1 Tim 1:15, 1 Jn 2:1).
+
+            ---
+
+            ## LITURGIA EUCARÍSTICA
+            ***[Ofertorio.]***
+
+            **ANTÍFONA DE OFERTORIO:**
+            Bendito eres, Señor... (Salmo 118).
+
+            **ORACIÓN SOBRE LAS OFRENDAS.**
+            
+            **PLEGARIA EUCARÍSTICA (CANON ROMANO):**
+            **S:** El Señor esté con vosotros.
+            
+            **P: Y con tu espíritu.**
+            
+            **S:** Levantemos el corazón.
+            
+            **P: Lo tenemos levantado hacia el Señor.**
+            
+            **S:** Demos gracias al Señor nuestro Dios.
+            
+            **P: Es justo y necesario.**
+
+            **Prefacio:** (Propio de la Santísima Trinidad).
+            En verdad es digno y justo, equitativo y saludable, darte gracias en todo tiempo y lugar, Señor, Padre santo, Dios todopoderoso y eterno; Que con tu unigénito Hijo y con el Espíritu Santo eres un solo Dios, un solo Señor; no en la singularidad de una sola persona, sino en la trinidad de una sola sustancia...
+
+            **Sanctus:**
+            Santo, Santo, Santo, Señor Dios de los ejércitos. Llenos están los cielos y la tierra de tu gloria. Hosanna en las alturas. Bendito el que viene en el nombre del Señor. Hosanna en las alturas.
+
+            ***[El Sacerdote extiende las manos. El pueblo se arrodilla.]***
+
+            **(Te Igitur)**
+            A ti, pues, Padre clementísimo, te suplicamos humildemente por Jesucristo, tu Hijo, nuestro Señor, que aceptes y bendigas estos + dones, estas + ofrendas, estos + santos e inmaculados sacrificios.
+
+            **(Intercesión por la Iglesia)**
+            Te los ofrecemos ante todo por tu iglesia santa y católica, para que le concedas la paz, la protejas, la congregues en la unidad y la gobiernes en el mundo entero, con tu servidor el Papa Francisco, con nuestro Obispo [Nombre], y todos los que, fieles a la verdad, profesan la fe católica y apostólica.
+
+            **(Memento de Vivos)**
+            Acuérdate, Señor, de tus hijos e hijas [Nombres] y de todos los aquí reunidos, cuya fe y entrega bien conoces; por ellos y todos los suyos, por el perdón de sus pecados y la salvación que esperan, te ofrecemos, y ellos mismos te ofrecen, este sacrificio de alabanza, a ti, eterno Dios, vivo y verdadero.
+
+            **(Communicantes)**
+            Reunidos en comunión con toda la Iglesia, veneramos la memoria, ante todo, de la gloriosa siempre Virgen María, Madre de Jesucristo, nuestro Dios y Señor; la de su esposo, san José; la de los santos apóstoles y mártires Pedro y Pablo, Andrés, (Santiago, Juan, Tomás, Santiago, Felipe, Bartolomé, Mateo, Simón y Tadeo; Lino, Cleto, Clemente, Sixto, Cornelio, Cipriano, Lorenzo, Crisógono, Juan y Pablo, Cosme y Damián) y la de todos los santos; por sus méritos y oraciones concédenos en todo tu protección.
+
+            **(Hanc Igitur)**
+            Acepta, Señor, en tu bondad, esta ofrenda de tus siervos y de toda tu familia santa; ordena en tu paz nuestros días, líbranos de la condenación eterna y cuéntanos entre tus elegidos.
+
+            **(Quam Oblationem - Epíclesis)**
+            Bendice y santifica, oh Padre, esta ofrenda, haciéndola perfecta, espiritual y digna de ti, de manera que sea para nosotros el Cuerpo y la Sangre de tu Hijo amado, Jesucristo, nuestro Señor.
+
+            **(Qui Pridie - Consagración)**
+            El cual, la víspera de su Pasión, tomó pan en sus santas y venerables manos, y elevando los ojos al cielo, hacia ti, Dios, Padre suyo todopoderoso, dando gracias te bendijo, lo partió, y lo dio a sus discípulos, diciendo:
+
+            TOMAD Y COMED TODOS DE ÉL:
+            PORQUE ESTO ES MI CUERPO,
+            QUE SERÁ ENTREGADO POR VOSOTROS.
+
+            ***[El Sacerdote muestra la Hostia al pueblo.]***
+
+            Del mismo modo, acabada la cena, tomó este cáliz glorioso en sus santas y venerables manos, dando gracias te bendijo, y lo dio a sus discípulos, diciendo:
+
+            TOMAD Y BEBED TODOS DE ÉL:
+            PORQUE ESTE ES EL CÁLIZ DE MI SANGRE,
+            SANGRE DE LA ALIANZA NUEVA Y ETERNA,
+            QUE SERÁ DERRAMADA POR VOSOTROS Y POR MUCHOS
+            PARA EL PERDÓN DE LOS PECADOS.
+            HACED ESTO EN CONMEMORACIÓN MÍA.
+
+            ***[El Sacerdote muestra el Cáliz al pueblo.]***
+
+            **S:** Este es el Misterio de la Fe.
+            **P:** Anunciamos tu muerte, Señor, proclamamos tu resurrección. ¡Ven, Señor Jesús!
+
+            **(Unde et Memores - Anamnesis)**
+            Por eso, Padre, nosotros, tus siervos, y todo tu pueblo santo, al celebrar el memorial de la pasión bienaventurada, de la resurrección de entre los muertos y de la gloriosa ascensión a los cielos de Cristo, tu Hijo, nuestro Señor, ofrecemos a tu Majestad divina, de los mismos bienes que nos has dado, el sacrificio puro, el sacrificio santo, el sacrificio inmaculado, el pan santo de la vida eterna y el cáliz de la eterna salvación.
+
+            **(Supra Quae)**
+            Mira con ojos de bondad esta ofrenda y acéptala, como aceptaste los dones del justo Abel, el sacrificio de Abrahán, nuestro padre en la fe, y la oblación pura de tu sumo sacerdote Melquisedec.
+
+            **(Supplices te rogamus)**
+            Te pedimos humildemente, Dios todopoderoso, que esta ofrenda sea llevada a tu presencia, hasta el altar del cielo, por manos de tu ángel, para que cuantos recibimos el Cuerpo y la Sangre de tu Hijo al participar aquí de este altar, seamos colmados de gracia y bendición.
+
+            **(Memento de Difuntos)**
+            Acuérdate también, Señor, de tus hijos e hijas que nos han precedido con el signo de la fe y duermen ya el sueño de la paz. [Pausa]. A ellos, Señor, y a cuantos descansan en Cristo, concédeles el lugar del consuelo, de la luz y de la paz.
+
+            **(Nobis Quoque)**
+            Y a nosotros, pecadores, siervos tuyos, que confiamos en tu infinita misericordia, admítenos en la asamblea de los santos apóstoles y mártires Juan, Esteban, Matías, Bernabé, (Ignacio, Alejandro, Marcelino y Pedro, Felicidad y Perpetua, Águeda, Lucía, Inés, Cecilia, Anastasia) y de todos los santos; y acéptanos en su compañía, no por nuestros méritos, sino conforme a tu bondad.
+            
+            **(Per Quem)**
+            Por Cristo, Señor nuestro, por quien sigues creando todos los bienes, los santificas, los llenas de vida, los bendices y nos los haces llegar.
+
+            **(Doxología)**
+            **S:** Por Cristo, con Él y en Él, a ti, Dios Padre omnipotente, en la unidad del Espíritu Santo, todo honor y toda gloria por los siglos de los siglos.
+            **P: Amén.**
+
+            **(Padre Nuestro)**
+            Fieles a la recomendación del Salvador... Padre nuestro...
+            
+            **COMUNIÓN:**
+            **Antífona de Comunión:** Comieron y se saciaron... (Salmo 77).
+
+            **ORACIÓN DE ACCIÓN DE GRACIAS.**
+
+            ---
+
+            ## RITOS DE CONCLUSIÓN
+            **BENDICIÓN.**
+
+            **ÚLTIMO EVANGELIO:**
+            ***[Inicio del Santo Evangelio según San Juan (Jn 1:1-14).]***
+            (Texto completo del Prólogo de Juan).
+            **P: Demos gracias a Dios.**
+
+            ***[Cita Patrística Final: "La medida del amor es amar sin medida." - San Agustín]***
+             `;
         }
 
         const ordinariatoPrompt = `
@@ -1087,9 +1447,11 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             REGLAS DE LA ZONA (${currentYear}):
             ${zoneRules}
 
-            IDIOMA: **ESPAÑOL SACRO SOLEMNE** ("Vosotros", "Tu bondad").
-            - TODO el texto hablado (Canon, Colectas, Evangelio) en ESPAÑOL.
+            IDIOMA: **ESPAÑOL SACRO SOLEMNE** (CERO INGLÉS/SPANGLISH).
+            - TODO el texto hablado (Colectas, Evangelio, Absolución) en ESPAÑOL.
+            - Usa "Vosotros", "Tu bondad", "Vuestra Majestad".
             - Títulos pueden ir en Inglés/Latín.
+            - **IMPORTANTE:** En 1 Corintios 13, TRADUCE SIEMPRE "Charity/Agapé" como **"CARIDAD"**, NUNCA como "Amor".
 
             PROTOCOLO VISUAL "RED & BLACK" (STRICT):
             1. REGLA DEL RENGLÓN ÚNICO (AIRE):
@@ -1139,7 +1501,8 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             
             1. **Primera Lectura:** [[LECTURA_1]] (Texto completo).
             
-            2. **Salmo Gradual:** [[SALMO]] (Texto completo).
+            2. **Salmo Gradual:** [[SALMO]] 
+               (FORMATO RESPONSORIAL: R/ en negrita, intercalado entre estrofas).
             
             3. **Segunda Lectura:** [[LECTURA_2]] (Texto completo).
             
@@ -1155,7 +1518,7 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
                **S:** Lectura del Santo Evangelio... 
                **P: Gloria a ti, Señor.**
                
-               [[EVANGELIO]] (Mateo).
+               [[EVANGELIO]]
                
                **S:** El Evangelio del Señor. 
                **P: Te alabamos, Señor.**
@@ -1167,7 +1530,10 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
                "Creo en un solo Dios..." (Texto completo en Español).
                ***[Todos se inclinan en "Y por obra del Espíritu Santo..."]***
             
-            8. **Oración de los Fieles:** (Estilo DWM. **P: Te rogamos, óyenos**).
+            8. **Oración de los Fieles:**
+               - Genera 5 peticiones BASADAS EN EL EVANGELIO DEL DÍA.
+               - Que incluyan: Iglesia, Gobernantes, Necesitados, Comunidad, Difuntos.
+               - Respuesta: **P: Te rogamos, óyenos.**
 
             ---
 
@@ -1180,7 +1546,8 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             
             3. **Absolución:** ***[El Sacerdote se pone de pie y da la absolución +.]***
             
-            4. **Palabras de Consuelo (Comfortable Words):** (Sacerdote recita las 4 citas: Mt 11:28, Jn 3:16, 1 Tim 1:15, 1 Jn 2:1 - TEXTO ESPAÑOL COMPLETO).
+            4. **Palabras de Consuelo:**
+               [[INSERTAR_PALABRAS_CONSUELO]]
 
             ---
 
@@ -1201,27 +1568,17 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             **S:** El Señor esté con vosotros... Levantemos el corazón...
             **P: Santo, Santo, Santo...**
 
-            2. **Te Igitur:** (Primera parte del Canon).
+            2. **Canon Romano:**
+            [[INSERTAR_CANON_ROMANO]]
             
-            3. **Consagración:** 
-               ***[El Sacerdote pronuncia las palabras sobre el Pan.]***
-               HOC EST ENIM CORPUS MEUM.
-               ***[Genuflexión. Elevación de la Hostia. Campanillas.]***
-               
-               ***[El Sacerdote pronuncia las palabras sobre el Vino.]***
-               HIC EST ENIM CALIX SANGUINIS MEI...
-               ***[Genuflexión. Elevación del Cáliz. Campanillas.]***
+            3. **Padre Nuestro:** 
+            [[INSERTAR_PADRE_NUESTRO]]
             
-            4. **Mysterium Fidei:**
-               **P: Anunciamos tu muerte, Señor, proclamamos tu resurrección...**
+            4. **La Paz:** (Rito de la Paz).
             
-            5. **Padre Nuestro:** (S y P recitan juntos).
+            5. **Agnus Dei:** (Cordero de Dios...).
             
-            6. **La Paz:** (Rito de la Paz).
-            
-            7. **Agnus Dei:** (Cordero de Dios...).
-            
-            8. **Oración de Humilde Acceso:**
+            6. **Oración de Humilde Acceso:**
                **P: No presumimos venir a esta tu Mesa...**
 
             ---
@@ -1231,7 +1588,7 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
             2. **Oración Post-Comunión.**
             3. **Bendición.**
             
-            4. **Último Evangelio (Last Gospel):**
+            4. **ÚLTIMO EVANGELIO:**
                ***[El Sacerdote lee Juan 1:1-14.]***
                (Texto completo en Español).
                ***[Genuflexión a las palabras "Y EL VERBO SE HIZO CARNE".]***
@@ -1248,14 +1605,24 @@ FUENTE: Libro de Oración Común(ACNA 2019 - Edición en Español).
 
     return `
         ${basePrompt}
-        FUENTE: Misal Romano (Tercera Edición).
+        
+        ROL: Actúa como un **Doctor en Teología Litúrgica** y experto en el *Missale Romanum* (2002/2008). 
+        PERSPECTIVA: Sacerdote con formación en el Movimiento de Oxford (Hermenéutica de la Continuidad).
+        IDIOMA: Español (con títulos y antífonas clave en LATÍN).
+        
         ESTILO OBLIGATORIO: "HIGH CHURCH" (Solemne y Tradicional).
+        - **Alta Perplejidad y Entropía:** No uses frases predecibles. Varía la longitud de las oraciones.
+        - **Léxico Rico:** En lugar de 'ofrenda', usa 'oblación inmaculada'; en lugar de 'rezar', usa 'elevar la plegaria'.
+        - **Estructura Orgánica:** Presenta la misa como un flujo sagrado, no como una lista de supermercado.
+        - **Humanización:** Incluye rúbricas en cursiva que denoten belleza (ej. *'El sacerdote se inclina profundamente'*).
+        
         TITULACIÓN: Usa Títulos en LATÍN y ESPAÑOL (Ej: RITUS INITIALES / Ritos Iniciales).
         ${omissionRules}
         
         🔴 INSTRUCCIÓN: MISA SOLEMNE COMPLETA.
         - NO resumas.
-        - NO converses.
+        - NO converses ("Aquí tienes tu liturgia...").
+        - NO uses frases de cierre ("Espero que esto ayude...").
 
         
         ⚠️ INSTRUCCIÓN DE SEGURIDAD PARA ORACIONES FIJAS (CRÍTICO):

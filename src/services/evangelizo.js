@@ -129,7 +129,7 @@ const parseEvangelizoResponse = (text) => {
  * @returns {string} - Cleaned text
  */
 const cleanReadingText = (text) => {
-    return text
+    let clean = text
         // Remove HTML tags
         .replace(/<[^>]+>/g, '')
         // Convert HTML entities
@@ -143,6 +143,34 @@ const cleanReadingText = (text) => {
         .replace(/\r\n/g, '\n')
         .replace(/\n{3,}/g, '\n\n')
         .trim();
+
+    // Remove liturgical headers if present at START
+    const headersToRemove = [
+        'Primera Lectura', '1ª Lectura',
+        'Segunda Lectura', '2ª Lectura',
+        'Salmo Responsorial', 'Salmo',
+        'Evangelio', 'Santo Evangelio',
+        'Lectura del Santo Evangelio'
+    ];
+
+    // Check if starts with header + optional colon/line break
+    for (const header of headersToRemove) {
+        const regex = new RegExp(`^${header}[:\\.]?\\s*`, 'i');
+        if (clean.match(regex)) {
+            // Be careful not to strip "Salmo 23" -> "23".
+            // Only strip if it's acting as a label.
+            // But "Salmo Responsorial" is safe to strip.
+            // "Primera Lectura" is safe.
+
+            if (header.startsWith('Salmo') && clean.match(/^Salmo \d/i)) {
+                // It's likely "Salmo 23...", keep it for citation extraction
+                continue;
+            }
+            clean = clean.replace(regex, '').trim();
+        }
+    }
+
+    return clean;
 };
 
 /**
@@ -228,11 +256,14 @@ export const formatResponsorialPsalm = (psalmText) => {
     // Group roughly by 2-3 lines to simulate stanzas
     let verseGroup = [];
 
+    formatted += `**R/. ${response}**\n\n`;
+
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
 
-        // Skip any leftover markers
+        // Skip any leftover markers or the response itself if repeated exactly
         if (line.match(/^(R\.?\/|Respuesta)[:\.]?$/i)) continue;
+        if (line.trim() === response.trim()) continue;
 
         // CRITICAL: Stop if we hit the Alleluia (it's the next section)
         if (line.match(/Aleluya/i)) break;
@@ -242,10 +273,13 @@ export const formatResponsorialPsalm = (psalmText) => {
         // Logic: End group if line ends with period/colon, or max 3 lines
         const endsSentence = line.match(/[.:!?]$/);
 
+        // Make groups slightly longer for better flow (3-4 lines)
         if ((verseGroup.length >= 2 && endsSentence) || verseGroup.length >= 4 || i === lines.length - 1) {
             if (verseGroup.length > 0) {
-                formatted += `**Salmista:** ${verseGroup.join(' ')}\n\n`;
-                formatted += `**Pueblo:** R/. ${response}\n\n`;
+                formatted += `${verseGroup.join(' ')}\n\n`;
+                formatted += `**R/.**\n\n`; // Just R/. to save space/repetitiveness, or full response? User wants clarity.
+                // Re-adding response text makes it very clear for people.
+                // formatted += `**R/.** ${response}\n\n`;
                 verseGroup = [];
             }
         }

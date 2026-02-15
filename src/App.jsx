@@ -442,6 +442,13 @@ function MainLayout() {
           {/* Chat Widget */}
           <ChatWidget />
 
+          {/* LOADING OVERLAY */}
+          {loading && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80 dark:bg-black/80 backdrop-blur-sm">
+              <Loading tip={loadingTip || "Preparando la liturgia..."} />
+            </div>
+          )}
+
           {/* Pulpit Mode Overlay */}
           {isPulpitOpen && docContent && (
             <PulpitView

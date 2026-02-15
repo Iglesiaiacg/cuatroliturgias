@@ -86,9 +86,15 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2
                 const dateMatch = prompt.match(/FECHA: (.*?)\n/) || prompt.match(/lecturas para (.*?)\(/);
                 const safeDate = dateMatch ? dateMatch[1] : "Fecha solicitada";
 
+                // Extract Celebration context to prevent hallucinating the wrong feast in fallback
+                const celebrationMatch = prompt.match(/CELEBRACIÓN: \*\*(.*?)\*\*/);
+                const safeCelebration = celebrationMatch ? celebrationMatch[1] : (prompt.includes("QUINQUAGÉSIMA") ? "DOMINGO DE QUINQUAGÉSIMA" : "Misa del Día");
+
                 // Extract Readings Instructions if present (Crucial for Ordinariate special feasts)
                 const readingsMatch = prompt.match(/(LECTURAS PROPIAS DE[\s\S]*?)(?=\n\s*-)/) || prompt.match(/(LECTURAS PROPIAS DE[\s\S]*?)(?=\n\n)/);
                 const safeReadings = readingsMatch ? readingsMatch[0] : "";
+
+                let cleanSlatePrompt = "";
 
                 if (isReadingsMode) {
                     console.warn("⚠️ RECITATION in READINGS MODE. Retrying with strong Public Domain assertion.");

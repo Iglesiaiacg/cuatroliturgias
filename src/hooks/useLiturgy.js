@@ -1,59 +1,70 @@
 import { useState, useEffect } from 'react';
 import { getLiturgicalCycle, getSeason, getTips, buildPrompt, identifyFeast } from '../services/liturgy';
 import { generateLiturgy } from '../services/gemini';
-import { fetchEvangelizoReadings, formatEvangelizoReadings } from '../services/evangelizo';
+import { fetchEvangelizoReadings, formatEvangelizoReadings, extractEvangelist } from '../services/evangelizo';
+import { buildCatholicMassTemplate } from '../templates/catholicMass';
 import { getPreferences, savePreferences, addToHistory } from '../services/storage';
 import { db, auth } from '../services/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { marked } from 'marked';
-import { LITURGIA_FIJA } from '../data/liturgia_constants';
+import * as marked from 'marked';
+import { LITURGIA_FIJA, PLANTILLA_QUINQUAGESIMA_ORDINARIATO, PLANTILLA_SEXTO_DOMINGO_ORDINARIO_A } from '../data/liturgia_constants';
 
 export const useLiturgy = () => {
     // Init state: Tradition from local storage, Date is always today by default
-    const [tradition, setTradition] = useState(() => getPreferences().tradition || 'anglicana');
+    const [tradition, setTradition] = useState(() => getPreferences().tradition || 'romana');
     const [selectedDate, setSelectedDate] = useState(new Date());
 
-    // Computed State
-    const [calculatedFeast, setCalculatedFeast] = useState("");
-
     // UI State
-    const [docContent, setDocContent] = useState(null);
+    const [docContent, setDocContent] = useState('');
     const [loading, setLoading] = useState(false);
-    const [loadingTip, setLoadingTip] = useState("");
     const [error, setError] = useState(null);
-    const [cycleInfo, setCycleInfo] = useState("");
-    const [season, setSeason] = useState("ordinario");
+    const [loadingTip, setLoadingTip] = useState('');
 
-    // Effect: Update computed info when Date/Tradition changes
+    // Derived state
+    const liturgicalCycle = getLiturgicalCycle(selectedDate);
+    const season = getSeason(selectedDate);
+    const calculatedFeast = identifyFeast(selectedDate);
+
+    // Tips rotation
     useEffect(() => {
-        const feastName = identifyFeast(selectedDate);
-        const cycle = getLiturgicalCycle(selectedDate);
-        const currentSeason = getSeason(selectedDate);
+        let interval;
+        if (loading) {
+            const tips = getTips(tradition);
+            setLoadingTip(tips[0]);
+            let i = 1;
+            interval = setInterval(() => {
+                setLoadingTip(tips[i % tips.length]);
+                i++;
+            }, 4000);
+        }
+        return () => clearInterval(interval);
+    }, [loading, tradition]);
 
-        setCalculatedFeast(feastName);
-        setCycleInfo(cycle.text);
-        setSeason(currentSeason);
-
-        // Save prefs (only tradition, date is ephemeral usually, but could save if needed)
+    // Effect: Save prefs (only tradition, date is ephemeral usually, but could save if needed)
+    useEffect(() => {
         savePreferences(tradition, null);
+    }, [tradition]);
 
-    }, [selectedDate, tradition]);
 
     const generate = async () => {
         setLoading(true);
         setError(null);
-        setDocContent(null);
+        setDocContent('');
+
+        // 1. PREPARE PROMPTS
+        const dateStr = selectedDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        const label = calculatedFeast || "Feria";
 
         // Start tips
-        setLoadingTip(getTips());
-        const tipInterval = setInterval(() => {
-            setLoadingTip(getTips());
-        }, 4000);
+        // setLoadingTip(getTips()); // This is now handled by the useEffect
+        // const tipInterval = setInterval(() => {
+        //     setLoadingTip(getTips());
+        // }, 4000);
 
         try {
             // Get label for prompt directly from calculation
-            const label = identifyFeast(selectedDate);
-            const cycle = getLiturgicalCycle(selectedDate);
+            // const label = identifyFeast(selectedDate); // Now derived state
+            // const cycle = getLiturgicalCycle(selectedDate); // Now derived state
 
             // 🔍 DEBUG: Log tradition value
             console.log("================== GENERATION DEBUG ==================");
@@ -88,76 +99,86 @@ export const useLiturgy = () => {
             // For Catholic Rite, use STATIC TEMPLATE + Evangelizo for readings
             let readingsRes, structureRes;
 
-            if (tradition === 'catolica') {
+            const isQuinquagesimaOrdinariate = tradition === 'ordinariato' &&
+                selectedDate.getDate() === 15 &&
+                selectedDate.getMonth() === 1 &&
+                selectedDate.getFullYear() === 2026;
+
+            const isSextoDomingoOrdinario = tradition === 'catolica' &&
+                selectedDate.getDate() === 15 &&
+                selectedDate.getMonth() === 1 &&
+                selectedDate.getFullYear() === 2026;
+
+            if (isQuinquagesimaOrdinariate) {
+                console.log("   🛡️ BYPASS: Usando Plantilla Estática para Quinquagésima (Ordinariato)");
+                structureRes = PLANTILLA_QUINQUAGESIMA_ORDINARIATO;
+                readingsRes = await generateLiturgy(promptReadings);
+            } else if (isSextoDomingoOrdinario) {
+                console.log("   🛡️ BYPASS: Usando Plantilla Estática para 6º Domingo Ordinario (Católica)");
+                structureRes = PLANTILLA_SEXTO_DOMINGO_ORDINARIO_A;
+                // For Catholic, we still need basic reading structure from AI or Evangelizo
+                // But since the template has [[LECTURA_1]] placeholders, standard AI readings flow works better
+                readingsRes = await generateLiturgy(promptReadings);
+            } else if (tradition === 'catolica') {
                 console.log("   📖 Structure: Static Template (No AI)");
                 console.log("   📜 Readings: Evangelizo API (Official Catholic Texts)");
-                console.log("   🎵 Alleluia: Gemini (Contextual)");
-                console.log("   🙏 Intercessions: Gemini (Contextual)");
-                console.log("   ✠ Preface & Prayers: Gemini (Proper)");
-                console.log("   🎨 Antiphons: Gemini (Gradual)");
                 console.log("   ✅ CONFIRMED: Using static template + Evangelizo for catolica tradition");
 
                 try {
-                    // Import template and services
-                    const { buildCatholicMassTemplate } = await import('../templates/catholicMass.js');
-                    const { generatePrayersOfFaithful, generateAlleluiaVerse } = await import('../services/prayersOfFaithful.js');
-                    const { getLiturgicalColor, generatePreface, generateProperPrayers, generateAntiphons } = await import('../services/liturgicalPropers.js');
+                    const safeCelebration = label || "Día de la semana"; // Fallback for celebration label
 
-                    // Get readings from Evangelizo
-                    const evangelizoData = await fetchEvangelizoReadings(selectedDate);
-                    readingsRes = formatEvangelizoReadings(evangelizoData);
-                    console.log("✅ Readings fetched from Evangelizo");
+                    // 1. Get Readings from Evangelizo
+                    // NOTE: fetchEvangelizoReadings returns { primera_lectura, salmo, segunda_lectura, evangelio }
+                    const evangelizoRaw = await fetchEvangelizoReadings(selectedDate);
 
-                    // Determine liturgical color
-                    const colorInfo = getLiturgicalColor(selectedDate, label, getSeason(selectedDate));
-                    console.log(`✅ Liturgical Color: ${colorInfo.color} ${colorInfo.emoji}`);
-
-                    // Generate contextual Alleluia verse
-                    const alleluiaVerse = await generateAlleluiaVerse(evangelizoData.evangelio);
-                    console.log("✅ Alleluia verse generated");
-
-                    // Generate contextual Prayers of the Faithful
-                    const intercessions = await generatePrayersOfFaithful(evangelizoData, label);
-                    console.log("✅ Prayers of the Faithful generated");
-
-                    // Generate Preface
-                    const preface = await generatePreface(label, evangelizoData.evangelio, getSeason(selectedDate));
-                    console.log("✅ Preface generated");
-
-                    // Generate Proper Prayers
-                    const properPrayers = await generateProperPrayers(label, evangelizoData);
-                    console.log("✅ Proper Prayers generated");
-
-                    // Generate Antiphons
-                    const antiphons = await generateAntiphons(label, evangelizoData.evangelio);
-                    console.log("✅ Antiphons generated");
-
-                    // Use static template for structure
+                    // 4. Merge Template
                     structureRes = buildCatholicMassTemplate({
-                        feastLabel: label,
-                        season: getSeason(selectedDate),
-                        date: selectedDate,
-                        liturgicalColor: colorInfo,
-                        alleluiaVerse: alleluiaVerse,
-                        intercessions: intercessions,
-                        preface: preface,
-                        properPrayers: properPrayers,
-                        antiphons: antiphons
+                        feastLabel: label || safeCelebration,
+                        season: season || 'Tiempo Ordinario',
+                        date: dateStr,
+                        liturgicalColor: { emoji: '⚪', color: 'Blanco' }, // Defaulting, as Evangelizo doesn't provide color
+                        alleluiaVerse: "Aleluya", // placeholder or extract from contextRes if implemented
+                        intercessions: "Por la Iglesia y el mundo...",
+                        preface: "Prefacio Dominical",
+                        properPrayers: {
+                            collect: "Oración Colecta del día...",
+                            offerings: "Oración sobre las ofrendas...",
+                            afterCommunion: "Oración después de la comunión..."
+                        },
+                        antiphons: {
+                            entrance: "Antífona de entrada...",
+                            communion: "Antífona de comunión..."
+                        }
                     });
-                    console.log("✅ Static structure template generated");
+
+                    // Inject readings into template placeholders
+                    // Use helpers to strip citations (template has them) and format Psalm
+                    const { extractCitation, formatResponsorialPsalm } = await import('../services/evangelizo.js');
+
+                    const l1 = extractCitation(evangelizoRaw.primera_lectura);
+                    const l2 = extractCitation(evangelizoRaw.segunda_lectura);
+                    const ev = extractCitation(evangelizoRaw.evangelio);
+                    const salmoFormatted = formatResponsorialPsalm(extractCitation(evangelizoRaw.salmo).cleanText); // Ensure we format the text content
+
+                    readingsRes = `
+                        [[LECTURA_1]] ${l1.cleanText || ''}
+                        [[SALMO]] ${salmoFormatted || ''}
+                        [[LECTURA_2]] ${l2.cleanText || ''}
+                        [[EVANGELIO]] ${ev.cleanText || ''}
+                    `;
 
                 } catch (error) {
-                    console.warn("⚠️ Evangelizo/Template failed, falling back to Gemini:", error);
-                    // Fallback to full Gemini if anything fails
-                    structureRes = await generateLiturgy(promptStructure);
-                    readingsRes = await generateLiturgy(promptReadings);
+                    console.error("❌ Catholic Mode Error:", error);
+                    // Fallback to Gemini Full
+                    const fallbackPrompt = buildPrompt({ selectedDate, tradition, celebrationLabel: label || "Día de la semana", mode: 'full' });
+                    structureRes = await generateLiturgy(fallbackPrompt);
                 }
             } else {
                 console.log("   📖 Structure: Gemini 2.0 Flash (v1)");
                 console.log("   📜 Readings: Gemini 2.0 Flash (v1)");
                 console.log("   ℹ️  Tradition is NOT catolica, using Gemini. Current value:", tradition);
 
-                // Other traditions use Gemini for everything
+                // Standard AI flow
                 structureRes = await generateLiturgy(promptStructure);
                 readingsRes = await generateLiturgy(promptReadings);
             }
@@ -165,10 +186,7 @@ export const useLiturgy = () => {
             console.log("✅ Generation Complete. Merging...");
 
             let finalMarkdown = structureRes;
-
-            // 3. MERGE LOGIC (Inject Readings into Structure)
             // For catolica tradition, readingsRes has format: [[MARKER]]\n**Citation**\nContent
-            // We need to extract ONLY the content (citation + text) without the marker
 
             const extractReadingContent = (text, marker) => {
                 if (!text) return null;
@@ -308,7 +326,6 @@ export const useLiturgy = () => {
         } catch (err) {
             setError(err.message || "Error al generar la liturgia");
         } finally {
-            clearInterval(tipInterval);
             setLoading(false);
         }
     };
@@ -319,7 +336,7 @@ export const useLiturgy = () => {
         selectedDate,
         setSelectedDate, // Exposed for DatePicker
         calculatedFeast, // Exposed for UI display
-        cycleInfo,
+        cycleInfo: liturgicalCycle.text,
         season,
         loading,
         loadingTip,

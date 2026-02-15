@@ -402,6 +402,30 @@ textarea {
     width: 100%;
     overflow-x: auto;
     max-width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+}
+
+/* Horizontal Rule - Section Break */
+.liturgy-content hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(153, 27, 27, 0), rgba(153, 27, 27, 0.75), rgba(153, 27, 27, 0));
+    margin: 3rem 0;
+    position: relative;
+    overflow: visible;
+}
+
+.liturgy-content hr::after {
+    content: "✠";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--bg-card); /* Match card bg */
+    padding: 0 1rem;
+    color: var(--color-primary);
+    font-size: 1.5rem;
 }
 
 .liturgy-content p {
@@ -468,7 +492,7 @@ textarea {
     margin-bottom: 0.5em;
 }
 
-/* Rubrics */
+/* Rubrics - Standard (Span based) */
 .rubric {
     color: #b91c1c;
     /* Keep Red for Rubrics */
@@ -481,10 +505,31 @@ textarea {
     text-align: center;
 }
 
+/* Rubrics - Markdown Bold Italic (***text***) */
+.liturgy-content strong em,
+.liturgy-content em strong {
+    color: #b91c1c; /* Liturgical Red */
+    font-family: 'Helvetica', 'Arial', sans-serif;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 0.9em;
+    display: block; /* Make it a block element for separation */
+    margin: 1.5em 0;
+    text-align: center;
+    background-color: rgba(185, 28, 28, 0.05); /* Subtle red bg */
+    padding: 0.5em;
+    border-radius: 4px;
+}
+
 /* Bold text */
 .liturgy-content strong {
     font-weight: 800;
     color: #111827;
+}
+
+/* Speaker Labels (S: / P:) */
+.liturgy-content p strong:first-child {
+    color: #7f1d1d; /* Darker red for speaker labels */
 }
 
 /* Responsive adjustments */
