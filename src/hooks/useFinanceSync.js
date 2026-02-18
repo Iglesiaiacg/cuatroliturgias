@@ -11,8 +11,10 @@ export function useFinanceSync(limitCount = 100) {
 
     // 1. Sync Transactions List (Recent)
     useEffect(() => {
-        if (!currentUser || !checkPermission || !checkPermission('view_treasury')) {
-            setTransactions([]);
+        const canView = currentUser && checkPermission && checkPermission('view_treasury');
+
+        if (!canView) {
+            setTransactions(prev => prev.length === 0 ? prev : []);
             setLoading(false);
             return;
         }
@@ -37,11 +39,15 @@ export function useFinanceSync(limitCount = 100) {
         });
 
         return () => unsubscribe();
-    }, [limitCount, currentUser, checkPermission, userRole]);
+    }, [limitCount, currentUser, checkPermission]); // removed userRole to reduce churn if unrelated
 
     // 2. Sync Global Balance (from finance/stats)
     useEffect(() => {
-        if (!currentUser || !checkPermission('view_treasury')) return;
+        const canView = currentUser && checkPermission && checkPermission('view_treasury');
+        if (!canView) {
+            setGlobalBalance(prev => prev === 0 ? prev : 0);
+            return;
+        }
 
         const unsubscribe = onSnapshot(doc(db, 'finance', 'stats'), (doc) => {
             if (doc.exists()) {
@@ -49,13 +55,11 @@ export function useFinanceSync(limitCount = 100) {
             } else {
                 setGlobalBalance(0);
             }
-            setLoading(false); // Global stats/list loaded (approx)
         }, (error) => {
             if (error.code !== 'permission-denied') console.warn("Finance Stats Sync Error:", error);
-            setLoading(false);
         });
         return () => unsubscribe();
-    }, [currentUser]);
+    }, [currentUser, checkPermission]);
 
     const addTransaction = async (transaction) => {
         try {

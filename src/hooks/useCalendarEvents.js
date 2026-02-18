@@ -1,19 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { startOfDay, isSameDay } from 'date-fns';
 import { db } from '../services/firebase';
-import { collection, onSnapshot, addDoc, deleteDoc, doc, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, addDoc, deleteDoc, doc, query } from 'firebase/firestore';
 
-import { useAuth } from '../context/AuthContext'; // Import useAuth
+import { useAuth } from '../context/AuthContext';
 
 export function useCalendarEvents() {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { currentUser } = useAuth(); // Get currentUser
+    const { currentUser } = useAuth();
 
     // Subscribe to Firestore 'events'
     useEffect(() => {
         if (!currentUser) {
-            setEvents([]);
+            setEvents(prev => prev.length === 0 ? prev : []);
             setLoading(false);
             return;
         }
@@ -41,14 +41,6 @@ export function useCalendarEvents() {
 
         return () => unsubscribe();
     }, [currentUser]);
-
-    // Helper: Directory birthdays (Still strictly local or parsed from DirectoryContext separately)
-    // For now, we keep the original logic but rely on external DirectoryContext if possible.
-    // However, to satisfy the signature of the hook, we'll strip directory harvesting from THIS hook
-    // and rely on the CalendarView to merge them, OR we can fetch them here if we import DirectoryContext.
-    // Given the architecture, let's keep this hook focused on FIRESTORE events.
-    // The previous implementation 'readData' combined local storage events + directory.
-    // Now 'events' is purely Firestore. 
 
     const getEventsForDate = useCallback((date) => {
         if (!date) return [];

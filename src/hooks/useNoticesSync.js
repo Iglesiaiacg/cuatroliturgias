@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { doc, onSnapshot, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 
 export function useNoticesSync() {
     const [notices, setNotices] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser, userRole } = useAuth();
+    const { currentUser } = useAuth();
 
     // Single doc for notices. 
     // In a production app, this might be a subcollection 'notices' to scale better, 
@@ -16,7 +16,7 @@ export function useNoticesSync() {
 
     useEffect(() => {
         if (!currentUser) {
-            setNotices([]);
+            setNotices(prev => prev.length === 0 ? prev : []);
             setLoading(false);
             return;
         }

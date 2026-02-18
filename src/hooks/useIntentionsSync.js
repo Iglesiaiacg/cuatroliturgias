@@ -17,10 +17,10 @@ export function useIntentionsSync(date) {
     useEffect(() => {
         // PERMISSION CHECK: Only Admin, Priest, Sacristan, Secretary can VIEW the list.
         // Guests/Faithful can only ADD (so they get an empty list here).
-        const canView = userRole === 'admin' || userRole === 'priest' || checkPermission('view_directory') || checkPermission('manage_sacristy');
+        const canView = userRole === 'admin' || userRole === 'priest' || (checkPermission && (checkPermission('view_directory') || checkPermission('manage_sacristy')));
 
         if (!currentUser || !canView) {
-            setIntentions([]);
+            setIntentions(prev => prev.length === 0 ? prev : []);
             setLoading(false);
             return;
         }

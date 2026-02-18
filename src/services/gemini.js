@@ -21,7 +21,7 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     }
 };
 
-export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2.0-flash') => {
+export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1.5-flash-001') => {
     try {
         let userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
 
@@ -41,7 +41,8 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-2
         }
 
         // Build the endpoint URL with the specified model
-        const endpoint = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${userKey}`;
+        // Using v1beta for better compatibility with newer/flash models
+        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${userKey}`;
 
         const response = await fetchWithRetry(endpoint, {
             method: 'POST',

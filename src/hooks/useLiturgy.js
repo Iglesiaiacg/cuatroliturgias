@@ -174,8 +174,8 @@ export const useLiturgy = () => {
                     structureRes = await generateLiturgy(fallbackPrompt);
                 }
             } else {
-                console.log("   📖 Structure: Gemini 2.0 Flash (v1)");
-                console.log("   📜 Readings: Gemini 2.0 Flash (v1)");
+                console.log("   📖 Structure: Gemini 1.5 Flash-001 (v1beta)");
+                console.log("   📜 Readings: Gemini 1.5 Flash-001 (v1beta)");
                 console.log("   ℹ️  Tradition is NOT catolica, using Gemini. Current value:", tradition);
 
                 // Standard AI flow
