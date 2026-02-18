@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
@@ -15,23 +15,24 @@ export function useInventorySync() {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser, checkPermission, userRole } = useAuth();
+    const { currentUser, checkPermission } = useAuth();
 
-    // Using a single document for all inventory for simplicity in this MVP
-    // collection: 'inventory', doc: 'sacristy_main'
-    const docRef = doc(db, 'inventory', 'sacristy_main');
+    // Memoize docRef to ensure stability across renders
+    const docRef = useMemo(() => doc(db, 'inventory', 'sacristy_main'), []);
 
-    const initializeInventory = async () => {
+    const initializeInventory = useCallback(async () => {
         try {
             await setDoc(docRef, { items: defaultItems, updatedAt: new Date() });
         } catch (e) {
             console.error("Error initializing inventory:", e);
         }
-    };
+    }, [docRef]);
 
     useEffect(() => {
-        if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
-            setItems(defaultItems);
+        const canView = currentUser && checkPermission && checkPermission('view_sacristy');
+
+        if (!canView) {
+            setItems(prev => prev === defaultItems ? prev : defaultItems);
             setLoading(false);
             return;
         }
@@ -41,7 +42,6 @@ export function useInventorySync() {
             if (snap.exists()) {
                 setItems(snap.data().items);
             } else {
-                // Initialize if doesn't exist
                 initializeInventory();
             }
             setLoading(false);
@@ -51,8 +51,7 @@ export function useInventorySync() {
         });
 
         return () => unsubscribe();
-    }, [currentUser, checkPermission, userRole]);
-
+    }, [currentUser, checkPermission, docRef, initializeInventory]);
 
 
     const toggleStatus = async (id) => {
@@ -73,6 +72,7 @@ export function useInventorySync() {
             await setDoc(docRef, { items: newItems, updatedAt: new Date() }, { merge: true });
         } catch (error) {
             console.error("Error updating inventory:", error);
+            // Revert on error? For now, we trust optimistic UI
         }
     };
 
