@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { doc, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { format } from 'date-fns';
 
@@ -43,14 +43,14 @@ export function useSacristySync(date) {
     const [items, setItems] = useState(defaultItems);
     const [loading, setLoading] = useState(true);
 
-    const { currentUser, checkPermission, userRole } = useAuth();
-
-    // Using dateKey in dependancy array is fine
+    const { currentUser, checkPermission } = useAuth();
     const dateKey = format(date, 'yyyy-MM-dd');
 
     useEffect(() => {
-        if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
-            setItems(defaultItems);
+        const canView = currentUser && checkPermission && checkPermission('view_sacristy');
+
+        if (!canView) {
+            setItems(prev => prev === defaultItems ? prev : defaultItems);
             setLoading(false);
             return;
         }
@@ -59,12 +59,11 @@ export function useSacristySync(date) {
         const docRef = doc(db, 'sacristy_checks', dateKey);
 
         const unsubscribe = onSnapshot(docRef, (snap) => {
-            if (snap.exists()) {
+            if (snap.exists() && snap.data().items) {
                 setItems(snap.data().items);
             } else {
-                // Initialize if doesn't exist
+                // Keep default if doesn't exist yet
                 setItems(defaultItems);
-                // Optional: Create it immediately or wait for first write
             }
             setLoading(false);
         }, (error) => {
@@ -73,7 +72,7 @@ export function useSacristySync(date) {
         });
 
         return () => unsubscribe();
-    }, [dateKey, currentUser, checkPermission, userRole]);
+    }, [dateKey, currentUser, checkPermission]);
 
     const toggleItem = async (id) => {
         // Optimistic update
