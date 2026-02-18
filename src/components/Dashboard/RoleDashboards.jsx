@@ -1,6 +1,32 @@
+import { useState } from 'react';
 import MinistersOnDutyCard from './MinistersOnDutyCard';
+import NoticesCard from './NoticesCard';
+import CommunicationCenter from './CommunicationCenter';
+import DutiesModal from './DutiesModal';
+import FinanceCard from './FinanceCard';
+import SacristyStatusCard from './SacristyStatusCard';
+import NextLiturgyCard from './NextLiturgyCard';
+import IntentionsCard from './IntentionsCard';
+import QuickCertCard from './QuickCertCard';
+import Preview from '../Liturgy/Preview';
+import { extractSection } from '../../utils/liturgyParser';
 
-// ... (existing imports)
+// --- HELPERS ---
+const shouldShowDuties = (role) => {
+    try {
+        const lastSeen = localStorage.getItem(`duties_seen_${role}`);
+        const today = new Date().toDateString();
+        return lastSeen !== today;
+    } catch (e) {
+        return true;
+    }
+};
+
+const markDutiesSeen = (role) => {
+    try {
+        localStorage.setItem(`duties_seen_${role}`, new Date().toDateString());
+    } catch (e) { /* ignore */ }
+};
 
 // --- 1. TREASURER DASHBOARD ---
 export function TreasurerDashboard({ onNavigate, docContent, pinnedLiturgy }) {

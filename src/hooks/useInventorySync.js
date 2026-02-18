@@ -21,6 +21,14 @@ export function useInventorySync() {
     // collection: 'inventory', doc: 'sacristy_main'
     const docRef = doc(db, 'inventory', 'sacristy_main');
 
+    const initializeInventory = async () => {
+        try {
+            await setDoc(docRef, { items: defaultItems, updatedAt: new Date() });
+        } catch (e) {
+            console.error("Error initializing inventory:", e);
+        }
+    };
+
     useEffect(() => {
         if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
             setItems(defaultItems);
@@ -45,13 +53,7 @@ export function useInventorySync() {
         return () => unsubscribe();
     }, [currentUser, checkPermission, userRole]);
 
-    const initializeInventory = async () => {
-        try {
-            await setDoc(docRef, { items: defaultItems, updatedAt: new Date() });
-        } catch (e) {
-            console.error("Error initializing inventory:", e);
-        }
-    };
+
 
     const toggleStatus = async (id) => {
         // Optimistic update

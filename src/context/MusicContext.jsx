@@ -18,6 +18,23 @@ export function MusicProvider({ children }) {
     // Preferencias de UI persistentes
     const [notationSystem, setNotationSystem] = useState(() => localStorage.getItem('music_notation_system') || 'american');
 
+
+    // Helper: Migrate local to cloud
+    const migrateSongs = useCallback(async (localList) => {
+        for (const song of localList) {
+            try {
+                const { id, ...data } = song;
+                await addDoc(collection(db, 'songs'), {
+                    ...data,
+                    migratedAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+            } catch (e) {
+                console.error("Error migrating song:", song.title, e);
+            }
+        }
+    }, []);
+
     useEffect(() => {
         localStorage.setItem('music_notation_system', notationSystem);
     }, [notationSystem]);
@@ -71,21 +88,7 @@ export function MusicProvider({ children }) {
         return () => unsubscribe();
     }, [currentUser]);
 
-    // Helper: Migrate local to cloud
-    const migrateSongs = useCallback(async (localList) => {
-        for (const song of localList) {
-            try {
-                const { id, ...data } = song;
-                await addDoc(collection(db, 'songs'), {
-                    ...data,
-                    migratedAt: serverTimestamp(),
-                    updatedAt: serverTimestamp()
-                });
-            } catch (e) {
-                console.error("Error migrating song:", song.title, e);
-            }
-        }
-    }, []);
+
 
     const addSong = useCallback(async (song) => {
         try {

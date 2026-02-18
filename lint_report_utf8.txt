@@ -1,0 +1,635 @@
+
+> liturgia-iacg@0.1.0 lint
+> eslint .
+
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\functions\index.js
+   1:32  error  'require' is not defined  no-undef
+   2:22  error  'require' is not defined  no-undef
+   3:15  error  'require' is not defined  no-undef
+   4:17  error  'require' is not defined  no-undef
+   8:43  error  'process' is not defined  no-undef
+  17:1   error  'exports' is not defined  no-undef
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\App.jsx
+   15:19  warning  'toast' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                    no-unused-vars
+  733:32  warning  'setNeedRefresh' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  736:18  warning  'r' is defined but never used. Allowed unused args must match /^_/u                             no-unused-vars
+  739:23  warning  'error' is defined but never used. Allowed unused args must match /^_/u                         no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Auth\ProfileModal.jsx
+  4:10  warning  'auth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Auth\UserManagement.jsx
+    3:50  warning  'writeBatch' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       no-unused-vars
+    7:26  warning  'userRole' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   22:12  warning  'loadingPermissions' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+   61:14  error    Error: Cannot access variable before it is declared
+
+`checkPermission` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  59 |
+  60 |         // Guard: Only admins can listen to users list
+> 61 |         if (!checkPermission || !checkPermission('manage_users')) {
+     |              ^^^^^^^^^^^^^^^ `checkPermission` accessed before it is declared
+  62 |             setLoadingList(false);
+  63 |             return;
+  64 |         }
+
+  205 |
+  206 |     // We use the hook context to check permission (although App.jsx already guards this)
+> 207 |     const { checkPermission } = useAuth();
+      |             ^^^^^^^^^^^^^^^ `checkPermission` is declared here
+  208 |
+  209 |     if (!checkPermission || !checkPermission('manage_users')) {
+  210 |         return <div className="p-4 text-red-500">Acceso Denegado. Se requieren permisos de administrador.</div>;  react-hooks/immutability
+  102:8   warning  React Hook useEffect has missing dependencies: 'DEFAULT_PERMISSIONS' and 'checkPermission'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Chat\ChatWidget.jsx
+  95:99  error  'startPrivateChat' is not defined  no-undef
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Common\AssignmentModal.jsx
+  18:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  16 |     useEffect(() => {
+  17 |         if (contextData) {
+> 18 |             setCustomMessage(`Aquí tienes el texto para preparar:\n\n"${contextData}"\n\n(Revisa el leccionario completo)`);
+     |             ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  19 |         } else {
+  20 |             setCustomMessage("");
+  21 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Common\LiturgyAssignmentsModal.jsx
+  58:9  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  56 |         });
+  57 |
+> 58 |         setSections(foundSections);
+     |         ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  59 |     }, [docContent]);
+  60 |
+  61 |     const handleSelect = (section) => {  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\DutiesModal.jsx
+   2:10  warning  'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                               no-unused-vars
+  66:34  error    React Hook "useChat" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?    react-hooks/rules-of-hooks
+  67:33  error    React Hook "useState" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?   react-hooks/rules-of-hooks
+  70:5   error    React Hook "useEffect" is called conditionally. React Hooks must be called in the exact same order in every component render. Did you accidentally call a React Hook after an early return?  react-hooks/rules-of-hooks
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\FinanceCard.jsx
+  56:18  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\NoticesCard.jsx
+   6:59  warning  'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  11:12  warning  'viewingStats' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  11:26  warning  'setViewingStats' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\PendingCertificatesCard.jsx
+  2:36  warning  'getDocs' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\RoleDashboards.jsx
+    6:50  warning  'docContent' is defined but never used. Allowed unused args must match /^_/u                 no-unused-vars
+    7:41  error    'useState' is not defined                                                                    no-undef
+    7:56  error    'shouldShowDuties' is not defined                                                            no-undef
+    8:41  error    'useState' is not defined                                                                    no-undef
+   12:9   error    'markDutiesSeen' is not defined                                                              no-undef
+   15:11  warning  'displayDate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  100:56  warning  'docContent' is defined but never used. Allowed unused args must match /^_/u                 no-unused-vars
+  101:41  error    'useState' is not defined                                                                    no-undef
+  101:56  error    'shouldShowDuties' is not defined                                                            no-undef
+  102:41  error    'useState' is not defined                                                                    no-undef
+  106:9   error    'markDutiesSeen' is not defined                                                              no-undef
+  232:56  warning  'docContent' is defined but never used. Allowed unused args must match /^_/u                 no-unused-vars
+  233:41  error    'useState' is not defined                                                                    no-undef
+  233:56  error    'shouldShowDuties' is not defined                                                            no-undef
+  234:41  error    'useState' is not defined                                                                    no-undef
+  238:9   error    'markDutiesSeen' is not defined                                                              no-undef
+  334:61  warning  'calculatedFeast' is defined but never used. Allowed unused args must match /^_/u            no-unused-vars
+  335:41  error    'useState' is not defined                                                                    no-undef
+  335:56  error    'shouldShowDuties' is not defined                                                            no-undef
+  336:41  error    'useState' is not defined                                                                    no-undef
+  340:9   error    'markDutiesSeen' is not defined                                                              no-undef
+  413:34  error    'extractSection' is not defined                                                              no-undef
+  415:42  error    'extractSection' is not defined                                                              no-undef
+  461:41  error    'useState' is not defined                                                                    no-undef
+  461:56  error    'shouldShowDuties' is not defined                                                            no-undef
+  465:9   error    'markDutiesSeen' is not defined                                                              no-undef
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\SundaySummaryCard.jsx
+   4:27  warning  'isSameDay' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-unused-vars
+   6:10  warning  'getLiturgicalColor' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-unused-vars
+   6:30  warning  'getLiturgicalRubrics' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+   6:52  warning  'identifyFeast' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   6:67  warning  'getLiturgicalCycle' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-unused-vars
+   7:10  warning  'collection' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   no-unused-vars
+   7:22  warning  'query' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        no-unused-vars
+   7:29  warning  'where' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        no-unused-vars
+   7:36  warning  'getDocs' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+   8:10  warning  'db' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-unused-vars
+  40:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  38 |             });
+  39 |         }
+> 40 |         setUpcomingEvents(events.slice(0, 5));
+     |         ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  41 |     }, [getEventsForDate]);
+  42 |
+  43 |     return (  react-hooks/set-state-in-effect
+  41:8   warning  React Hook useEffect has a missing dependency: 'today'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Dashboard\UpcomingEventsCard.jsx
+  23:9  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  21 |             });
+  22 |         }
+> 23 |         setUpcomingEvents(events.slice(0, 5));
+     |         ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |     }, [getEventsForDate]);
+  25 |
+  26 |     return (  react-hooks/set-state-in-effect
+  24:8  warning  React Hook useEffect has a missing dependency: 'today'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Finance\DigitalOfferingCard.jsx
+  36:18  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Layout\TopBar.jsx
+  11:40  warning  'onSettings' is defined but never used. Allowed unused args must match /^_/u                   no-unused-vars
+  11:86  warning  'userRole' is defined but never used. Allowed unused args must match /^_/u                     no-unused-vars
+  12:13  warning  'theme' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  12:20  warning  'setTheme' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u       no-unused-vars
+  14:12  warning  'isMenuOpen' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+  14:24  warning  'setIsMenuOpen' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  37:11  warning  'priorityItems' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Liturgy\PulpitView.jsx
+  19:21  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |     useEffect(() => {
+  18 |         const stored = localStorage.getItem('liturgia_notices');
+> 19 |         if (stored) setNotices(JSON.parse(stored));
+     |                     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |     }, [showBriefing]); // Refresh when opening
+  21 |
+  22 |     // Timer State  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Ministries\AvailabilityCalendar.jsx
+   3:35  warning  'getDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u            no-unused-vars
+  10:12  warning  'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  16:15  warning  'year' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Ministries\RosterView.jsx
+    3:10  warning  'useAuth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                      no-unused-vars
+    5:10  warning  'collection' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                   no-unused-vars
+    5:22  warning  'getDocs' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                      no-unused-vars
+    6:10  warning  'generateRosterPDF' is defined but never used. Allowed unused vars must match /^[A-Z_]/u            no-unused-vars
+   12:12  warning  'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u             no-unused-vars
+   13:12  warning  'availabilities' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u      no-unused-vars
+   13:28  warning  'setAvailabilities' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+   80:11  warning  'handleAutoGenerate' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  184:11  warning  'handleSave' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u          no-unused-vars
+  209:11  warning  'changeMonth' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Music\SetlistView.jsx
+  54:68  warning  'activeListName' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Music\SongDetail.jsx
+   18:12  warning  'beat' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+   34:18  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+   69:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  67 |         } else {
+  68 |             clearInterval(timerRef.current);
+> 69 |             setBeat(0);
+     |             ^^^^^^^ Avoid calling setState() directly within an effect
+  70 |         }
+  71 |
+  72 |         return () => clearInterval(timerRef.current);  react-hooks/set-state-in-effect
+  115:98  error    Unnecessary escape character: \[                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-useless-escape
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\DirectoryView.jsx
+  278:21  warning  'isNew' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\HomeView.jsx
+  51:12  warning  'isSundayLive' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+  60:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  58 |         const hour = now.getHours();
+  59 |         const isLive = isSunday && hour >= 7 && hour < 15; // 7am to 3pm wide window
+> 60 |         setIsSundayLive(isLive);
+     |         ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  61 |
+  62 |         // Auto-switch to Celebrant Mode on Sunday Morning
+  63 |         if (isLive) {  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\MinistryReportModal.jsx
+  34:18  warning  'error' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+  52:18  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u      no-unused-vars
+  52:21  error    Empty block statement                                                             no-empty
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\MusicView.jsx
+  317:58  warning  'e' is defined but never used. Allowed unused caught errors must match /^_/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\OccasionalServicesView.jsx
+  31:16  error  Empty block statement  no-empty
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\OfferingsView.jsx
+  24:71  warning  'loadingTransactions' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  44:12  warning  'recentEvents' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\PublicSetlistView.jsx
+   4:10  warning  'parseChordsFromText' is defined but never used. Allowed unused vars must match /^[A-Z_]/u    no-unused-vars
+  49:11  warning  'formatLyrics' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\components\Views\RectorReportModal.jsx
+  11:12  warning  'period' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 no-unused-vars
+  11:20  warning  'setPeriod' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              no-unused-vars
+  17:13  error    Error: Cannot access variable before it is declared
+
+`fetchReports` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  15 |     useEffect(() => {
+  16 |         if (isOpen) {
+> 17 |             fetchReports();
+     |             ^^^^^^^^^^^^ `fetchReports` accessed before it is declared
+  18 |         }
+  19 |     }, [isOpen]);
+  20 |
+
+  19 |     }, [isOpen]);
+  20 |
+> 21 |     const fetchReports = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 22 |         setLoading(true);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 23 |         try {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 33 |         setLoading(false);
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^
+> 34 |     };
+     | ^^^^^^^ `fetchReports` is declared here
+  35 |
+  36 |     if (!isOpen) return null;
+  37 |  react-hooks/immutability
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\AuthContext.jsx
+   15:17  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  233:8   warning  React Hook useCallback has a missing dependency: 'DEFAULT_PERMISSIONS'. Either include it or remove the dependency array        react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\ChatContext.jsx
+   2:14  warning  'auth' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+  17:17  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               react-refresh/only-export-components
+  24:12  warning  'loading' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      no-unused-vars
+  50:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  48 |     useEffect(() => {
+  49 |         if (!currentUser) {
+> 50 |             setMessages([]);
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  51 |             return;
+  52 |         }
+  53 |  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\DirectoryContext.jsx
+   3:69  warning  'setDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             no-unused-vars
+   9:14  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            react-refresh/only-export-components
+  25:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  23 |     useEffect(() => {
+  24 |         if (!currentUser) {
+> 25 |             setMembers([]);
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  26 |             setLoading(false);
+  27 |             return;
+  28 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\MusicContext.jsx
+   8:17  error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-refresh/only-export-components
+  52:29  error    Error: Cannot access variable before it is declared
+
+`migrateSongs` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  50 |                         if (localSongs.length > 0) {
+  51 |
+> 52 |                             migrateSongs(localSongs);
+     |                             ^^^^^^^^^^^^ `migrateSongs` accessed before it is declared
+  53 |                         }
+  54 |                     } catch (e) {
+  55 |                         console.error("Migration parse error", e);
+
+  73 |
+  74 |     // Helper: Migrate local to cloud
+> 75 |     const migrateSongs = useCallback(async (localList) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 76 |         for (const song of localList) {
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 77 |             try {
+     …
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 87 |         }
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 88 |     }, []);
+     | ^^^^^^^^^^^^ `migrateSongs` is declared here
+  89 |
+  90 |     const addSong = useCallback(async (song) => {
+  91 |         try {  react-hooks/immutability
+  72:8   warning  React Hook useEffect has a missing dependency: 'migrateSongs'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   react-hooks/exhaustive-deps
+  78:25  warning  'id' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\NotificationContext.jsx
+   8:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        react-refresh/only-export-components
+  19:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |     useEffect(() => {
+  18 |         if (!currentUser) {
+> 19 |             setNotifications([]);
+     |             ^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |             setUnreadCount(0);
+  21 |             return;
+  22 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\SetlistContext.jsx
+   3:102  warning  'where' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-unused-vars
+   8:17   error    Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              react-refresh/only-export-components
+  22:13   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  20 |     useEffect(() => {
+  21 |         if (!currentUser) {
+> 22 |             setSetlists([]);
+     |             ^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  23 |             setLoading(false);
+  24 |             return;
+  25 |         }  react-hooks/set-state-in-effect
+  68:8    warning  React Hook useEffect has a missing dependency: 'error'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\context\ThemeContext.jsx
+  26:14  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\data\liturgia_constants.js
+  195:5  error  Duplicate key '[[INSERTAR_PADRE_NUESTRO]]'  no-dupe-keys
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useCalendarEvents.js
+   4:65  warning  'where' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            no-unused-vars
+  16:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  14 |     useEffect(() => {
+  15 |         if (!currentUser) {
+> 16 |             setEvents([]);
+     |             ^^^^^^^^^ Avoid calling setState() directly within an effect
+  17 |             setLoading(false);
+  18 |             return;
+  19 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useFinanceSync.js
+  15:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  13 |     useEffect(() => {
+  14 |         if (!currentUser || !checkPermission || !checkPermission('view_treasury')) {
+> 15 |             setTransactions([]);
+     |             ^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  16 |             setLoading(false);
+  17 |             return;
+  18 |         }  react-hooks/set-state-in-effect
+  58:8   warning  React Hook useEffect has a missing dependency: 'checkPermission'. Either include it or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+  62:21  warning  'id' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useIntentionsSync.js
+  23:13  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  21 |
+  22 |         if (!currentUser || !canView) {
+> 23 |             setIntentions([]);
+     |             ^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  24 |             setLoading(false);
+  25 |             return;
+  26 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useInventorySync.js
+  37:17  error    Error: Cannot access variable before it is declared
+
+`initializeInventory` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  35 |             } else {
+  36 |                 // Initialize if doesn't exist
+> 37 |                 initializeInventory();
+     |                 ^^^^^^^^^^^^^^^^^^^ `initializeInventory` accessed before it is declared
+  38 |             }
+  39 |             setLoading(false);
+  40 |         }, (error) => {
+
+  46 |     }, [currentUser, checkPermission, userRole]);
+  47 |
+> 48 |     const initializeInventory = async () => {
+     |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 49 |         try {
+     | ^^^^^^^^^^^^^
+> 50 |             await setDoc(docRef, { items: defaultItems, updatedAt: new Date() });
+     | ^^^^^^^^^^^^^
+> 51 |         } catch (e) {
+     | ^^^^^^^^^^^^^
+> 52 |             console.error("Error initializing inventory:", e);
+     | ^^^^^^^^^^^^^
+> 53 |         }
+     | ^^^^^^^^^^^^^
+> 54 |     };
+     | ^^^^^^^ `initializeInventory` is declared here
+  55 |
+  56 |     const toggleStatus = async (id) => {
+  57 |         // Optimistic update  react-hooks/immutability
+  46:8   warning  React Hook useEffect has missing dependencies: 'docRef' and 'initializeInventory'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             react-hooks/exhaustive-deps
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useLiturgy.js
+  4:35  warning  'formatEvangelizoReadings' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  4:61  warning  'extractEvangelist' is defined but never used. Allowed unused vars must match /^[A-Z_]/u         no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useNoticesSync.js
+   3:35  warning  'updateDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          no-unused-vars
+   3:46  warning  'arrayUnion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+  10:26  warning  'userRole' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  no-unused-vars
+  19:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |     useEffect(() => {
+  18 |         if (!currentUser) {
+> 19 |             setNotices([]);
+     |             ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |             setLoading(false);
+  21 |             return;
+  22 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\hooks\useSacristySync.js
+   3:35  warning  'updateDoc' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         no-unused-vars
+  53:13  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  51 |     useEffect(() => {
+  52 |         if (!currentUser || !checkPermission || !checkPermission('view_sacristy')) {
+> 53 |             setItems(defaultItems);
+     |             ^^^^^^^^ Avoid calling setState() directly within an effect
+  54 |             setLoading(false);
+  55 |             return;
+  56 |         }  react-hooks/set-state-in-effect
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\services\evangelizo.js
+   72:73   error    Unnecessary escape character: \.                                                                no-useless-escape
+   72:75   error    Unnecessary escape character: \-                                                                no-useless-escape
+  103:102  error    Unnecessary escape character: \.                                                                no-useless-escape
+  103:104  error    Unnecessary escape character: \-                                                                no-useless-escape
+  117:81   error    Unnecessary escape character: \.                                                                no-useless-escape
+  117:83   error    Unnecessary escape character: \-                                                                no-useless-escape
+  191:30   error    Unnecessary escape character: \.                                                                no-useless-escape
+  192:37   error    Unnecessary escape character: \.                                                                no-useless-escape
+  194:32   error    Unnecessary escape character: \.                                                                no-useless-escape
+  195:28   error    Unnecessary escape character: \.                                                                no-useless-escape
+  196:41   error    Unnecessary escape character: \.                                                                no-useless-escape
+  229:9    warning  'startLineIndex' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  232:93   error    Unnecessary escape character: \.                                                                no-useless-escape
+  236:80   error    Unnecessary escape character: \.                                                                no-useless-escape
+  265:46   error    Unnecessary escape character: \.                                                                no-useless-escape
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\services\liturgy.js
+   325:25   warning  'tradition' is defined but never used. Allowed unused args must match /^_/u                          no-unused-vars
+   342:11   warning  'feb2' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                 no-unused-vars
+   387:11   warning  'prefacioObligatorio' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+  1001:131  error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1001:152  error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1022:79   error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1022:99   error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1602:11   warning  'marianAntiphonText' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u   no-unused-vars
+  1656:128  error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1656:149  error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1713:50   error    Unnecessary escape character: \`                                                                     no-useless-escape
+  1713:70   error    Unnecessary escape character: \`                                                                     no-useless-escape
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\templates\catholicMass.js
+  7:57  warning  'season' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+  7:65  warning  'date' is defined but never used. Allowed unused args must match /^_/u    no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\utils\rites\baptism.js
+  14:53  warning  'celebrant' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\utils\rites\marriage.js
+  14:31  warning  'witnesses' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\src\utils\rosterPDFGenerator.js
+  82:38  warning  'index' is defined but never used. Allowed unused args must match /^_/u  no-unused-vars
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\test-regex-2.js
+  11:26  error  Unnecessary escape character: \.  no-useless-escape
+  12:33  error  Unnecessary escape character: \.  no-useless-escape
+  14:28  error  Unnecessary escape character: \.  no-useless-escape
+  15:24  error  Unnecessary escape character: \.  no-useless-escape
+  16:37  error  Unnecessary escape character: \.  no-useless-escape
+
+C:\Users\Anglo\OneDrive\Documentos\Desktop\cuatroliturgias\test-regex.js
+   6:18  error  Unnecessary escape character: \.  no-useless-escape
+   6:29  error  Unnecessary escape character: \.  no-useless-escape
+   7:25  error  Unnecessary escape character: \.  no-useless-escape
+   7:36  error  Unnecessary escape character: \.  no-useless-escape
+   7:38  error  Unnecessary escape character: \-  no-useless-escape
+   9:20  error  Unnecessary escape character: \.  no-useless-escape
+   9:31  error  Unnecessary escape character: \.  no-useless-escape
+   9:33  error  Unnecessary escape character: \-  no-useless-escape
+  10:16  error  Unnecessary escape character: \.  no-useless-escape
+  10:27  error  Unnecessary escape character: \.  no-useless-escape
+  10:29  error  Unnecessary escape character: \-  no-useless-escape
+  11:29  error  Unnecessary escape character: \.  no-useless-escape
+  11:40  error  Unnecessary escape character: \.  no-useless-escape
+  11:42  error  Unnecessary escape character: \-  no-useless-escape
+
+✖ 198 problems (103 errors, 95 warnings)
+

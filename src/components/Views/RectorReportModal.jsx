@@ -12,11 +12,6 @@ export default function RectorReportModal({ isOpen, onClose }) {
     const [reports, setReports] = useState([]);
     const [remarks, setRemarks] = useState("En virtud de los informes recibidos y la observación pastoral, certifico el avance de la obra...");
 
-    useEffect(() => {
-        if (isOpen) {
-            fetchReports();
-        }
-    }, [isOpen]);
 
     const fetchReports = async () => {
         setLoading(true);
@@ -32,6 +27,14 @@ export default function RectorReportModal({ isOpen, onClose }) {
         }
         setLoading(false);
     };
+
+    useEffect(() => {
+        if (isOpen) {
+            fetchReports();
+        }
+    }, [isOpen]);
+
+
 
     if (!isOpen) return null;
 

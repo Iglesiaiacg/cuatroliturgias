@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { collection, onSnapshot, deleteDoc, doc, writeBatch, getDoc, setDoc } from 'firebase/firestore'; // Added writeBatch, getDoc, setDoc
 import { db } from '../../services/firebase';
+import { DEFAULT_PERMISSIONS } from '../../utils/constants';
 
 export default function UserManagement() {
-    const { currentUser, userRole, assignRole } = useAuth();
+    const { currentUser, userRole, assignRole, checkPermission } = useAuth();
 
     // User List State
     const [users, setUsers] = useState([]);
@@ -44,13 +45,7 @@ export default function UserManagement() {
     ];
 
     // Default permissions if none exist
-    const DEFAULT_PERMISSIONS = {
-        admin: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'manage_users', 'view_treasury', 'view_music', 'manage_music'],
-        treasurer: ['view_calendar', 'view_offerings', 'view_treasury'],
-        secretary: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_directory', 'view_offerings', 'view_music'],
-        sacristan: ['view_liturgy', 'view_calendar', 'view_sacristy', 'view_music'],
-        reader: ['view_liturgy', 'view_calendar', 'view_music']
-    };
+
 
     // Fetch users and permissions on mount
     // Fetch users and permissions on mount
@@ -204,8 +199,6 @@ export default function UserManagement() {
 
 
     // We use the hook context to check permission (although App.jsx already guards this)
-    const { checkPermission } = useAuth();
-
     if (!checkPermission || !checkPermission('manage_users')) {
         return <div className="p-4 text-red-500">Acceso Denegado. Se requieren permisos de administrador.</div>;
     }

@@ -5,7 +5,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 
 export default function ChatWidget() {
-    const { messages, sendMessage, isOpen, toggleChat, activeChat, setActiveChat } = useChat();
+    const { messages, sendMessage, isOpen, toggleChat, activeChat, setActiveChat, startPrivateChat } = useChat();
     const { currentUser } = useAuth();
     const [newMessage, setNewMessage] = useState('');
     const messagesEndRef = useRef(null);
