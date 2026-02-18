@@ -21,7 +21,7 @@ const fetchWithRetry = async (url, options, retries = 5, backoff = 2000) => {
     }
 };
 
-export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1.5-flash-001') => {
+export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1.5-flash') => {
     try {
         let userKey = import.meta.env.VITE_GOOGLE_API_KEY || getApiKey();
 
@@ -41,8 +41,8 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1
         }
 
         // Build the endpoint URL with the specified model
-        // Using v1beta for better compatibility with newer/flash models
-        const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${userKey}`;
+        // Using v1 for maximum stability (v1beta was returning 404s)
+        const endpoint = `https://generativelanguage.googleapis.com/v1/models/${model}:generateContent?key=${userKey}`;
 
         const response = await fetchWithRetry(endpoint, {
             method: 'POST',
@@ -68,6 +68,18 @@ export const generateLiturgy = async (prompt, isRetry = false, model = 'gemini-1
         if (data.error) {
             console.error("Gemini Raw Error:", data.error);
             const msg = data.error.message || "Error desconocido de Google";
+
+            // Fallback strategy for 404: If we already tried fallback or if it's a hard failure
+            if (data.error.code === 404) {
+                if (model !== 'gemini-pro') {
+                    console.warn(`Model ${model} not found. Falling back to gemini-pro...`);
+                    return generateLiturgy(prompt, isRetry, 'gemini-pro');
+                } else {
+                    // Even fallback failed
+                    throw new Error("Error 404: Google no habilita modelos para tu API Key. Crea una NUEVA Key en aistudio.google.com");
+                }
+            }
+
             if (msg.includes('API key') || data.error.code === 403) {
                 throw new Error(`Tu API Key no es válida (Code ${data.error.code}). Verifica en ⚙️`);
             }
